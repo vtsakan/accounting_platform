@@ -1,0 +1,20 @@
+[
+  {
+    "path": "docker-compose.yml",
+    "location": "POSTGRES_PASSWORD",
+    "line": 12,
+    "replacement": "empty value; deployment secret loading deferred"
+  },
+  {
+    "path": "core/settings.py",
+    "location": "SECRET_KEY",
+    "line": 23,
+    "replacement": "empty value; configuration deferred to S04"
+  },
+  {
+    "path": "core/settings.py",
+    "location": "DATABASES.default.PASSWORD",
+    "line": 81,
+    "replacement": "empty value; configuration deferred to S04"
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "recorded_at": "2026-11-07",
+  "source_baseline_commit": "3bb4c0240a48ee31ddbb19a26698bc25b3c79486",
+  "source_archive": {
+    "filename": "accountant_v6.zip",
+    "library_file_id": "libfile_068834d96d008191a03d0253671ea7d7",
+    "version": 0,
+    "sha256": "d2bce8470dd1a3fab2907745f55c17f4ee087d1caf49673c1b42827d6743dd96",
+    "size_bytes": 5919852,
+    "untouched_reference": "Original archive preserved separately; excluded from the handoff package because it contains private runtime data"
+  },
+  "documents": [
+    {
+      "identifier": "ACC-URS-001",
+      "version": "0.1",
+      "date": "2026-10-29",
+      "library_file_id": "libfile_86ca3ea5d9d48191b78a412431f5a659",
+      "library_version": 0,
+      "repository_path": "docs/baselines/Accounting_Platform_User_Requirements_and_Implementation_Plan_v01.docx",
+      "sha256": "61b272d5559d1f00ca501f581cebb672b810e18c7bab44cd6e1a9b33b7804b71"
+    },
+    {
+      "identifier": "ACC-IMP-001",
+      "version": "0.1",
+      "date": "2026-10-29",
+      "library_file_id": "libfile_58372391c1d481919b3fd13a52dbdc64",
+      "library_version": 0,
+      "repository_path": "docs/baselines/Accounting_Platform_Implementation_Pathway_GCP_DuckDNS_v01.docx",
+      "sha256": "08a60bedddc7516b9b5490678eda47d2202ef02aa9c10e610fe4bf6b8065e251"
+    },
+    {
+      "identifier": "ACC-IMP-002",
+      "version": "0.1",
+      "date": "2026-10-29",
+      "library_file_id": "libfile_02cc5337a9cc8191a992bb440e8403d9",
+      "library_version": 0,
+      "repository_path": "docs/baselines/Accounting_Platform_Prompt_by_Prompt_Implementation_Reference_v01.md",
+      "sha256": "9d6a0fc6bc288b02b0d0e4aae752a5bc1a78ae0fcc4b86d6de296ff4b482e124"
+    }
+  ],
+  "preparation": {
+    "archive_sha256": "d2bce8470dd1a3fab2907745f55c17f4ee087d1caf49673c1b42827d6743dd96",
+    "archive_size_bytes": 5919852,
+    "archive_file_count": 1396,
+    "working_source_file_count": 38,
+    "disposition_counts": {
+      "Excluded": 1358,
+      "Preserved": 35,
+      "Safety redacted": 2,
+      "Source protection": 1
+    },
+    "redaction_count": 3
+  }
+}

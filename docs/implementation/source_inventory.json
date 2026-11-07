@@ -1,0 +1,712 @@
+{
+  "source_archive": "accountant_v6.zip",
+  "archive_root": "accountant_v3",
+  "review_date": "2026-11-07",
+  "method": "Static AST/source inventory; no application import or database access",
+  "models": [
+    {
+      "name": "Entity",
+      "source_path": "accounting/models.py",
+      "line": 12,
+      "default_table_inference": "accounting_entity",
+      "database_table_verified": false,
+      "fields": [
+        {
+          "name": "entity_type",
+          "type": "models.CharField",
+          "line": 17,
+          "declaration": "models.CharField(max_length=10, choices=EntityType.choices, verbose_name='Τύπος')"
+        },
+        {
+          "name": "name",
+          "type": "models.CharField",
+          "line": 18,
+          "declaration": "models.CharField(max_length=255, verbose_name='Επωνυμία')"
+        },
+        {
+          "name": "vat_number",
+          "type": "models.CharField",
+          "line": 19,
+          "declaration": "models.CharField(max_length=20, unique=True, blank=True, null=True, verbose_name='Α.Φ.Μ.')"
+        },
+        {
+          "name": "tax_office",
+          "type": "models.CharField",
+          "line": 20,
+          "declaration": "models.CharField(max_length=100, blank=True, verbose_name='Δ.Ο.Υ.')"
+        },
+        {
+          "name": "address",
+          "type": "models.CharField",
+          "line": 21,
+          "declaration": "models.CharField(max_length=255, blank=True, verbose_name='Διεύθυνση')"
+        },
+        {
+          "name": "city",
+          "type": "models.CharField",
+          "line": 22,
+          "declaration": "models.CharField(max_length=100, blank=True, verbose_name='Πόλη')"
+        },
+        {
+          "name": "postal_code",
+          "type": "models.CharField",
+          "line": 23,
+          "declaration": "models.CharField(max_length=10, blank=True, verbose_name='Τ.Κ.')"
+        },
+        {
+          "name": "phone_number",
+          "type": "models.CharField",
+          "line": 24,
+          "declaration": "models.CharField(max_length=20, blank=True, verbose_name='Τηλέφωνο')"
+        },
+        {
+          "name": "email",
+          "type": "models.EmailField",
+          "line": 25,
+          "declaration": "models.EmailField(blank=True, verbose_name='Email')"
+        },
+        {
+          "name": "created_at",
+          "type": "models.DateTimeField",
+          "line": 26,
+          "declaration": "models.DateTimeField(auto_now_add=True)"
+        },
+        {
+          "name": "updated_at",
+          "type": "models.DateTimeField",
+          "line": 27,
+          "declaration": "models.DateTimeField(auto_now=True)"
+        }
+      ],
+      "methods": [
+        "__str__"
+      ]
+    },
+    {
+      "name": "CashAccount",
+      "source_path": "accounting/models.py",
+      "line": 39,
+      "default_table_inference": "accounting_cashaccount",
+      "database_table_verified": false,
+      "fields": [
+        {
+          "name": "name",
+          "type": "models.CharField",
+          "line": 40,
+          "declaration": "models.CharField(max_length=100, unique=True, verbose_name='Όνομα Ταμείου')"
+        },
+        {
+          "name": "opening_balance",
+          "type": "models.DecimalField",
+          "line": 41,
+          "declaration": "models.DecimalField(max_digits=12, decimal_places=2, default=0.0, verbose_name='Αρχικό Υπόλοιπο')"
+        },
+        {
+          "name": "is_active",
+          "type": "models.BooleanField",
+          "line": 42,
+          "declaration": "models.BooleanField(default=True, verbose_name='Ενεργό')"
+        }
+      ],
+      "methods": [
+        "__str__"
+      ]
+    },
+    {
+      "name": "Category",
+      "source_path": "accounting/models.py",
+      "line": 54,
+      "default_table_inference": "accounting_category",
+      "database_table_verified": false,
+      "fields": [
+        {
+          "name": "name",
+          "type": "models.CharField",
+          "line": 55,
+          "declaration": "models.CharField(max_length=100, verbose_name='Όνομα Κατηγορίας')"
+        },
+        {
+          "name": "parent",
+          "type": "models.ForeignKey",
+          "line": 56,
+          "declaration": "models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories', verbose_name='Γονική Κατηγορία')"
+        }
+      ],
+      "methods": [
+        "__str__"
+      ]
+    },
+    {
+      "name": "Agreement",
+      "source_path": "accounting/models.py",
+      "line": 80,
+      "default_table_inference": "accounting_agreement",
+      "database_table_verified": false,
+      "fields": [
+        {
+          "name": "agreement_type",
+          "type": "models.CharField",
+          "line": 90,
+          "declaration": "models.CharField(max_length=10, choices=AgreementType.choices)"
+        },
+        {
+          "name": "entity",
+          "type": "models.ForeignKey",
+          "line": 91,
+          "declaration": "models.ForeignKey(Entity, on_delete=models.CASCADE, related_name='agreements')"
+        },
+        {
+          "name": "description",
+          "type": "models.CharField",
+          "line": 92,
+          "declaration": "models.CharField(max_length=255, verbose_name='Description of Services/Goods')"
+        },
+        {
+          "name": "total_amount",
+          "type": "models.DecimalField",
+          "line": 93,
+          "declaration": "models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Total Agreed Amount')"
+        },
+        {
+          "name": "start_date",
+          "type": "models.DateField",
+          "line": 94,
+          "declaration": "models.DateField()"
+        },
+        {
+          "name": "status",
+          "type": "models.CharField",
+          "line": 95,
+          "declaration": "models.CharField(max_length=10, choices=AgreementStatus.choices, default=AgreementStatus.ACTIVE)"
+        },
+        {
+          "name": "created_at",
+          "type": "models.DateTimeField",
+          "line": 96,
+          "declaration": "models.DateTimeField(auto_now_add=True)"
+        },
+        {
+          "name": "updated_at",
+          "type": "models.DateTimeField",
+          "line": 97,
+          "declaration": "models.DateTimeField(auto_now=True)"
+        }
+      ],
+      "methods": [
+        "__str__"
+      ]
+    },
+    {
+      "name": "Transaction",
+      "source_path": "accounting/models.py",
+      "line": 110,
+      "default_table_inference": "accounting_transaction",
+      "database_table_verified": false,
+      "fields": [
+        {
+          "name": "transaction_date",
+          "type": "models.DateField",
+          "line": 117,
+          "declaration": "models.DateField(verbose_name='Ημερομηνία')"
+        },
+        {
+          "name": "transaction_type",
+          "type": "models.CharField",
+          "line": 118,
+          "declaration": "models.CharField(max_length=10, choices=TransactionType.choices, verbose_name='Τύπος Κίνησης')"
+        },
+        {
+          "name": "amount",
+          "type": "models.DecimalField",
+          "line": 119,
+          "declaration": "models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Ποσό')"
+        },
+        {
+          "name": "description",
+          "type": "models.CharField",
+          "line": 120,
+          "declaration": "models.CharField(max_length=255, verbose_name='Περιγραφή')"
+        },
+        {
+          "name": "remarks",
+          "type": "models.TextField",
+          "line": 121,
+          "declaration": "models.TextField(blank=True, verbose_name='Πατηρήσεις')"
+        },
+        {
+          "name": "cash_account",
+          "type": "models.ForeignKey",
+          "line": 122,
+          "declaration": "models.ForeignKey(CashAccount, on_delete=models.PROTECT, verbose_name='Ταμείο')"
+        },
+        {
+          "name": "category",
+          "type": "models.ForeignKey",
+          "line": 123,
+          "declaration": "models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Κατηγορία')"
+        },
+        {
+          "name": "entity",
+          "type": "models.ForeignKey",
+          "line": 124,
+          "declaration": "models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Πελάτης/Προμηθευτής', related_name='entity_transactions')"
+        },
+        {
+          "name": "agreement",
+          "type": "models.ForeignKey",
+          "line": 125,
+          "declaration": "models.ForeignKey(Agreement, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')"
+        },
+        {
+          "name": "transfer_id",
+          "type": "models.UUIDField",
+          "line": 126,
+          "declaration": "models.UUIDField(default=uuid.uuid4, editable=False, help_text='Used to link two transactions for internal transfers')"
+        },
+        {
+          "name": "created_at",
+          "type": "models.DateTimeField",
+          "line": 127,
+          "declaration": "models.DateTimeField(auto_now_add=True)"
+        },
+        {
+          "name": "updated_at",
+          "type": "models.DateTimeField",
+          "line": 128,
+          "declaration": "models.DateTimeField(auto_now=True)"
+        }
+      ],
+      "methods": [
+        "save",
+        "__str__"
+      ]
+    }
+  ],
+  "migrations": [
+    {
+      "name": "0001_initial",
+      "path": "accounting/migrations/0001_initial.py",
+      "sha256": "9a7bdd7e986f6fad6e3d46f77e5b415b2550a3469fb676294c92f78b0d6e7edd",
+      "dependencies": [],
+      "operations": [
+        {
+          "operation": "migrations.CreateModel",
+          "name": "CashAccount"
+        },
+        {
+          "operation": "migrations.CreateModel",
+          "name": "Entity"
+        },
+        {
+          "operation": "migrations.CreateModel",
+          "name": "Category"
+        },
+        {
+          "operation": "migrations.CreateModel",
+          "name": "Agreement"
+        },
+        {
+          "operation": "migrations.CreateModel",
+          "name": "Transaction"
+        }
+      ],
+      "executed": false
+    },
+    {
+      "name": "0002_transaction_agreement_alter_agreement_status_and_more",
+      "path": "accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
+      "sha256": "a0f2e06b564441a5e369789c446a3c0cf2847b855d781bdd682f13d6a32aaf0e",
+      "dependencies": [
+        [
+          "accounting",
+          "0001_initial"
+        ]
+      ],
+      "operations": [
+        {
+          "operation": "migrations.AddField",
+          "model_name": "transaction",
+          "name": "agreement"
+        },
+        {
+          "operation": "migrations.AlterField",
+          "model_name": "agreement",
+          "name": "status"
+        },
+        {
+          "operation": "migrations.AlterField",
+          "model_name": "transaction",
+          "name": "entity"
+        },
+        {
+          "operation": "migrations.AlterField",
+          "model_name": "transaction",
+          "name": "remarks"
+        }
+      ],
+      "executed": false
+    }
+  ],
+  "views": [
+    {
+      "name": "dashboard_view",
+      "path": "accounting/views.py",
+      "line": 15,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "transaction_list_view",
+      "path": "accounting/views.py",
+      "line": 53,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "customer_list_view",
+      "path": "accounting/views.py",
+      "line": 116,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "supplier_list_view",
+      "path": "accounting/views.py",
+      "line": 128,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "add_expense_view",
+      "path": "accounting/views.py",
+      "line": 145,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "add_income_view",
+      "path": "accounting/views.py",
+      "line": 180,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "add_entity_view",
+      "path": "accounting/views.py",
+      "line": 214,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "entity_detail_view",
+      "path": "accounting/views.py",
+      "line": 234,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "summary_report_view",
+      "path": "accounting/views.py",
+      "line": 275,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "edit_entity_view",
+      "path": "accounting/views.py",
+      "line": 342,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "agreement_list_view",
+      "path": "accounting/views.py",
+      "line": 364,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "agreement_detail_view",
+      "path": "accounting/views.py",
+      "line": 378,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "add_agreement_view",
+      "path": "accounting/views.py",
+      "line": 400,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "edit_agreement_view",
+      "path": "accounting/views.py",
+      "line": 425,
+      "decorators": [
+        "login_required"
+      ]
+    },
+    {
+      "name": "add_transfer_view",
+      "path": "accounting/views.py",
+      "line": 470,
+      "decorators": [
+        "login_required",
+        "transaction.atomic"
+      ]
+    }
+  ],
+  "forms_and_widgets": [
+    {
+      "name": "EntityTypeSelectWidget",
+      "path": "accounting/forms.py",
+      "line": 12,
+      "bases": [
+        "forms.Select"
+      ]
+    },
+    {
+      "name": "AgreementChoiceField",
+      "path": "accounting/forms.py",
+      "line": 23,
+      "bases": [
+        "forms.ModelChoiceField"
+      ]
+    },
+    {
+      "name": "ExpenseForm",
+      "path": "accounting/forms.py",
+      "line": 32,
+      "bases": [
+        "forms.Form"
+      ]
+    },
+    {
+      "name": "IncomeForm",
+      "path": "accounting/forms.py",
+      "line": 52,
+      "bases": [
+        "forms.Form"
+      ]
+    },
+    {
+      "name": "EntityForm",
+      "path": "accounting/forms.py",
+      "line": 72,
+      "bases": [
+        "forms.ModelForm"
+      ]
+    },
+    {
+      "name": "AgreementForm",
+      "path": "accounting/forms.py",
+      "line": 88,
+      "bases": [
+        "forms.ModelForm"
+      ]
+    },
+    {
+      "name": "TransferForm",
+      "path": "accounting/forms.py",
+      "line": 121,
+      "bases": [
+        "forms.Form"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "source_path": "core/urls.py",
+      "line": 7,
+      "route": "admin/",
+      "view": "admin.site.urls",
+      "name": null
+    },
+    {
+      "source_path": "core/urls.py",
+      "line": 9,
+      "route": "",
+      "view": "include('accounting.urls')",
+      "name": null
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 7,
+      "route": "login/",
+      "view": "auth_views.LoginView.as_view(template_name='accounting/login.html')",
+      "name": "login"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 8,
+      "route": "logout/",
+      "view": "auth_views.LogoutView.as_view()",
+      "name": "logout"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 9,
+      "route": "",
+      "view": "views.dashboard_view",
+      "name": "dashboard"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 10,
+      "route": "transactions/",
+      "view": "views.transaction_list_view",
+      "name": "transaction-list"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 11,
+      "route": "customers/",
+      "view": "views.customer_list_view",
+      "name": "customer-list"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 12,
+      "route": "suppliers/",
+      "view": "views.supplier_list_view",
+      "name": "supplier-list"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 13,
+      "route": "expense/add/",
+      "view": "views.add_expense_view",
+      "name": "add-expense"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 14,
+      "route": "income/add/",
+      "view": "views.add_income_view",
+      "name": "add-income"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 15,
+      "route": "entity/add/",
+      "view": "views.add_entity_view",
+      "name": "add-entity"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 16,
+      "route": "entity/<int:pk>/",
+      "view": "views.entity_detail_view",
+      "name": "entity-detail"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 17,
+      "route": "report/",
+      "view": "views.summary_report_view",
+      "name": "summary-report"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 18,
+      "route": "entity/<int:pk>/edit/",
+      "view": "views.edit_entity_view",
+      "name": "edit-entity"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 19,
+      "route": "agreements/",
+      "view": "views.agreement_list_view",
+      "name": "agreement-list"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 20,
+      "route": "agreement/<int:pk>/",
+      "view": "views.agreement_detail_view",
+      "name": "agreement-detail"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 21,
+      "route": "agreement/add/",
+      "view": "views.add_agreement_view",
+      "name": "add-agreement"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 22,
+      "route": "agreement/<int:pk>/edit/",
+      "view": "views.edit_agreement_view",
+      "name": "edit-agreement"
+    },
+    {
+      "source_path": "accounting/urls.py",
+      "line": 23,
+      "route": "transfer/add/",
+      "view": "views.add_transfer_view",
+      "name": "add-transfer"
+    }
+  ],
+  "templates": [
+    "accounting/templates/accounting/add_agreement.html",
+    "accounting/templates/accounting/add_entity.html",
+    "accounting/templates/accounting/add_expense.html",
+    "accounting/templates/accounting/add_income.html",
+    "accounting/templates/accounting/add_transfer.html",
+    "accounting/templates/accounting/agreement_detail.html",
+    "accounting/templates/accounting/agreement_list.html",
+    "accounting/templates/accounting/base.html",
+    "accounting/templates/accounting/customer_list.html",
+    "accounting/templates/accounting/dashboard.html",
+    "accounting/templates/accounting/edit_agreement.html",
+    "accounting/templates/accounting/edit_entity.html",
+    "accounting/templates/accounting/entity_detail.html",
+    "accounting/templates/accounting/login.html",
+    "accounting/templates/accounting/summary_report.html",
+    "accounting/templates/accounting/supplier_list.html",
+    "accounting/templates/accounting/transaction_list.html"
+  ],
+  "source_settings": {
+    "framework_declared": "Django==5.2.5",
+    "database_engine": "django.db.backends.postgresql",
+    "database_host": "localhost",
+    "compose_database_image": "postgres:15",
+    "DEBUG": true,
+    "LANGUAGE_CODE": "en-us",
+    "TIME_ZONE": "UTC",
+    "USE_TZ": true,
+    "authentication_user_model": "default Django user (no custom AUTH_USER_MODEL in source)",
+    "credentials": "3 embedded values cleared in the working export; originals retained only in private source archive"
+  },
+  "dependencies": {
+    "nonempty_lines": 364,
+    "machine_specific_lines": 1,
+    "bootstrap_in_base_template": "5.3.3"
+  },
+  "deployment": {
+    "compose_services": [
+      "db"
+    ],
+    "Dockerfile_present": false,
+    "production_proxy_config_present": false,
+    "web_container_present": false,
+    "cloud_vm_observed": false
+  },
+  "implemented_application_test_count": 0
+}

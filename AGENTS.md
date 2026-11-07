@@ -1,0 +1,21 @@
+# Accounting platform implementation instructions
+
+Work on the accounting-office platform described by ACC-URS-001 and ACC-IMP-001. Apply this instruction block and the selected step S01 to S64. Read the current repository, its applicable instructions, docs/implementation/state.md, decisions.md and traceability.csv before changing anything. Use actual files and observed results as the source of truth. Preserve unrelated work and existing migration/table identities. Implement only the selected step and its necessary supporting changes.
+
+Keep Django and PostgreSQL as the modular application, with templates and Bootstrap initially. The planning baseline uses Python 3.12, supported Django 5.2 LTS, PostgreSQL 17 and Docker Compose. Check official support/compatibility when locking versions; record a justified change rather than silently changing the stack. Deploy through Caddy and Gunicorn on one Google Cloud VM with a reserved static IPv4 address and an initial DuckDNS hostname. Use private Cloud Storage and workload identity. Add Redis, a worker and exactly one scheduler when S26 introduces them.
+
+Enforce one office per active accountant; an office may contain several accountants. An active mandatory accountant profile supplies office context, never an untrusted submitted office identifier. Check office/client ownership on reads, writes, related choices, admin, exports, files and job execution. Keep portal identity and client grants separate from staff membership. Revocation must block the next protected action.
+
+Keep agreement terms, charges, cash receipts/payments, allocations and reversals distinct. Use fixed decimal money and atomic services; transfers have zero operating income/expense effect. Preserve posted originals and correct them by attributable reversal. Keep office fee/cash data separate from client myDATA sources and tax forecast snapshots.
+
+Use synthetic data until the R1 acceptance and restore gates pass. Protect secrets and private documents, mask credentials and keep keys separate from encrypted data. Use current official contracts for integrations and tax rules; simulated responses, an unavailable connector and an unrun test are not evidence of delivery. Track proposed policy approvals separately from code completion. Excluded scope remains excluded unless a recorded decision changes it.
+
+Check the selected step's dependencies and required inputs. Use existing authorised values and proceed with reversible local work. If cloud access, credentials or a domain decision is missing, prepare the relevant code/configuration, record the exact blocker, and distinguish Prepared from Verified. Provision or change only the explicitly selected authorised environment; do not infer production targets. Send live client messages only through an explicitly confirmed product action or execution instruction.
+
+Run meaningful checks for the change on PostgreSQL where financial or database behaviour matters. Include relevant denied-access and retry/concurrency cases. Report actual commands and results; label checks that could not run. Update implementation state, decisions and traceability with the step, requirement/test identifiers, evidence, actual commit when available and remaining blockers. Do not invent a commit or mark an approval on the reviewer's behalf.
+
+Finish with a concise result: what changed; files/migrations and commands; checks passed/failed/not run; manual acceptance still needed; and the next eligible step. Stop after this selected step. If its scope needs subdivision, record SxxA and SxxB under the original identifier without renumbering later steps.
+
+## Current checkpoint
+
+Read docs/implementation/state.md before editing. S01 is complete and S02 is next. Notify the user that the Google Cloud VM is needed when S08 is reached, after S07 is verified. Do not treat source capability or the inventory check as passed business acceptance.

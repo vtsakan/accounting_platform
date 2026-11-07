@@ -1,0 +1,16 @@
+issue_id,status,finding,source,evidence_basis,implementation_steps,requirements,runtime_verified_in_S01
+LEG-001,Open,No Office or AccountantProfile model,accounting/models.py,Static inspection confirms absence,S11 S12 S16,UR-OFF-01 UR-OFF-05 UR-OFF-07 QR-01,No
+LEG-002,Open,Global queries and unrestricted related choices,accounting/views.py; accounting/forms.py; accounting/admin.py,Static source inspection; no two-office runtime test in S01,S12 S16,UR-OFF-04 UR-OFF-05 QR-01,No
+LEG-003,Open,Balance aggregates can be null when one side is empty,accounting/views.py:dashboard_view,Static inspection; prior review reported synthetic SQLite reproduction; PostgreSQL regression pending S06,S06 S19,UR-CSH-03,No
+LEG-004,Open,Internal transfer legs enter ordinary income and expense totals,accounting/views.py:add_transfer_view; summary_report_view,Source uses EXPENSE and INCOME for transfer legs; report aggregates both,S06 S21 S29,UR-CSH-04 UR-REP-02,No
+LEG-005,Open,Settlement does not validate matching counterparty,accounting/views.py:add_income_view; add_expense_view; accounting/forms.py,"Agreement query is direction/status based, without selected-counterparty consistency check",S06 S23,UR-AGR-02,No
+LEG-006,Open,Ordinary amount positivity is not enforced,accounting/forms.py; accounting/models.py,Decimal fields/forms have no explicit positive amount validator or constraint,S06 S18 S20 S23,UR-CSH-02 QR-03,No
+LEG-007,Open,Agreement status is not reopened after settlement correction/deletion,accounting/models.py:Transaction.save,Only the completion transition is automated; no reversal/allocation service exists,S06 S23 S24,UR-AGR-04 UR-CSH-07,No
+LEG-008,Open,Saving a linked transaction can overwrite cancelled agreement state,accounting/models.py:Transaction.save,"Completion condition excludes only COMPLETED, not CANCELLED",S06 S24,UR-AGR-04 UR-AGR-05,No
+LEG-009,Open,Malformed date and identifier filters can raise errors,accounting/views.py:transaction_list_view; summary_report_view,Unvalidated query values are passed into date parsing/ORM filters,S06 S20,UR-CSH-06,No
+LEG-010,Open,Embedded legacy credentials and development settings,core/settings.py; docker-compose.yml,3 secret values cleared only in working export; DEBUG remains a legacy finding,S03 S04 S07 S09,QR-02 QR-14,No
+LEG-011,Open,Environment-wide dependency freeze and machine-specific reference,requirements.txt,364 nonempty lines; one machine-specific file requirement,S03 S05 S07,QR-14,No
+LEG-012,Open,No implemented application tests,accounting/tests.py,Only an imported TestCase and placeholder comment,S06,QR-14,No
+LEG-013,Open,Locale configuration does not match proposed Greek conventions,core/settings.py; accounting/templates/accounting/base.html,"en-us, UTC and HTML lang=en in source; target conventions pending implementation",S04 S15 S35 S47,QR-07 QR-08,No
+LEG-014,Open,Archive deployment definition contains the database service only,docker-compose.yml,"No web Dockerfile, proxy or production application service in the archive",S05 S07 S08 S09 S10,QR-09 QR-12 QR-14,No
+LEG-015,Open,Posted originals are mutable through default admin operations,accounting/admin.py; accounting/models.py,No posted-record immutability/reversal workflow in source,S18 S24,UR-CSH-07 QR-04,No

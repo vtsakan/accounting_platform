@@ -1,0 +1,62 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}Add Agreement{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Add New Agreement</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="alert alert-danger mt-1 p-2">
+                                        {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <hr>
+                        <button type="submit" class="btn btn-primary">Save Agreement</button>
+                        <a href="{% url 'agreement-list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait until the whole page is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the two dropdown elements by their ID
+            const entitySelect = document.getElementById('id_entity');
+            const typeSelect = document.getElementById('id_agreement_type');
+
+            // Listen for any change in the 'Entity' dropdown
+            entitySelect.addEventListener('change', function() {
+                // Find the currently selected option
+                const selectedOption = entitySelect.options[entitySelect.selectedIndex];
+                
+                // Get the data-type attribute we added with our custom widget
+                const entityType = selectedOption.getAttribute('data-type');
+
+                if (entityType === 'CUSTOMER') {
+                    // If it's a customer, set the type to 'Receivable'
+                    typeSelect.value = 'RECEIVABLE';
+                } else if (entityType === 'SUPPLIER') {
+                    // If it's a supplier, set the type to 'Payable'
+                    typeSelect.value = 'PAYABLE';
+                }
+            });
+        });
+    </script>
+{% endblock %}

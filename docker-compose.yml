@@ -1,0 +1,19 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15 # You can specify any version you want
+    container_name: accountants_db_container
+    environment:
+      - POSTGRES_DB=accountants_db
+      - POSTGRES_USER=accountant_user
+      - POSTGRES_PASSWORD=
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

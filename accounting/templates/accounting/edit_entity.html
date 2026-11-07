@@ -1,0 +1,24 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}Edit {{ entity.name }}{% endblock %}
+
+{% block content %}
+    <h1>Edit {{ entity.name }}</h1>
+    
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="alert alert-danger mt-1">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'entity-detail' pk=entity.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

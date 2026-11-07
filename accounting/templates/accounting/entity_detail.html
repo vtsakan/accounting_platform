@@ -1,0 +1,89 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}History for {{ entity.name }}{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>History for {{ entity.name }}</h1>
+        <a href="{% url 'edit-entity' pk=entity.pk %}" class="btn btn-secondary">Edit {{ entity.name }}</a>
+    </div>
+    <hr>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Agreements</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Description</th>
+                        <th class="text-end">Total Amount</th>
+                        <th class="text-end">Remaining Balance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agreement in agreements %}
+                    <tr>
+                        <td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td>
+                        <td class="text-end">{{ agreement.total_amount|floatformat:2 }} €</td>
+                        <td class="text-end fw-bold">{{ agreement.remaining_balance|floatformat:2 }} €</td>
+                        <td>
+                            {% if agreement.status == 'ACTIVE' %}
+                                <span class="badge bg-info">{{ agreement.get_status_display }}</span>
+                            {% elif agreement.status == 'COMPLETED' %}
+                                <span class="badge bg-success">{{ agreement.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ agreement.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center p-3">No agreements found for this entity.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Standalone Transactions</h3>
+        </div>
+        <div class="card-body">
+            <p>These are transactions not linked to a specific agreement. 
+            <strong>Current Cash Balance: {{ standalone_balance|floatformat:2 }} €</strong></p>
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in standalone_transactions %}
+                    <tr>
+                        <td>{{ tx.transaction_date|date:"d M, Y" }}</td>
+                        <td>{{ tx.description }}</td>
+                        {% if tx.transaction_type == 'INCOME' %}
+                            <td class="text-end text-success fw-bold">+{{ tx.amount|floatformat:2 }} €</td>
+                        {% elif tx.transaction_type == 'EXPENSE' %}
+                            <td class="text-end text-danger fw-bold">-{{ tx.amount|floatformat:2 }} €</td>
+                        {% else %}
+                             <td class="text-end">{{ tx.amount|floatformat:2 }} €</td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center p-3">No standalone transactions found for this entity.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

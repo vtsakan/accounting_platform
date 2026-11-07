@@ -1,0 +1,57 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Account Balances (Ταμεία)</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for account in cash_accounts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ account.name }}</span>
+                            <span class="badge bg-primary rounded-pill fs-6">{{ account.current_balance|floatformat:2 }} €</span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-center">
+                            No cash accounts found. Please add one in the admin panel.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'add-income' %}" class="list-group-item list-group-item-action text-success"><strong>+ Add New Income</strong></a>
+                    <a href="{% url 'add-expense' %}" class="list-group-item list-group-item-action text-danger"><strong>+ Add New Expense</strong></a>
+                    <a href="{% url 'add-transfer' %}" class="list-group-item list-group-item-action"><strong>⇄ Add Transfer</strong></a>
+                    <a href="{% url 'add-entity' %}" class="list-group-item list-group-item-action"><strong>+ Add Customer/Supplier</strong></a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Reports & Views</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'summary-report' %}" class="list-group-item list-group-item-action">View Summary Report</a>
+                    <a href="{% url 'transaction-list' %}" class="list-group-item list-group-item-action">View All Transactions</a>
+                    <a href="{% url 'customer-list' %}" class="list-group-item list-group-item-action">View Customers</a>
+                    <a href="{% url 'supplier-list' %}" class="list-group-item list-group-item-action">View Suppliers</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

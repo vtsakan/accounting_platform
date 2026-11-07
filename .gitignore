@@ -1,0 +1,14 @@
+# Private/runtime inputs stay outside the source baseline.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.sql
+*.sqlite3
+media/
+private/
+recovered/
+*.zip

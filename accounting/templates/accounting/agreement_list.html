@@ -1,0 +1,60 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}Agreements{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Agreements List</h1>
+        <a href="{% url 'add-agreement' %}" class="btn btn-primary"><strong>+ Add New Agreement</strong></a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Entity</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Start Date</th> <th>Description</th>
+                        <th class="text-end">Total Amount</th>
+                        <th class="text-end">Remaining Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agreement in agreements %}
+                    <tr>
+                        <td><a href="{% url 'entity-detail' pk=agreement.entity.pk %}">{{ agreement.entity.name }}</a></td>
+                        <td>
+                            {% if agreement.agreement_type == 'RECEIVABLE' %}
+                                <span class="badge bg-success">Receivable</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Payable</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if agreement.status == 'ACTIVE' %}
+                                <span class="badge bg-info">{{ agreement.get_status_display }}</span>
+                            {% elif agreement.status == 'COMPLETED' %}
+                                <span class="badge bg-success">{{ agreement.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ agreement.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ agreement.start_date|date:"d M, Y" }}</td>
+                        <td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td>
+                        <td class="text-end">{{ agreement.total_amount|floatformat:2 }} €</td>
+                        <td class="text-end fw-bold">{{ agreement.remaining_balance|floatformat:2 }} €</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center p-4">
+                            No agreements found. Please add one.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

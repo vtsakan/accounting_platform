@@ -1,0 +1,36 @@
+{% extends 'accounting/base.html' %}
+
+{% block title %}Edit Agreement{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Edit Agreement with {{ agreement.entity.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="alert alert-danger mt-1 p-2">
+                                        {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <hr>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'agreement-detail' pk=agreement.pk %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

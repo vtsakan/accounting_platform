@@ -1204,7 +1204,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "CR-001 approved by explicit user instruction; applies from R1 through R3. S02 records only; implementation starts S04 and continues per feature; no application acceptance run."
+    "notes": "CR-001 confirmed by the user. S04 implements Greek locale, 17 current staff templates, form labels and catalog; full admin/portal/email/export and release acceptance remain Pending."
   },
   {
     "requirement_id": "QR-01",
@@ -1238,7 +1238,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: fail-closed production configuration, file-secret interface, safe errors and redacted logs tested; full MFA/HTTPS/integration security acceptance remains Pending."
   },
   {
     "requirement_id": "QR-03",
@@ -1323,7 +1323,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S04: focused UTF-8/AFM, Greek Decimal/date and DST boundary checks passed; PostgreSQL persistence and complete workflow acceptance remain Pending."
   },
   {
     "requirement_id": "QR-08",
@@ -1442,6 +1442,6 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending"
+    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: separate settings and reproducible focused configuration tests verified; PostgreSQL migration/build release acceptance remains Pending."
   }
 ]

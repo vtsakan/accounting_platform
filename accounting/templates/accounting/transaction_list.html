@@ -1,62 +1,63 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}All Transactions{% endblock %}
+{% block title %}Όλες οι κινήσεις{% endblock %}
 
 {% block content %}
-    <h1>All Transactions (Βάση Δεδομένων)</h1>
+    <h1>Όλες οι κινήσεις</h1>
 
     <div class="card bg-light my-4">
         <div class="card-body">
             <form method="get" class="row g-3 align-items-end">
                 <div class="col-lg-3 col-md-6">
-                    <label for="query" class="form-label">Search Description:</label>
+                    <label for="query" class="form-label">Αναζήτηση περιγραφής:</label>
                     <input type="text" name="query" id="query" value="{{ query|default:'' }}" class="form-control">
                 </div>
                 <div class="col-lg-2 col-md-3">
-                    <label for="start_date" class="form-label">From Date:</label>
+                    <label for="start_date" class="form-label">Από ημερομηνία:</label>
                     <input type="date" name="start_date" id="start_date" value="{{ selected_start_date|default:'' }}" class="form-control">
                 </div>
                 <div class="col-lg-2 col-md-3">
-                    <label for="end_date" class="form-label">To Date:</label>
+                    <label for="end_date" class="form-label">Έως ημερομηνία:</label>
                     <input type="date" name="end_date" id="end_date" value="{{ selected_end_date|default:'' }}" class="form-control">
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <label for="entity" class="form-label">Entity:</label>
+                    <label for="entity" class="form-label">Συναλλασσόμενος:</label>
                     <select name="entity" id="entity" class="form-select">
-                        <option value="">All Entities</option>
+                        <option value="">Όλοι οι συναλλασσόμενοι</option>
                         {% for e in all_entities %}
                             <option value="{{ e.pk }}" {% if e.pk|stringformat:"s" == selected_entity_id %}selected{% endif %}>{{ e.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-lg-3 col-md-4">
-                    <label for="cash_account" class="form-label">Cash Account:</label>
+                    <label for="cash_account" class="form-label">Ταμείο:</label>
                     <select name="cash_account" id="cash_account" class="form-select">
-                        <option value="">All Accounts</option>
+                        <option value="">Όλα τα ταμεία</option>
                         {% for account in all_cash_accounts %}
                             <option value="{{ account.pk }}" {% if account.pk|stringformat:"s" == selected_cash_account_id %}selected{% endif %}>{{ account.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-4">
-                    <label for="category" class="form-label">Category:</label>
+                    <label for="category" class="form-label">Κατηγορία:</label>
                     <select name="category" id="category" class="form-select">
-                        <option value="">All Categories</option>
+                        <option value="">Όλες οι κατηγορίες</option>
                         {% for cat in all_categories %}
                             <option value="{{ cat.pk }}" {% if cat.pk|stringformat:"s" == selected_category_id %}selected{% endif %}>{{ cat.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <label for="transaction_type" class="form-label">Type:</label>
+                    <label for="transaction_type" class="form-label">Τύπος:</label>
                     <select name="transaction_type" id="transaction_type" class="form-select">
-                        <option value="">All Types</option>
-                        <option value="INCOME" {% if selected_type == 'INCOME' %}selected{% endif %}>Income</option>
-                        <option value="EXPENSE" {% if selected_type == 'EXPENSE' %}selected{% endif %}>Expense</option>
+                        <option value="">Όλοι οι τύποι</option>
+                        <option value="INCOME" {% if selected_type == 'INCOME' %}selected{% endif %}>Έσοδο</option>
+                        <option value="EXPENSE" {% if selected_type == 'EXPENSE' %}selected{% endif %}>Έξοδο</option>
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-6">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    <button type="submit" class="btn btn-primary w-100">Εφαρμογή φίλτρων</button>
                 </div>
             </form>
         </div>
@@ -65,27 +66,27 @@
 
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Transaction Results</span>
+            <span>Αποτελέσματα κινήσεων</span>
             <div>
-                <a href="{% url 'add-income' %}" class="btn btn-success btn-sm">+ Add Income</a>
-                <a href="{% url 'add-expense' %}" class="btn btn-danger btn-sm">+ Add Expense</a>
+                <a href="{% url 'add-income' %}" class="btn btn-success btn-sm">+ Νέο έσοδο</a>
+                <a href="{% url 'add-expense' %}" class="btn btn-danger btn-sm">+ Νέο έξοδο</a>
             </div>
         </div>
         <div class="card-body">
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Entity</th>
-                        <th>Category</th>
-                        <th class="text-end">Amount</th>
+                        <th>Ημερομηνία</th>
+                        <th>Περιγραφή</th>
+                        <th>Συναλλασσόμενος</th>
+                        <th>Κατηγορία</th>
+                        <th class="text-end">Ποσό</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for tx in transactions %}
                     <tr>
-                        <td>{{ tx.transaction_date|date:"d M, Y" }}</td>
+                        <td>{{ tx.transaction_date|el_date }}</td>
                         <td>
                             <strong>{{ tx.description }}</strong><br>
                             <small class="text-muted">{{ tx.cash_account }}</small>
@@ -98,19 +99,19 @@
                             {% endif %}
                         </td>
                         <td>{{ tx.category|default:"-" }}</td>
-                        
+
                         {% if tx.transaction_type == 'INCOME' %}
-                            <td class="text-end text-success fw-bold">+{{ tx.amount|floatformat:2 }} €</td>
+                            <td class="text-end text-success fw-bold">+{{ tx.amount|euro }}</td>
                         {% elif tx.transaction_type == 'EXPENSE' %}
-                            <td class="text-end text-danger fw-bold">-{{ tx.amount|floatformat:2 }} €</td>
+                            <td class="text-end text-danger fw-bold">-{{ tx.amount|euro }}</td>
                         {% else %}
-                             <td class="text-end">{{ tx.amount|floatformat:2 }} €</td>
+                             <td class="text-end">{{ tx.amount|euro }}</td>
                         {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
                         <td colspan="5" class="text-center p-4">
-                            No transactions found matching your filters.
+                            Δεν βρέθηκαν κινήσεις με αυτά τα φίλτρα.
                         </td>
                     </tr>
                     {% endfor %}

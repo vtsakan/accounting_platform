@@ -12,6 +12,8 @@
 !accounting/static/**
 !locale/
 !locale/**
+!templates/
+!templates/**
 !docker/
 !docker/**
 !Dockerfile

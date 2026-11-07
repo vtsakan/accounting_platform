@@ -2,7 +2,7 @@ step_id,stage,title,dependencies,status,branch,code_reference_commit,completion_
 S01,P0,Inventory the source and establish implementation records,,Verified,main,3bb4c0240a48ee31ddbb19a26698bc25b3c79486,s01-complete,QR-14,docs/implementation/evidence/S01-verification.json,Not required for source inventory,,S02
 S02,P0,Record decisions and investigate connector feasibility,S01,Verified,step/s02-decisions-greek-ui,86d01abaf76fbbed669ae39a12b41ff4d47b831a,step/s02-decisions-greek-ui,QR-02 QR-09 QR-11 QR-12 QR-13 UR-LOC-01,docs/implementation/evidence/S02-verification.json,Policy owners/reviewers remain pending per D01-D09; Greek frontend confirmed by user,,S03
 S03,P0,Clean the repository and lock application dependencies,S01,Verified,step/s03-dependencies,a6a251b434bce295ec04240a63e33a656dc7f92e,step/s03-dependencies,QR-02 QR-14,docs/implementation/evidence/S03-verification.json,No new business-policy approval; QR-02 and QR-14 remain pending at their full release gates,,S04
-S04,P0,Separate settings and establish Greek locale conventions,S03,Not started,,,,QR-02 QR-07 QR-14 UR-LOC-01,,,,
+S04,P0,Separate settings and establish Greek locale conventions,S03,Verified,step/s04-settings-greek,1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718,step/s04-settings-greek,QR-02 QR-07 QR-14 UR-LOC-01,docs/implementation/evidence/S04-verification.json,Focused configuration/locale tests only; full QR and frontend acceptance remain Pending,,S05
 S05,P0,Build the local PostgreSQL environment,S03 S04,Not started,,,,QR-14,,,,
 S06,P0,Capture the known financial defects as regressions,S05,Not started,,,,QR-03 QR-14,,,,
 S07,P0,Build the production image and delivery checks,S04 S05 S06,Not started,,,,QR-02 QR-12 QR-14,,,,

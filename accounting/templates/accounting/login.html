@@ -1,36 +1,37 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Σύνδεση{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h2 class="mb-0">Login</h2>
+                <h2 class="mb-0">Σύνδεση</h2>
             </div>
             <div class="card-body">
                 {% if form.errors %}
                     <div class="alert alert-danger">
-                        Your username and password didn't match. Please try again.
+                        Τα στοιχεία σύνδεσης δεν είναι σωστά. Δοκιμάστε ξανά.
                     </div>
                 {% endif %}
-                
+
                 <form method="post">
                     {% csrf_token %}
-                    
+
                     <div class="mb-3">
-                        <label for="id_username" class="form-label">Username</label>
+                        <label for="id_username" class="form-label">Όνομα χρήστη</label>
                         <input type="text" name="username" id="id_username" class="form-control" required>
                     </div>
-                    
+
                     <div class="mb-3">
-                        <label for="id_password" class="form-label">Password</label>
+                        <label for="id_password" class="form-label">Κωδικός πρόσβασης</label>
                         <input type="password" name="password" id="id_password" class="form-control" required>
                     </div>
 
                     <hr>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary">Σύνδεση</button>
                 </form>
             </div>
         </div>

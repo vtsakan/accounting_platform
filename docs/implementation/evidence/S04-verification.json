@@ -1,0 +1,183 @@
+{
+  "step": "S04",
+  "verified_at": "2026-11-07",
+  "status": "Verified",
+  "source_reference_commit": "1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718",
+  "checks_passed": 30,
+  "focused_tests_passed": 30,
+  "staff_templates_translated": 17,
+  "greek_locale_foundation_implemented": true,
+  "full_frontend_acceptance_passed": false,
+  "fresh_dependency_install_performed": true,
+  "application_tests_run": true,
+  "database_or_migration_execution": false,
+  "docker_build_run": false,
+  "google_cloud_resources_created": false,
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 6,
+    "unique_history_blobs": 97,
+    "candidate_text_files": 107,
+    "binary_files_or_blobs_skipped": 5,
+    "reviewed_non_secret_matches": 36,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "checks": [
+    {
+      "check": "preserved accounting/models.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved accounting/views.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved accounting/urls.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved core/urls.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved requirements.in",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved requirements.txt",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved docs/implementation/baseline_sources.json",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved docs/implementation/source_manifest.csv",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved tools/verify_s01.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved tools/verify_s02.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved tools/verify_s03.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved accounting/migrations/0001_initial.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved accounting/migrations/__init__.py",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved docs/baselines/Accounting_Platform_Prompt_by_Prompt_Implementation_Reference_v01.md",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved docs/baselines/Accounting_Platform_Implementation_Pathway_GCP_DuckDNS_v01.docx",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "preserved docs/baselines/Accounting_Platform_User_Requirements_and_Implementation_Plan_v01.docx",
+      "result": "PASS",
+      "detail": "business code, migration identities, runtime lock or controlled baseline unchanged"
+    },
+    {
+      "check": "separate settings",
+      "result": "PASS",
+      "detail": "common/local/test/production modules replace the monolithic settings file"
+    },
+    {
+      "check": "private local config ignored",
+      "result": "PASS",
+      "detail": "generated local credentials stay outside version control"
+    },
+    {
+      "check": "example credentials empty",
+      "result": "PASS",
+      "detail": "the example contains no credential value"
+    },
+    {
+      "check": "locale files included in context",
+      "result": "PASS",
+      "detail": "project catalogs and error templates are included in the planned image context"
+    },
+    {
+      "check": "requirements parity",
+      "result": "PASS",
+      "detail": "all 71 UR / 14 QR remain pending staged acceptance; CSV and JSON agree"
+    },
+    {
+      "check": "S04 checkpoint",
+      "result": "PASS",
+      "detail": "S01 through S04 complete; S05 next"
+    },
+    {
+      "check": "Python syntax",
+      "result": "PASS",
+      "detail": "new configuration, locale and maintenance modules parse"
+    },
+    {
+      "check": "fresh hashed installs",
+      "result": "PASS",
+      "detail": "both isolated dependency locks install and pass pip check"
+    },
+    {
+      "check": "lock reproduction",
+      "result": "PASS",
+      "detail": "runtime and maintenance locks reproduce; only polib is added for S04 catalog compilation"
+    },
+    {
+      "check": "compiled catalog",
+      "result": "PASS",
+      "detail": "reviewed Greek PO compiles byte for byte to the committed MO"
+    },
+    {
+      "check": "focused tests",
+      "result": "PASS",
+      "detail": "configuration failures, secret files, Greek rendering/validation, Decimal input, DST and logging cases pass"
+    },
+    {
+      "check": "no accounting schema changes",
+      "result": "PASS",
+      "detail": "original migrations load; no additional accounting migration is required; no database connection"
+    },
+    {
+      "check": "secret scan",
+      "result": "PASS",
+      "detail": "offline scan and its synthetic-password self-check pass with reviewed public-hash exceptions"
+    }
+  ]
+}

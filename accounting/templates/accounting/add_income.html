@@ -1,18 +1,19 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}Add Income{% endblock %}
+{% block title %}Νέο έσοδο{% endblock %}
 
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Add New Income (Καταχώρηση Εσόδων)</h2>
+                    <h2 class="mb-0">Καταχώρηση εσόδου</h2>
                 </div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        
+
                         {% for field in form %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
@@ -26,8 +27,8 @@
                         {% endfor %}
 
                         <hr>
-                        <button type="submit" class="btn btn-success">Save Income</button>
-                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success">Αποθήκευση εσόδου</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ακύρωση</a>
                     </form>
                 </div>
             </div>

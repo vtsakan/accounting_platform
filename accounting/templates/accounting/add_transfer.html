@@ -1,18 +1,19 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}Add Transfer{% endblock %}
+{% block title %}Νέα μεταφορά{% endblock %}
 
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Add New Internal Transfer</h2>
+                    <h2 class="mb-0">Νέα εσωτερική μεταφορά</h2>
                 </div>
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        
+
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">{{ form.non_field_errors }}</div>
                         {% endif %}
@@ -28,8 +29,8 @@
                         {% endfor %}
 
                         <hr>
-                        <button type="submit" class="btn btn-primary">Execute Transfer</button>
-                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Καταχώρηση μεταφοράς</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ακύρωση</a>
                     </form>
                 </div>
             </div>

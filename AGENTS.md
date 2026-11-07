@@ -20,4 +20,4 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
-Read docs/implementation/state.md before editing. S01 and S02 are complete and S03 is next. Use the effective prompt records in docs/implementation/prompts.json with the original prompt reference. Notify the user that the Google Cloud VM is needed when S08 is reached, after S07 is verified. Do not treat source capability, documentary feasibility or inventory checks as passed business acceptance.
+Read docs/implementation/state.md before editing. S01 through S03 are complete and S04 is next. Install runtime dependencies from the hashed requirements.txt, maintain direct inputs in requirements.in, and keep maintenance tools isolated in requirements-tools.txt. Read docs/implementation/dependencies.md before changing the locks. Use the effective prompt records in docs/implementation/prompts.json with the original prompt reference. Notify the user that the Google Cloud VM is needed when S08 is reached, after S07 is verified. Do not treat source capability, documentary feasibility, dependency installation or inventory checks as passed business acceptance.

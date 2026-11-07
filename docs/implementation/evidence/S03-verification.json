@@ -1,0 +1,440 @@
+{
+  "step": "S03",
+  "verified_at": "2026-11-07",
+  "status": "Verified",
+  "checks_passed": 77,
+  "source_reference_commit": "a6a251b434bce295ec04240a63e33a656dc7f92e",
+  "fresh_install_performed": true,
+  "runtime": {
+    "python": "3.12.16",
+    "packages": {
+      "django": "5.2.19",
+      "psycopg": "3.3.8",
+      "asgiref": "3.13.0",
+      "gunicorn": "26.2.0",
+      "psycopg-binary": "3.3.8",
+      "sqlparse": "0.6.1",
+      "typing-extensions": "4.16.0"
+    },
+    "driver_implementation": "binary",
+    "migration_nodes": [
+      "0001_initial",
+      "0002_transaction_agreement_alter_agreement_status_and_more"
+    ],
+    "historical_models": [
+      "Agreement",
+      "CashAccount",
+      "Category",
+      "Entity",
+      "Transaction"
+    ],
+    "database_connected": false
+  },
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 4,
+    "unique_history_blobs": 75,
+    "candidate_text_files": 79,
+    "binary_files_or_blobs_skipped": 4,
+    "reviewed_non_secret_matches": 31,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "application_tests_run": false,
+  "database_or_migration_execution": false,
+  "docker_build_run": false,
+  "greek_frontend_implemented": false,
+  "google_cloud_resources_created": false,
+  "checks": [
+    {
+      "check": "verification platform",
+      "result": "PASS",
+      "detail": "the locked deployment target is Linux x86_64/glibc"
+    },
+    {
+      "check": "minimal runtime",
+      "result": "PASS",
+      "detail": "three declared direct runtime dependencies, seven locked packages"
+    },
+    {
+      "check": "supported selections recorded",
+      "result": "PASS",
+      "detail": "selected versions agree with the dated official-source review"
+    },
+    {
+      "check": "maintenance tools isolated",
+      "result": "PASS",
+      "detail": "locking and secret scanning do not enter the runtime environment"
+    },
+    {
+      "check": "source docker-compose.yml",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source manage.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source The Development Plan.txt",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source core/__init__.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source core/asgi.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source core/wsgi.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source core/settings.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source core/urls.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/models.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/views.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/__init__.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/admin.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/tests.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/apps.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/migrations/__init__.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/migrations/0001_initial.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/urls.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/dashboard.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/transaction_list.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/customer_list.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/supplier_list.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_expense.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_income.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/entity_detail.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_transfer.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/edit_entity.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_entity.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/summary_report.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/base.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/login.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/agreement_list.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/agreement_detail.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_agreement.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/templates/accounting/edit_agreement.html",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "source accounting/forms.py",
+      "result": "PASS",
+      "detail": "legacy application/configuration bytes preserved"
+    },
+    {
+      "check": "baseline docs/baselines/Accounting_Platform_Implementation_Pathway_GCP_DuckDNS_v01.docx",
+      "result": "PASS",
+      "detail": "controlled historical baseline unchanged"
+    },
+    {
+      "check": "baseline docs/baselines/Accounting_Platform_Prompt_by_Prompt_Implementation_Reference_v01.md",
+      "result": "PASS",
+      "detail": "controlled historical baseline unchanged"
+    },
+    {
+      "check": "baseline docs/baselines/Accounting_Platform_User_Requirements_and_Implementation_Plan_v01.docx",
+      "result": "PASS",
+      "detail": "controlled historical baseline unchanged"
+    },
+    {
+      "check": "baseline docs/implementation/baseline_sources.json",
+      "result": "PASS",
+      "detail": "controlled historical baseline unchanged"
+    },
+    {
+      "check": "baseline docs/implementation/source_manifest.csv",
+      "result": "PASS",
+      "detail": "controlled historical baseline unchanged"
+    },
+    {
+      "check": "historical verifier verify_s01.py",
+      "result": "PASS",
+      "detail": "earlier snapshot verifiers are not weakened"
+    },
+    {
+      "check": "historical verifier verify_s02.py",
+      "result": "PASS",
+      "detail": "earlier snapshot verifiers are not weakened"
+    },
+    {
+      "check": "Git excludes .env",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes .env.production",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes .venv/pyvenv.cfg",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes .venv-tools/pyvenv.cfg",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes media/client.pdf",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes private/document.pdf",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes sessions/session.dat",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes backup.sql",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes backup.sql.gz",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes db.dump",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes db.sqlite3",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes secrets/service-account.json",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes service-account-preview.json",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git excludes runtime.key",
+      "result": "PASS",
+      "detail": "runtime/private input excluded from version control"
+    },
+    {
+      "check": "Git permits .env.example",
+      "result": "PASS",
+      "detail": "controlled source/configuration example remains trackable"
+    },
+    {
+      "check": "Git permits requirements.txt",
+      "result": "PASS",
+      "detail": "controlled source/configuration example remains trackable"
+    },
+    {
+      "check": "Git permits accounting/migrations/0001_initial.py",
+      "result": "PASS",
+      "detail": "controlled source/configuration example remains trackable"
+    },
+    {
+      "check": "Docker context policy",
+      "result": "PASS",
+      "detail": "static review: runtime-input allowlist followed by sensitive-file exclusions; actual build is S07"
+    },
+    {
+      "check": "tracked payload clean",
+      "result": "PASS",
+      "detail": "no tracked environment, dump, sessions, uploads or private-key payload"
+    },
+    {
+      "check": "requirement parity",
+      "result": "PASS",
+      "detail": "CSV and JSON agree"
+    },
+    {
+      "check": "requirements remain pending",
+      "result": "PASS",
+      "detail": "71 UR / 14 QR retained; Greek requirement confirmed; application acceptance unrun"
+    },
+    {
+      "check": "step checkpoint",
+      "result": "PASS",
+      "detail": "S01–S03 complete; S04 is next"
+    },
+    {
+      "check": "tool syntax",
+      "result": "PASS",
+      "detail": "all maintenance Python scripts parse"
+    },
+    {
+      "check": "fresh tools install",
+      "result": "PASS",
+      "detail": "requirements-tools.txt installs with enforced hashes; pip check passes"
+    },
+    {
+      "check": "fresh runtime install",
+      "result": "PASS",
+      "detail": "fresh CPython environment contains exactly the seven locked runtime packages; pip check passes"
+    },
+    {
+      "check": "PostgreSQL driver",
+      "result": "PASS",
+      "detail": "Psycopg binary implementation and Django backend import without a database connection"
+    },
+    {
+      "check": "migration compatibility",
+      "result": "PASS",
+      "detail": "original migration graph loads and renders all five historical models; no migration execution"
+    },
+    {
+      "check": "Gunicorn import/configuration",
+      "result": "PASS",
+      "detail": "selected WSGI server passes a standard-library demo configuration check; no application server started"
+    },
+    {
+      "check": "lock reproduction",
+      "result": "PASS",
+      "detail": "both locks recompile byte for byte from their declared inputs"
+    },
+    {
+      "check": "secret scan",
+      "result": "PASS",
+      "detail": "offline candidate/history scan passes; synthetic detection self-check passes; public hashes reviewed"
+    }
+  ]
+}

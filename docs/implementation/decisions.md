@@ -203,4 +203,8 @@ Evidence: steps.csv, CR-001, ACC-IMP-001. Approval evidence: **not recorded**.
 
 ## Work that can proceed
 
-S03 dependency cleanup is eligible now; the open decisions above do not require a VM or government credentials for local dependency work. Resolve the specific policy at its dependent step. The Greek requirement is confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). Cloud target values are collected at S08 after S07.
+S03 dependency cleanup is complete; S04 settings and Greek locale work can proceed locally. The open decisions above do not require a VM or government credentials for that work. Resolve each specific policy at its dependent step. The Greek requirement is confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). Cloud target values are collected at S08 after S07.
+
+## S03 technical selections
+
+S03 selects CPython 3.12.16, Django 5.2.19 LTS, Psycopg 3.3.8 binary and Gunicorn 26.2.0 within the authorised architecture. [Dependency policy](dependency_policy.json) records the official evidence, target platform and deferred optional libraries; [dependencies.md](dependencies.md) records installation and update procedures. Runtime and maintenance dependencies have separate hashed locks. These technical choices do not approve or close any open D01–D09 domain policy. S04 is the next implementation step.

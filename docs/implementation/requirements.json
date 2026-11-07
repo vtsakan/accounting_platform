@@ -1238,7 +1238,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending"
   },
   {
     "requirement_id": "QR-03",
@@ -1442,6 +1442,6 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending"
   }
 ]

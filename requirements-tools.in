@@ -1,0 +1,3 @@
+# Maintenance tools, isolated from the application environment/image.
+uv==0.13.7
+detect-secrets==1.5.0

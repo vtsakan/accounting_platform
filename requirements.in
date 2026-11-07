@@ -1,0 +1,5 @@
+# Direct runtime dependencies only. Install the hashed requirements.txt lock.
+# S03 baseline: CPython 3.12 on Linux x86_64; review updates before relocking.
+Django>=5.2.19,<5.3
+gunicorn>=26.2.0,<27
+psycopg[binary]>=3.3.8,<3.4

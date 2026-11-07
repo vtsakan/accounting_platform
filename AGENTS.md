@@ -4,6 +4,8 @@ Work on the accounting-office platform described by ACC-URS-001 and ACC-IMP-001.
 
 Keep Django and PostgreSQL as the modular application, with templates and Bootstrap initially. The planning baseline uses Python 3.12, supported Django 5.2 LTS, PostgreSQL 17 and Docker Compose. Check official support/compatibility when locking versions; record a justified change rather than silently changing the stack. Deploy through Caddy and Gunicorn on one Google Cloud VM with a reserved static IPv4 address and an initial DuckDNS hostname. Use private Cloud Storage and workload identity. Add Redis, a worker and exactly one scheduler when S26 introduces them.
 
+All product-authored frontend content must be Greek under CR-001 / UR-LOC-01: staff screens, client portal, authentication/admin pages, accessible labels, validation, help/errors, notifications, user-facing email and report/export headings. Preserve original user/provider content, identifiers and brand names. Internal code and developer documentation may remain English. Read docs/implementation/frontend_language.md and docs/requirements/CR-001-Greek-frontend.md. Establish the Greek locale in S04 and include Greek copy in every later UI change; never claim the existing application is translated merely because the requirement is recorded. The effective baseline has 71 UR and 14 QR; keep original baseline documents immutable.
+
 Enforce one office per active accountant; an office may contain several accountants. An active mandatory accountant profile supplies office context, never an untrusted submitted office identifier. Check office/client ownership on reads, writes, related choices, admin, exports, files and job execution. Keep portal identity and client grants separate from staff membership. Revocation must block the next protected action.
 
 Keep agreement terms, charges, cash receipts/payments, allocations and reversals distinct. Use fixed decimal money and atomic services; transfers have zero operating income/expense effect. Preserve posted originals and correct them by attributable reversal. Keep office fee/cash data separate from client myDATA sources and tax forecast snapshots.
@@ -18,4 +20,4 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
-Read docs/implementation/state.md before editing. S01 is complete and S02 is next. Notify the user that the Google Cloud VM is needed when S08 is reached, after S07 is verified. Do not treat source capability or the inventory check as passed business acceptance.
+Read docs/implementation/state.md before editing. S01 and S02 are complete and S03 is next. Use the effective prompt records in docs/implementation/prompts.json with the original prompt reference. Notify the user that the Google Cloud VM is needed when S08 is reached, after S07 is verified. Do not treat source capability, documentary feasibility or inventory checks as passed business acceptance.

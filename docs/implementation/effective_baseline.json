@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-11-07",
+  "base": "ACC-URS-001 v0.1",
+  "original_user_requirements": 70,
+  "original_quality_requirements": 14,
+  "changes": [
+    {
+      "id": "CR-001",
+      "status": "Approved by explicit user instruction",
+      "date": "2026-11-07",
+      "path": "docs/requirements/CR-001-Greek-frontend.md",
+      "sha256": "573086243ca5709734ddff1df579ea48f020403e89c7e256892f2d0838cac0d5",
+      "added_requirements": [
+        "UR-LOC-01"
+      ]
+    }
+  ],
+  "effective_user_requirements": 71,
+  "effective_quality_requirements": 14,
+  "effective_total": 85,
+  "implementation_step_count": 64,
+  "application_acceptance": "Pending",
+  "original_baselines_modified": false
+}

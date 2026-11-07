@@ -1190,6 +1190,23 @@
     "notes": "S01 inventory only; application acceptance not executed"
   },
   {
+    "requirement_id": "UR-LOC-01",
+    "type": "User",
+    "priority": "Must",
+    "release": "R1",
+    "work_package": "WP1",
+    "source_codes": "U",
+    "definition_status": "Confirmed",
+    "statement": "The system shall present all product-authored user-facing content in Greek across the staff application and client portal, including authentication, navigation, forms, validation, help, errors, notifications, user-visible email and generated report headings.",
+    "acceptance_check": "AT-LOC-01: exercise implemented journeys in Greek, including success, empty, denied, invalid and failed states; an English browser preference must not switch product copy to English. Inspect Greek email subjects/bodies and human-facing PDF/export headings at each release.",
+    "acceptance_test_id": "AT-LOC-01",
+    "implementation_steps": "S02 S04 S11 S12 S13 S14 S15 S19 S20 S21 S22 S23 S24 S27 S29 S30 S31 S32 S33 S34 S35 S36 S37 S38 S39 S40 S41 S42 S43 S44 S45 S46 S47 S48 S50 S51 S52 S53 S54 S56 S57 S58 S59 S60 S61 S62 S63 S64",
+    "acceptance_status": "Pending",
+    "evidence": "",
+    "last_reviewed": "2026-11-07",
+    "notes": "CR-001 approved by explicit user instruction; applies from R1 through R3. S02 records only; implementation starts S04 and continues per feature; no application acceptance run."
+  },
+  {
     "requirement_id": "QR-01",
     "type": "Quality",
     "priority": "Must",
@@ -1221,7 +1238,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
   },
   {
     "requirement_id": "QR-03",
@@ -1340,7 +1357,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
   },
   {
     "requirement_id": "QR-10",
@@ -1374,7 +1391,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
   },
   {
     "requirement_id": "QR-12",
@@ -1391,7 +1408,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
   },
   {
     "requirement_id": "QR-13",
@@ -1408,7 +1425,7 @@
     "acceptance_status": "Pending",
     "evidence": "",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "notes": "S01 inventory only; application acceptance not executed; S02 decision/evidence records prepared; policy approvals and application acceptance remain pending"
   },
   {
     "requirement_id": "QR-14",

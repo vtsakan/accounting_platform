@@ -1,40 +1,38 @@
 # Accounting platform
 
-S01 source inventory and implementation baseline, completed 2026-11-07. The project combines the existing accounting application with the documented requirements for office management, collaboration, a client portal and authorised tax-data services.
+A Django/PostgreSQL accounting-office platform combining the existing application with office management, collaboration, a client portal and authorised tax-data services. **All frontend content must be Greek**, including authentication, errors, emails and human-facing report headings.
+
+S01 and S02 are complete. **S03 is next.** The application runtime and existing templates have not yet been modernised or translated; follow the controlled implementation sequence.
 
 ## Start here
 
-1. Read [implementation state](docs/implementation/state.md).
-2. Review the [source inventory](docs/implementation/source_inventory.md) and [module map](docs/implementation/module_map.md).
-3. Use [the prompt sequence](docs/baselines/Accounting_Platform_Prompt_by_Prompt_Implementation_Reference_v01.md), starting with S02 next.
-4. Track progress in [steps.csv](docs/implementation/steps.csv), decisions in [decisions.md](docs/implementation/decisions.md), and requirement evidence in [traceability.csv](docs/implementation/traceability.csv).
+1. Read [implementation state](docs/implementation/state.md) and the repository instructions.
+2. Review [decisions](docs/implementation/decisions.md), [connector feasibility](docs/implementation/connector_feasibility.md) and [deployment parameters](docs/implementation/deployment_parameters.md).
+3. Use the original [prompt reference](docs/baselines/Accounting_Platform_Prompt_by_Prompt_Implementation_Reference_v01.md) with the effective [prompt records](docs/implementation/prompts.json) and [Greek frontend change](docs/requirements/CR-001-Greek-frontend.md).
+4. Track [steps](docs/implementation/steps.csv), [requirements](docs/implementation/traceability.csv) and the [Greek copy guide](docs/implementation/frontend_language.md).
 
-## Local prerequisites and checks
+## Checks and local prerequisites
 
-For the S01 inventory check, use Python 3.12 or newer and Git. No third-party Python dependency or database is needed:
+The current documentation checks need Python 3.12+ and Git, with no application dependencies or database:
 
 ```bash
-python3 tools/verify_s01.py
+python3 tools/verify_s02.py
 git log --oneline --decorate
 git status --short
 ```
 
-For later development, provide Docker Engine with Compose v2, Git and a code editor. S03 locks minimal application dependencies, S04 separates configuration and S05 establishes the reproducible local PostgreSQL environment. The legacy dependency freeze and settings have not been made production-ready in S01; three original secret values are intentionally absent from the working export. Start the application using the commands delivered in S05, after those steps pass.
+The S01 verifier remains a historical snapshot check at `s01-complete`. For application development, provide Docker Engine with Compose v2 and Git. S03 locks dependencies, S04 separates settings and establishes Greek locale, and S05 delivers the runnable local PostgreSQL environment. Do not use the legacy configuration as a production setup.
 
-## Source and planning references
+## Baseline and acceptance
 
-The original `accountant_v6.zip` archive contains an `accountant_v3` Django application. The untouched original remains saved separately. Its checksum, identity and all member checksums are recorded in [baseline_sources.json](docs/implementation/baseline_sources.json) and [source_manifest.csv](docs/implementation/source_manifest.csv). Working models and both migrations are preserved byte for byte.
+[Source inventory](docs/implementation/source_inventory.md), [module map](docs/implementation/module_map.md), [source manifest](docs/implementation/source_manifest.csv) and [baseline identities](docs/implementation/baseline_sources.json) preserve the original `accountant_v6.zip` provenance. Original models and both migrations remain unchanged through S02. Private archives and runtime inputs are excluded from this public repository.
 
-`docs/baselines/` contains current copies of ACC-URS-001, ACC-IMP-001 and the Markdown ACC-IMP-002 prompt reference. Requirement definitions and acceptance checks are also available as [requirements.json](docs/implementation/requirements.json). All 70 user requirements and 14 quality requirements remain Pending until their actual acceptance checks run.
+The original ACC-URS-001 v0.1 documents remain immutable. [CR-001](docs/requirements/CR-001-Greek-frontend.md) adds UR-LOC-01, making **71 user requirements and 14 quality requirements** in the effective baseline. All 85 application acceptance checks remain Pending. S02 documentary feasibility does not prove live service access.
 
 ## Deployment checkpoint
 
-**You need the Google Cloud VM at S08, after S07.** S01 to S07 can be completed locally. S08 prepares the selected VM, storage and address; S09 deploys the DuckDNS HTTPS preview; S10 verifies backup and recovery. No cloud resource has been created during S01.
-
-## Repository history
-
-The local Git history starts with `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`. The `s01-complete` tag identifies the completed S01 records. No remote is configured; the private Git destination can be selected when repository setup continues. Model/table and migration identities must remain stable unless an explicit later migration changes them.
+**Create or select the Google Cloud VM at S08, after S07.** S03–S07 run locally. S08 prepares the selected VM, storage and static address; S09 deploys the DuckDNS HTTPS preview; S10 verifies off-VM backup and recovery. No cloud resources have been created by S01 or S02.
 
 ## Scope boundary
 
-Every active accountant belongs to exactly one office; several accountants may share that office. Portal identity and client grants are separate from office membership. Keep cash, charges, allocations, transfers, reversals and client tax sources distinct. Statutory general-ledger bookkeeping, invoice issuance, payroll, automatic tax filing, bank-payment execution, native mobile apps and subscription billing are outside the current baseline.
+Every active accountant belongs to exactly one office; several accountants may share it. Portal identity and client grants remain separate. Keep cash, charges, allocations, transfers, reversals and client tax sources distinct. Statutory general-ledger bookkeeping, invoice issuance, payroll, automatic tax filing, bank-payment execution, native mobile apps and subscription billing are outside the current baseline.

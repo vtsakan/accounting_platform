@@ -1,0 +1,91 @@
+{
+  "reviewed_at": "2026-11-07",
+  "step": "S02",
+  "scope": "Documentary review of official sources. No authenticated retrieval, client-authority validation or integration test was performed. Revalidate and pin contracts at S49.",
+  "sources": [
+    {"id": "AADE-REG", "url": "https://www.aade.gr/anazitisi-basikon-stoiheion-mitrooy-epiheiriseon", "title": "AADE basic business registry service", "reviewed": "Page reviewed"},
+    {"id": "AADE-REG-FAQ", "url": "https://www.aade.gr/sites/default/files/2023-07/FAQS_anazitisi_vasikwn_stx_mitrwou_epix.pdf", "title": "Registry FAQ v1.6, 18 July 2023", "reviewed": "PDF reviewed"},
+    {"id": "AADE-REG-SDK", "url": "https://www.aade.gr/sites/default/files/2023-07/RgWsPublic2DevelopersInfoV1.1.zip", "title": "Published developer package v1.1, 18 July 2023", "reviewed": "Official link identified; ZIP contents not inspected"},
+    {"id": "AADE-SPECIAL", "url": "https://aade.gr/eidikoi-kodikoi-prosbasis-aade", "title": "Service-specific AADE credentials", "reviewed": "Page reviewed"},
+    {"id": "MYDATA-VERSIONS", "url": "https://www.aade.gr/mydata/tehnikes-prodiagrafes-ekdoseis-mydata", "title": "myDATA technical specification versions", "reviewed": "Page reviewed; lists v2.0.2"},
+    {"id": "MYDATA-ERP", "url": "https://www.aade.gr/sites/default/files/2026-09/myDATA%20API%20Documentation%20v2.0.2_official_erp_1.pdf", "title": "myDATA ERP REST API v2.0.2", "reviewed": "Registration, headers and retrieval sections reviewed"},
+    {"id": "VIES-HELP", "url": "https://europa.eu/youreurope/business/finance-and-tax/vat/check-vat-number-vies/index_el.htm", "title": "Your Europe: VIES VAT validation", "reviewed": "Official guidance reviewed"},
+    {"id": "VIES-TECH", "url": "https://ec.europa.eu/taxation_customs/vies/#/technical-information", "title": "European Commission VIES technical information", "reviewed": "Official page identified; dynamic technical content not extracted"},
+    {"id": "VIES-WSDL", "url": "https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl", "title": "VIES WSDL location", "reviewed": "Fetch returned unsupported application/wsdl+xml; schema not inspected or pinned"},
+    {"id": "KED-REG", "url": "https://www.gsis.gr/dimosia-dioikisi/ked/webservices/Forologiko%20Mitroo", "title": "KED tax-registry interoperability for public bodies", "reviewed": "Eligibility context and service list reviewed"},
+    {"id": "AADE-APP", "url": "https://www.aade.gr/myaadeapp", "title": "Official myAADEapp description", "reviewed": "Debt/payment and document features reviewed; not an API contract"},
+    {"id": "EFKA-SERVICE", "url": "https://www.e-efka.gov.gr/el/eisfores-mi-misthoton-ypohreoseis-asfalisis", "title": "e-EFKA non-salaried insurance obligations", "reviewed": "Official service page and linked current guide reviewed"},
+    {"id": "EFKA-GUIDE", "url": "https://www.e-efka.gov.gr/sites/default/files/2026-07/e%CE%95%CE%A6%CE%9A%CE%91_%CE%9F%CE%B4%CE%B7%CE%B3%CF%8C%CF%82_%CE%A7%CF%81%CE%AE%CF%83%CE%B7%CF%82_%CE%91%CF%83%CF%86%CE%B1%CE%BB%CE%B9%CF%83%CE%BC%CE%AD%CE%BD%CE%BF%CF%85-%CE%A5%CF%80%CE%BF%CF%87%CF%81%CE%B5%CF%8E%CF%83%CE%B5%CE%B9%CF%82_%CE%91%CF%83%CF%86%CE%AC%CE%BB%CE%B9%CF%83%CE%B7%CF%82%20v1_0.pdf", "title": "Insurance obligations user guide v1.0, July 2026", "reviewed": "Login and notice retrieval sections reviewed"}
+  ],
+  "connectors": [
+    {
+      "id": "AADE_REGISTRY", "requirement_ids": ["UR-INT-02"], "dependent_steps": ["S49", "S50", "S51"],
+      "status": "Documented registration route; access conditional", "owner": "Office service account owner and developer",
+      "official_evidence": "AADE describes basic business identity lookup for eligible businesses/professionals, with registration and separate service credentials. FAQ lists identity/status, address and activity information; this is not a full private taxpayer profile.",
+      "source_ids": ["AADE-REG", "AADE-REG-FAQ", "AADE-REG-SDK", "AADE-SPECIAL"],
+      "eligibility_and_authority": "Confirm the requesting office is eligible and the intended use meets the service terms. Registration is not inferred from having TAXISnet credentials.",
+      "required_accounts": ["Eligible office TAXISnet account for registration", "Issued service-specific username/password; never put credentials in this repository"],
+      "required_sample_evidence": ["Redacted or synthetic response fixture with AFM, status and KAD fields", "Not-found, denied and timeout cases", "Selective-apply review preserving existing client fields"],
+      "unresolved": ["Inspect developer ZIP and pin supported WSDL/operations at S49", "Verify terms, access and service limits with the office account owner"],
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    },
+    {
+      "id": "MYDATA", "requirement_ids": ["UR-INT-06", "UR-POR-07"], "dependent_steps": ["S49", "S50", "S52", "S54"],
+      "status": "Documented ERP REST route; access conditional", "owner": "Client/office service account owner and developer",
+      "official_evidence": "ERP v2.0.2 describes separate API registration, username/subscription-key headers, retrieval methods and client AFM selection for third-party requests. It covers incoming/transmitted records, period summaries and pagination; an API key alone does not prove authority over a client.",
+      "source_ids": ["MYDATA-VERSIONS", "MYDATA-ERP"],
+      "eligibility_and_authority": "Prove the account's permitted client scope and delegation. Keep test and production accounts/endpoints separate. Planned scope is retrieval; invoice submission is outside this baseline.",
+      "required_accounts": ["myDATA REST API registration and subscription key for the intended environment", "Evidence of representative/accountant authority for each client AFM"],
+      "required_sample_evidence": ["Redacted multi-page incoming/transmitted records and summaries", "Updated, cancelled and credit records; duplicate retrieval", "Revoked authority, invalid key, empty period and timeout cases"],
+      "unresolved": ["Revalidate version and XSD hashes at S49", "Reconcile RequestDocs/RequestTransmittedDocs and summary coverage for forecasts", "Confirm limits and client delegation in the selected environment"],
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    },
+    {
+      "id": "VIES", "requirement_ids": ["UR-INT-07"], "dependent_steps": ["S49", "S50", "S53"],
+      "status": "Public validation route identified; technical contract pending", "owner": "Developer with office reviewer",
+      "official_evidence": "Commission guidance describes checking EU VAT registration against national data. Invalid and unavailable outcomes differ. The technical page and WSDL location were identified; the WSDL parser could not inspect the returned content.",
+      "source_ids": ["VIES-HELP", "VIES-TECH", "VIES-WSDL"],
+      "eligibility_and_authority": "Public validation does not grant access to private tax accounts. Confirm current service conditions, requester fields and limits at S49.",
+      "required_accounts": ["No account collected at S02; confirm authentication/requester requirements from the current contract at S49"],
+      "required_sample_evidence": ["Schema-pinned valid and invalid fixtures", "Service/member-state unavailable, malformed input and timeout fixtures", "Timestamped validation record without treating an outage as invalid"],
+      "unresolved": ["Retrieve and validate WSDL, operation fields, limits and request identifier semantics", "Confirm which returned identity fields may be absent"],
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    },
+    {
+      "id": "TAXISNET_PROFILE", "requirement_ids": ["UR-INT-03"], "dependent_steps": ["S49", "S50", "S60", "S63"],
+      "status": "Conditional; blocked pending approved private-application access", "owner": "Service account owner with developer",
+      "official_evidence": "The reviewed KED tax-registry page explicitly concerns interoperability for public bodies. Its published methods are not evidence of eligibility for this private accounting application.",
+      "source_ids": ["KED-REG"],
+      "eligibility_and_authority": "Require an official permitted access path for the exact full-profile data and intended private operator. A portal login or client consent alone is insufficient evidence of an automation contract.",
+      "required_accounts": ["To be defined only after service eligibility and delegation are confirmed"],
+      "required_sample_evidence": ["Official eligibility/authorisation evidence and versioned technical contract", "Redacted individual/entity profile, client mismatch and revoked-access fixtures"],
+      "unresolved": ["Whether an approved private-application interface exists for the required profile", "Account, delegation, authentication and permitted fields"],
+      "fallback": "Keep retrieval visibly unavailable. Separately reviewed manual upload may store an owner-provided document but does not pass AT-INT-03.",
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    },
+    {
+      "id": "AADE_DEBT", "requirement_ids": ["UR-INT-04"], "dependent_steps": ["S49", "S50", "S61", "S63"],
+      "status": "Conditional; blocked pending approved private-application access", "owner": "Service account owner with developer",
+      "official_evidence": "AADE describes debt/payment information and document functionality in myAADEapp. This proves an official user channel, not an unattended debt-statement API available to this application.",
+      "source_ids": ["AADE-APP"],
+      "eligibility_and_authority": "Confirm the exact statement product, permitted client delegation and approved retrieval interface before implementation.",
+      "required_accounts": ["Undetermined pending official access confirmation; do not collect broad TAXISnet credentials speculatively"],
+      "required_sample_evidence": ["Approved interface and delegated-access evidence", "Redacted client-bound statement with issue date/period", "Mismatch, absent document, revoked access and timeout fixtures"],
+      "unresolved": ["Approved interface, statement coverage, account requirements and response/document format"],
+      "fallback": "Manual upload through the protected document workflow remains a distinct feature and does not pass AT-INT-04.",
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    },
+    {
+      "id": "EFKA_NOTICE", "requirement_ids": ["UR-INT-05"], "dependent_steps": ["S49", "S50", "S62", "S63"],
+      "status": "Conditional; blocked pending approved private-application access", "owner": "Insured-client representative with developer",
+      "official_evidence": "The July 2026 guide covers non-salaried insurance obligations and PDF notices. The interactive flow uses TAXISnet and identification by AMKA or Personal Number. The reviewed material does not establish an unattended private-application API.",
+      "source_ids": ["EFKA-SERVICE", "EFKA-GUIDE"],
+      "eligibility_and_authority": "Confirm the insured person's representative authority and permitted automated interface. Interactive identification requirements must not be assumed to define an API contract.",
+      "required_accounts": ["Interactive portal requirements documented; application account/credential mechanism still undetermined"],
+      "required_sample_evidence": ["Official automation eligibility, authentication and delegation evidence", "Redacted notice bound to client and period", "Missing identifier, mismatch, unavailable notice and revoked-access fixtures"],
+      "unresolved": ["Permitted interface and delegation", "Current required identifiers, notice coverage, terms and document format at S49/S62"],
+      "fallback": "Protected manual upload is separate from automated retrieval and does not pass AT-INT-05.",
+      "contract_pinned": false, "authorised_access_demonstrated": false, "live_test_status": "Not run", "production_enabled": false
+    }
+  ]
+}

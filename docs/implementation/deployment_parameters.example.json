@@ -1,0 +1,69 @@
+{
+  "status": "Template only; no environment provisioned",
+  "provisioning_step": "S08",
+  "prerequisite_steps": ["S02", "S07"],
+  "environment": "synthetic-preview",
+  "project_id": null,
+  "billing_enabled": null,
+  "region": null,
+  "zone": null,
+  "existing_vm": null,
+  "vm_name": null,
+  "operator_identity": null,
+  "incident_owner": null,
+  "restore_owner": null,
+  "monthly_budget_eur": null,
+  "proposed": {
+    "machine_type": "e2-standard-2",
+    "vcpu": 2,
+    "memory_gb": 8,
+    "provisioning_model": "STANDARD",
+    "os_family": "Ubuntu 24.04 LTS; revalidate image at S08",
+    "boot_disk_gb": 30,
+    "data_disk_gb": 50,
+    "data_disk_type": "pd-balanced",
+    "data_disk_auto_delete": false,
+    "admin_access": "OS Login over IAP; select and verify at S08",
+    "public_tcp_ports": [80, 443],
+    "database_public": false,
+    "redis_public": false,
+    "runtime": "Docker Compose, Caddy, Gunicorn, PostgreSQL; Redis/worker/one scheduler from S26",
+    "locale": "el",
+    "timezone": "Europe/Athens"
+  },
+  "network": {
+    "vpc_name": null,
+    "subnet_name": null,
+    "regional_static_ipv4_name": null,
+    "regional_static_ipv4_address": null,
+    "admin_source_or_iap_policy": null,
+    "duckdns_hostname": null,
+    "acme_contact_email": null
+  },
+  "storage": {
+    "artifact_registry_repository": null,
+    "private_document_bucket": null,
+    "private_backup_bucket": null,
+    "bucket_location": null,
+    "retention_policy_reference": null,
+    "backup_retention_policy_reference": null
+  },
+  "identity": {
+    "vm_service_account": null,
+    "iam_policy_reference": null,
+    "authentication": "Attached VM service account and metadata credentials; no downloaded service-account key"
+  },
+  "secret_version_refs": {
+    "django_secret_key": null,
+    "postgres_password": null,
+    "credential_encryption_key": null,
+    "duckdns_token": null
+  },
+  "recovery": {
+    "proposed_rpo_hours": 24,
+    "proposed_rto_hours": 8,
+    "key_recovery_reference": null,
+    "restore_evidence": null
+  },
+  "resources_created": false
+}

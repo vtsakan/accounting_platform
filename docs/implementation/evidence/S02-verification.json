@@ -1,0 +1,731 @@
+{
+  "step": "S02",
+  "verified_at": "2026-11-07",
+  "status": "Verified",
+  "checks_passed": 142,
+  "requirements": {
+    "user": 71,
+    "quality": 14,
+    "acceptance": "Pending"
+  },
+  "decisions": 9,
+  "connectors_reviewed": 6,
+  "source_reference_commit": "86d01abaf76fbbed669ae39a12b41ff4d47b831a",
+  "application_tests_run": false,
+  "database_or_migration_execution": false,
+  "greek_frontend_implemented": false,
+  "live_connector_tests_run": false,
+  "google_cloud_resources_created": false,
+  "checks": [
+    {
+      "check": "effective requirements",
+      "result": "PASS",
+      "detail": "71 UR and 14 QR, all identifiers unique"
+    },
+    {
+      "check": "CSV/JSON parity",
+      "result": "PASS",
+      "detail": "both requirement registers contain identical records"
+    },
+    {
+      "check": "application acceptance pending",
+      "result": "PASS",
+      "detail": "planning checks do not pass application acceptance"
+    },
+    {
+      "check": "acceptance identifiers",
+      "result": "PASS",
+      "detail": "AT/QT identifiers preserve requirement identity"
+    },
+    {
+      "check": "original requirement definitions preserved",
+      "result": "PASS",
+      "detail": "the original 84 definitions, priorities, statuses and allocations are unchanged"
+    },
+    {
+      "check": "Greek requirement confirmed",
+      "result": "PASS",
+      "detail": "explicit user instruction recorded separately from pending implementation"
+    },
+    {
+      "check": "effective baseline totals",
+      "result": "PASS",
+      "detail": "controlled addendum agrees with the registers"
+    },
+    {
+      "check": "CR-001 provenance",
+      "result": "PASS",
+      "detail": "the recorded approved addendum checksum matches"
+    },
+    {
+      "check": "64-step sequence",
+      "result": "PASS",
+      "detail": "original identifiers retained, no renumbering"
+    },
+    {
+      "check": "step status",
+      "result": "PASS",
+      "detail": "only S01 and S02 are complete"
+    },
+    {
+      "check": "S01 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S02 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S03 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S04 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S05 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S06 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S07 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S08 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S09 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S10 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S11 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S12 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S13 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S14 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S15 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S16 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S17 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S18 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S19 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S20 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S21 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S22 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S23 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S24 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S25 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S26 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S27 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S28 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S29 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S30 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S31 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S32 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S33 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S34 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S35 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S36 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S37 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S38 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S39 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S40 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S41 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S42 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S43 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S44 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S45 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S46 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S47 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S48 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S49 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S50 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S51 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S52 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S53 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S54 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S55 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S56 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S57 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S58 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S59 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S60 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S61 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S62 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S63 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "S64 allocation",
+      "result": "PASS",
+      "detail": "step, prompt, requirement and dependency references agree"
+    },
+    {
+      "check": "Greek release coverage",
+      "result": "PASS",
+      "detail": "locale foundation, core UI, emails, portal, reports and release gates covered"
+    },
+    {
+      "check": "Greek prompt propagation",
+      "result": "PASS",
+      "detail": "effective prompts include the user language requirement"
+    },
+    {
+      "check": "requirement steps valid",
+      "result": "PASS",
+      "detail": "every requirement maps to valid implementation steps"
+    },
+    {
+      "check": "decision identifiers",
+      "result": "PASS",
+      "detail": "D01 through D09 retained"
+    },
+    {
+      "check": "D01 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D02 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D03 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D04 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D05 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D06 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D07 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D08 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "D09 actionable record",
+      "result": "PASS",
+      "detail": "owner, options, open inputs, affected steps and unapproved recommendation are explicit"
+    },
+    {
+      "check": "official evidence sources",
+      "result": "PASS",
+      "detail": "dated first-party sources with explicit review limits"
+    },
+    {
+      "check": "six connector records",
+      "result": "PASS",
+      "detail": "all required feasibility investigations recorded"
+    },
+    {
+      "check": "AADE_REGISTRY feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "MYDATA feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "VIES feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "TAXISNET_PROFILE feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "TAXISNET_PROFILE conditional gate",
+      "result": "PASS",
+      "detail": "unsupported route is blocked and manual upload is distinct"
+    },
+    {
+      "check": "AADE_DEBT feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "AADE_DEBT conditional gate",
+      "result": "PASS",
+      "detail": "unsupported route is blocked and manual upload is distinct"
+    },
+    {
+      "check": "EFKA_NOTICE feasibility",
+      "result": "PASS",
+      "detail": "access requirements and next evidence are explicit; no live success claimed"
+    },
+    {
+      "check": "EFKA_NOTICE conditional gate",
+      "result": "PASS",
+      "detail": "unsupported route is blocked and manual upload is distinct"
+    },
+    {
+      "check": "cloud timing",
+      "result": "PASS",
+      "detail": "VM checkpoint retained; no environment provisioned"
+    },
+    {
+      "check": "unknown target visible",
+      "result": "PASS",
+      "detail": "target values remain unknown rather than assumed"
+    },
+    {
+      "check": "secret references empty",
+      "result": "PASS",
+      "detail": "public template contains no secret values"
+    },
+    {
+      "check": "private services and persistence",
+      "result": "PASS",
+      "detail": "proposed controls protect private services and persistent data"
+    },
+    {
+      "check": "source docker-compose.yml",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source .gitignore",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source requirements.txt",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source manage.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source The Development Plan.txt",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source core/__init__.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source core/asgi.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source core/wsgi.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source core/settings.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source core/urls.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/models.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/views.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/__init__.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/admin.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/tests.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/apps.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/migrations/__init__.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/migrations/0001_initial.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/urls.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/dashboard.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/transaction_list.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/customer_list.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/supplier_list.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_expense.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_income.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/entity_detail.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_transfer.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/edit_entity.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_entity.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/summary_report.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/base.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/login.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/agreement_list.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/agreement_detail.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/add_agreement.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/templates/accounting/edit_agreement.html",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "source accounting/forms.py",
+      "result": "PASS",
+      "detail": "S02 leaves all 38 working legacy source files unchanged"
+    },
+    {
+      "check": "historical baseline bytes preserved",
+      "result": "PASS",
+      "detail": "all original baseline files, provenance and S01 verifier match the S01 commit"
+    },
+    {
+      "check": "verification script syntax",
+      "result": "PASS",
+      "detail": "parsed without importing the application"
+    }
+  ]
+}

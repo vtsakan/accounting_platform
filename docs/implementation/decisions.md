@@ -203,7 +203,7 @@ Evidence: steps.csv, CR-001, ACC-IMP-001. Approval evidence: **not recorded**.
 
 ## Work that can proceed
 
-S04 settings and Greek locale work are complete; S05 can build the local PostgreSQL environment. The open decisions above do not require a VM or government credentials for that work. Resolve each specific policy at its dependent step. The Greek requirement is confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). Cloud target values are collected at S08 after S07.
+S04 settings and Greek locale work are complete; S05 supplies the local PostgreSQL environment. Its native database checks pass, with Docker build/recreation verification pending on the user's local engine. S06 becomes eligible when that S05 gate passes. The open decisions above do not require a VM or government credentials for local verification. Resolve each specific policy at its dependent step. The Greek requirement is confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). Cloud target values are collected at S08 after S07.
 
 ## S03 technical selections
 
@@ -211,4 +211,10 @@ S03 selects CPython 3.12.16, Django 5.2.19 LTS, Psycopg 3.3.8 binary and Gunicor
 
 ## S04 configuration and locale selections
 
-S04 separates local/test/production settings, uses explicit environment or mounted-file secret inputs and masks configured log/error output. Greek locale, Decimal presentation and explicit DST conversion are implemented. [Settings and locale instructions](settings_and_locale.md) record supported inputs, verified scope and future Secret Manager/proxy checks. Full financial, office-boundary, admin and frontend release acceptance remains Pending. D01–D09 approvals are unchanged; S05 is next.
+S04 separates local/test/production settings, uses explicit environment or mounted-file secret inputs and masks configured log/error output. Greek locale, Decimal presentation and explicit DST conversion are implemented. [Settings and locale instructions](settings_and_locale.md) record supported inputs, verified scope and future Secret Manager/proxy checks. Full financial, office-boundary, admin and frontend release acceptance remains Pending. D01–D09 approvals are unchanged.
+
+## S05 local environment selections
+
+S05 uses digest-pinned official Python 3.12.16 slim-bookworm and PostgreSQL 17.11 bookworm images on linux/amd64. A new project-scoped `postgres17_data` volume separates PostgreSQL 17 from the legacy PostgreSQL 15 directory; logical legacy migration remains S25. Development startup applies migrations explicitly before Django's development server, without data imports or default users. The web port is loopback-only and the database has no published host port. The existing runtime lock and original models/views/migrations remain unchanged.
+
+[Local development instructions](local_development.md) document the commands and [S05 evidence](evidence/S05-verification.json) distinguishes native PostgreSQL proof from the Docker completion gate. The workspace has no Docker Engine: Compose configuration, all 20 migrations, 35 tests and a native database restart were checked, while image building and container recreation await `tools/verify_s05.py --record` on a local engine. Native mode cannot mark S05 Verified. These implementation selections do not approve D01–D09 or complete QT-14 release acceptance.

@@ -16,6 +16,8 @@
 !templates/**
 !docker/
 !docker/**
+!tools/
+!tools/init_local_env.py
 !Dockerfile
 
 # Sensitive/runtime material remains excluded even inside an allowed directory.

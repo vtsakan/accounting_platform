@@ -1321,9 +1321,9 @@
     "acceptance_test_id": "QT-07",
     "implementation_steps": "S04 S15 S30 S31 S35 S47",
     "acceptance_status": "Pending",
-    "evidence": "",
+    "evidence": "docs/implementation/evidence/S05-verification.json; accounting/tests_integration.py",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S04: focused UTF-8/AFM, Greek Decimal/date and DST boundary checks passed; PostgreSQL persistence and complete workflow acceptance remain Pending."
+    "notes": "S01 inventory only; application acceptance not executed; S04: focused UTF-8/AFM, Greek Decimal/date and DST boundary checks passed; PostgreSQL persistence and complete workflow acceptance remain Pending. S05 additionally verifies Greek text, leading-zero AFMs and Decimal values on native PostgreSQL 17.11; complete workflow acceptance remains Pending."
   },
   {
     "requirement_id": "QR-08",
@@ -1440,8 +1440,8 @@
     "acceptance_test_id": "QT-14",
     "implementation_steps": "S01 S03 S04 S05 S06 S07 S09 S25 S31 S63 S64",
     "acceptance_status": "Pending",
-    "evidence": "",
+    "evidence": "docs/implementation/evidence/S05-verification.json; accounting/tests_integration.py",
     "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: separate settings and reproducible focused configuration tests verified; PostgreSQL migration/build release acceptance remains Pending."
+    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: separate settings and reproducible focused configuration tests verified; PostgreSQL migration/build release acceptance remains Pending. S05 applies the original migration history to an empty native PostgreSQL 17.11 database, passes 35 focused/integration tests and verifies database restart persistence. Docker build/container recreation is a separate gate tracked in S05-verification.json; regression, production delivery and full release acceptance remain Pending."
   }
 ]

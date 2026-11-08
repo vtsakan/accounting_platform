@@ -35,7 +35,8 @@ Keep the generated `.env` across restarts. PostgreSQL initialization variables a
 | `python3 tools/dev.py admin` | Interactively create a development superuser |
 | `python3 tools/dev.py migrate` | Reapply pending migrations explicitly; repeated execution is safe |
 | `python3 tools/dev.py seed` | Explicitly create/verify two clearly labelled synthetic S05 records |
-| `python3 tools/dev.py test` | Run configuration/locale tests and PostgreSQL integration tests |
+| `python3 tools/dev.py test` | Run configuration/integration checks and the strict S06 financial regression suite |
+| `python3 tools/dev.py test-raw` | Expose the unfixed financial assertions with Django's ordinary runner; exit code 1 is intentional at S06 |
 | `python3 tools/dev.py status` | Show service state and the published local web port |
 | `python3 tools/dev.py logs` | Show the most recent local service logs |
 | `python3 tools/dev.py config` | Validate Compose quietly without printing resolved secrets |
@@ -79,7 +80,7 @@ After a successful run, commit these three evidence/state files and push the S05
 
 The implementation workspace has a Docker client and Compose, but **no Docker Engine**. Actual Compose configuration parsing passed. Supplementary checks ran against an empty, native PostgreSQL 17.11 cluster using authenticated loopback TCP: all 20 migrations (including both original accounting migrations), an idempotent second migration run, 35 configuration/integration tests, repeatable synthetic seeding and persistence after a real PostgreSQL stop/start passed. PostgreSQL packages were checked against hashes in the official PGDG HTTPS repository index; [native provenance](evidence/S05-native-provenance.json) records their identities.
 
-The supplied [S05 evidence](evidence/S05-verification.json) therefore records **Prepared**, with native persistence true and Docker build/recreation false. Native proof does not demonstrate a container build or a container-volume lifecycle. Run the Docker verifier above before proceeding to S06. For an explicitly supplementary native check, `--native-bin /absolute/path/to/postgresql/17/bin --report /path/to/report.json` is available; it cannot be combined with `--record` and still requires the Compose client for configuration validation.
+The initial S05 patch recorded **Prepared**, with native persistence true and Docker build/recreation false. The user subsequently completed the local Docker verification and pushed its evidence on 08/11/2026; the current [S05 evidence](evidence/S05-verification.json) is **Verified**. Native proof did not substitute for that Docker gate. Earlier verifiers remain historical snapshot checks. For the next test-capture step, see [S06 financial regressions](financial_regressions.md).
 
 No original model, view or migration change was needed for PostgreSQL 17. No real data, live connector, cloud resource or full financial acceptance was exercised. All 85 application acceptance statuses remain Pending. Existing financial defects are intentionally captured at S06 rather than silently changed here.
 

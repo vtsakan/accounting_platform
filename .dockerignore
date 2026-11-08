@@ -6,6 +6,7 @@
 !core/**/*.py
 !accounting/
 !accounting/**/*.py
+!accounting/regression_cases.json
 !accounting/templates/
 !accounting/templates/**
 !accounting/static/

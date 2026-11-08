@@ -1,60 +1,56 @@
 # Implementation state
 
-Updated 2026-11-08. Current step: **S05 Verified — local Docker/PostgreSQL environment**. Next step: **S06**.
+Updated 2026-11-08. Current step: **S06 Verified — financial regression baseline**. Next step: **S07**.
 
 ## Repository position
 
 - Repository: [vtsakan/accounting_platform](https://github.com/vtsakan/accounting_platform), public by user choice.
-- S05 branch: `step/s05-local-postgresql`; resolve its actual implementation commit with `git rev-parse HEAD` after applying the patch.
-- Pushed S04 baseline: `aae1250c441f76b804c532711bc00edc3258943e` on `origin/step/s04-settings-greek`. S05 starts from that branch; `main` still pointed to S02 when checked.
+- S06 branch: `step/s06-financial-regressions`; resolve its implementation commit with `git rev-parse HEAD` after applying the patch.
+- Pushed S05 baseline: `5a65a72906f7d3a5fccdcfd8aad0d0362a2bd7fa` on `origin/step/s05-local-postgresql`. The user committed successful Docker verification; S06 starts from this branch.
+- Pushed S04 baseline: `aae1250c441f76b804c532711bc00edc3258943e` on `origin/step/s04-settings-greek`.
 - Pushed S03 baseline: `1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718` on `origin/step/s03-dependencies`.
 - S02 completion: `a6a251b434bce295ec04240a63e33a656dc7f92e`, tagged `s02-complete`.
 - S01 completion: `86d01abaf76fbbed669ae39a12b41ff4d47b831a`, tagged `s01-complete`.
 - Original source: `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`.
-- Publication: S04 is confirmed pushed. S05 is supplied as a local commit/patch for the user's terminal workflow; no remote S05 branch or pull request is claimed. The GitHub integration previously rejected writes.
+- Publication: S05 is confirmed pushed. S06 is supplied as a local commit/patch for the user's terminal workflow; no remote S06 branch or pull request is claimed. The integration previously rejected writes.
 
-## Completed scope
+## Completed foundation
 
-S01 preserved source/baseline provenance and inventoried the original models, routes and migrations. Three embedded credential values were cleared before the first controlled commit. S02 recorded D01–D09, six connector evidence records, deployment parameters and the explicit Greek frontend requirement. Domain/accountant approvals remain pending.
+S01 preserved source/baseline provenance and inventoried original models, routes and migrations. Three embedded credentials were cleared before the first controlled commit. S02 recorded D01–D09, connector evidence, deployment parameters and the confirmed Greek frontend requirement. Domain/accountant approvals remain pending.
 
-S03 replaced the 364-entry workstation freeze with three direct runtime dependencies and seven hash-locked packages. CPython 3.12.16, Django 5.2.19, Psycopg 3.3.8 binary and Gunicorn 26.2.0 remain selected. Source packaging and offline secret scanning were established.
+S03 replaced the workstation freeze with three direct runtime dependencies and seven hash-locked packages. CPython 3.12.16, Django 5.2.19, Psycopg 3.3.8 binary and Gunicorn 26.2.0 remain selected. Source packaging and offline scanning were established. S04 separated settings, secret handling, safe errors/logging and Greek locale; its 17 staff templates and catalog remain implemented.
 
-S04 separates common/local/test/production settings, adds safe local secret generation, environment/mounted-file inputs, production validation, redacted logging and Greek error pages. It sets el and Europe/Athens, implements Decimal/date/DST helpers, translates all 17 existing staff templates and form labels, and supplies a checked Greek message catalog. polib is maintenance-only; the runtime lock remains unchanged.
+S05 supplies the digest-pinned development Compose environment, a separate PostgreSQL 17 volume, localhost web access and guarded local commands. The user's pushed S05 evidence verifies the actual Docker build, all 20 migrations, 35 tests, Greek HTTP login and retained markers after container recreation. The existing WEB_PORT option resolved the normal local stack's port conflict without removing its volume or stopping the other application.
 
-S05 supplies a development Dockerfile/entrypoint, Compose with PostgreSQL 17.11, a new persistent volume, local-only web access and no database host port. `tools/dev.py` supplies startup, administrator, migration, test, explicit seed and volume-preserving shutdown commands. Two guarded management commands supply synthetic markers and non-secret database evidence. Five real PostgreSQL integration tests supplement S04's 30 configuration/locale tests. A disposable verifier checks the Docker lifecycle and records completion only after it succeeds.
+## S06 scope and current gate
 
-Business models, view logic, routes and original migrations remain byte-identical to the pushed S04 baseline. No new migration or runtime Python dependency is required. Known financial defects remain scheduled for S06 and their later corrective steps.
+S06 adds a synthetic PostgreSQL fixture, a 36-case registry, financial contract tests, a strict result adapter, seven runner guard tests and an isolated verifier. Known financial failures are reproduced, not fixed. Models, forms, views, routes, original migrations and both dependency locks remain unchanged from S05. No migration or new Python dependency is needed. The Greek locale and staff templates are retained; no new product UI is introduced. Legacy generated transfer descriptions still contain English copy, to be corrected at S21 under UR-LOC-01.
 
-## Current completion gate
+<!-- S06-RESULT -->
+S06 test capture is Verified on native-postgresql17, PostgreSQL 170011. The strict suite ran 78 tests: 52 passed and 26 exact known failures were reproduced, with no unexpected outcomes. The ordinary runner still fails the unfixed assertions. S07 is eligible; financial fixes remain in their assigned steps.
+<!-- /S06-RESULT -->
 
-<!-- S05-RESULT -->
-Local Docker build, empty-database migrations, focused/PostgreSQL tests and persisted markers after container recreation are Verified. See evidence/S05-verification.json. S06 is eligible.
-<!-- /S05-RESULT -->
+The 26 cases cover null balances, transfer gross totals, cross-counterparty settlement, nonpositive amounts, stale settlement after correction/deletion, overwritten cancellation and malformed filters. The cases include the required 100 + 50 = 150 contract (still a known failure). Ten passing financial controls cover partial settlement 100 - 25 = 75, paired transfer 1000 and actual second-leg rollback, among other working paths. The runner recognises only exact registered financial mismatches; unrelated errors, skips, changed failure patterns and unexpected passes fail. The ordinary runner exposes all 26 unfixed assertions as failures.
 
-## Evidence and commands
+## Evidence and repeatable commands
 
-- `evidence/S01-verification.json` through `evidence/S04-verification.json`: historical step snapshots; earlier verifiers remain unchanged and target those snapshots.
-- `evidence/S05-verification.json`: actual mode, migrations, synthetic markers, test count, native/Docker persistence flags, secret scan and outstanding blocker. Check its status before proceeding.
-- `evidence/S05-native-provenance.json`: official PGDG package identities and checksums for the supplementary native run.
-- `local_development.md`: Docker requirements, startup/admin/test/seed/shutdown, volume safety, verification and official references.
-- `docker/image-pins.json`: reviewed official image references and platform identities.
-- `settings_and_locale.md`, `dependencies.md` and `../security/README.md`: configuration, locale, dependency and secret-scan policies.
-- `effective_baseline.json` and `../requirements/CR-001-Greek-frontend.md`: effective 71 UR / 14 QR baseline.
+- `evidence/S01-verification.json` through `evidence/S05-verification.json`: historical step evidence; S05's current record is the user's successful Docker run.
+- `evidence/S06-verification.json`: actual mode, migrations, 78-test strict result, ordinary-runner failures, case observations, locks/catalog and secret scan.
+- `evidence/S06-regression-baseline.csv`: per-case requirement, observed value, correct expectation and corrective steps.
+- `financial_regressions.md`, `accounting/regression_cases.json` and `known_issues.csv`: fixture design, strict tracking rules and the issue/test/fix mapping.
+- `local_development.md`, `settings_and_locale.md`, `dependencies.md` and `../security/README.md`: local operation and security/configuration conventions.
 
 ```bash
-python3 tools/verify_s05.py --record
+python3 tools/dev.py test
+python3 tools/verify_s06.py --record
 ```
 
-The verifier uses its own random project, credentials, loopback port and volume, then removes only that temporary project. Successful `--record` updates this state, `steps.csv` and the S05 evidence; commit those three files after it passes. Normal development data is not selected. `python3 tools/dev.py up` starts the usual local environment; `python3 tools/dev.py admin` creates an interactive development administrator.
+The first command checks the running development stack. The second uses a new disposable Docker project and unused loopback port; it never selects the normal .env or development volume. S06 can also be verified with `--native-bin` on a real isolated PostgreSQL 17 cluster. The supplied S06 run uses native PostgreSQL and records no Docker execution this step. S05's Docker proof remains independent. After a successful local `--record`, commit the S06 evidence, case CSV, steps and state.
 
-All 85 application acceptance statuses remain Pending. Native migration/test evidence does not prove Docker delivery, financial correctness, office isolation, live government APIs or production readiness. Full Greek admin/portal/email/export and staged release acceptance remains pending in the planned steps. No real data or Google Cloud resources have been used.
+All 85 requirement acceptance statuses remain Pending. Capturing regressions is not financial, office-isolation, production or full Greek frontend acceptance. No real data, live messages/connectors or Google Cloud resources were used. Policy approvals D01–D09 remain open at their assigned gates.
 
-## Next work and open inputs
+## Next step and cloud checkpoint
 
-After S05 Docker verification passes, S06 captures the known financial defects as PostgreSQL regression tests using synthetic fixtures. S07 builds the production image and delivery checks. Do not reuse a PostgreSQL 15 data directory as a version 17 volume; logical export/import and reconciliation remain S25.
+After S06 verification, **S07** creates the production image, Gunicorn service, liveness/readiness endpoints, static asset path and delivery checks while retaining the explicit financial failure inventory. The principal financial corrections remain S19–S24, with supporting constraints at S18 and reporting at S29.
 
-D01–D09 still identify role/grant policy, financial rules, tax reference cases, legacy ownership, scale, retention and operational responsibilities. Technical defaults and passing foundation tests do not approve those policies. S49 must revalidate connector eligibility and contracts; conditional government retrieval remains unavailable until approved access exists.
-
-## Google Cloud VM checkpoint
-
-**Create or select the VM at S08, after S07 is verified. No VM is needed for S05–S07.** Collect the real project/billing, EU region/zone, resource choice, administrator identity and DuckDNS hostname at that checkpoint. S09 demonstrates HTTPS/proxy behaviour and S10 proves off-VM restore before live client data is accepted.
+**Create or select the Google Cloud VM at S08, after S07 is verified. No VM is needed for S06 or S07.** Collect the project/billing, EU region/zone, administrator identity, resource choice and DuckDNS hostname then. S09 demonstrates HTTPS/proxy behaviour; S10 proves off-VM restore before live client data is accepted. PostgreSQL 15 legacy export/import and reconciliation remain S25; never attach its old data directory to PostgreSQL 17.

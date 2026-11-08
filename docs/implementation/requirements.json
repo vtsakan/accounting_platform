@@ -267,9 +267,9 @@
     "acceptance_test_id": "AT-CSH-02",
     "implementation_steps": "S20",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 AMT-001–004 and AMT-007–008 reproduce zero/negative ordinary writes; invalid text controls pass. Fixes remain S18/S20."
   },
   {
     "requirement_id": "UR-CSH-03",
@@ -284,9 +284,9 @@
     "acceptance_test_id": "AT-CSH-03",
     "implementation_steps": "S19",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 BAL-001–003 reproduce null balances with empty aggregate sides. Mixed-balance control passes. S19 remains the corrective step."
   },
   {
     "requirement_id": "UR-CSH-04",
@@ -301,9 +301,9 @@
     "acceptance_test_id": "AT-CSH-04",
     "implementation_steps": "S21",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 reproduces transfer operating-total pollution and nonpositive transfer writes. Paired 1000 balances, second-leg rollback and same-account rejection controls pass; idempotency/concurrency/office acceptance remains Pending for S21."
   },
   {
     "requirement_id": "UR-CSH-05",
@@ -335,9 +335,9 @@
     "acceptance_test_id": "AT-CSH-06",
     "implementation_steps": "S20",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 FLT-001–009 reproduce malformed-date/identifier server errors on the movement list and report. Typed field validation remains S20 with report reuse at S29."
   },
   {
     "requirement_id": "UR-CSH-07",
@@ -352,9 +352,9 @@
     "acceptance_test_id": "AT-CSH-07",
     "implementation_steps": "S24",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 STA-001–002 expose stale legacy settlement status after diagnostic fixture mutation/deletion. No reversal workflow is implemented; S24 remains Pending."
   },
   {
     "requirement_id": "UR-AGR-01",
@@ -386,9 +386,9 @@
     "acceptance_test_id": "AT-AGR-02",
     "implementation_steps": "S23",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 SET-001–002 reproduce cross-customer and cross-supplier settlement. The existing receipt form rejects a payable agreement. Full allocation/office correctness remains Pending for S23."
   },
   {
     "requirement_id": "UR-AGR-03",
@@ -403,9 +403,9 @@
     "acceptance_test_id": "AT-AGR-03",
     "implementation_steps": "S23",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 CTL-002 verifies the legacy same-client 100 minus 25 equals 75 example. Future charge/allocation and client-credit acceptance remains Pending."
   },
   {
     "requirement_id": "UR-AGR-04",
@@ -420,9 +420,9 @@
     "acceptance_test_id": "AT-AGR-04",
     "implementation_steps": "S24",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 reproduces stale status after correction/deletion and cancellation overwritten by transaction resave; the initial full-settlement control passes. S23/S24 fixes remain Pending."
   },
   {
     "requirement_id": "UR-AGR-05",
@@ -437,9 +437,9 @@
     "acceptance_test_id": "AT-AGR-05",
     "implementation_steps": "S24",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 CAN-001 confirms that resaving a linked receipt overwrites cancellation. Versioned changes and reversal/cancellation policy remain Pending for S24."
   },
   {
     "requirement_id": "UR-BIL-01",
@@ -1151,9 +1151,9 @@
     "acceptance_test_id": "AT-REP-02",
     "implementation_steps": "S29",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 TRF-001 shows transfer 1000 inflating both gross operating totals while net remains unchanged. S21 selector correction and S29 report reuse remain Pending."
   },
   {
     "requirement_id": "UR-REP-03",
@@ -1202,9 +1202,9 @@
     "acceptance_test_id": "AT-LOC-01",
     "implementation_steps": "S02 S04 S11 S12 S13 S14 S15 S19 S20 S21 S22 S23 S24 S27 S29 S30 S31 S32 S33 S34 S35 S36 S37 S38 S39 S40 S41 S42 S43 S44 S45 S46 S47 S48 S50 S51 S52 S53 S54 S56 S57 S58 S59 S60 S61 S62 S63 S64",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "CR-001 confirmed by the user. S04 implements Greek locale, 17 current staff templates, form labels and catalog; full admin/portal/email/export and release acceptance remain Pending."
+    "evidence": "accounting/views.py:add_transfer_view (static copy inspection); docs/implementation/financial_regressions.md",
+    "last_reviewed": "2026-11-08",
+    "notes": "CR-001 confirmed by the user. S04 implements Greek locale, 17 current staff templates, form labels and catalog; full admin/portal/email/export and release acceptance remain Pending. S06 retains the existing locale/templates without a new UI. Static inspection confirms legacy generated transfer descriptions still use English copy in add_transfer_view; S21 must replace it. Full staged Greek acceptance remains Pending."
   },
   {
     "requirement_id": "QR-01",
@@ -1253,9 +1253,9 @@
     "acceptance_test_id": "QT-03",
     "implementation_steps": "S06 S17 S18 S21 S23 S25 S31 S37 S63",
     "acceptance_status": "Pending",
-    "evidence": "",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed"
+    "evidence": "docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed S06 reproduces 26 exact known failures across seven financial defect groups on PostgreSQL 17.11; existing Decimal, transfer rollback and settlement controls pass. No fixes, concurrent allocation proof or financial acceptance are claimed."
   },
   {
     "requirement_id": "QR-04",
@@ -1440,8 +1440,8 @@
     "acceptance_test_id": "QT-14",
     "implementation_steps": "S01 S03 S04 S05 S06 S07 S09 S25 S31 S63 S64",
     "acceptance_status": "Pending",
-    "evidence": "docs/implementation/evidence/S05-verification.json; accounting/tests_integration.py",
-    "last_reviewed": "2026-11-07",
-    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: separate settings and reproducible focused configuration tests verified; PostgreSQL migration/build release acceptance remains Pending. S05 applies the original migration history to an empty native PostgreSQL 17.11 database, passes 35 focused/integration tests and verifies database restart persistence. Docker build/container recreation is a separate gate tracked in S05-verification.json; regression, production delivery and full release acceptance remain Pending."
+    "evidence": "docs/implementation/evidence/S05-verification.json; accounting/tests_integration.py; docs/implementation/evidence/S06-verification.json; accounting/regression_cases.json",
+    "last_reviewed": "2026-11-08",
+    "notes": "S01 inventory only; application acceptance not executed; S03 minimal hashed dependency lock and source/history secret scan verified; full release acceptance remains Pending; S04: separate settings and reproducible focused configuration tests verified; PostgreSQL migration/build release acceptance remains Pending. S05 applies the original migration history to an empty native PostgreSQL 17.11 database, passes 35 focused/integration tests and verifies database restart persistence. Docker build/container recreation is a separate gate tracked in S05-verification.json; regression, production delivery and full release acceptance remain Pending. S05 Docker build/recreation is Verified in the pushed evidence. S06 adds a strict 78-test baseline (52 passed, 26 known failures), an ordinary-runner failing baseline and reproducible isolated PostgreSQL commands; production delivery and full release acceptance remain Pending."
   }
 ]

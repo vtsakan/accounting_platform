@@ -45,7 +45,7 @@ def compose_command(env_file=None, project=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["up", "down", "migrate", "admin", "seed", "test", "logs", "status", "config"])
+    parser.add_argument("action", choices=["up", "down", "migrate", "admin", "seed", "test", "test-raw", "logs", "status", "config"])
     args = parser.parse_args()
     if args.action == "up" and not (ROOT / ".env").exists():
         from init_local_env import create_local_env
@@ -57,7 +57,11 @@ if __name__ == "__main__":
         "migrate": ["exec", "-T", "web", "python", "manage.py", "migrate", "--noinput"],
         "admin": ["exec", "web", "python", "manage.py", "createsuperuser"],
         "seed": ["exec", "-T", "web", "python", "manage.py", "seed_development_data"],
-        "test": ["exec", "-T", "web", "python", "manage.py", "test", "core.tests", "accounting.tests_integration", "--settings=core.settings.test"],
+        "test": ["exec", "-T", "web", "python", "manage.py", "test", "core.tests", "accounting.tests_integration",
+                 "accounting.tests_regressions", "--settings=core.settings.test",
+                 "--testrunner=accounting.regression_runner.FinancialRegressionRunner"],
+        "test-raw": ["exec", "-T", "web", "python", "manage.py", "test", "accounting.tests_regressions",
+                     "--settings=core.settings.test", "--testrunner=django.test.runner.DiscoverRunner"],
         "logs": ["logs", "--tail", "100", "web", "db"],
         "status": ["ps"],
         "config": ["config", "--quiet"],

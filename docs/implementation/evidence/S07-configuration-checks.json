@@ -1,0 +1,28 @@
+{
+  "recorded_at": "2026-11-08",
+  "scope": "Configuration parsing only; no Docker Engine build/container execution",
+  "compose_client": "5.7.0",
+  "compose_file": "compose.delivery.yml",
+  "compose_config_json_parsed": true,
+  "database_host_ports": 0,
+  "web_bind": "127.0.0.1",
+  "web_published_port": "0 (unused dynamic port)",
+  "web_read_only": true,
+  "compose_image_build_directive": false,
+  "workflow_yaml_parsed": true,
+  "workflow_permissions": {
+    "contents": "read"
+  },
+  "workflow_events": [
+    "push",
+    "pull_request",
+    "workflow_dispatch"
+  ],
+  "cloud_resources_created": false,
+  "github_workflow_execution": false,
+  "continuing_ci_entrypoint": "tools/verify_delivery.py",
+  "current_source_discovery_checked_on_native_postgresql": true,
+  "current_source_tests_run": 90,
+  "current_source_tests_passed": 64,
+  "current_source_known_failures": 26
+}

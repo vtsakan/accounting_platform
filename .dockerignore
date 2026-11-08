@@ -1,4 +1,4 @@
-# Only application/build inputs enter the context. Revisit when S07 adds files.
+# Defence in depth: production builds use the committed allowlist in tools/image.py.
 **
 !manage.py
 !requirements.txt
@@ -20,6 +20,7 @@
 !tools/
 !tools/init_local_env.py
 !Dockerfile
+!gunicorn.conf.py
 
 # Sensitive/runtime material remains excluded even inside an allowed directory.
 **/.git

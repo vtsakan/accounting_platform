@@ -16,7 +16,7 @@ COPY requirements.txt /app/requirements.txt
 RUN python -m pip install --no-cache-dir --require-hashes --only-binary=:all: --index-url https://pypi.org/simple -r requirements.txt \
     && python -m pip check
 
-COPY --chown=app:app manage.py /app/manage.py
+COPY --chown=app:app manage.py gunicorn.conf.py /app/
 COPY --chown=app:app core /app/core
 COPY --chown=app:app accounting /app/accounting
 COPY --chown=app:app locale /app/locale

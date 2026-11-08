@@ -1,5 +1,6 @@
 """Fail closed on missing deployment configuration; never load a local .env."""
 
+from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
 from core.config import boolean, csrf_origins, database, env, hosts, integer
@@ -17,8 +18,14 @@ DATABASES = database(production=True)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
+# Only data-free internal probes bypass the HTTPS redirect. Public proxy/TLS
+# behaviour is verified at S09; ordinary pages retain the redirect.
+SECURE_REDIRECT_EXEMPT = [r"^health/live/$", r"^health/ready/$"]
 SECURE_HSTS_SECONDS = integer("DJANGO_HSTS_SECONDS", 3600, maximum=31536000)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 # Enable only behind Caddy when it overwrites this header and Gunicorn is private.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") if boolean("DJANGO_TRUST_PROXY_HEADERS", False) else None
+STATIC_ROOT = Path(env("DJANGO_STATIC_ROOT", str(BASE_DIR / "staticfiles")))
+STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+            "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}}

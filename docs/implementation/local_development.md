@@ -44,6 +44,8 @@ Keep the generated `.env` across restarts. PostgreSQL initialization variables a
 
 Source directories are mounted read-only into the development container; Django autoreloads Python edits. Rebuild with `up` after dependency or image changes. Translation-source changes still require the S04 maintenance-tool catalog compilation procedure; commit both the reviewed PO and compiled MO.
 
+After applying S07, run `python3 tools/dev.py up` before daily tests: the rebuilt development image includes the root Gunicorn configuration used by the 12 new health/configuration checks. The strict suite now runs 90 tests (64 passed, 26 known failures in this snapshot). The existing `.env`, WEB_PORT and data volume are retained.
+
 The seed is a management command, separate from migrations. It uses AFM `000000000`, `ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S05` and `ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ S05`, with an opening balance of `1234.56`. It is atomic, repeats without duplicates, refuses another settings profile and refuses to overwrite conflicting data. These are explicitly synthetic markers, not an approved financial fixture or a legacy import. The focused PostgreSQL tests use a separate Django test database and roll back their records.
 
 ## Ports, images and data

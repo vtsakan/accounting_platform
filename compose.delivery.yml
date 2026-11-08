@@ -1,0 +1,47 @@
+# Disposable S07 verification only. VM/proxy deployment is S08/S09.
+services:
+  db:
+    image: postgres:17.11-bookworm@sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: ${DB_NAME:?Private verification env required}
+      POSTGRES_USER: ${DB_USER:?Private verification env required}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Private verification env required}
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C.UTF-8 --auth-host=scram-sha-256 --auth-local=scram-sha-256
+    volumes:
+      - delivery_postgres17:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    stop_grace_period: 30s
+  web:
+    image: ${DELIVERY_IMAGE:?Build the committed production image first}
+    platform: linux/amd64
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+      DJANGO_DEBUG: "false"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Private verification env required}
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DJANGO_CSRF_TRUSTED_ORIGINS: https://localhost
+      DJANGO_TRUST_PROXY_HEADERS: "false"
+      DB_NAME: ${DB_NAME:?Private verification env required}
+      DB_USER: ${DB_USER:?Private verification env required}
+      DB_PASSWORD: ${DB_PASSWORD:?Private verification env required}
+      DB_HOST: db
+      DB_PORT: "5432"
+      HEALTHCHECK_HOST: "127.0.0.1"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:0:8000"
+    stop_grace_period: 40s
+volumes:
+  delivery_postgres17:

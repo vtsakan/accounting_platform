@@ -48,7 +48,7 @@ python3 tools/verify_s06.py --record
 
 The verifier uses a new random `accounting-s06-check-*` project, generated private credentials and port zero to obtain an unused loopback web port. It builds, proves the database is empty before migrations, applies all 20 migrations, runs both the strict and ordinary-runner checks and cleans up only its own containers/network/volume. It also checks the dependency locks, catalog, original business-code identity and source/history secret scan. The normal `.env`, port 8001 and development volume are not selected. Full source history, Python 3.10+ with venv, package-download access and a local Docker Engine/Compose plugin are required.
 
-`--record` writes the S06 verification JSON, case-evidence CSV, steps and state only after verification succeeds. A plain run prints the result without changing state. The current supplied evidence was produced by:
+`--record` writes the S06 verification JSON, case-evidence CSV, steps and state only after verification succeeds. A plain run prints the result without changing state. The initial S06 evidence used the native command below. The user subsequently completed Docker verification and pushed the current Verified record at 53e453b59bda9e2a21cbea59a086ed7ae26a45bb. That 78-test S06 snapshot remains historical; S07 adds 12 core checks, making the daily strict suite 90 tests. The original native command was:
 
 ```text
 python3 tools/verify_s06.py --native-bin /absolute/path/to/postgresql/17/bin --record

@@ -1,56 +1,55 @@
 # Implementation state
 
-Updated 2026-11-08. Current step: **S06 Verified — financial regression baseline**. Next step: **S07**.
+Updated 2026-11-08. Current step: **S07 Prepared — production image and delivery checks**. Next step: **complete S07 Docker verification, then S08**.
 
 ## Repository position
 
 - Repository: [vtsakan/accounting_platform](https://github.com/vtsakan/accounting_platform), public by user choice.
-- S06 branch: `step/s06-financial-regressions`; resolve its implementation commit with `git rev-parse HEAD` after applying the patch.
-- Pushed S05 baseline: `5a65a72906f7d3a5fccdcfd8aad0d0362a2bd7fa` on `origin/step/s05-local-postgresql`. The user committed successful Docker verification; S06 starts from this branch.
-- Pushed S04 baseline: `aae1250c441f76b804c532711bc00edc3258943e` on `origin/step/s04-settings-greek`.
-- Pushed S03 baseline: `1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718` on `origin/step/s03-dependencies`.
-- S02 completion: `a6a251b434bce295ec04240a63e33a656dc7f92e`, tagged `s02-complete`.
-- S01 completion: `86d01abaf76fbbed669ae39a12b41ff4d47b831a`, tagged `s01-complete`.
+- S07 branch: `step/s07-production-delivery`; resolve its implementation commit with `git rev-parse HEAD` after applying the patch.
+- Pushed S06 baseline: `53e453b59bda9e2a21cbea59a086ed7ae26a45bb` on `origin/step/s06-financial-regressions`, including successful Docker verification (78 tests: 52 passed, 26 known failures).
+- Pushed S05 baseline: `5a65a72906f7d3a5fccdcfd8aad0d0362a2bd7fa` on `origin/step/s05-local-postgresql`, including Docker build/migration/recreation persistence.
+- Pushed S04/S03 baselines: `aae1250c441f76b804c532711bc00edc3258943e` and `1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718`.
+- S02: `a6a251b434bce295ec04240a63e33a656dc7f92e`, tagged `s02-complete`; S01: `86d01abaf76fbbed669ae39a12b41ff4d47b831a`, tagged `s01-complete`.
 - Original source: `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`.
-- Publication: S05 is confirmed pushed. S06 is supplied as a local commit/patch for the user's terminal workflow; no remote S06 branch or pull request is claimed. The integration previously rejected writes.
+- S07 is a local commit/patch for the user's terminal workflow; no remote S07 branch, CI run or pull request is claimed. The integration previously rejected writes.
 
-## Completed foundation
+## Completed foundation and selected scope
 
-S01 preserved source/baseline provenance and inventoried original models, routes and migrations. Three embedded credentials were cleared before the first controlled commit. S02 recorded D01–D09, connector evidence, deployment parameters and the confirmed Greek frontend requirement. Domain/accountant approvals remain pending.
+S01/S02 preserve provenance, decisions, connector evidence, deployment parameters and the confirmed Greek requirement. S03 locks CPython 3.12.16, Django 5.2.19, Psycopg 3.3.8 binary and Gunicorn 26.2.0; seven runtime packages remain. S04 supplies settings/secrets/redaction and Greek locale/templates/catalog. S05's actual Docker environment/migrations/persistence and S06's financial baseline are independently Verified in the pushed records.
 
-S03 replaced the workstation freeze with three direct runtime dependencies and seven hash-locked packages. CPython 3.12.16, Django 5.2.19, Psycopg 3.3.8 binary and Gunicorn 26.2.0 remain selected. Source packaging and offline scanning were established. S04 separated settings, secret handling, safe errors/logging and Greek locale; its 17 staff templates and catalog remain implemented.
+S07 adds the root production Dockerfile, Gunicorn configuration, command-only entrypoint, live/ready endpoints, manifest static build/export, committed-source image helper, disposable delivery Compose/verifier and pinned GitHub workflow. Twelve health/configuration tests extend the strict suite to 90 cases. Existing development Compose, local .env/port 8001 and its PostgreSQL volume are preserved.
 
-S05 supplies the digest-pinned development Compose environment, a separate PostgreSQL 17 volume, localhost web access and guarded local commands. The user's pushed S05 evidence verifies the actual Docker build, all 20 migrations, 35 tests, Greek HTTP login and retained markers after container recreation. The existing WEB_PORT option resolved the normal local stack's port conflict without removing its volume or stopping the other application.
+Original business models, forms, views, app routes, migrations and dependency locks remain unchanged from S06. Core URLs gain only health routes. No new migration/dependency or financial fix is introduced. The 26 known failures remain Open at S18–S24/S29; legacy English generated transfer descriptions remain S21. No new human-facing UI is added; health responses are machine schema keys.
 
-## S06 scope and current gate
+## Current completion gate
 
-S06 adds a synthetic PostgreSQL fixture, a 36-case registry, financial contract tests, a strict result adapter, seven runner guard tests and an isolated verifier. Known financial failures are reproduced, not fixed. Models, forms, views, routes, original migrations and both dependency locks remain unchanged from S05. No migration or new Python dependency is needed. The Greek locale and staff templates are retained; no new product UI is introduced. Legacy generated transfer descriptions still contain English copy, to be corrected at S21 under UR-LOC-01.
+<!-- S07-RESULT -->
+S07 is Prepared. Native PostgreSQL 17.11 and real Gunicorn pass 90 tests (64 passed, 26 exact known failures), production checks, Greek login/admin manifest references, static collection and actual database outage/recovery. Liveness stays available while readiness returns 503 and recovers. Deterministic committed-context policy checks reject private/untracked/symlink/dirty source inputs. This workspace has no Docker Engine: the production image build, container UID/private-file audit and same-image static export are not executed. Run `python3 tools/verify_s07.py --record` successfully on a local Engine before S08. Native proof cannot complete this gate.
+<!-- /S07-RESULT -->
 
-<!-- S06-RESULT -->
-S06 test capture is Verified on docker-compose, PostgreSQL 170011. The strict suite ran 78 tests: 52 passed and 26 exact known failures were reproduced, with no unexpected outcomes. The ordinary runner still fails the unfixed assertions. S07 is eligible; financial fixes remain in their assigned steps.
-<!-- /S06-RESULT -->
+## Evidence and commands
 
-The 26 cases cover null balances, transfer gross totals, cross-counterparty settlement, nonpositive amounts, stale settlement after correction/deletion, overwritten cancellation and malformed filters. The cases include the required 100 + 50 = 150 contract (still a known failure). Ten passing financial controls cover partial settlement 100 - 25 = 75, paired transfer 1000 and actual second-leg rollback, among other working paths. The runner recognises only exact registered financial mismatches; unrelated errors, skips, changed failure patterns and unexpected passes fail. The ordinary runner exposes all 26 unfixed assertions as failures.
-
-## Evidence and repeatable commands
-
-- `evidence/S01-verification.json` through `evidence/S05-verification.json`: historical step evidence; S05's current record is the user's successful Docker run.
-- `evidence/S06-verification.json`: actual mode, migrations, 78-test strict result, ordinary-runner failures, case observations, locks/catalog and secret scan.
-- `evidence/S06-regression-baseline.csv`: per-case requirement, observed value, correct expectation and corrective steps.
-- `financial_regressions.md`, `accounting/regression_cases.json` and `known_issues.csv`: fixture design, strict tracking rules and the issue/test/fix mapping.
-- `local_development.md`, `settings_and_locale.md`, `dependencies.md` and `../security/README.md`: local operation and security/configuration conventions.
+- `evidence/S01-verification.json` through `evidence/S06-verification.json`: historical step snapshots; S05/S06 current records include the user's Docker verification.
+- `evidence/S07-verification.json`: actual mode, migrations, 90-test outcomes, native health/static/log/configuration proof and pending image blocker.
+- `evidence/S07-configuration-checks.json`: observed Compose/YAML configuration-only checks; no Engine execution.
+- `production_delivery.md`: image identity, explicit migrations, probes, static export, CI artifacts, warnings and next gate.
+- `docker/image-pins.json`, `docker/ci-pins.json`: runtime/base image and immutable official action identities.
+- `financial_regressions.md`, `evidence/S06-regression-baseline.csv`, `accounting/regression_cases.json`: unchanged financial failure contracts and fix mapping.
 
 ```bash
-python3 tools/dev.py test
-python3 tools/verify_s06.py --record
+python3 tools/verify_s07.py --record
 ```
 
-The first command checks the running development stack. The second uses a new disposable Docker project and unused loopback port; it never selects the normal .env or development volume. S06 can also be verified with `--native-bin` on a real isolated PostgreSQL 17 cluster. The supplied S06 run uses native PostgreSQL and records no Docker execution this step. S05's Docker proof remains independent. After a successful local `--record`, commit the S06 evidence, case CSV, steps and state.
+Use a committed checkout and local Docker Engine/Compose. Verification builds/reuses one full-commit image, uses its immutable ID throughout, explicitly migrates an empty PostgreSQL 17 database, tests the image, checks real outage/recovery and exports static from that same image. A random project/unused loopback port separates it from normal local services. Only its temporary containers/network/volume are removed; the tested image remains. Successful --record updates this state, steps and evidence, then announces the S08 VM checkpoint. Commit those evidence/state changes afterwards; the recorded image revision remains the code commit that was actually built.
 
-All 85 requirement acceptance statuses remain Pending. Capturing regressions is not financial, office-isolation, production or full Greek frontend acceptance. No real data, live messages/connectors or Google Cloud resources were used. Policy approvals D01–D09 remain open at their assigned gates.
+For daily tests use `python3 tools/dev.py test`. Earlier verifiers remain historical snapshots, including S06's exact 78-test count. The CI workflow uses tools/verify_delivery.py to discover all current tests and follow reviewed registry outcomes as future features change models/migrations; it saves evidence/tested image artifacts and cannot rewrite historical step records. No live deployment or credentials are configured.
 
-## Next step and cloud checkpoint
+## Limits and open inputs
 
-After S06 verification, **S07** creates the production image, Gunicorn service, liveness/readiness endpoints, static asset path and delivery checks while retaining the explicit financial failure inventory. The principal financial corrections remain S19–S24, with supporting constraints at S18 and reporting at S29.
+Django production checks show zero errors and reviewed warnings W005/W021: HSTS includeSubDomains/preload remain disabled pending S09 hostname/TLS verification. Other warnings fail delivery verification. Actual Caddy/static/TLS serving is S09; restore/incident operations are S10. Two Gunicorn workers are a provisional default, not workload evidence.
 
-**Create or select the Google Cloud VM at S08, after S07 is verified. No VM is needed for S06 or S07.** Collect the project/billing, EU region/zone, administrator identity, resource choice and DuckDNS hostname then. S09 demonstrates HTTPS/proxy behaviour; S10 proves off-VM restore before live client data is accepted. PostgreSQL 15 legacy export/import and reconciliation remain S25; never attach its old data directory to PostgreSQL 17.
+All 71 user and 14 quality acceptance statuses remain Pending. D01–D09 domain/operator approvals remain open. No real client data, live messages/connectors, cloud resources, off-VM restore or full financial/office/Greek frontend acceptance is claimed.
+
+## Google Cloud VM checkpoint
+
+**After S07 Docker verification passes, create/select the VM at S08.** No VM is needed for the remaining S07 local checks. Use deployment_parameters.md for project/billing, EU region/zone, operator identity, VM/disks, reserved static IP, DuckDNS hostname and private storage/secret references. S09 deploys HTTPS; S10 proves off-VM restore before live data. Legacy PostgreSQL 15 export/import remains S25; never attach its old data directory to PostgreSQL 17.

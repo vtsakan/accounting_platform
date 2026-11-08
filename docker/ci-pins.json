@@ -1,0 +1,20 @@
+{
+  "reviewed_at": "2026-11-08",
+  "actions": [
+    {
+      "repository": "actions/checkout",
+      "version": "v7.0.1",
+      "commit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "runtime": "node24"
+    },
+    {
+      "repository": "actions/upload-artifact",
+      "version": "v7.0.2",
+      "commit": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "runtime": "node24"
+    }
+  ],
+  "evidence": "Release tag refs resolved via official GitHub REST API; action.yml at each immutable commit inspected.",
+  "permissions": "contents: read; no cloud/registry credentials or deployment mutation",
+  "runner": "ubuntu-24.04"
+}

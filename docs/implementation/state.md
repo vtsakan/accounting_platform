@@ -25,6 +25,8 @@ Original business models, forms, views, app routes, migrations and dependency lo
 
 <!-- S07-RESULT -->
 S07 is Prepared. Native PostgreSQL 17.11 and real Gunicorn pass 90 tests (64 passed, 26 exact known failures), production checks, Greek login/admin manifest references, static collection and actual database outage/recovery. Liveness stays available while readiness returns 503 and recovers. Deterministic committed-context policy checks reject private/untracked/symlink/dirty source inputs. This workspace has no Docker Engine: the production image build, container UID/private-file audit and same-image static export are not executed. Run `python3 tools/verify_s07.py --record` successfully on a local Engine before S08. Native proof cannot complete this gate.
+
+The user's first local Docker attempt failed earlier, during the psycopg-binary wheel download from files.pythonhosted.org, with a read timeout. The follow-up fix increases pip's socket timeout to 120 seconds and keeps five new-connection attempts in both Dockerfiles. Commit/apply the fix before rerunning the verifier; dependency hashes/versions and normal development data are unchanged. The prior native evidence is preserved as its original snapshot; it does not attest the revised image context or a successful Docker build. The actual S07 gate remains Prepared; see evidence/S07-download-timeout-fix.json.
 <!-- /S07-RESULT -->
 
 ## Evidence and commands

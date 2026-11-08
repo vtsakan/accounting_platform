@@ -1,0 +1,63 @@
+{
+  "step": "S07",
+  "recorded_at": "2026-11-08",
+  "status": "Prepared",
+  "reported_failure": {
+    "source": "User-supplied terminal output",
+    "stage": "Production image locked dependency installation",
+    "package": "psycopg-binary==3.3.8",
+    "endpoint_host": "files.pythonhosted.org",
+    "exception": "pip ReadTimeoutError",
+    "application_checks_reached": false
+  },
+  "change": {
+    "dockerfiles": [
+      "Dockerfile",
+      "docker/development.Dockerfile"
+    ],
+    "socket_timeout_seconds": 120,
+    "new_connection_attempts": 5,
+    "hash_verification_retained": true,
+    "binary_only_install_retained": true,
+    "https_verification_retained": true,
+    "runtime_versions_or_locks_changed": false
+  },
+  "validation": {
+    "native_locked_wheel_download": "Passed",
+    "downloaded_wheels": [
+      "asgiref-3.13.0-py3-none-any.whl",
+      "django-5.2.19-py3-none-any.whl",
+      "gunicorn-26.2.0-py3-none-any.whl",
+      "psycopg-3.3.8-py3-none-any.whl",
+      "psycopg_binary-3.3.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sqlparse-0.6.1-py3-none-any.whl",
+      "typing_extensions-4.16.0-py3-none-any.whl"
+    ],
+    "command": [
+      "python3.12",
+      "-m",
+      "pip",
+      "download",
+      "--timeout",
+      "120",
+      "--retries",
+      "5",
+      "--no-cache-dir",
+      "--require-hashes",
+      "--only-binary=:all:",
+      "--index-url",
+      "https://pypi.org/simple",
+      "-r",
+      "requirements.txt"
+    ],
+    "runtime_lock_digest": "sha256:64bc86139dd2c91f27462acd0091096f8bd03b77c8947d6cc5126dd6cb4338e8",
+    "dockerfile_edits_limited_to_transport_options": true,
+    "application_tests_rerun": false,
+    "docker_build_rerun_here": false
+  },
+  "prior_native_evidence": "S07-verification.json is preserved as the pre-fix native snapshot; its context includes the prior Dockerfile and does not attest this image change.",
+  "pending": "Apply/commit the fix and run python3 tools/verify_s07.py --record successfully on the local Docker Engine before S08.",
+  "official_option_reference": "https://pip.pypa.io/en/stable/cli/pip/",
+  "full_requirement_acceptance": "Pending",
+  "google_cloud_resources_created": false
+}

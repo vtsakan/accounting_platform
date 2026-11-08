@@ -16,7 +16,7 @@ RUN apt-get update \
     && useradd --uid 10001 --gid app --create-home app
 WORKDIR /app
 COPY requirements.txt /app/requirements.txt
-RUN python -m pip install --no-cache-dir --require-hashes --only-binary=:all: --index-url https://pypi.org/simple -r requirements.txt \
+RUN python -m pip install --timeout 120 --retries 5 --no-cache-dir --require-hashes --only-binary=:all: --index-url https://pypi.org/simple -r requirements.txt \
     && python -m pip check
 COPY manage.py gunicorn.conf.py /app/
 COPY core /app/core

@@ -26,7 +26,7 @@ Original business models, forms, views, app routes, migrations and dependency lo
 <!-- S07-RESULT -->
 S07 is Prepared. Native PostgreSQL 17.11 and real Gunicorn pass 90 tests (64 passed, 26 exact known failures), production checks, Greek login/admin manifest references, static collection and actual database outage/recovery. Liveness stays available while readiness returns 503 and recovers. Deterministic committed-context policy checks reject private/untracked/symlink/dirty source inputs. This workspace has no Docker Engine: the production image build, container UID/private-file audit and same-image static export are not executed. Run `python3 tools/verify_s07.py --record` successfully on a local Engine before S08. Native proof cannot complete this gate.
 
-The user's first local Docker attempt failed earlier, during the psycopg-binary wheel download from files.pythonhosted.org, with a read timeout. The follow-up fix increases pip's socket timeout to 120 seconds and keeps five new-connection attempts in both Dockerfiles. Commit/apply the fix before rerunning the verifier; dependency hashes/versions and normal development data are unchanged. The prior native evidence is preserved as its original snapshot; it does not attest the revised image context or a successful Docker build. The actual S07 gate remains Prepared; see evidence/S07-download-timeout-fix.json.
+The initial PyPI read timeout was followed by two user runs that successfully built the same immutable image and stopped at static export. The old `docker cp` helper hid stderr, so the exact Docker cause is unconfirmed. The follow-up export fix streams from a network-disabled, read-only temporary container, creates host-owned writable directories and reports redacted diagnostics. Seventeen standalone host regressions pass under Python 3.12.16; the fixed Docker path remains unrun here. The guarded `--image` option can reuse the user's built image when its application-context digest matches, retaining both image and verification-tool revisions. S07 remains Prepared until a complete local `--record` succeeds; see evidence/S07-static-export-fix.json. Earlier native and timeout-fix evidence is preserved as historical snapshots.
 <!-- /S07-RESULT -->
 
 ## Evidence and commands
@@ -34,6 +34,7 @@ The user's first local Docker attempt failed earlier, during the psycopg-binary 
 - `evidence/S01-verification.json` through `evidence/S06-verification.json`: historical step snapshots; S05/S06 current records include the user's Docker verification.
 - `evidence/S07-verification.json`: actual mode, migrations, 90-test outcomes, native health/static/log/configuration proof and pending image blocker.
 - `evidence/S07-configuration-checks.json`: observed Compose/YAML configuration-only checks; no Engine execution.
+- `evidence/S07-static-export-fix.json`: reported Docker export failure, host regression results and guarded existing-image retry.
 - `production_delivery.md`: image identity, explicit migrations, probes, static export, CI artifacts, warnings and next gate.
 - `docker/image-pins.json`, `docker/ci-pins.json`: runtime/base image and immutable official action identities.
 - `financial_regressions.md`, `evidence/S06-regression-baseline.csv`, `accounting/regression_cases.json`: unchanged financial failure contracts and fix mapping.
@@ -43,6 +44,8 @@ python3 tools/verify_s07.py --record
 ```
 
 Use a committed checkout and local Docker Engine/Compose. Verification builds/reuses one full-commit image, uses its immutable ID throughout, explicitly migrates an empty PostgreSQL 17 database, tests the image, checks real outage/recovery and exports static from that same image. A random project/unused loopback port separates it from normal local services. Only its temporary containers/network/volume are removed; the tested image remains. Successful --record updates this state, steps and evidence, then announces the S08 VM checkpoint. Commit those evidence/state changes afterwards; the recorded image revision remains the code commit that was actually built.
+
+For the already built user image, append `--image sha256:68e1e362af3d7d22e59f57ed7b0c3014093737ab621009044964fcb3c9b9af2f` after applying the static-export fix. The helper refuses application-context mismatches; the host-only fix does not change that context. See production_delivery.md for the full retry command and identity checks.
 
 For daily tests use `python3 tools/dev.py test`. Earlier verifiers remain historical snapshots, including S06's exact 78-test count. The CI workflow uses tools/verify_delivery.py to discover all current tests and follow reviewed registry outcomes as future features change models/migrations; it saves evidence/tested image artifacts and cannot rewrite historical step records. No live deployment or credentials are configured.
 

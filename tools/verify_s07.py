@@ -215,14 +215,14 @@ def native_verification(bin_dir, directory, python):
                 "blocker": "Docker Engine unavailable here. Run tools/verify_s07.py --record on a local Docker Engine before S08."}
 
 
-def docker_verification(directory, *, current_source=False):
+def docker_verification(directory, *, current_source=False, image_reference=None):
     require_local_docker()
     # This allowed-looking untracked source must not enter a committed build.
     canary = ROOT / "accounting" / ("s07_untracked_" + secrets.token_hex(6) + ".py")
     try:
         with canary.open("x") as stream:
             stream.write("# Synthetic untracked build-context canary\n")
-        image = production_image.build()
+        image = production_image.reuse_for_verification(image_reference) if image_reference else production_image.build()
         assert str(canary.relative_to(ROOT)) not in image["context"]["paths"]
     finally:
         canary.unlink(missing_ok=True)
@@ -325,11 +325,14 @@ def main(*, current_source=False):
     parser.add_argument("--native-bin", type=Path)
     parser.add_argument("--report", type=Path)
     parser.add_argument("--record", action="store_true")
+    parser.add_argument("--image", help="Reuse a local image only if its committed application context matches")
     args = parser.parse_args()
     if current_source and (args.record or args.native_bin):
         parser.error("The continuing CI gate requires Docker and cannot rewrite the historical S07 step records.")
     if args.native_bin and args.record:
         parser.error("Native proof is Prepared and cannot complete the production image gate.")
+    if args.native_bin and args.image:
+        parser.error("--image is a Docker verification option")
     if args.record and args.report and args.report.resolve() != (RECORDS / "evidence/S07-verification.json").resolve():
         parser.error("--record writes canonical S07 evidence; use --report without --record for another destination.")
     baseline = json.loads((RECORDS / "evidence/S06-verification.json").read_text())
@@ -342,6 +345,9 @@ def main(*, current_source=False):
         require_local_docker()
     with tempfile.TemporaryDirectory(prefix="accounting-s07-") as temp:
         directory = Path(temp)
+        host_checks = run([sys.executable, "-m", "unittest", "discover", "-s", "tools", "-p", "test_image_export.py"])
+        host_count = re.search(r"Ran (\d+) tests?", host_checks.stdout + host_checks.stderr)
+        assert host_count and int(host_count[1]) > 0, "Static export host regressions were not discovered"
         context_policy = context_policy_check(directory)
         print("[S07] Installing hashed tools, reproducing locks and checking the Greek catalog.", flush=True)
         run([sys.executable, "-m", "venv", directory / "tools"])
@@ -361,10 +367,11 @@ def main(*, current_source=False):
             run([runtime, *install, ROOT / "requirements.txt"])
             result = native_verification(args.native_bin, directory, runtime)
         else:
-            result = docker_verification(directory, current_source=current_source)
+            result = docker_verification(directory, current_source=current_source, image_reference=args.image)
     report = {"step": "delivery" if current_source else "S07", "verified_at": datetime.now(ZoneInfo("Europe/Athens")).isoformat(timespec="seconds"),
               "source_reference_commit": result["image"]["revision"] if current_source else S06,
               **result, "secret_scan": scan, "dependency_locks_reproduced": True, "compiled_catalog_in_sync": True,
+              "static_export_host_checks": {"tests_run": int(host_count[1]), "status": "Passed"},
               "committed_context_policy": context_policy,
               **({"known_financial_failures_remaining": result["suite"]["known_failures_reproduced"]} if current_source else
                  {"financial_defects_fixed": False, "business_models_views_forms_migrations_unchanged": True}),

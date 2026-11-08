@@ -7,10 +7,14 @@ import io
 import json
 import os
 from pathlib import Path, PurePosixPath
+import re
 import subprocess
 import tarfile
+import tempfile
 
 from dev import ROOT, require_local_docker
+from static_export import EXPORT_CODE, extract_static_archive, stream_archive
+from verify_s05 import redact
 
 EXACT = {"Dockerfile", ".dockerignore", "manage.py", "requirements.txt", "gunicorn.conf.py",
          "accounting/regression_cases.json", "tools/init_local_env.py",
@@ -116,28 +120,68 @@ def build():
             "reused_existing_image": reused, "context": manifest}
 
 
+def reuse_for_verification(reference):
+    """Reuse an immutable image only when its application context still matches."""
+    require_local_docker()
+    revision, _, manifest = committed_context()
+    metadata = inspect(reference)
+    if metadata is None:
+        raise RuntimeError("The requested verification image is not present locally")
+    labels = metadata["Config"].get("Labels") or {}
+    original = labels.get("org.opencontainers.image.revision", "")
+    if (labels.get("gr.accounting.source-context") != manifest["digest"]
+            or labels.get("org.opencontainers.image.source") != "https://github.com/vtsakan/accounting_platform"
+            or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", original)
+            or metadata["Config"].get("User") != "10001:10001" or metadata.get("Architecture") != "amd64"):
+        raise RuntimeError("The requested image does not match this committed production context; run without --image to build it.")
+    return {"revision": "git:" + original, "verification_revision": "git:" + revision,
+            "reference": reference, "image_id": metadata["Id"], "reused_existing_image": True,
+            "context": manifest}
+
+
+def docker_command(arguments):
+    result = subprocess.run(["docker", *arguments], capture_output=True, text=True)
+    if result.returncode:
+        raise RuntimeError(f"Docker {arguments[0]} failed (exit {result.returncode}):\n" + redact(result.stderr[-6000:]))
+    return result
+
+
 def export_static(reference, output):
+    output = Path(output).absolute()
+    if output.exists() or output.is_symlink():
+        raise RuntimeError("Choose a new static output directory; existing files are not overwritten")
     require_local_docker()
     metadata = inspect(reference)
     if metadata is None:
         raise RuntimeError("Image is not present locally")
-    if output.exists():
-        raise RuntimeError("Choose a new static output directory; existing files are not overwritten")
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.mkdir()
-    container = subprocess.check_output(["docker", "create", "--network", "none", "--entrypoint", "python",
-                                         metadata["Id"], "-c", "pass"], text=True).strip()
-    try:
-        subprocess.run(["docker", "cp", container + ":/app/staticfiles/.", str(output)], check=True, capture_output=True)
-    finally:
-        subprocess.run(["docker", "rm", container], check=True, capture_output=True)
-    assert (output / "staticfiles.json").is_file() and (output / "admin/css/base.css").is_file()
-    # The operator owns the host export; Caddy receives a read-only mount at
-    # S09. Writable host directory modes also allow safe temporary cleanup.
-    output.chmod(0o755)
-    for path in output.rglob("*"):
-        path.chmod(0o755 if path.is_dir() else 0o644)
-    return {"image_id": metadata["Id"], "output": str(output), "file_count": sum(path.is_file() for path in output.rglob("*"))}
+    with tempfile.TemporaryDirectory(prefix=".accounting-static-export-", dir=output.parent) as temp:
+        staging = Path(temp) / "files"
+        container = docker_command(["create", "--network", "none", "--read-only", "--no-healthcheck",
+                                    "--cap-drop", "ALL", "--security-opt", "no-new-privileges:true",
+                                    "--entrypoint", "python", metadata["Id"], "-c", EXPORT_CODE]).stdout.strip()
+        if not re.fullmatch(r"[0-9a-f]{64}", container):
+            raise RuntimeError("Docker create did not return a valid temporary container ID")
+        try:
+            with tempfile.TemporaryFile(dir=temp) as archive:
+                diagnostics = stream_archive(["docker", "start", "--attach", container], archive)
+                exit_code = docker_command(["inspect", "--format", "{{.State.ExitCode}}", container]).stdout.strip()
+                if exit_code != "0":
+                    raise RuntimeError(f"Static exporter failed inside the image (exit {exit_code}):\n{diagnostics}")
+                proof = extract_static_archive(archive, staging)
+        except BaseException:
+            # Preserve the original diagnostic if cleanup also fails.
+            try:
+                subprocess.run(["docker", "rm", "--force", container], capture_output=True)
+            except OSError:
+                pass
+            raise
+        else:
+            docker_command(["rm", container])
+        if output.exists() or output.is_symlink():
+            raise RuntimeError("The output directory appeared during export; no existing files were replaced")
+        staging.rename(output)
+    return {"image_id": metadata["Id"], "output": str(output), **proof}
 
 
 def main():
@@ -148,7 +192,7 @@ def main():
     export.add_argument("--image", required=True)
     export.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
-    result = build() if args.action == "build" else export_static(args.image, args.output.resolve())
+    result = build() if args.action == "build" else export_static(args.image, args.output.absolute())
     print(json.dumps(result, indent=2))
 
 

@@ -2,7 +2,7 @@
 
 S07 supplies the production image, Gunicorn, data-free health endpoints, manifest static assets and a GitHub Actions delivery workflow. S04–S06 are verified prerequisites. The pushed S06 baseline is `53e453b59bda9e2a21cbea59a086ed7ae26a45bb`, including the user's Docker verification.
 
-The implementation workspace has no Docker Engine. Native PostgreSQL/Gunicorn checks pass, but the supplied [S07 evidence](evidence/S07-verification.json) remains **Prepared** until the Docker image gate passes. Do not create the VM before that gate. All 85 application acceptance checks remain Pending; the 26 financial failures are still tracked for their corrective steps.
+The implementation workspace has no Docker Engine. Native PostgreSQL/Gunicorn checks pass. The user's local image now builds, but verification stops at static export; the supplied [S07 evidence](evidence/S07-verification.json) remains **Prepared** until the complete Docker gate passes. Do not create the VM before that gate. All 85 application acceptance checks remain Pending; the 26 financial failures are still tracked for their corrective steps.
 
 ## Production artifact
 
@@ -53,7 +53,9 @@ python3 tools/image.py static \
   --output /absolute/path/to/static/FULL_CODE_COMMIT_SHA
 ```
 
-Replace the uppercase placeholder with the SHA portion of the image's `reference` field printed by `image.py build` or recorded in verification JSON. Export uses an unstarted, network-disabled temporary container and removes only that container. It does not need production secrets or a database. Existing output directories are refused. Files/directories in the host export are operator-owned and readable; S09 mounts that versioned directory into Caddy read-only at `/srv/static` and routes `/static/*` to it. Keep the image and static export from the same release. Actual Caddy/TLS serving remains S09.
+Replace the uppercase placeholder with the source revision recorded by `image.py build` or verification JSON; `--image` also accepts the immutable `image_id`. Export starts a short-lived Python process in that image with networking disabled, a read-only root filesystem, no healthcheck and dropped capabilities. It needs no application credentials or database. Python streams `/app/staticfiles` as a binary tar archive through Docker's attached stdout; host Python owns the destination and Docker never receives a host output path.
+
+[static_export.py](../../tools/static_export.py) validates paths, regular-file types, size/entry limits and manifest targets before publishing the completed staging directory. It rejects links, traversal and duplicate paths. Image UID/GID and modes are not restored: host directories are `0755` and files `0644`, including when the image directories are `0555`. Existing destinations, including dangling symlinks, are refused. Failures retain redacted Docker/exporter diagnostics and remove only the owned temporary container/staging files. S09 mounts the versioned host directory into Caddy read-only at `/srv/static` and routes `/static/*` to it. Keep the image and static export from the same release. Actual Caddy/TLS serving remains S09.
 
 ## Run the complete delivery gate
 
@@ -63,13 +65,24 @@ From a committed checkout with local Docker Engine/Compose and the S05 prerequis
 python3 tools/verify_s07.py --record
 ```
 
-The verifier bootstraps hash-checked tools and pinned Python, reproduces both locks, checks the Greek catalog and scans source/history. It builds/reuses the commit image, creates a unique `accounting-s07-check-*` Compose project and an empty PostgreSQL 17 volume, probes before migration, explicitly migrates, and runs the strict 90-test suite (64 passed, 26 known failures in this snapshot). New errors, changed failure patterns, tracked skips or unexpected passes fail the command. Business models/forms/views/routes, migrations and dependency locks remain unchanged from S06.
+The verifier first runs the standalone host export regressions in [test_image_export.py](../../tools/test_image_export.py). It then bootstraps hash-checked tools and pinned Python, reproduces both locks, checks the Greek catalog and scans source/history. It builds/reuses the commit image, creates a unique `accounting-s07-check-*` Compose project and an empty PostgreSQL 17 volume, probes before migration, explicitly migrates, and runs the strict 90-test application suite (64 passed, 26 known failures in this snapshot). Host export tests are separate from that application count. New errors, changed failure patterns, tracked skips or unexpected passes fail the command. Business models/forms/views/routes, migrations and dependency locks remain unchanged from S06.
 
 The disposable [delivery Compose file](../../compose.delivery.yml) uses the immutable image ID, a read-only application filesystem, `/tmp` tmpfs, dropped capabilities and no-new-privileges. PostgreSQL has no host port. The web port uses an unused loopback port, preserving your normal port 8001 and development volume. Verification checks production settings, actual process UID/private-file exclusion, static export, Greek login/admin static references, HTTPS redirect, log query exclusion and database outage/recovery. It removes only its own containers/network/volume and retains the tested image for reuse/export.
 
 Successful `--record` promotes S07 to **Verified** in the evidence JSON, steps and state. It then announces the **S08 Google Cloud VM checkpoint**. A failure does not promote the gate. `--report /path/report.json` saves a result without changing step state. Native `--native-bin /path/to/postgresql/17/bin --report /path/report.json` provides supplementary real PostgreSQL/Gunicorn proof and remains Prepared; it cannot be combined with `--record`.
 
 The first user-side S07 attempt stopped during the `psycopg-binary` wheel download with a read timeout from files.pythonhosted.org, before application checks or the disposable database stack ran. Both Dockerfiles now give pip a 120-second socket timeout and five new-connection attempts while retaining HTTPS, pinned versions, binary wheels and hash verification. This does not upgrade pip or promise to resume incomplete downloads. Apply/commit this follow-up fix before retrying `python3 tools/verify_s07.py --record`: the builder uses committed source, so a host `PIP_DEFAULT_TIMEOUT` setting or an uncommitted Dockerfile edit does not change its build input. Existing successful Docker layers can be reused; no volume reset is needed. [Timeout-fix evidence](evidence/S07-download-timeout-fix.json) records the limited validation; the actual Docker gate remains pending until a complete successful run.
+
+The next two user runs built the same immutable image and reached `docker cp` in static export. The old helper captured stderr without showing it, so the underlying Docker error is unconfirmed. The streamed replacement avoids both restoring restrictive image directory modes during copying and asking Docker to access a host temporary path. [Static-export fix evidence](evidence/S07-static-export-fix.json) records host regressions and the remaining Docker gate. No image/build input changes are needed for this fix.
+
+After applying the static-export fix, the user's existing image can be verified again without rebuilding it:
+
+```bash
+python3 tools/verify_s07.py --record \
+  --image sha256:68e1e362af3d7d22e59f57ed7b0c3014093737ab621009044964fcb3c9b9af2f
+```
+
+`--image` requires a clean committed checkout and a local image whose source-context digest exactly matches the current committed production inputs. It also checks repository/revision labels, architecture and non-root user, resolves the immutable image ID, and preserves the original image revision separately from the current `verification_revision`. A missing or mismatched image is refused; run without `--image` to build the current commit when needed. Every migration, test, health check and export still uses the selected image ID. Maintenance-tool installation/lock checks still run. Normal verification and CI continue to build/reuse a per-commit image by default. `--image` cannot be combined with native verification.
 
 Django deployment checks run with production settings and generated synthetic credentials. There are zero errors and two explicitly reviewed warnings: `security.W005` (HSTS includeSubDomains) and `security.W021` (preload). Both remain disabled pending the actual S09 hostname/TLS policy; the warnings are recorded, not silenced. Any other warning fails verification. Live HTTPS, HSTS deployment, backup/restore and complete QR-02/QR-12/QR-14 acceptance remain Pending.
 

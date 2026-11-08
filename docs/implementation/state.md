@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-08. Current step: **S07 Prepared — production image and delivery checks**. Next step: **complete S07 Docker verification, then S08**.
+Updated 2026-11-08. Current step: **S07 Verified — production image and delivery checks**. Next step: **S08 — Google Cloud VM checkpoint**.
 
 ## Repository position
 
@@ -24,9 +24,7 @@ Original business models, forms, views, app routes, migrations and dependency lo
 ## Current completion gate
 
 <!-- S07-RESULT -->
-S07 is Prepared. Native PostgreSQL 17.11 and real Gunicorn pass 90 tests (64 passed, 26 exact known failures), production checks, Greek login/admin manifest references, static collection and actual database outage/recovery. Liveness stays available while readiness returns 503 and recovers. Deterministic committed-context policy checks reject private/untracked/symlink/dirty source inputs. This workspace has no Docker Engine: the production image build, container UID/private-file audit and same-image static export are not executed. Run `python3 tools/verify_s07.py --record` successfully on a local Engine before S08. Native proof cannot complete this gate.
-
-The initial PyPI read timeout was followed by two user runs that successfully built the same immutable image and stopped at static export. The old `docker cp` helper hid stderr, so the exact Docker cause is unconfirmed. The follow-up export fix streams from a network-disabled, read-only temporary container, creates host-owned writable directories and reports redacted diagnostics. Seventeen standalone host regressions pass under Python 3.12.16; the fixed Docker path remains unrun here. The guarded `--image` option can reuse the user's built image when its application-context digest matches, retaining both image and verification-tool revisions. S07 remains Prepared until a complete local `--record` succeeds; see evidence/S07-static-export-fix.json. Earlier native and timeout-fix evidence is preserved as historical snapshots.
+The production Docker image, explicit migrations, strict PostgreSQL suite, non-root/private-file audit, static export and Gunicorn readiness outage/recovery are Verified. See evidence/S07-verification.json for the immutable image identity. S08 is eligible: create/select the Google Cloud VM and supply the deployment parameters.
 <!-- /S07-RESULT -->
 
 ## Evidence and commands

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-07. Current step: **S05 Prepared — local Docker/PostgreSQL environment**. Next step: **complete S05 Docker verification, then S06**.
+Updated 2026-11-08. Current step: **S05 Verified — local Docker/PostgreSQL environment**. Next step: **S06**.
 
 ## Repository position
 
@@ -28,7 +28,7 @@ Business models, view logic, routes and original migrations remain byte-identica
 ## Current completion gate
 
 <!-- S05-RESULT -->
-S05 is Prepared. Actual Compose configuration validation passed. A fresh native PostgreSQL 17.11 database accepted all 20 migrations, an idempotent second migration run and 35 tests. Greek/AFM/Decimal records, explicit repeatable seeding and persistence after PostgreSQL stop/start passed. A Docker Engine is unavailable in the implementation workspace, so the image build, HTTP service in a container and container recreation with the same volume have not run. Run `python3 tools/verify_s05.py --record` successfully on a local Docker Engine before S06. Native mode cannot promote this gate.
+Local Docker build, empty-database migrations, focused/PostgreSQL tests and persisted markers after container recreation are Verified. See evidence/S05-verification.json. S06 is eligible.
 <!-- /S05-RESULT -->
 
 ## Evidence and commands

@@ -72,7 +72,7 @@
     "initial_checker_issue": "Anonymous 401 was incorrectly rejected by a 403-only expectation; corrected replay passed, authenticated denials remain 403-only"
   },
   "repository_checks": {
-    "verified_at": "2026-11-09T16:01:00+02:00",
+    "verified_at": "2026-11-09T16:07:51+02:00",
     "status": "Passed",
     "safeguard_tests": 22,
     "shell_syntax_checks": 2,
@@ -83,7 +83,7 @@
     "cloud_calls_run_by_this_verifier": false,
     "host_scripts_run_by_this_verifier": false,
     "application_or_database_tests_run": false,
-    "code_commit": "git:8eed8a7de603ad9f97f5ad474133e46a5e0212f2"
+    "code_commit": "git:74421fc639b2d8d877b440e8303fea054e73d252"
   },
   "new_replay_tools_executed_against_gcp": false,
   "new_host_replay_scripts_executed_on_vm": false,

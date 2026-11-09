@@ -27,5 +27,6 @@ SECURE_HSTS_PRELOAD = False
 # Enable only behind Caddy when it overwrites this header and Gunicorn is private.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") if boolean("DJANGO_TRUST_PROXY_HEADERS", False) else None
 STATIC_ROOT = Path(env("DJANGO_STATIC_ROOT", str(BASE_DIR / "staticfiles")))
+MEDIA_ROOT = Path(env("DJANGO_MEDIA_ROOT", "/app/media"))
 STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
             "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}}

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-09. Current step: **S08 Verified — Google Cloud foundation**. Next step: **S09 — DuckDNS/HTTPS preview**, requiring the actual hostname/control and ACME contact. The selected VM already exists.
+Updated 2026-11-09. Current step: **S09 Prepared — DuckDNS HTTPS preview**. Next step: **complete public deployment and reboot proof**.
 
 ## Repository position
 
@@ -12,7 +12,8 @@ Updated 2026-11-09. Current step: **S08 Verified — Google Cloud foundation**. 
 - S02: `a6a251b434bce295ec04240a63e33a656dc7f92e`, tagged `s02-complete`; S01: `86d01abaf76fbbed669ae39a12b41ff4d47b831a`, tagged `s01-complete`.
 - Original source: `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`.
 - Pushed S07 verification baseline: `a215beb91e2e49a5ffd1fa9ce8c751b8f3572234` on `origin/step/s07-production-delivery`; read through GitHub and fetched before S08. No successful CI run is inferred from that push.
-- S08 is supplied as a patch on `step/s08-google-cloud`, based on that pushed baseline. Resolve its applied commit with `git rev-parse HEAD`; no S08 remote push is claimed before the user performs it.
+- S08 is pushed at `git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac` on `origin/step/s08-google-cloud`; fetched before S09 implementation.
+- S09 is prepared on `step/s09-https-duckdns` from that exact pushed base. Resolve the applied S09 code commit with `git rev-parse HEAD`; no S09 push/deployed image is invented.
 
 ## Completed foundation and selected scope
 
@@ -100,3 +101,39 @@ Monthly budget/alerts, measured workload and incident/restore/key custodians rem
 open D06/D07 inputs. S09 still needs actual DuckDNS control and ACME contact, then
 must prove Caddy/Compose/secret loading, HTTPS/login/static/reboot behaviour. The
 app is not deployed yet. Redis/worker/exactly-one scheduler arrive only at S26.
+
+## S09 selected HTTPS preview — 2026-11-09
+
+<!-- S09-RESULT -->
+S09 is Prepared. Run the operator deployment and public/reboot checks; local proof does not complete this gate.
+<!-- /S09-RESULT -->
+
+The user selected `totalaccounting.duckdns.org`. Public DNS observed on 09/11/2026
+resolves exactly to reserved IPv4 `207.175.136.231` with no AAAA record. DuckDNS
+account ownership/control and a real ACME contact are operator inputs; the public
+DNS observation does not establish account ownership. Manual static DNS and Caddy
+HTTP/TLS challenges need no DuckDNS token in the application or deployment.
+
+Production Compose deploys the pinned app, PostgreSQL 17.11 and Caddy 2.11.9. Only
+Caddy publishes 80/443; application/database networks are internal. Code, static,
+private media and certificates use explicit separate paths. The host loads pinned
+Secret Manager versions into tmpfs before Docker startup; container metadata access
+is denied. The app database role is restricted. Installation explicitly migrates;
+boot only resumes. Exact hosts/origin, secure cookies, a one-hour host-only HSTS
+policy, overwritten proxy headers and Greek proxy errors are configured.
+
+The only application-setting change is a persistent private MEDIA_ROOT; models,
+views, migrations, locks and the 26 open financial regressions are preserved.
+All newly authored product-facing proxy responses are Greek. No client messages,
+real records, credential values or DuckDNS token are created or committed.
+
+Read [HTTPS preview instructions](https_preview.md) and [S09 evidence](evidence/S09-verification.json).
+Offline safeguards and native Caddy/Gunicorn/PostgreSQL TLS checks pass. The strict
+90-test suite remains 64 passed / 26 known failures / zero unexpected outcomes.
+Native proof uses a local internal CA and process restart; public ACME, Docker
+execution, actual VM reboot and off-VM restore are not established by that proof.
+The laptop must run current-source tools/verify_delivery.py, publish and ship the
+immutable image, then tools/verify_s09.py --live --record before and after a real
+reboot. Only the latter marks S09 Verified. All 85 acceptance statuses stay Pending.
+S10 follows the completed S09 gate and must prove encrypted off-VM backup/restore
+before real data. Redis/worker/one scheduler remain S26.

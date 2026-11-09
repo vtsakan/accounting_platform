@@ -1,0 +1,54 @@
+{
+	admin off
+	email "{$ACME_EMAIL}"
+	servers {
+		protocols h1 h2
+	}
+	log default {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri delete
+				request>headers delete
+				headers delete
+			}
+		}
+	}
+}
+
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy same-origin
+		-Server
+	}
+	@private path /media/* /private/* /.env /.git/*
+	handle @private {
+		header Content-Type "text/plain; charset=utf-8"
+		respond "Η σελίδα δεν είναι διαθέσιμη." 404
+	}
+	handle_path /static/* {
+		root * /srv/static
+		file_server
+	}
+	handle {
+		reverse_proxy web:8000 {
+			header_up X-Forwarded-Proto https
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 35s
+			}
+		}
+	}
+	handle_errors {
+		header Content-Type "text/plain; charset=utf-8"
+		respond "Η υπηρεσία δεν είναι διαθέσιμη αυτή τη στιγμή." {err.status_code}
+	}
+}
+
+http:// {
+	header Content-Type "text/plain; charset=utf-8"
+	respond "Η σελίδα δεν είναι διαθέσιμη." 404
+}

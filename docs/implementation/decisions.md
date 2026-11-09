@@ -279,3 +279,26 @@ S09 deploys only synthetic preview data; S10 must establish encrypted automated
 backup and restore. All 85 full acceptance statuses remain Pending. See
 [S08 instructions](google_cloud.md), [inventory](cloud_inventory.json) and
 [evidence](evidence/S08-verification.json).
+
+## S09 HTTPS deployment selections — 2026-11-09
+
+The user requested `totalaccounting.duckdns.org` for the existing S08 preview.
+Observed public A/AAAA results match the reserved IPv4/no-IPv6 configuration.
+Manual static DNS avoids a persistent DuckDNS token. Certificate issuance uses
+Caddy's standard public HTTP/TLS challenges; renewal is configured, not observed.
+The real ACME contact is entered only in ignored/private operator configuration.
+
+Digest-pinned Caddy 2.11.9 adds no Python dependency. Separate certificate/static/
+media roots, read-only application files, internal app/database networks and only
+public TCP 80/443 preserve the S07 image boundary. Host metadata retrieves pinned
+runtime materials into mode-0400 tmpfs binds; DOCKER-USER denies workload metadata.
+PostgreSQL uses a non-superuser app role and local peer administration, with the
+initialization-only admin password disabled. Explicit install migrations remain
+separate from automatic boot resume. Secret rotation is never an implicit retry.
+
+The native TLS/PostgreSQL test and offline safeguards are observed local evidence;
+Docker publication/pull, public trusted ACME and controlled VM reboot remain the
+operator gate. The implementation is Prepared. No D01–D09 policy, real-data release,
+availability target or full QR/Greek frontend acceptance is approved. Refer to
+[runbook](https_preview.md), [pins](../../docker/preview-pins.json) and
+[S09 evidence](evidence/S09-verification.json) for actual commands and limits.

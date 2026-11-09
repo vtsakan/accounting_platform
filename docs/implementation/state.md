@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S09 Prepared — DuckDNS HTTPS preview**. Next step: **complete public deployment and reboot proof**.
+Updated 2026-11-10. Current step: **S09 Verified — DuckDNS HTTPS preview**. Next step: **S10 — backup and restore**.
 
 ## Repository position
 
@@ -105,7 +105,7 @@ app is not deployed yet. Redis/worker/exactly-one scheduler arrive only at S26.
 ## S09 selected HTTPS preview — 2026-11-09
 
 <!-- S09-RESULT -->
-S09 is Prepared. Run the operator deployment and public/reboot checks; local proof does not complete this gate.
+Public DNS/TLS/login/static/isolation and actual reboot persistence are Verified. S10 is eligible; full release acceptance remains Pending.
 <!-- /S09-RESULT -->
 
 The user selected `totalaccounting.duckdns.org`. Public DNS observed on 09/11/2026

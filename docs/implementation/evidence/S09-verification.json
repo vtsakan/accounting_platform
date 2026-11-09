@@ -1,26 +1,109 @@
 {
   "step": "S09",
-  "status": "Prepared",
-  "reviewed_on": "2026-11-09",
-  "source_reference_commit": "git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac",
+  "verified_at": "2026-11-10T01:42:54+02:00",
+  "status": "Verified",
   "hostname": "totalaccounting.duckdns.org",
-  "reserved_ipv4": "207.175.136.231",
-  "dns_observation": {
-    "observed_at": "2026-11-09T14:57:42+00:00",
-    "hostname": "totalaccounting.duckdns.org",
-    "A": {
-      "status": 0,
-      "answers": [
-        "207.175.136.231"
-      ]
+  "image": {
+    "commit": "git:70cf0d3dbc601163f33ae9c6f927605be50841aa",
+    "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+    "image_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+    "context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "delivery_evidence": "sha256:b5d08c622b4bb41bbbb3969d04bee97a2d0fb208dfdbea55fb5669deb6da2ec5"
+  },
+  "dns": {
+    "A": [
+      "207.175.136.231"
+    ],
+    "AAAA": []
+  },
+  "certificate": {
+    "fingerprint": "sha256:6feeae12f4a5029ec3dd27b8d8f347c199a5bc45960707646976a0e9a921e266",
+    "not_after": "Feb  7 22:36:50 2027 GMT",
+    "chain_trusted_and_hostname_verified": true
+  },
+  "deployment_source_commit": "git:1968cd67424a368359c44cbddc055868ecf74d0a",
+  "public_http": {
+    "http_redirect": true,
+    "certificate_trust": true,
+    "greek_login_admin": true,
+    "proxy_spoofing_and_no_redirect_loop": true,
+    "valid_login_post": true,
+    "foreign_origin_denied": true,
+    "missing_csrf_denied": true,
+    "secure_session_and_csrf_cookies": true,
+    "one_hour_host_only_hsts": true,
+    "static_image_bytes_match": true,
+    "private_media_denied": true,
+    "https_readiness": true
+  },
+  "private_ports": {
+    "5432": "closed_or_filtered",
+    "8000": "closed_or_filtered"
+  },
+  "vm_runtime": {
+    "status": "Passed",
+    "boot_id": "1890d21b-371a-49cc-8b8b-f2f59ee70998",
+    "ports": {
+      "db": {},
+      "web": {},
+      "caddy": {
+        "443/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "443"
+          }
+        ],
+        "80/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "80"
+          }
+        ]
+      }
     },
-    "AAAA": {
-      "status": 0,
-      "answers": []
+    "image_identity": {
+      "published_build_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+      "daemon_image_id": "sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+      "pinned_registry_image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+      "running_image_id": "sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb"
+    },
+    "settings": {
+      "debug": false,
+      "hosts": [
+        "totalaccounting.duckdns.org"
+      ],
+      "origins": [
+        "https://totalaccounting.duckdns.org"
+      ],
+      "secure_cookies": true,
+      "proxy": [
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+      ],
+      "media": "/app/media",
+      "uid": 10001
+    },
+    "database": {
+      "version": 170011,
+      "elevated": false
+    },
+    "container_metadata_blocked": true,
+    "static_path": "/static/admin/css/base.96c479cedf7a.css",
+    "static_digest": "sha256:307ad38123087a64aef09908c06f5b3ef19f06745f8d00723dd535f13e7479d7",
+    "persistence": {
+      "entity": 1,
+      "account": 1,
+      "vat": "000000000",
+      "opening": "0.00"
     }
   },
-  "duckdns_account_control": "Operator must control the record; public resolution does not establish ownership",
-  "acme_contact": "Entered locally during preview.py configure; no private email copied into this record",
+  "reboot_persistence_verified": true,
+  "temporary_login_user_removed": true,
+  "certificate_auto_renewal_configured": true,
+  "actual_renewal_observed": false,
+  "off_vm_restore_verified": false,
+  "real_client_data_imported": false,
+  "full_requirement_acceptance": "Pending",
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
@@ -71,109 +154,6 @@
     "vm_reboot_tested": false,
     "off_vm_restore_tested": false
   },
-  "prepared_application_context": {
-    "file_count": 75,
-    "paths": [
-      ".dockerignore",
-      "Dockerfile",
-      "accounting/__init__.py",
-      "accounting/admin.py",
-      "accounting/apps.py",
-      "accounting/forms.py",
-      "accounting/management/__init__.py",
-      "accounting/management/commands/__init__.py",
-      "accounting/management/commands/probe_development_database.py",
-      "accounting/management/commands/seed_development_data.py",
-      "accounting/migrations/0001_initial.py",
-      "accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
-      "accounting/migrations/__init__.py",
-      "accounting/models.py",
-      "accounting/regression_cases.json",
-      "accounting/regression_runner.py",
-      "accounting/templates/accounting/add_agreement.html",
-      "accounting/templates/accounting/add_entity.html",
-      "accounting/templates/accounting/add_expense.html",
-      "accounting/templates/accounting/add_income.html",
-      "accounting/templates/accounting/add_transfer.html",
-      "accounting/templates/accounting/agreement_detail.html",
-      "accounting/templates/accounting/agreement_list.html",
-      "accounting/templates/accounting/base.html",
-      "accounting/templates/accounting/customer_list.html",
-      "accounting/templates/accounting/dashboard.html",
-      "accounting/templates/accounting/edit_agreement.html",
-      "accounting/templates/accounting/edit_entity.html",
-      "accounting/templates/accounting/entity_detail.html",
-      "accounting/templates/accounting/login.html",
-      "accounting/templates/accounting/summary_report.html",
-      "accounting/templates/accounting/supplier_list.html",
-      "accounting/templates/accounting/transaction_list.html",
-      "accounting/templatetags/__init__.py",
-      "accounting/templatetags/greek.py",
-      "accounting/tests.py",
-      "accounting/tests_integration.py",
-      "accounting/tests_regressions.py",
-      "accounting/urls.py",
-      "accounting/views.py",
-      "core/__init__.py",
-      "core/asgi.py",
-      "core/config.py",
-      "core/error_views.py",
-      "core/formats/__init__.py",
-      "core/formats/el/__init__.py",
-      "core/formats/el/formats.py",
-      "core/health.py",
-      "core/locale.py",
-      "core/redaction.py",
-      "core/settings/__init__.py",
-      "core/settings/base.py",
-      "core/settings/build.py",
-      "core/settings/local.py",
-      "core/settings/production.py",
-      "core/settings/test.py",
-      "core/tests/__init__.py",
-      "core/tests/test_s04.py",
-      "core/tests/test_s06_runner.py",
-      "core/tests/test_s07.py",
-      "core/tests/urls.py",
-      "core/urls.py",
-      "core/wsgi.py",
-      "docker/healthcheck.py",
-      "docker/production-entrypoint.sh",
-      "gunicorn.conf.py",
-      "locale/el/LC_MESSAGES/django.mo",
-      "locale/el/LC_MESSAGES/django.po",
-      "manage.py",
-      "requirements.txt",
-      "templates/400.html",
-      "templates/403.html",
-      "templates/404.html",
-      "templates/500.html",
-      "tools/init_local_env.py"
-    ],
-    "digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726"
-  },
-  "observed_s08_environment": "docs/implementation/cloud_inventory.json",
-  "production_compose": "compose.production.yml",
-  "proxy_configuration": "infrastructure/Caddyfile",
-  "operator_runbook": "docs/implementation/https_preview.md",
-  "same_image_delivery_gate_required": true,
-  "docker_containers_executed_for_s09": false,
-  "public_acme_issuance_verified": false,
-  "vm_reboot_persistence_verified": false,
-  "certificate_auto_renewal_configured": true,
-  "actual_renewal_observed": false,
-  "new_cloud_resources_created": false,
-  "off_vm_restore_verified": false,
-  "real_client_data_imported": false,
-  "live_client_messages_sent": false,
-  "credential_values_recorded": false,
-  "domain_policy_approvals_recorded": false,
-  "full_requirement_acceptance": "Pending",
-  "blockers": [
-    "Apply the Docker image-store identity compatibility fix and finish VM setup",
-    "Public trusted HTTPS/login and genuine VM reboot proof remain unrun"
-  ],
-  "next_step": "Complete S09 operator deployment and after-reboot gate; then S10 backup/restore",
   "secret_scan": {
     "scanner": "detect-secrets",
     "version": "1.5.0",
@@ -189,31 +169,5 @@
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
   },
-  "committed_source_check": {
-    "workspace_implementation_commit": "git:faced47be9c6190a9fa987782db929233ed27302",
-    "committed_context_matches_native_tested_context": true,
-    "committed_application_context": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
-    "repository_checks": {
-      "mode": "offline",
-      "status": "Prepared",
-      "tests": 21,
-      "business_migrations_dependency_locks_unchanged": true,
-      "full_acceptances_pending": 85,
-      "compose_config_validated_without_engine": true,
-      "caddy_native_validated": true,
-      "docker_containers_executed": false,
-      "live_cloud_execution": false
-    }
-  },
-  "patch_application_check": {
-    "base": "git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac",
-    "git_am_keep_cr": "Passed in an isolated clean worktree",
-    "offline_tests_after_application": 21,
-    "compose_and_native_caddy_validation_after_application": "Passed",
-    "public_vm_execution": false
-  },
-  "image_publication_verified_from_operator_output": true,
-  "image_pull_on_vm_verified": true,
-  "deployment_retry_evidence": "docs/implementation/evidence/S09-deployment-retry.json",
-  "image_identity_evidence": "docs/implementation/evidence/S09-image-identity.json"
+  "source_reference_commit": "git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac"
 }

@@ -302,3 +302,22 @@ operator gate. The implementation is Prepared. No D01–D09 policy, real-data re
 availability target or full QR/Greek frontend acceptance is approved. Refer to
 [runbook](https_preview.md), [pins](../../docker/preview-pins.json) and
 [S09 evidence](evidence/S09-verification.json) for actual commands and limits.
+
+## S09 first deployment attempt and operator-tool retry
+
+The operator verified and published application commit git:70cf0d3dbc601163f33ae9c6f927605be50841aa.
+The image ID/context/registry digest are recorded in evidence/S09-deployment-retry.json.
+The first ship command returned only a suppressed gcloud failure. A read-only check
+confirmed IAP SSH, sudo, staged files and the expected mounted disk, with no listed
+accounting containers. The failing original setup stage is not established.
+
+Local inspection separately reproduced malformed web/Caddy tmpfs flow lists; block
+lists and option validation correct that defect. Typed, bounded stage diagnostics
+replace opaque VM errors without forwarding credential-bearing stderr. A clean
+operator-tool revision may deploy the already published image only after exact
+application-context comparison. Both source identities remain explicit; no image
+label is rewritten and no previous release is modified in place. Boot configuration
+uses the operator revision, and actual reboot proof includes it. Existing identity,
+secret, PostgreSQL-version and explicit-migration guards remain. This host-only fix
+adds no runtime dependency, model, migration, product copy or financial assertion.
+S09 remains Prepared until the operator retry/public/reboot gate succeeds.

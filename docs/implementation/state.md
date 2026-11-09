@@ -137,3 +137,19 @@ immutable image, then tools/verify_s09.py --live --record before and after a rea
 reboot. Only the latter marks S09 Verified. All 85 acceptance statuses stay Pending.
 S10 follows the completed S09 gate and must prove encrypted off-VM backup/restore
 before real data. Redis/worker/one scheduler remain S26.
+
+## S09 operator image gate and first deployment attempt
+
+The current-source Docker gate is now operator-Verified for git:70cf0d3dbc601163f33ae9c6f927605be50841aa
+(64 passed / 26 known failures / zero unexpected outcomes). Artifact Registry
+publication succeeded. The initial ship failed with its underlying error hidden.
+A subsequent operator read-only probe verified SSH/sudo, staged inputs and data
+UUID; it listed no accounting containers. See evidence/S09-deployment-retry.json.
+
+A confirmed Compose tmpfs parsing defect is fixed separately from the unconfirmed
+original deployment failure. Safe stage diagnostics and a distinct clean operator
+revision support retrying the unchanged, already published image. Apply the
+follow-up patch, check the repository, push, then run preview.py ship --current-tools.
+Actual VM image pull/setup, public HTTPS/login and reboot still require proof;
+S09 is Prepared. Application code, locks, migrations and all 85 acceptance states
+are unchanged. Read the retry section of https_preview.md before continuing.

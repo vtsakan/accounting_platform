@@ -13,6 +13,7 @@ import urllib.error
 import urllib.request
 
 from cloud import account, require, validate as validate_gcp
+import preview_events as events
 
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE = ROOT / "private/preview.json"
@@ -39,7 +40,12 @@ def validate(config, published=False):
         require(re.fullmatch(re.escape(prefix) + r"[0-9a-f]{64}", release["image"]), "Use the selected repository and immutable registry digest")
         for field in ("image_id", "context_digest"):
             require(re.fullmatch(r"sha256:[0-9a-f]{64}", release[field]), f"Invalid {field}")
+        require(re.fullmatch(r"[0-9a-f]{40}", deployment_commit(config)), "Pin the complete deployment commit")
     return config
+
+
+def deployment_commit(config):
+    return config.get("deployment_commit", config["published"]["commit"])
 
 
 def private_json(path, value, exclusive=False):
@@ -63,13 +69,30 @@ def private_json(path, value, exclusive=False):
             os.unlink(temporary)
 
 
+class CommandFailure(RuntimeError):
+    def __init__(self, command, result):
+        self.program = Path(str(command[0])).name
+        self.exit_code = result.returncode
+        self.child = events.child_failure(result.stderr)
+        message = f"{self.program} operation failed (exit {self.exit_code})"
+        if self.child:
+            message += "; VM diagnostic: " + json.dumps(self.child, sort_keys=True)
+        super().__init__(message)
+
+
+class MaterialAccessError(RuntimeError):
+    def __init__(self, status=None):
+        self.http_status = status
+        super().__init__("Pinned Secret Manager read failed; no payload printed")
+
+
 def run(command, *, payload=None, environment=None, json_output=False):
     result = subprocess.run([str(v) for v in command], input=payload, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, env=environment)
     if result.returncode:
         # No captured output/command arguments: they may carry metadata tokens,
         # generated test credentials, psql input or private configuration.
-        raise RuntimeError(f"{Path(str(command[0])).name} operation failed (exit {result.returncode})")
+        raise CommandFailure(command, result)
     return json.loads(result.stdout) if json_output else result.stdout
 
 
@@ -107,8 +130,10 @@ def read_secret(config, ref, version, token):
     try:
         with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=25) as response:
             result = json.load(response)
+    except urllib.error.HTTPError as error:
+        raise MaterialAccessError(error.code) from None
     except (OSError, ValueError):
-        raise RuntimeError("Pinned Secret Manager read failed; no payload printed") from None
+        raise MaterialAccessError() from None
     payload = result["payload"]
     value = base64.b64decode(payload["data"], validate=True)
     require(crc32c(value) == int(payload["dataCrc32c"]), "Secret payload checksum mismatch")

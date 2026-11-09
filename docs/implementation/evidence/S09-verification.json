@@ -24,7 +24,7 @@
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
-    "tests": 21,
+    "tests": 31,
     "business_migrations_dependency_locks_unchanged": true,
     "full_acceptances_pending": 85,
     "compose_config_validated_without_engine": true,
@@ -158,7 +158,6 @@
   "operator_runbook": "docs/implementation/https_preview.md",
   "same_image_delivery_gate_required": true,
   "docker_containers_executed_for_s09": false,
-  "image_published_or_pulled_on_vm": false,
   "public_acme_issuance_verified": false,
   "vm_reboot_persistence_verified": false,
   "certificate_auto_renewal_configured": true,
@@ -171,8 +170,8 @@
   "domain_policy_approvals_recorded": false,
   "full_requirement_acceptance": "Pending",
   "blockers": [
-    "Implementation workspace has no Docker Engine or authenticated VM administration session",
-    "Operator must run current-source Docker delivery gate, publish and ship the immutable image",
+    "First ship failed; original underlying stage/cause not established",
+    "Apply the host-only retry patch and run ship --current-tools",
     "Public trusted HTTPS/login and genuine VM reboot proof remain unrun"
   ],
   "next_step": "Complete S09 operator deployment and after-reboot gate; then S10 backup/restore",
@@ -213,5 +212,8 @@
     "offline_tests_after_application": 21,
     "compose_and_native_caddy_validation_after_application": "Passed",
     "public_vm_execution": false
-  }
+  },
+  "image_publication_verified_from_operator_output": true,
+  "image_pull_on_vm_verified": false,
+  "deployment_retry_evidence": "docs/implementation/evidence/S09-deployment-retry.json"
 }

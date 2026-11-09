@@ -1,6 +1,7 @@
 """Offline rejection tests. No fixture is evidence of a live deployment."""
 
 import base64
+from contextlib import redirect_stderr
 import errno
 import io
 import json
@@ -14,8 +15,11 @@ from unittest.mock import patch, MagicMock
 import preview_common as common
 import preview_host as host
 import preview_http
+import preview_events as events
+import preview
 from test_s08 import configuration as gcp_configuration
 from preview import verified_delivery
+from verify_s09 import check_tmpfs
 
 
 def configuration():
@@ -30,6 +34,73 @@ def configuration():
 
 
 class ConfigurationTests(unittest.TestCase):
+    def test_new_tooling_keeps_the_verified_application_identity(self):
+        config = configuration()
+        old_image = dict(config["published"])
+        context = {"digest": old_image["context_digest"]}
+        with patch.object(preview.image, "committed_context", return_value=("b" * 40, b"", context)):
+            self.assertEqual(preview.select_deployment_source(config), "b" * 40)
+        self.assertEqual(config["published"], old_image)
+        common.validate(config, published=True)
+        self.assertEqual(host.release_path(config).name, "b" * 40)
+
+    def test_changed_application_or_dirty_source_cannot_reuse_publication(self):
+        config = configuration()
+        with patch.object(preview.image, "committed_context", return_value=("b" * 40, b"", {"digest": "sha256:" + "9" * 64})), self.assertRaises(ValueError):
+            preview.select_deployment_source(config)
+        self.assertNotIn("deployment_commit", config)
+        with patch.object(preview.image, "committed_context", side_effect=RuntimeError("Commit tracked changes first")), self.assertRaises(RuntimeError):
+            preview.select_deployment_source(config)
+
+    def test_invalid_operator_revision_denied(self):
+        config = configuration(); config["deployment_commit"] = "main; untrusted"
+        with self.assertRaises(ValueError):
+            common.validate(config, published=True)
+
+    def test_release_environment_uses_new_tools_and_original_static_export(self):
+        config = configuration(); config["deployment_commit"] = "b" * 40
+        with tempfile.TemporaryDirectory() as temporary, patch.object(common, "HOST_DATA", Path(temporary)):
+            host.environment_file(config)
+            environment = Path(temporary) / "release-config" / ("b" * 40 + ".env")
+            text = environment.read_text()
+            self.assertIn(config["published"]["image"], text)
+            self.assertIn(str(Path(temporary) / "static" / ("a" * 40)), text)
+            self.assertIn(str(environment), common.compose_command(host.release_path(config)))
+            self.assertEqual(environment.stat().st_mode & 0o777, 0o600)
+
+    def test_retry_ships_all_helpers_from_the_operator_commit(self):
+        config = configuration(); published = dict(config["published"])
+        def source(command, **kwargs):
+            if command[:2] == ["git", "archive"]:
+                return b"synthetic-source-archive"
+            if command[:2] == ["git", "ls-tree"]:
+                return b"tools/preview_events.py\n"
+            if command[:2] == ["git", "show"]:
+                return b"# synthetic helper\n"
+            raise AssertionError("Unexpected command")
+        context = {"digest": published["context_digest"]}
+        with tempfile.TemporaryDirectory() as temporary, patch.object(preview.image, "committed_context", return_value=("b" * 40, b"", context)), patch.object(common, "dns"), patch.object(common, "run", side_effect=source) as commands, patch.object(preview, "gcloud", return_value={"status": "Started"}) as remote, redirect_stderr(io.StringIO()):
+            private = Path(temporary) / "preview.json"
+            result = preview.ship(config, current_tools=True, config_path=private)
+            self.assertEqual(result["status"], "Started")
+            saved = json.loads(private.read_text())
+            self.assertEqual(saved["deployment_commit"], "b" * 40)
+            self.assertEqual(saved["published"], published)
+            shown = [call.args[0][-1] for call in commands.call_args_list if call.args[0][:2] == ["git", "show"]]
+            self.assertEqual(len(shown), 4)
+            self.assertTrue(all(path.startswith("b" * 40 + ":tools/") for path in shown))
+            self.assertIn("b" * 40 + ":tools/preview_events.py", shown)
+            self.assertEqual(remote.call_count, 3)
+
+    def test_pulled_image_check_uses_original_application_revision(self):
+        config = configuration(); config["deployment_commit"] = "b" * 40
+        pub = config["published"]
+        data = {"Id": pub["image_id"], "Architecture": "amd64", "Config": {"User": "10001:10001", "Labels": {
+            "org.opencontainers.image.source": "https://github.com/vtsakan/accounting_platform",
+            "org.opencontainers.image.revision": pub["commit"], "gr.accounting.source-context": pub["context_digest"]}}}
+        with patch.object(common, "run", return_value=[data]):
+            self.assertEqual(host.image_check(config), data)
+
     def test_exact_hostname_and_pinned_release(self):
         common.validate(configuration(), published=True)
 
@@ -70,6 +141,38 @@ class ConfigurationTests(unittest.TestCase):
 
 
 class CredentialTests(unittest.TestCase):
+    def test_vm_failure_record_survives_ssh_without_secret_values(self):
+        stream = io.StringIO()
+        marker = "synthetic-credential-canary"
+        error = common.MaterialAccessError(403)
+        with patch.object(events, "CURRENT", "runtime-signing-read"), redirect_stderr(stream):
+            events.failure(error)
+        failed = MagicMock(returncode=1, stdout=marker.encode(), stderr=stream.getvalue().encode())
+        with patch.object(common.subprocess, "run", return_value=failed), self.assertRaises(common.CommandFailure) as caught:
+            common.run(["gcloud", marker], payload=marker.encode())
+        self.assertIn("runtime-signing-read", str(caught.exception))
+        self.assertIn("403", str(caught.exception))
+        self.assertNotIn(marker, str(caught.exception))
+
+    def test_unknown_errors_and_forged_diagnostic_values_are_suppressed(self):
+        marker = "synthetic-private-canary"
+        stream = io.StringIO()
+        with redirect_stderr(stream):
+            events.failure(ValueError(marker))
+        self.assertNotIn(marker, stream.getvalue())
+        for extra in ({"reason": marker}, {"error": marker}, {"stage": {"private": marker}}, {"program": marker}, {"at": marker}, {"secret": marker}, {"http_status": marker}):
+            record = {"event": "failure", "stage": "registry-login", "error": "RuntimeError", **extra}
+            self.assertIsNone(events.child_failure((events.PREFIX + json.dumps(record)).encode()))
+
+    def test_secret_api_diagnostics_keep_only_status(self):
+        import urllib.error
+        error = urllib.error.HTTPError("https://example.invalid/private", 403, "private canary", {}, None)
+        opener = MagicMock(); opener.open.side_effect = error
+        with patch("preview_common.urllib.request.build_opener", return_value=opener), self.assertRaises(common.MaterialAccessError) as caught:
+            common.read_secret(configuration(), "test-material", 1, "not-printed")
+        self.assertEqual(caught.exception.http_status, 403)
+        self.assertNotIn("canary", str(caught.exception))
+
     def test_castagnoli_reference_vector(self):
         self.assertEqual(common.crc32c(b"123456789"), 0xe3069283)
 
@@ -134,6 +237,12 @@ class ArchiveTests(unittest.TestCase):
 
 
 class NetworkTests(unittest.TestCase):
+    def test_tmpfs_options_cannot_become_separate_mounts(self):
+        check_tmpfs(["/tmp:rw,noexec,nosuid,size=128m,mode=1777"])
+        for mounts in (["/tmp:rw", "noexec", "nosuid", "size=128m", "mode=1777"], ["/tmp:rw,size=128m"], ["/tmp"]):
+            with self.subTest(mounts=mounts), self.assertRaises(ValueError):
+                check_tmpfs(mounts)
+
     def test_gce_dns_exceptions_precede_metadata_rejection(self):
         installed = []
         missing = MagicMock(returncode=1)

@@ -61,7 +61,8 @@ services:
       GUNICORN_WORKERS: "2"
       HEALTHCHECK_HOST: ${SITE_DOMAIN}
     read_only: true
-    tmpfs: [/tmp:rw,noexec,nosuid,size=128m,mode=1777]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     pids_limit: 128
@@ -96,7 +97,8 @@ services:
       XDG_CONFIG_HOME: /config
     ports: ["0.0.0.0:80:80/tcp", "0.0.0.0:443:443/tcp"]
     read_only: true
-    tmpfs: [/tmp:rw,noexec,nosuid,size=64m,mode=1777]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
     cap_drop: [ALL]
     cap_add: [NET_BIND_SERVICE]
     security_opt: [no-new-privileges:true]

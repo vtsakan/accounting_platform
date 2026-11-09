@@ -17,6 +17,7 @@ import tempfile
 
 from cloud import require
 import preview_common as common
+import preview_events as events
 
 RELEASES = Path("/opt/accounting/releases")
 
@@ -32,7 +33,7 @@ def mounted(config):
 
 
 def release_path(config):
-    return RELEASES / config["published"]["commit"]
+    return RELEASES / common.deployment_commit(config)
 
 
 def compose(config, *arguments, payload=None, json_output=False):
@@ -104,11 +105,13 @@ def refresh(config):
     token = common.access_token()
     gcp = config["gcp"]
     for name, ref_key, version_key in (("signing", "django_ref", "django"), ("database", "postgres_ref", "postgres")):
+        events.checkpoint("runtime-" + name + "-read")
         value = common.read_secret(config, gcp[ref_key], gcp["secret_versions"][version_key], token)
         secret_file(name, value, 10001)
     # Initialization-only entropy. The postgres network password is disabled by
     # explicit bootstrap; later starts keep PGDATA and ignore this initial value.
     secret_file("pg-init", secrets.token_urlsafe(64).encode(), 0)
+    events.checkpoint("metadata-firewall")
     metadata_firewall()
 
 
@@ -173,7 +176,7 @@ def environment_file(config):
     pairs = {"APP_IMAGE": config["published"]["image"], "SITE_DOMAIN": config["hostname"], "ACME_EMAIL": config["acme_email"],
              "DB_NAME": config["db_name"], "DB_USER": config["db_user"],
              "STATIC_DIRECTORY": str(common.HOST_DATA / "static" / config["published"]["commit"])}
-    path = common.HOST_DATA / "release-config" / (config["published"]["commit"] + ".env")
+    path = common.HOST_DATA / "release-config" / (common.deployment_commit(config) + ".env")
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     require(all("\n" not in value and "\r" not in value for value in pairs.values()), "Multiline release configuration")
     path.write_text("".join(key + "=" + value + "\n" for key, value in pairs.items()))
@@ -181,6 +184,7 @@ def environment_file(config):
 
 
 def install(config, bundle, expected):
+    events.checkpoint("vm-preflight")
     mounted(config)
     common.dns(config)
     require(common.run(["docker", "info", "--format", "{{.DockerRootDir}}" ]).decode().strip() == "/srv/accounting/docker", "Unexpected Docker data root")
@@ -191,7 +195,9 @@ def install(config, bundle, expected):
         for key in ("project_id", "vm_name", "data_uuid", "service_account_id", "django_ref", "postgres_ref"):
             require(previous["gcp"][key] == config["gcp"][key], "Existing cloud/storage/credential identity differs")
         require(previous["gcp"]["secret_versions"] == config["gcp"]["secret_versions"], "Password/signing rotation is a separate explicit operation")
-    release = unpack(bundle, expected, config["published"]["commit"])
+    events.checkpoint("source-extract")
+    release = unpack(bundle, expected, common.deployment_commit(config))
+    events.checkpoint("storage-layout")
     for relative in ("postgres17", "media", "caddy/data", "caddy/config", "static"):
         path = common.HOST_DATA / relative
         require(not path.is_symlink(), "Unexpected storage symlink")
@@ -199,16 +205,22 @@ def install(config, bundle, expected):
     pg = common.HOST_DATA / "postgres17"
     require(not any(pg.iterdir()) or (pg / "PG_VERSION").is_file() and (pg / "PG_VERSION").read_text().strip() == "17", "Refusing incompatible or unknown PostgreSQL data")
     os.chown(common.HOST_DATA / "media", 10001, 10001)
+    events.checkpoint("runtime-files")
     refresh(config)
     registry = config["published"]["image"].split("/", 1)[0]
     with tempfile.TemporaryDirectory(prefix="accounting-registry-", dir=common.RUN) as private:
         cli = ["docker", "--config", private]
+        events.checkpoint("registry-login")
         common.run(cli + ["login", registry, "--username", "oauth2accesstoken", "--password-stdin"], payload=common.access_token().encode())
+        events.checkpoint("application-pull")
         common.run(cli + ["pull", config["published"]["image"]])
+    events.checkpoint("image-identity")
     image_check(config)
     pins = json.loads((release / "docker/preview-pins.json").read_text())
-    for ref in (pins["caddy"]["reference"], pins["postgresql"]["reference"]):
+    for phase, ref in (("proxy-pull", pins["caddy"]["reference"]), ("postgres-pull", pins["postgresql"]["reference"])):
+        events.checkpoint(phase)
         common.run(["docker", "pull", ref])
+    events.checkpoint("static-export")
     static = common.HOST_DATA / "static" / config["published"]["commit"]
     if not static.exists():
         sys.path.insert(0, str(release / "tools"))
@@ -216,17 +228,25 @@ def install(config, bundle, expected):
         image.export_static(config["published"]["image"], static)
     require((static / "staticfiles.json").is_file(), "Static export manifest missing")
     environment_file(config)
+    events.checkpoint("compose-config")
     compose(config, "config", "--quiet")
+    events.checkpoint("database-start")
     compose(config, "up", "--detach", "--wait", "--wait-timeout", "180", "db")
+    events.checkpoint("database-role")
     bootstrap_database(config)
     # Migrations are an explicit release action here, never an entrypoint/boot action.
+    events.checkpoint("database-migrate")
     compose(config, "run", "--rm", "--no-deps", "web", "python", "manage.py", "migrate", "--noinput")
+    events.checkpoint("services-start")
     compose(config, "up", "--detach", "--wait", "--wait-timeout", "180")
+    events.checkpoint("synthetic-markers")
     persistence(config, create=True)
     common.private_json(common.HOST_CONFIG, config)
     common.private_json(common.HOST_DATA / "preview-state.json", {"commit": "git:" + config["published"]["commit"], "initialised": True})
+    events.checkpoint("boot-install")
     install_units(release)
-    return {"status": "Started", "hostname": config["hostname"], "public_verification": "Pending", "reboot_verification": "Pending"}
+    return {"status": "Started", "hostname": config["hostname"], "application_commit": "git:" + config["published"]["commit"],
+            "deployment_commit": "git:" + common.deployment_commit(config), "public_verification": "Pending", "reboot_verification": "Pending"}
 
 
 def install_units(release):
@@ -352,14 +372,17 @@ def main():
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 result = install(config, args.bundle, args.bundle_hash)
         elif args.action == "secrets":
+            events.checkpoint("runtime-files")
             refresh(config)
             result = {"status": "Loaded pinned runtime secrets"}
         elif args.action == "resume":
+            events.checkpoint("resume")
             mounted(config)
             require((common.HOST_DATA / "postgres17/PG_VERSION").read_text().strip() == "17", "PostgreSQL data missing")
             compose(config, "up", "--detach", "--wait", "--wait-timeout", "180", "--pull", "never")
             result = {"status": "Resumed without migrations"}
         elif args.action == "inspect":
+            events.checkpoint("inspection")
             result = inspect(config)
         elif args.action in {"probe-create", "probe-delete"}:
             sys.stdout.buffer.write(probe_user(config, "create" if args.action == "probe-create" else "delete"))
@@ -370,7 +393,8 @@ def main():
                            env=common.compose_environment(), check=True)
             return
         print(json.dumps(result, ensure_ascii=False, indent=2))
-    except (OSError, ValueError, RuntimeError, KeyError, subprocess.SubprocessError) as error:
+    except Exception as error:
+        events.failure(error)
         parser.exit(1, f"S09 host operation stopped ({type(error).__name__}); no credentials printed.\n")
 
 

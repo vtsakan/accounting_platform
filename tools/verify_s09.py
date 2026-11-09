@@ -68,10 +68,18 @@ def check_compose(config):
     require(proxy_mounts["/srv/static"].get("read_only") and proxy_mounts["/data"]["source"] == "/srv/accounting/caddy/data"
             and proxy_mounts["/config"]["source"] == "/srv/accounting/caddy/config", "Certificate state/static mounts differ")
     for name, service in services.items():
+        check_tmpfs(service.get("tmpfs", []))
         for mount in service.get("volumes", []):
             require(mount["type"] == "bind" and mount.get("bind", {}).get("create_host_path") is False, "A missing bind source could create a boot-disk directory")
             if str(mount["source"]).startswith("/run/accounting/"):
                 require(mount.get("read_only"), "Writable credential mount")
+
+
+def check_tmpfs(mounts):
+    for mount in mounts:
+        require(isinstance(mount, str) and mount.split(":", 1)[0].startswith("/"), "Tmpfs options were split into invalid relative mount targets")
+    require(any(mount.startswith("/tmp:") and all(option in mount.split(":", 1)[1].split(",")
+                for option in ("rw", "noexec", "nosuid", "mode=1777")) for mount in mounts), "The protected /tmp mount options must remain one YAML string")
 
 
 def live(path, after_reboot):
@@ -89,13 +97,13 @@ def live(path, after_reboot):
     finally:
         ssh(config, "probe-delete")
     baseline_path = common.ROOT / "private/s09-before-reboot.json"
-    current = {"commit": "git:" + config["published"]["commit"], "boot_id": runtime["boot_id"],
+    current = {"commit": "git:" + config["published"]["commit"], "deployment": "git:" + common.deployment_commit(config), "boot_id": runtime["boot_id"],
                "certificate": cert["fingerprint"], "persistence": runtime["persistence"], "static": runtime["static_digest"]}
     reboot = False
     if after_reboot:
         baseline = json.loads(baseline_path.read_text())
         require(baseline["boot_id"] != current["boot_id"], "VM boot ID has not changed")
-        require(all(baseline[key] == current[key] for key in ("commit", "certificate", "persistence", "static")), "Image, certificate, static assets or synthetic records did not persist")
+        require(all(baseline.get(key) == current[key] for key in ("commit", "deployment", "certificate", "persistence", "static")), "Image, deployment, certificate, static assets or synthetic records did not persist")
         reboot = True
     elif not baseline_path.exists():
         common.private_json(baseline_path, current, exclusive=True)
@@ -105,6 +113,7 @@ def live(path, after_reboot):
     return {"step": "S09", "verified_at": datetime.now(ZoneInfo("Europe/Athens")).isoformat(timespec="seconds"),
             "status": "Verified" if reboot else "Prepared", "hostname": config["hostname"],
             "image": {**config["published"], "commit": "git:" + config["published"]["commit"]}, "dns": records, "certificate": cert,
+            "deployment_source_commit": "git:" + common.deployment_commit(config),
             "public_http": web, "private_ports": ports, "vm_runtime": runtime,
             "reboot_persistence_verified": reboot, "temporary_login_user_removed": True,
             "certificate_auto_renewal_configured": True, "actual_renewal_observed": False,
@@ -160,7 +169,8 @@ def main():
             record(report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
     except (ValueError, RuntimeError, OSError, KeyError) as error:
-        parser.exit(1, f"S09 verification stopped ({type(error).__name__}); no credentials printed.\n")
+        detail = ": " + str(error) if isinstance(error, common.CommandFailure) else ""
+        parser.exit(1, f"S09 verification stopped ({type(error).__name__}){detail}; no credentials printed.\n")
 
 
 if __name__ == "__main__":

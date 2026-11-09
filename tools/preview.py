@@ -14,6 +14,7 @@ import cloud
 from dev import require_local_docker
 import image
 import preview_common as common
+import preview_events as events
 
 
 def gcloud(config, *arguments, json_output=False):
@@ -86,31 +87,56 @@ def publish(config, path):
     cloud.require(len(digests) == 1, "Ambiguous registry digest after publication")
     config["published"] = {"commit": commit, "image": digests[0], "image_id": built["image_id"],
                            "context_digest": built["context"]["digest"], "delivery_evidence": common.file_sha(proof)}
+    config.pop("deployment_commit", None)
     common.validate(config, published=True)
     common.private_json(path, config)
     return {"status": "Published", **config["published"]}
 
 
-def ship(config):
+def select_deployment_source(config):
+    """Use new committed operator tooling only for identical application bytes."""
+    revision, _, context = image.committed_context()
+    cloud.require(context["digest"] == config["published"]["context_digest"],
+                  "Current application context differs from the published image; run the delivery/publication gates for the changed application")
+    config["deployment_commit"] = revision
+    return revision
+
+
+def ship(config, *, current_tools=False, config_path=None):
     common.validate(config, published=True)
+    events.checkpoint("ship-source")
+    if current_tools:
+        select_deployment_source(config)
+    commit = common.deployment_commit(config)
+    if commit != config["published"]["commit"]:
+        revision, _, context = image.committed_context()
+        cloud.require(revision == commit and context["digest"] == config["published"]["context_digest"],
+                      "Deployment source must be the clean current commit with the published application context")
     common.dns(config)
-    commit = config["published"]["commit"]
     gcp = config["gcp"]
     with tempfile.TemporaryDirectory(prefix="accounting-ship-") as temporary:
         stage = Path(temporary)
         bundle = stage / "source.tar"
         bundle.write_bytes(common.run(["git", "archive", "--format=tar", commit]))
-        for name in ("cloud.py", "preview_common.py", "preview_host.py"):
+        helpers = ["cloud.py", "preview_common.py", "preview_host.py"]
+        if common.run(["git", "ls-tree", "--name-only", commit, "tools/preview_events.py"]).strip():
+            helpers.append("preview_events.py")
+        for name in helpers:
             (stage / name).write_bytes(common.run(["git", "show", f"{commit}:tools/{name}"]))
         private = stage / "preview.json"
         common.private_json(private, config)
+        if config_path:
+            common.private_json(config_path, config)
         target = f"{gcp['ssh_user']}@{gcp['vm_name']}"
+        events.checkpoint("ship-ssh")
         gcloud(config, "compute", "ssh", target, "--zone=" + gcp["zone"], "--tunnel-through-iap",
                "--command=umask 077; mkdir -p accounting-s09-stage")
-        files = [bundle, private, *(stage / name for name in ("cloud.py", "preview_common.py", "preview_host.py"))]
+        files = [bundle, private, *(stage / name for name in helpers)]
+        events.checkpoint("ship-transfer")
         gcloud(config, "compute", "scp", "--zone=" + gcp["zone"], "--tunnel-through-iap", *map(str, files), target + ":accounting-s09-stage/")
         command = ["sudo", "-n", "python3", "accounting-s09-stage/preview_host.py", "install",
                    "--config=accounting-s09-stage/preview.json", "--bundle=accounting-s09-stage/source.tar", "--bundle-hash=" + common.file_sha(bundle)]
+        events.checkpoint("ship-install")
         return gcloud(config, "compute", "ssh", target, "--zone=" + gcp["zone"], "--tunnel-through-iap",
                       "--command=" + shlex.join(command), json_output=True)
 
@@ -121,8 +147,10 @@ def main():
     parser.add_argument("--config", type=Path, default=common.PRIVATE)
     parser.add_argument("--hostname", default="totalaccounting.duckdns.org")
     parser.add_argument("--email")
+    parser.add_argument("--current-tools", action="store_true", help="Ship the clean current operator commit using the unchanged published application image")
     args = parser.parse_args()
     try:
+        cloud.require(not args.current_tools or args.action == "ship", "--current-tools requires ship")
         if args.action == "configure":
             email = args.email or input("Certificate contact email (stored in private configuration): ").strip()
             result = configure(args.config, args.hostname, email)
@@ -133,7 +161,7 @@ def main():
             elif args.action == "publish":
                 result = publish(config, args.config)
             else:
-                result = ship(config)
+                result = ship(config, current_tools=args.current_tools, config_path=args.config)
         print(json.dumps(result, ensure_ascii=False, indent=2))
     except (OSError, ValueError, RuntimeError, KeyError) as error:
         parser.exit(1, f"S09 stopped ({type(error).__name__}): {error}\n")

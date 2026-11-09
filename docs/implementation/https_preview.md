@@ -206,3 +206,61 @@ availability SLA, incident-owner policy or full requirement acceptance is approv
 - [Docker DOCKER-USER firewall rules](https://docs.docker.com/engine/network/firewall-iptables/)
 - [Artifact Registry short-lived authentication](https://cloud.google.com/artifact-registry/docs/docker/authentication)
 - [Secret Manager integrity verification](https://cloud.google.com/secret-manager/docs/data-integrity)
+
+## S09 deployment retry after the first operator attempt
+
+The operator's current-source Docker gate passed for application commit
+`git:70cf0d3dbc601163f33ae9c6f927605be50841aa`: 64 passed tests, 26 exact known
+failures, zero unexpected outcomes. Publication returned the immutable Artifact
+Registry digest recorded in evidence/S09-deployment-retry.json. SSH, sudo, the
+five staged inputs and the expected data UUID were subsequently observed. No
+accounting-preview containers were listed. The hidden original installer error
+has not been identified; successful transfer does not prove successful setup.
+
+Inspection reproduced a separate definite Compose bug: unquoted commas in a YAML
+flow list split web/Caddy tmpfs options into five mounts. The corrected block list
+keeps each mount and its options in one string. Offline checks now reject the
+previous split form, missing protection flags and relative targets. Configuration
+validation alone is still not Docker container execution.
+
+Apply accounting-platform-S09-deployment-fix.patch on the existing S09 branch,
+then use this laptop sequence. No new configure/publish operation is required:
+
+```bash
+cd ~/accountant_cloud/accounting_v5/accounting-platform
+git am --keep-cr ~/Downloads/accounting-platform-S09-deployment-fix.patch
+python3 tools/verify_s09.py
+git push
+python3 tools/preview.py ship --current-tools
+```
+
+`--current-tools` selects the clean current Git commit for the deployment archive
+and bootstrap helpers. It requires its application context digest to equal the
+already published image context. It never changes the published image's source
+revision, registry digest or image ID. The operator commit is separately recorded
+as private configuration's deployment_commit. Its release directory and environment
+file use that operator commit; static export remains keyed to the image commit.
+Image label checks still compare with the original application commit. A changed
+application context or dirty tracked checkout stops the retry. An explicit later
+publication clears this operator override for the new image.
+
+Boot uses the selected immutable operator release. Public evidence and the reboot
+baseline distinguish application and operator commits; both must persist. Original
+source bundles are retained, without editing an earlier release in place. Normal
+retries keep existing data and pinned secret versions. PostgreSQL 15/unknown data
+and unexpected cloud/database identity remain rejected.
+
+Labeled diagnostics identify source preparation, SSH, transfer, VM checks, runtime
+material reads, registry login/pull, static export, Compose configuration, database
+startup/migration and boot installation. When the VM installer fails, the laptop
+relays only a bounded typed record: stage, exception class, reviewed literal reason,
+program/exit code, HTTP status, errno and source module/line where available. It
+never forwards raw provider bodies, SQL input, command arguments, private JSON,
+credential output or arbitrary stderr. Secret Manager HTTP errors retain their
+status without their URL, headers, body or token. Unknown/forged diagnostic fields
+are discarded. Ordinary stdout remains parseable JSON.
+
+After ship reports Started, run `python3 tools/verify_s09.py --live --record`, then
+follow the controlled reboot instructions above. The fix is Prepared pending actual
+operator retry, public HTTPS/login and reboot proof. S10 and real-data acceptance
+remain gated. The 26 financial defects are unchanged.

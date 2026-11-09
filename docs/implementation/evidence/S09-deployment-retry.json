@@ -1,0 +1,90 @@
+{
+  "step": "S09",
+  "status": "Prepared",
+  "reviewed_at": "2026-11-09T19:57:20+02:00",
+  "source_reference_commit": "git:70cf0d3dbc601163f33ae9c6f927605be50841aa",
+  "observed_operator_delivery": {
+    "status": "Verified",
+    "execution": "Operator local Docker Engine",
+    "tests_run": 90,
+    "tests_passed": 64,
+    "known_failures_reproduced": 26,
+    "unexpected_outcomes": 0,
+    "secret_scan_unreviewed": 0
+  },
+  "observed_publication": {
+    "status": "Published",
+    "application_commit": "git:70cf0d3dbc601163f33ae9c6f927605be50841aa",
+    "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+    "image_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+    "context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "delivery_evidence": "sha256:b5d08c622b4bb41bbbb3969d04bee97a2d0fb208dfdbea55fb5669deb6da2ec5"
+  },
+  "observed_failed_ship": {
+    "exit_code": 1,
+    "original_message": "gcloud operation failed (exit 1)",
+    "underlying_cause": "Unconfirmed; do not attribute it solely to the independently reproduced tmpfs defect"
+  },
+  "observed_readonly_vm_probe": {
+    "iap_ssh": true,
+    "sudo_root": true,
+    "staged_files_present": true,
+    "data_uuid": "22415b2c-1e1b-4e39-9ce5-5fb0c19dd663",
+    "matching_accounting_containers_listed": 0
+  },
+  "confirmed_compose_defect": {
+    "old_web_tmpfs": [
+      "/tmp:rw",
+      "noexec",
+      "nosuid",
+      "size=128m",
+      "mode=1777"
+    ],
+    "old_caddy_tmpfs": [
+      "/tmp:rw",
+      "noexec",
+      "nosuid",
+      "size=64m",
+      "mode=1777"
+    ],
+    "correction": "Block lists keep each mount/options value in one string; verifier rejects split/relative mounts"
+  },
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "tests": 31,
+    "business_migrations_dependency_locks_unchanged": true,
+    "full_acceptances_pending": 85,
+    "compose_config_validated_without_engine": true,
+    "caddy_native_validated": true,
+    "docker_containers_executed": false,
+    "live_cloud_execution": false
+  },
+  "application_context_unchanged": true,
+  "application_files": 75,
+  "reuses_published_image_only_when_context_matches": true,
+  "separate_application_and_operator_commits": true,
+  "bounded_diagnostics": "Stage/type/reviewed reason/program/status/module/line only; no raw provider stderr, headers, tokens, command arguments or SQL payloads",
+  "vm_retry_run_by_workspace": false,
+  "docker_containers_executed_by_workspace": false,
+  "original_failure_reproduced_on_vm": false,
+  "public_https_or_reboot_verified": false,
+  "off_vm_restore_verified": false,
+  "financial_defects_fixed": false,
+  "full_requirement_acceptance": "Pending",
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 35,
+    "unique_history_blobs": 298,
+    "candidate_text_files": 172,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 78,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

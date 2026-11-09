@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-08. Current step: **S07 Verified — production image and delivery checks**. Next step: **S08 — Google Cloud VM checkpoint**.
+Updated 2026-11-09. Current step: **S08 Verified — Google Cloud foundation**. Next step: **S09 — DuckDNS/HTTPS preview**, requiring the actual hostname/control and ACME contact. The selected VM already exists.
 
 ## Repository position
 
@@ -11,7 +11,8 @@ Updated 2026-11-08. Current step: **S07 Verified — production image and delive
 - Pushed S04/S03 baselines: `aae1250c441f76b804c532711bc00edc3258943e` and `1c296bbbd2a1aa3e642b1982a8d0b8dd2cfb7718`.
 - S02: `a6a251b434bce295ec04240a63e33a656dc7f92e`, tagged `s02-complete`; S01: `86d01abaf76fbbed669ae39a12b41ff4d47b831a`, tagged `s01-complete`.
 - Original source: `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`.
-- S07 is a local commit/patch for the user's terminal workflow; no remote S07 branch, CI run or pull request is claimed. The integration previously rejected writes.
+- Pushed S07 verification baseline: `a215beb91e2e49a5ffd1fa9ce8c751b8f3572234` on `origin/step/s07-production-delivery`; read through GitHub and fetched before S08. No successful CI run is inferred from that push.
+- S08 is supplied as a patch on `step/s08-google-cloud`, based on that pushed baseline. Resolve its applied commit with `git rev-parse HEAD`; no S08 remote push is claimed before the user performs it.
 
 ## Completed foundation and selected scope
 
@@ -30,7 +31,8 @@ The production Docker image, explicit migrations, strict PostgreSQL suite, non-r
 ## Evidence and commands
 
 - `evidence/S01-verification.json` through `evidence/S06-verification.json`: historical step snapshots; S05/S06 current records include the user's Docker verification.
-- `evidence/S07-verification.json`: actual mode, migrations, 90-test outcomes, native health/static/log/configuration proof and pending image blocker.
+- `evidence/S07-verification.json`: successful real Docker gate, immutable image/context identity, migrations and 90-test outcomes (64 passed, 26 exact known failures), health/static/log/configuration proof. Earlier failed attempts are historical.
+- `evidence/S08-verification.json`, `cloud_inventory.json`, `google_cloud.md`: operator-executed cloud/host/access evidence, actual resources, commands, cost assumptions and limitations.
 - `evidence/S07-configuration-checks.json`: observed Compose/YAML configuration-only checks; no Engine execution.
 - `evidence/S07-static-export-fix.json`: reported Docker export failure, host regression results and guarded existing-image retry.
 - `production_delivery.md`: image identity, explicit migrations, probes, static export, CI artifacts, warnings and next gate.
@@ -51,8 +53,50 @@ For daily tests use `python3 tools/dev.py test`. Earlier verifiers remain histor
 
 Django production checks show zero errors and reviewed warnings W005/W021: HSTS includeSubDomains/preload remain disabled pending S09 hostname/TLS verification. Other warnings fail delivery verification. Actual Caddy/static/TLS serving is S09; restore/incident operations are S10. Two Gunicorn workers are a provisional default, not workload evidence.
 
-All 71 user and 14 quality acceptance statuses remain Pending. D01–D09 domain/operator approvals remain open. No real client data, live messages/connectors, cloud resources, off-VM restore or full financial/office/Greek frontend acceptance is claimed.
+All 71 user and 14 quality acceptance statuses remain Pending. D01–D09 unresolved domain/operator approvals remain open. S08 cloud resources are actually provisioned; no real client data, live messages/connectors, application deployment, off-VM restore or full financial/office/Greek frontend acceptance is claimed.
 
 ## Google Cloud VM checkpoint
 
-**After S07 Docker verification passes, create/select the VM at S08.** No VM is needed for the remaining S07 local checks. Use deployment_parameters.md for project/billing, EU region/zone, operator identity, VM/disks, reserved static IP, DuckDNS hostname and private storage/secret references. S09 deploys HTTPS; S10 proves off-VM restore before live data. Legacy PostgreSQL 15 export/import remains S25; never attach its old data directory to PostgreSQL 17.
+**S08 is complete from operator execution; another VM purchase is not needed.** The user selected the new accounting-only project accounting-514109 and accounting-preview in europe-west1-b. See cloud_inventory.json for the exact retained disk, Premium static IPv4, private buckets, IAM and secret metadata. The biomedical/research project is outside this scope. S09 deploys HTTPS; S10 proves off-VM restore before live data. Legacy PostgreSQL 15 logical migration remains S25.
+
+## S08 execution and repository tools
+
+The actual lower-cost selection is regular e2-medium (4 GB RAM/shared core) with
+Ubuntu 26.04.1 LTS amd64. Host Docker 29.9.3, Compose 5.7.0 and containerd 2.4.2
+use the retained 50-GiB ext4 data disk at /srv/accounting. Mount dependencies/UUID
+guards were configured, and mount/runtime startup plus cached network-disabled
+hello-world passed after reboot. A physical missing-disk boot test was not run.
+
+IAP SSH works from Cloud Shell and laptop. Effective public ingress is TCP 80/443;
+TCP 22 is limited to IAP. Metadata-key SSH was observed; OS Login was not independently
+verified. The dedicated accounting-vm service account has cloud-platform scope and
+resource-specific roles. The final project IAM query returned no VM project-role
+rows. Pinned signing/database secret version-1 reads passed without printing values;
+project-wide secret listing was denied. No service-account JSON key was used.
+
+Document CRUD/listing passed. Backup upload passed while VM reads/listing/overwrite/
+delete returned 403. Anonymous requests returned 401, correctly allowed by the
+fixed 401/403 expectation. The administrator removed the exact backup probe object.
+Registry listing and reported read permissions passed; a real image pull is S09
+proof after publishing an image. Seven-day soft deletion is not retention approval
+or immutable-backup acceptance. Automated encrypted backup/key recovery/restore
+remain S10 work.
+
+The implementation workspace reviewed the user's output rather than executing GCP
+itself. New configurable cloud/host/access replay tools have offline safeguards;
+their own live execution is not claimed. Actual configuration is Git-ignored under
+private/gcp.json. See google_cloud.md for init/inspect/reference provisioning and
+evidence/S08-verification.json for exact local check counts/code commit.
+
+```bash
+python3 tools/verify_s08.py
+```
+
+Run from a clean committed checkout. This verifies the offline safeguards and
+unchanged S07 application build context, not live cloud availability. No new app/
+database suite, migration or financial fix was run by S08; all 26 known defects
+remain scheduled. Application code, dependencies and Greek frontend are unchanged.
+Monthly budget/alerts, measured workload and incident/restore/key custodians remain
+open D06/D07 inputs. S09 still needs actual DuckDNS control and ACME contact, then
+must prove Caddy/Compose/secret loading, HTTPS/login/static/reboot behaviour. The
+app is not deployed yet. Redis/worker/exactly-one scheduler arrive only at S26.

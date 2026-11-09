@@ -203,7 +203,7 @@ Evidence: steps.csv, CR-001, ACC-IMP-001. Approval evidence: **not recorded**.
 
 ## Work that can proceed
 
-S05/S06 have successful Docker evidence pushed by the user. S07 prepares the production image, health/static path and delivery checks; native proof passes but the actual production Docker image gate must complete before S08. The open decisions above do not require a VM or government credentials for this local work. Resolve each policy at its dependent step. Greek remains confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). Cloud target values are collected at S08 after S07 verification.
+S05/S06 have successful Docker evidence pushed by the user. S07's complete production Docker gate is Verified in pushed commit a215beb91e2e49a5ffd1fa9ce8c751b8f3572234. S08's selected cloud foundation is Verified from operator execution as recorded below. S09 may proceed with actual DuckDNS control/contact; S10 must demonstrate off-VM restore. Resolve each policy at its dependent step. Greek remains confirmed in [CR-001](../requirements/CR-001-Greek-frontend.md). No government credentials or policy approvals are inferred from infrastructure completion.
 
 ## S03 technical selections
 
@@ -236,3 +236,46 @@ The [delivery guide](production_delivery.md) and [S07 evidence](evidence/S07-ver
 The user's first local S07 image build reached locked dependency installation but timed out downloading psycopg-binary from PyPI. The follow-up transport fix sets pip's socket timeout to 120 seconds and explicitly keeps five new-connection attempts in both Dockerfiles. Hash checks, HTTPS, binary-only installs and package locks remain unchanged. This is not a financial change or evidence of a successful Docker build; S07 stays Prepared until the same verifier passes. See evidence/S07-download-timeout-fix.json and the retry instructions in the delivery guide.
 
 Two subsequent user runs successfully built one immutable image but failed at static export. The old docker cp helper hid its captured stderr; the underlying Docker cause is unconfirmed. Export now streams a bounded tar archive from a network-disabled, read-only temporary container and writes validated regular files with host ownership/modes before publishing the directory. Redacted process diagnostics survive failed export/cleanup. The host-only change leaves the production context unchanged. A verification-only --image option accepts an existing local image only when its context digest, source/revision labels, architecture and runtime UID match; original image and current verifier revisions remain distinct. Default build/CI identity policy is unchanged. Seventeen host regressions pass; real Docker execution of the fix, full S07 verification and S08 eligibility remain pending. See evidence/S07-static-export-fix.json.
+
+## S07 gate completion and S08 actual selections — 2026-11-09
+
+The preceding S07 Prepared/failure paragraphs are historical. The user subsequently
+completed the Docker gate and pushed the successful evidence at
+`a215beb91e2e49a5ffd1fa9ce8c751b8f3572234` on `step/s07-production-delivery`.
+S08 was based on that actual pushed commit, not the stale native-only workspace.
+
+The user selected a new accounting-only project, a regular e2-medium shared-core
+VM in Belgium, Ubuntu 26.04.1 LTS and 30/50-GiB boot/data disks. This supersedes the
+earlier e2-standard-2/Ubuntu24.04 candidates without changing the app's pinned
+runtime. Premium-tier regional static IPv4, IAP-limited metadata-key SSH, retained
+ext4 data storage and Docker/containerd mount guards were actually configured.
+OS Login and a physical missing-disk boot test are not claimed. Host persistence
+passed across reboot. Measured workload/availability acceptance remains separate.
+
+Private EU object buckets use uniform IAM and enforced public access prevention.
+The VM receives document object-user and backup object-creator permissions; the
+registry grants reader and each runtime secret grants accessor. The attached
+dedicated identity uses cloud-platform scope/metadata tokens. The operator's final
+project IAM query returned no VM project roles. Pinned generated signing/database
+secrets use version 1 with payload replication in Belgium. No service-account JSON
+key was used; no new user-managed-key inventory execution is invented.
+
+The real denied-access probe confirmed anonymous 401 and authenticated 403 outcomes.
+The overly narrow anonymous 403-only expectation was corrected without weakening
+authenticated denials. Document operations and backup upload/restrictions passed;
+the exact backup test object was removed by the administrator. Registry listing
+and reported read permissions passed; a real image pull is S09 proof.
+
+The versioned provisioner/host replay/access probe are configurable reference tools
+with local safeguards. Their new code was not executed against GCP here; operator
+output proves the deployed infrastructure. Public inventory/evidence record metadata,
+never secret payloads. Operative parameters and secret references remain in ignored
+private/gcp.json. No app/dependency/migration/Greek UI change was introduced by S08.
+
+D06/D07 still need budget/alerts, workload, named operators/key custodians, business
+retention and recovery approval. Seven-day soft deletion and upload-only VM IAM
+are infrastructure choices, not immutable-backup or retention-policy acceptance.
+S09 deploys only synthetic preview data; S10 must establish encrypted automated
+backup and restore. All 85 full acceptance statuses remain Pending. See
+[S08 instructions](google_cloud.md), [inventory](cloud_inventory.json) and
+[evidence](evidence/S08-verification.json).

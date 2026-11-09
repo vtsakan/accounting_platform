@@ -1,6 +1,7 @@
 """Offline rejection tests. No fixture is evidence of a live deployment."""
 
 import base64
+import copy
 from contextlib import redirect_stderr
 import errno
 import io
@@ -95,7 +96,7 @@ class ConfigurationTests(unittest.TestCase):
     def test_pulled_image_check_uses_original_application_revision(self):
         config = configuration(); config["deployment_commit"] = "b" * 40
         pub = config["published"]
-        data = {"Id": pub["image_id"], "Architecture": "amd64", "Config": {"User": "10001:10001", "Labels": {
+        data = {"Id": pub["image_id"], "RepoDigests": [pub["image"]], "Os": "linux", "Architecture": "amd64", "Config": {"User": "10001:10001", "Labels": {
             "org.opencontainers.image.source": "https://github.com/vtsakan/accounting_platform",
             "org.opencontainers.image.revision": pub["commit"], "gr.accounting.source-context": pub["context_digest"]}}}
         with patch.object(common, "run", return_value=[data]):
@@ -138,6 +139,68 @@ class ConfigurationTests(unittest.TestCase):
             verified_delivery(built, {**report, "status": "Prepared"})
         with self.assertRaises(ValueError):
             verified_delivery({**built, "revision": "git:" + "b" * 40}, report)
+
+
+class ImageIdentityTests(unittest.TestCase):
+    def metadata(self, containerd=False):
+        config = configuration(); pub = config["published"]
+        data = {"Id": pub["image_id"], "RepoDigests": [pub["image"]], "Os": "linux", "Architecture": "amd64",
+                "Config": {"User": "10001:10001", "Labels": {"org.opencontainers.image.source": "https://github.com/vtsakan/accounting_platform",
+                    "org.opencontainers.image.revision": pub["commit"], "gr.accounting.source-context": pub["context_digest"]}}}
+        if containerd:
+            data["Id"] = pub["image"].split("@", 1)[1]
+            data["Descriptor"] = {"digest": data["Id"], "mediaType": "application/vnd.oci.image.manifest.v1+json"}
+        return config, data
+
+    def test_classic_and_containerd_ids_keep_the_same_publication_receipt(self):
+        for containerd in (False, True):
+            config, data = self.metadata(containerd)
+            before = copy.deepcopy(config)
+            host.image_metadata_check(config, data)
+            self.assertEqual(config, before)
+
+    def test_pinned_manifest_does_not_accept_a_different_image_id(self):
+        config, data = self.metadata(True); data["Id"] = "sha256:" + "9" * 64
+        with self.assertRaisesRegex(ValueError, "Pulled image ID differs"):
+            host.image_metadata_check(config, data)
+
+    def test_matching_id_or_labels_never_replace_registry_binding(self):
+        for containerd in (False, True):
+            for refs in ([], ["other.invalid/web@sha256:" + "1" * 64], ["example.invalid/web@sha256:" + "8" * 64]):
+                config, data = self.metadata(containerd); data["RepoDigests"] = refs
+                with self.subTest(containerd=containerd, refs=refs), self.assertRaisesRegex(ValueError, "not bound"):
+                    host.image_metadata_check(config, data)
+
+    def test_a_present_descriptor_must_match_the_published_manifest(self):
+        for value in ({"digest": "sha256:" + "9" * 64}, "untrusted"):
+            config, data = self.metadata(True); data["Descriptor"] = value
+            with self.assertRaisesRegex(ValueError, "descriptor differs"):
+                host.image_metadata_check(config, data)
+
+    def test_containerd_still_checks_source_revision_and_context(self):
+        for key in ("org.opencontainers.image.source", "org.opencontainers.image.revision", "gr.accounting.source-context"):
+            config, data = self.metadata(True); data["Config"]["Labels"][key] = "untrusted"
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                host.image_metadata_check(config, data)
+
+    def test_containerd_still_rejects_other_platforms_and_root_user(self):
+        for key, value in (("Architecture", "arm64"), ("Os", "windows"), ("User", "0:0")):
+            config, data = self.metadata(True)
+            if key == "User":
+                data["Config"][key] = value
+            else:
+                data[key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                host.image_metadata_check(config, data)
+
+    def test_running_container_must_use_pinned_reference_and_validated_ids(self):
+        for containerd in (False, True):
+            config, data = self.metadata(containerd); host.image_metadata_check(config, data)
+            for identifier in {config["published"]["image_id"], data["Id"]}:
+                host.running_image_check(config, data, {"Config": {"Image": config["published"]["image"]}, "Image": identifier})
+            for image_ref, identifier in (("untrusted:latest", data["Id"]), (config["published"]["image"], "sha256:" + "8" * 64)):
+                with self.assertRaises(ValueError):
+                    host.running_image_check(config, data, {"Config": {"Image": image_ref}, "Image": identifier})
 
 
 class CredentialTests(unittest.TestCase):

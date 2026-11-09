@@ -264,3 +264,29 @@ After ship reports Started, run `python3 tools/verify_s09.py --live --record`, t
 follow the controlled reboot instructions above. The fix is Prepared pending actual
 operator retry, public HTTPS/login and reboot proof. S10 and real-data acceptance
 remain gated. The 26 financial defects are unchanged.
+
+## S09 image-identity follow-up
+
+The retry at operator commit git:8f16ea5a57c218411707c6fdcbd73626378d2063 reached
+image-identity after successful pull. A read-only VM probe confirmed the expected
+manifest digest, RepoDigests reference, platform, UID, app revision and context.
+The containerd store reports that manifest digest as Id. It differs from the
+publication receipt's laptop build ID without implying a different artifact.
+
+Apply accounting-platform-S09-image-identity-fix.patch after the deployment fix:
+
+```bash
+git am --keep-cr ~/Downloads/accounting-platform-S09-image-identity-fix.patch
+python3 tools/verify_s09.py
+git push
+python3 tools/preview.py ship --current-tools
+```
+
+The pinned registry digest, expected build ID and application source are preserved.
+The audit accepts only those publication identities and still requires the exact
+registry reference, matching optional descriptor, Linux/amd64, UID 10001:10001,
+source URL, application commit and context. Unrelated IDs, changed content bindings
+or labels fail closed. Runtime evidence records the build, daemon and container
+IDs separately. No Docker backend migration, expected-ID overwrite, rebuild or
+republish is part of this fix. A successful ship must still be followed by the
+public --live check and the actual --after-reboot gate before S09 is complete.

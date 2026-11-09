@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-09. Current step: **S09 Prepared — DuckDNS HTTPS preview**. Next step: **complete public deployment and reboot proof**.
+Updated 2026-11-10. Current step: **S09 Prepared — DuckDNS HTTPS preview**. Next step: **complete public deployment and reboot proof**.
 
 ## Repository position
 
@@ -153,3 +153,23 @@ follow-up patch, check the repository, push, then run preview.py ship --current-
 Actual VM image pull/setup, public HTTPS/login and reboot still require proof;
 S09 is Prepared. Application code, locks, migrations and all 85 acceptance states
 are unchanged. Read the retry section of https_preview.md before continuing.
+
+## S09 confirmed image-store identity difference — 2026-11-10
+
+The operator pushed the first deployment fix at git:8f16ea5a57c218411707c6fdcbd73626378d2063.
+Its retry passed VM setup through registry pull and stopped at image-identity.
+The read-only probe confirmed the containerd snapshotter, daemon image ID equal
+to the recorded registry digest, the exact pinned RepoDigests reference, amd64,
+UID 10001:10001, application revision 70cf0d3 and the unchanged source context.
+The check had incorrectly required the laptop's build image ID on every store.
+
+The new operator-only fix accepts only the recorded build ID or the recorded
+registry digest, additionally requiring the exact registry reference, matching
+optional descriptor, Linux/amd64, runtime UID, source URL, revision and context.
+Running-container checks retain the pinned reference and validated IDs. Both build
+and VM identities are retained in runtime evidence; no expected value is learned
+from an untrusted VM response. Apply the follow-up identity patch and retry
+preview.py ship --current-tools. App image, code, locks, migrations and all 26
+financial failures are unchanged. The application context is still identical.
+Actual app startup, public HTTPS/login and reboot proof remain Pending; S09 stays
+Prepared. See evidence/S09-image-identity.json and the HTTPS retry guide.

@@ -162,14 +162,32 @@ def bootstrap_database(config):
     require(b"restricted-role-ready" in compose(config, "run", "--rm", "--no-deps", "web", "python", "-c", check), "Application credential failed")
 
 
+def image_metadata_check(config, data):
+    published = config["published"]
+    registry_digest = published["image"].split("@", 1)[1]
+    labels = data["Config"].get("Labels", {})
+    require(data.get("Os") == "linux" and data["Architecture"] == "amd64" and data["Config"]["User"] == "10001:10001", "Image platform/user differs")
+    require(published["image"] in (data.get("RepoDigests") or []), "Pulled image is not bound to pinned registry digest")
+    # Classic stores report a configuration ID; containerd reports the target
+    # manifest/index ID. Both anchors were recorded during publication. Never
+    # accept an unrelated ID or learn/overwrite an expected ID from the VM.
+    require(data["Id"] in {published["image_id"], registry_digest}, "Pulled image ID differs from published image")
+    descriptor = data.get("Descriptor")
+    require(descriptor is None or (isinstance(descriptor, dict) and descriptor.get("digest") == registry_digest),
+            "Pulled image descriptor differs from pinned registry digest")
+    require(labels.get("org.opencontainers.image.source") == "https://github.com/vtsakan/accounting_platform", "Unexpected image source")
+    require(labels.get("org.opencontainers.image.revision") == published["commit"] and labels.get("gr.accounting.source-context") == published["context_digest"], "Image revision/context differs")
+
+
 def image_check(config):
     data = common.run(["docker", "image", "inspect", config["published"]["image"]], json_output=True)[0]
-    labels = data["Config"].get("Labels", {})
-    require(data["Architecture"] == "amd64" and data["Config"]["User"] == "10001:10001", "Image platform/user differs")
-    require(data["Id"] == config["published"]["image_id"], "Pulled image ID differs from published image")
-    require(labels.get("org.opencontainers.image.source") == "https://github.com/vtsakan/accounting_platform", "Unexpected image source")
-    require(labels.get("org.opencontainers.image.revision") == config["published"]["commit"] and labels.get("gr.accounting.source-context") == config["published"]["context_digest"], "Image revision/context differs")
+    image_metadata_check(config, data)
     return data
+
+
+def running_image_check(config, audited_image, container):
+    require(container["Config"]["Image"] == config["published"]["image"], "Running container image differs from release")
+    require(container["Image"] in {config["published"]["image_id"], audited_image["Id"]}, "Running application image ID differs")
 
 
 def environment_file(config):
@@ -275,10 +293,11 @@ def settings_check(config):
 
 def inspect(config):
     mounted(config)
-    image_check(config)
+    audited_image = image_check(config)
     pins = json.loads((release_path(config) / "docker/preview-pins.json").read_text())
     expected_images = {"web": config["published"]["image"], "db": pins["postgresql"]["reference"], "caddy": pins["caddy"]["reference"]}
     ports = {}
+    running_web_id = None
     for service in ("db", "web", "caddy"):
         identifier = compose(config, "ps", "--quiet", service).decode().strip()
         require(identifier, "Expected service is missing")
@@ -286,7 +305,8 @@ def inspect(config):
         require(data["State"]["Running"], "Expected service is stopped")
         require(data["Config"]["Image"] == expected_images[service], "Running container image differs from release")
         if service == "web":
-            require(data["Image"] == config["published"]["image_id"], "Running application image ID differs")
+            running_image_check(config, audited_image, data)
+            running_web_id = data["Image"]
         ports[service] = data["HostConfig"].get("PortBindings") or {}
         if service != "caddy":
             require(not ports[service], "Application/database has a published port")
@@ -313,6 +333,8 @@ def inspect(config):
     name = manifest["paths"]["admin/css/base.css"]
     static = common.HOST_DATA / "static" / config["published"]["commit"] / name
     return {"status": "Passed", "boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip(), "ports": ports,
+            "image_identity": {"published_build_id": config["published"]["image_id"], "daemon_image_id": audited_image["Id"],
+                               "pinned_registry_image": config["published"]["image"], "running_image_id": running_web_id},
             "settings": settings, "database": role, "container_metadata_blocked": True, "static_path": "/static/" + name,
             "static_digest": common.file_sha(static), "persistence": persistence(config)}
 

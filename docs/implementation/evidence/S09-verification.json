@@ -24,7 +24,7 @@
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
-    "tests": 31,
+    "tests": 38,
     "business_migrations_dependency_locks_unchanged": true,
     "full_acceptances_pending": 85,
     "compose_config_validated_without_engine": true,
@@ -170,8 +170,7 @@
   "domain_policy_approvals_recorded": false,
   "full_requirement_acceptance": "Pending",
   "blockers": [
-    "First ship failed; original underlying stage/cause not established",
-    "Apply the host-only retry patch and run ship --current-tools",
+    "Apply the Docker image-store identity compatibility fix and finish VM setup",
     "Public trusted HTTPS/login and genuine VM reboot proof remain unrun"
   ],
   "next_step": "Complete S09 operator deployment and after-reboot gate; then S10 backup/restore",
@@ -214,6 +213,7 @@
     "public_vm_execution": false
   },
   "image_publication_verified_from_operator_output": true,
-  "image_pull_on_vm_verified": false,
-  "deployment_retry_evidence": "docs/implementation/evidence/S09-deployment-retry.json"
+  "image_pull_on_vm_verified": true,
+  "deployment_retry_evidence": "docs/implementation/evidence/S09-deployment-retry.json",
+  "image_identity_evidence": "docs/implementation/evidence/S09-image-identity.json"
 }

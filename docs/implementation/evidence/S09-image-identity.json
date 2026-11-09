@@ -1,0 +1,72 @@
+{
+  "step": "S09",
+  "status": "Prepared",
+  "reviewed_on": "2026-11-10",
+  "source_reference_commit": "git:8f16ea5a57c218411707c6fdcbd73626378d2063",
+  "observed_retry": {
+    "failing_stage": "image-identity",
+    "message": "Pulled image ID differs from published image",
+    "registry_pull_completed": true
+  },
+  "observed_vm_probe": {
+    "driver_type": "io.containerd.snapshotter.v1",
+    "daemon_image_id": "sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+    "repo_digests": [
+      "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb"
+    ],
+    "architecture": "amd64",
+    "user": "10001:10001",
+    "application_revision": "git:70cf0d3dbc601163f33ae9c6f927605be50841aa",
+    "context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726"
+  },
+  "publication_build_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+  "publication_registry_reference": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+  "cause": "The old guard required the build-host Id representation on the containerd store, which reports the target manifest digest",
+  "correction": {
+    "trusted_anchors": "Recorded build ID and recorded registry digest only",
+    "exact_repo_digest_required": true,
+    "descriptor_checked_when_present": true,
+    "linux_amd64_and_uid_required": true,
+    "source_url_revision_context_required": true,
+    "running_container_reference_and_identity_required": true,
+    "publication_receipt_mutated": false
+  },
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "tests": 38,
+    "business_migrations_dependency_locks_unchanged": true,
+    "full_acceptances_pending": 85,
+    "compose_config_validated_without_engine": true,
+    "caddy_native_validated": true,
+    "docker_containers_executed": false,
+    "live_cloud_execution": false
+  },
+  "application_context_unchanged": true,
+  "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+  "app_rebuilt_or_republished_for_fix": false,
+  "models_migrations_locks_unchanged": true,
+  "operator_retry_of_this_fix": "Pending",
+  "workspace_docker_execution": false,
+  "actual_public_https_or_reboot_proof": false,
+  "full_requirement_acceptance": "Pending",
+  "official_sources": [
+    "https://docs.docker.com/engine/storage/containerd/",
+    "https://github.com/moby/moby/blob/master/daemon/containerd/image_inspect.go"
+  ],
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 37,
+    "unique_history_blobs": 312,
+    "candidate_text_files": 173,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 78,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

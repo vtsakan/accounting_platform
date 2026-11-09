@@ -321,3 +321,25 @@ uses the operator revision, and actual reboot proof includes it. Existing identi
 secret, PostgreSQL-version and explicit-migration guards remain. This host-only fix
 adds no runtime dependency, model, migration, product copy or financial assertion.
 S09 remains Prepared until the operator retry/public/reboot gate succeeds.
+
+## S09 image identity across Docker stores — 2026-11-10
+
+The VM's read-only image probe confirmed that its containerd store reports the
+published manifest digest as Id, whereas the publication receipt retains the
+laptop build ID. Both values already belong to the same recorded publication.
+This is consistent with Docker's containerd ImageInspect implementation, which
+sets Id from the target descriptor, and Docker's storage documentation. The first
+comparison incorrectly assumed all stores use the same Id representation.
+
+The correction requires an exact RepoDigests binding to the immutable selected
+repository reference and accepts Id only from the two already trusted publication
+anchors. Any present descriptor must match the pinned digest. Linux/amd64, UID,
+source URL, application commit and context checks remain mandatory. Runtime
+containers must retain the exact pinned reference and a validated image identity.
+The original build ID is never replaced with whatever the VM reports. This is an
+operator-only compatibility fix, with no registry tag move or image rebuild.
+Actual startup/public/reboot proof remains separate. See S09-image-identity.json.
+
+Official references:
+- https://docs.docker.com/engine/storage/containerd/
+- https://github.com/moby/moby/blob/master/daemon/containerd/image_inspect.go

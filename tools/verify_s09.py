@@ -123,12 +123,15 @@ def record(report):
     else:
         report["repository_checks"] = old.get("repository_checks", {})
         report["native_proxy_checks"] = old.get("native_proxy_checks", {})
+        report["secret_scan"] = old.get("secret_scan", {})
+        report["source_reference_commit"] = BASE
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     status = report.get("status", "Prepared")
     with (RECORDS / "steps.csv").open(newline="") as stream:
         rows = list(csv.DictReader(stream))
     row = next(row for row in rows if row["step_id"] == "S09")
     row.update(status=status, blocker="" if status == "Verified" else "Actual DNS/control, image pull, public HTTPS/login and controlled reboot proof required",
+               manual_acceptance="Public HTTPS/login/static/isolation and actual reboot verified; all full acceptance Pending" if status == "Verified" else "Synthetic preview only; public HTTPS/login and controlled reboot proof required; all full acceptance Pending",
                next_step="S10" if status == "Verified" else "Complete S09 operator deployment/proof")
     with (RECORDS / "steps.csv").open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=rows[0], lineterminator="\n"); writer.writeheader(); writer.writerows(rows)

@@ -182,13 +182,36 @@
     "network_verification": false,
     "scanner_self_check": "Passed: detected an ephemeral synthetic password",
     "history_scope": "All locally reachable Git refs plus the current candidate source",
-    "history_commits": 28,
-    "unique_history_blobs": 276,
+    "history_commits": 30,
+    "unique_history_blobs": 295,
     "candidate_text_files": 170,
     "binary_files_or_blobs_skipped": 6,
-    "reviewed_non_secret_matches": 77,
+    "reviewed_non_secret_matches": 78,
     "unreviewed_findings": 0,
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "committed_source_check": {
+    "workspace_implementation_commit": "git:faced47be9c6190a9fa987782db929233ed27302",
+    "committed_context_matches_native_tested_context": true,
+    "committed_application_context": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "repository_checks": {
+      "mode": "offline",
+      "status": "Prepared",
+      "tests": 21,
+      "business_migrations_dependency_locks_unchanged": true,
+      "full_acceptances_pending": 85,
+      "compose_config_validated_without_engine": true,
+      "caddy_native_validated": true,
+      "docker_containers_executed": false,
+      "live_cloud_execution": false
+    }
+  },
+  "patch_application_check": {
+    "base": "git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac",
+    "git_am_keep_cr": "Passed in an isolated clean worktree",
+    "offline_tests_after_application": 21,
+    "compose_and_native_caddy_validation_after_application": "Passed",
+    "public_vm_execution": false
   }
 }

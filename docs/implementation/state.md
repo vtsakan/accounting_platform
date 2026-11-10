@@ -383,3 +383,7 @@ owner after that gate, in a separate empty local project with no admin flags.
 No human account, live email, client import or VM deployment has been performed.
 The running S09 image/S10 recovery binding is preserved. S15 follows the Docker
 gate; a reviewed S11–S14 deployment is a separate operation.
+
+<!-- S14-RESULT -->
+Prepared: 60 office/settings/invitation/role/handover/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Live mail/deployment and full release acceptance remain Pending.
+<!-- /S14-RESULT -->

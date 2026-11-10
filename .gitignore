@@ -62,6 +62,7 @@ caddy-config/
 *.log
 *.pid
 *.sock
+*.eml
 recovered/
 *.zip
 *.whl

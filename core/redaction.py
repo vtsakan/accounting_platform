@@ -9,7 +9,7 @@ from urllib.parse import quote
 from django.views.debug import SafeExceptionReporterFilter
 
 _registered = set()
-_sensitive_key = re.compile(r"password|passwd|secret|token|authorization|cookie|credential|api[_-]?key|sessionid", re.I)
+_sensitive_key = re.compile(r"password|passwd|secret|token|recovery_code|authorization|cookie|credential|api[_-]?key|sessionid", re.I)
 _assignment = re.compile(
     r'''(?i)(["']?(?:[\w-]*(?:password|passwd|secret|token|api[_-]?key|credential|sessionid|authorization|cookie)[\w-]*)["']?\s*[:=]\s*)(?:"[^"\n]*"|'[^'\n]*'|[^\s,;&}\]]+)'''
 )
@@ -22,6 +22,7 @@ def register_secret(value):
 
 def redact_text(value):
     text = str(value)
+    text = re.sub(r"(/auth/password/reset/)[^/\s]+/[^/\s?]+", r"\1[REDACTED]", text)
     known = set(_registered)
     known.update(v for k, v in os.environ.items() if _sensitive_key.search(k) and len(v) >= 4 and not k.endswith("_FILE"))
     variants = {variant for item in known for variant in (item, quote(item, safe=""), json.dumps(item)[1:-1])}

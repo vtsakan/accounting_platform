@@ -4,6 +4,7 @@ from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
 from core.config import boolean, csrf_origins, database, env, hosts, integer
+from core.auth_mail import public_origin
 from .base import *  # noqa: F403
 
 if boolean("DJANGO_DEBUG", False):
@@ -30,3 +31,18 @@ STATIC_ROOT = Path(env("DJANGO_STATIC_ROOT", str(BASE_DIR / "staticfiles")))
 MEDIA_ROOT = Path(env("DJANGO_MEDIA_ROOT", "/app/media"))
 STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
             "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}}
+
+# SMTP remains disabled until a real provider and sender have been reviewed.
+AUTH_PUBLIC_ORIGIN = public_origin(env("AUTH_PUBLIC_ORIGIN", "https://" + ALLOWED_HOSTS[0]), ALLOWED_HOSTS, production=True)
+AUTH_MAIL_MODE = env("AUTH_MAIL_MODE", "disabled")
+AUTH_MAIL_LIVE_ENABLED = boolean("AUTH_MAIL_LIVE_ENABLED", False)
+if AUTH_MAIL_MODE not in {"disabled", "smtp"} or (AUTH_MAIL_MODE == "smtp" and not AUTH_MAIL_LIVE_ENABLED):
+    raise ImproperlyConfigured("Production recovery mail requires disabled mode or explicit SMTP opt-in.")
+if AUTH_MAIL_MODE == "smtp":
+    EMAIL_HOST = env("EMAIL_HOST", required=True)
+    EMAIL_PORT = integer("EMAIL_PORT", 587, minimum=1)
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER", required=True)
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", required=True, secret=True)
+    EMAIL_USE_TLS = True
+    EMAIL_TIMEOUT = 10
+    DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", required=True)

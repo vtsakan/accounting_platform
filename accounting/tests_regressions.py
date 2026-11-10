@@ -46,7 +46,8 @@ class FinancialRegressionTests(TestCase):
             description="ΔΟΚΙΜΑΣΤΙΚΗ ΣΥΜΦΩΝΙΑ ΠΡΟΜΗΘΕΥΤΗ S06", total_amount=Decimal("100.00"), start_date=DAY)
 
     def setUp(self):
-        self.client.force_login(self.user)
+        from .tests_auth_support import staff_client_login
+        staff_client_login(self.client, self.user)
 
     def movement(self, amount, direction="INCOME", *, account=None, agreement=None):
         return Transaction.objects.create(office=self.office, transaction_date=DAY, transaction_type=direction,

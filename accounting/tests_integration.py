@@ -57,6 +57,8 @@ class PostgreSQLFoundationTests(TestCase):
                                   role="owner")
         Entity.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ", entity_type="CUSTOMER", vat_number="000000002")
         self.assertTrue(self.client.login(username=user.username, password=password))
+        from .tests_auth_support import staff_client_login
+        staff_client_login(self.client, user)
         response = self.client.get("/customers/", HTTP_ACCEPT_LANGUAGE="en-US,en")
         self.assertContains(response, "ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ")
         self.assertEqual(response.headers["Content-Language"], "el")

@@ -1,40 +1,17 @@
-{% extends 'accounting/base.html' %}
-{% load greek %}
-
+{% extends 'accounting/auth/base.html' %}
 {% block title %}Σύνδεση{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="mb-0">Σύνδεση</h2>
-            </div>
-            <div class="card-body">
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        Τα στοιχεία σύνδεσης δεν είναι σωστά. Δοκιμάστε ξανά.
-                    </div>
-                {% endif %}
-
-                <form method="post">
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Όνομα χρήστη</label>
-                        <input type="text" name="username" id="id_username" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="id_password" class="form-label">Κωδικός πρόσβασης</label>
-                        <input type="password" name="password" id="id_password" class="form-control" required>
-                    </div>
-
-                    <hr>
-                    <button type="submit" class="btn btn-primary">Σύνδεση</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+{% block auth_content %}
+<h1 class="h3">Σύνδεση στην εφαρμογή</h1>
+<p>Χρησιμοποιήστε τον λογαριασμό του λογιστικού σας γραφείου.</p>
+{% if request.GET.expired %}<p role="status" class="alert alert-info">Η συνεδρία έληξε ή άλλαξε. Συνδεθείτε ξανά.</p>{% endif %}
+<form method="post">{% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3"><label for="id_username">Όνομα χρήστη</label>
+        <input id="id_username" class="form-control" name="username" maxlength="150" autocomplete="username" required autofocus value="{{ form.username.value|default:'' }}">{{ form.username.errors }}</div>
+    <div class="mb-3"><label for="id_password">Κωδικός πρόσβασης</label>
+        <input id="id_password" class="form-control" type="password" name="password" autocomplete="current-password" required>{{ form.password.errors }}</div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn btn-primary" type="submit">Σύνδεση</button>
+</form>
+<p class="mt-3"><a href="{% url 'password-reset' %}">Ξεχάσατε τον κωδικό πρόσβασης;</a></p>
 {% endblock %}

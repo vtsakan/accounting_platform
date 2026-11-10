@@ -16,3 +16,6 @@ register_secret(SECRET_KEY)
 ALLOWED_HOSTS = hosts()
 DATABASES = database()
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+AUTH_MAIL_MODE = "capture"
+AUTH_PUBLIC_ORIGIN = env("AUTH_PUBLIC_ORIGIN", "http://localhost:" + env("WEB_PORT", "8000"))
+AUTH_MAIL_CAPTURE_ROOT = env("AUTH_MAIL_CAPTURE_ROOT", "/tmp/accounting-auth-mail")

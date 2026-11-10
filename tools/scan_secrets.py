@@ -34,7 +34,7 @@ def scan():
         entries = list(csv.DictReader(stream))
     allowed = set()
     for item in entries:
-        if (item["detector"] not in {"Hex High Entropy String", "Base64 High Entropy String"}
+        if (item["detector"] not in {"Hex High Entropy String", "Base64 High Entropy String", "Secret Keyword"}
                 or not re.fullmatch(r"[a-f0-9]{40}", item["fingerprint"])
                 or not item["reason"] or not item["evidence"]):
             raise RuntimeError("Invalid reviewed non-secret entry")

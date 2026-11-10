@@ -9,6 +9,14 @@ Recorded 2026-11-07 for S02. [Machine-readable register](decision_register.json)
 - Use the public vtsakan/accounting_platform GitHub repository. Source: User-created repository and successful S01 push.
 - All product-authored frontend content must be Greek, including staff and client experiences. Source: User instruction 2026-11-07; CR-001; UR-LOC-01.
 
+S13 technical implementation (2026-11-10): Django auth plus django-otp, locally
+generated QR and externally keyed seed encryption; owner/platform MFA, single-use
+backup recovery, bounded sessions and PostgreSQL auth throttles. Recovery mail
+is captured locally and disabled in production until provider/sender opt-in.
+These are the selected S13 safeguards, not approval of the outstanding D01
+capability/succession policy. S14 office invitations/regular onboarding and S16
+integrated isolation remain Pending. See staff_authentication.md and S13 evidence.
+
 ## D01 — Office membership and permissions
 
 Owner: Product owner (vtsakan). Status: **Partly confirmed; permission policy pending**. Gate: G0; before S11/S14/S16 acceptance.

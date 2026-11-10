@@ -3,3 +3,7 @@
 Django>=5.2.19,<5.3
 gunicorn>=26.2.0,<27
 psycopg[binary]>=3.3.8,<3.4
+# S13: maintained OTP primitives, encrypted authenticator secrets and local SVG QR.
+django-otp>=1.7.5,<1.8
+cryptography>=50.0.2,<51
+qrcode>=8.2,<9

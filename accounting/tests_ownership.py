@@ -13,6 +13,7 @@ from unittest.mock import patch
 from django.contrib.admin.models import ADDITION, LogEntry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.management import call_command
@@ -20,7 +21,7 @@ from django.core.management.base import CommandError
 from django.db import IntegrityError, close_old_connections, connection, transaction
 from django.db.migrations.executor import MigrationExecutor
 from django.db.migrations.recorder import MigrationRecorder
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 
 from .forms import AgreementForm, EntityForm, IncomeForm
@@ -29,6 +30,7 @@ from .legacy_ownership import MODELS, backfill, template
 from .membership import create_accountant_profile
 from .models import AccountantProfile, Agreement, CashAccount, Category, Entity, Office, Transaction
 from .office_access import execution_record, record, records, save_for_user
+from .tests_auth_support import staff_client_login
 
 A = "00000000-0000-4000-8000-00000000000a"
 B = "00000000-0000-4000-8000-00000000000b"
@@ -61,7 +63,7 @@ class OfficeBoundaryTests(TestCase):
                 setattr(cls, name + "_" + suffix, value)
 
     def setUp(self):
-        self.client.force_login(self.user_a)
+        staff_client_login(self.client, self.user_a)
 
     def income_data(self):
         return {"transaction_date": DAY.isoformat(), "description": "ΔΟΚΙΜΑΣΤΙΚΗ ΕΓΓΡΑΦΗ", "amount": "1,00",
@@ -102,7 +104,7 @@ class OfficeBoundaryTests(TestCase):
             self.assertEqual(self.client.get(path, {"entity_id": self.entity_b.pk}).status_code, 404)
 
     def test_both_directions_of_office_isolation(self):
-        self.client.force_login(self.user_b)
+        staff_client_login(self.client, self.user_b)
         response = self.client.get("/customers/")
         self.assertContains(response, "ΠΕΛΑΤΗΣ_ΓΡΑΦΕΙΟΥ_Β")
         self.assertNotContains(response, "ΠΕΛΑΤΗΣ_ΓΡΑΦΕΙΟΥ_Α")
@@ -219,7 +221,7 @@ class OfficeBoundaryTests(TestCase):
                 model.objects.bulk_create([obj])
 
     def test_admin_lists_foreign_key_choices_and_filters_do_not_leak(self):
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         for model in MODELS:
             response = self.client.get(reverse("admin:accounting_" + model + "_changelist"))
             self.assertEqual(response.status_code, 200)
@@ -233,7 +235,7 @@ class OfficeBoundaryTests(TestCase):
                 self.assertFalse(field.queryset.exclude(office_id=A).exists())
 
     def test_admin_foreign_change_history_delete_are_denied(self):
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         for suffix in ("change", "history", "delete"):
             path = reverse("admin:accounting_entity_" + suffix, args=[self.entity_b.pk])
             self.assertEqual(self.client.get(path).status_code, 404)
@@ -241,13 +243,13 @@ class OfficeBoundaryTests(TestCase):
         self.assertTrue(Entity.objects.filter(pk=self.entity_b.pk).exists())
 
     def test_admin_autocomplete_is_scoped(self):
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         response = self.client.get(reverse("admin:autocomplete"), {"app_label": "accounting", "model_name": "transaction", "field_name": "entity", "term": "ΠΕΛΑΤΗΣ"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual({r["id"] for r in response.json()["results"]}, {str(self.entity_a.pk)})
 
     def test_admin_cannot_forge_office_lookup_or_bulk_action(self):
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         path = reverse("admin:accounting_entity_changelist")
         self.assertEqual(self.client.get(path, {"office__id__exact": B}).status_code, 400)
         self.assertEqual(self.client.post(path, {"action": "delete_selected", "_selected_action": [self.entity_a.pk, self.entity_b.pk]}).status_code, 403)
@@ -255,7 +257,7 @@ class OfficeBoundaryTests(TestCase):
         self.assertTrue(Entity.objects.filter(pk=self.entity_b.pk).exists())
 
     def test_admin_forged_fk_post_does_not_create_transaction(self):
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         before = Transaction.objects.count()
         data = self.income_data(); data.update(transaction_type="INCOME", cash_account=self.account_b.pk, amount="1,00")
         response = self.client.post(reverse("admin:accounting_transaction_add"), data)
@@ -266,7 +268,7 @@ class OfficeBoundaryTests(TestCase):
     def test_admin_index_hides_unscoped_historical_labels(self):
         LogEntry.objects.create(user=self.admin_a, content_type=ContentType.objects.get_for_model(Entity),
             object_id=str(self.entity_b.pk), object_repr="FOREIGN_AUDIT_CANARY", action_flag=ADDITION)
-        self.client.force_login(self.admin_a)
+        staff_client_login(self.client, self.admin_a)
         response = self.client.get("/admin/")
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "FOREIGN_AUDIT_CANARY")
@@ -291,7 +293,10 @@ class OfficeBoundaryTests(TestCase):
             save_for_user(self.entity_b, self.user_a)
 
 
+@override_settings(MIDDLEWARE=[m for m in settings.MIDDLEWARE if m not in {
+    "django_otp.middleware.OTPMiddleware", "accounting.auth_middleware.StaffSecurityMiddleware"}])
 class OwnershipMigrationTests(TransactionTestCase):
+    # Rehearses the historical 0003/0004 schema before S13 auth tables exist.
     def migrate_to(self, name):
         executor = MigrationExecutor(connection)
         executor.migrate([("accounting", name)])
@@ -311,7 +316,8 @@ class OwnershipMigrationTests(TransactionTestCase):
     def tearDown(self):
         with connection.cursor() as cursor:
             cursor.execute("TRUNCATE accounting_transaction, accounting_agreement, accounting_category, accounting_cashaccount, accounting_entity CASCADE")
-        self.migrate_to("0005_enforce_office_ownership")
+        executor = MigrationExecutor(connection)
+        executor.migrate(executor.loader.graph.leaf_nodes())
         super().tearDown()
 
     def mapping(self):

@@ -20,6 +20,21 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S12 is operator-Verified and pushed/tagged at s12-complete
+(13ef2a1c8c96984da88c4cf73e695d128023555b), with 157 tests: 131 passed and
+26 exact known financial failures. Selected S13 adds Greek staff authentication,
+password recovery, privileged MFA and bounded sessions/shared PostgreSQL limits.
+Read staff_authentication.md and evidence/S13-verification.json. Use
+tools/verify_s13.py --record for the disposable Docker completion gate; native
+PG17 proof remains Prepared. No human account, live SMTP, VM/database change or
+deployment occurs. S14 handles regular office onboarding/invitations and D01
+capabilities. Preserve original migrations/calculations and the 26 financial
+failure assertions. S13 adds migration 0006 and five runtime packages, retaining
+all seven previous versions and the maintenance lock. Keep the running preview
+and its recovery binding unchanged; do not run old context-pinned installers.
+
+The following earlier preparation checkpoints are historical.
+
 S11 is now Verified and pushed/tagged at s11-complete
 (e314645a4c6decc701fc0dca928d52d6f9b76491), including the actual Docker
 120-test gate. Selected S12 adds ownership to all five old business tables.

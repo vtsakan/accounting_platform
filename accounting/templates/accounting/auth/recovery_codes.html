@@ -1,0 +1,7 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Κωδικοί ανάκτησης{% endblock %}
+{% block auth_content %}<h1 class="h3">Αποθηκεύστε τους κωδικούς ανάκτησης</h1>
+<p role="status">Εμφανίζονται μόνο τώρα. Φυλάξτε τους στον διαχειριστή κωδικών σας ή σε ανεξάρτητο ασφαλές σημείο. Καθένας χρησιμοποιείται μία φορά.</p>
+<ul class="list-unstyled">{% for code in codes %}<li class="mb-2"><code class="text-break">{{ code }}</code></li>{% endfor %}</ul>
+<p>Η νέα έκδοση ακυρώνει όλους τους προηγούμενους κωδικούς ανάκτησης.</p>
+<a href="{{ continue_url }}" class="btn btn-primary">Έχω αποθηκεύσει τους κωδικούς — συνέχεια</a>{% endblock %}

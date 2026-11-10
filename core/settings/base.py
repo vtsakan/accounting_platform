@@ -7,13 +7,15 @@ from core.redaction import logging_config
 BASE_DIR = Path(__file__).resolve().parents[2]
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
-    "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles", "accounting",
+    "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles", "django_otp", "accounting",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware", "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware", "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware", "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
     "accounting.middleware.ActiveOfficeMiddleware",
+    "accounting.auth_middleware.StaffSecurityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "core.urls"
@@ -49,3 +51,19 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 DEFAULT_EXCEPTION_REPORTER_FILTER = "core.redaction.RedactingExceptionReporterFilter"
 CSRF_FAILURE_VIEW = "core.error_views.csrf_failure"
 LOGGING = logging_config()
+
+# S13 initial security defaults; no Redis/worker or live-mail provider required.
+PASSWORD_RESET_TIMEOUT = 3600
+AUTH_IDLE_SECONDS = 1800
+AUTH_ABSOLUTE_SECONDS = 28800
+AUTH_REAUTH_SECONDS = 300
+AUTH_MFA_PENDING_SECONDS = 600
+AUTH_RATE_WINDOW_SECONDS = 900
+AUTH_RATE_LIMITS = {"login": (10, 100), "reset": (3, 50), "mfa": (20, 200), "manage": (10, 100)}
+SESSION_COOKIE_AGE = AUTH_ABSOLUTE_SECONDS
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+AUTH_MAIL_MODE = "disabled"
+AUTH_MAIL_LIVE_ENABLED = False
+AUTH_PUBLIC_ORIGIN = "http://localhost:8000"
+AUTH_MAIL_CAPTURE_ROOT = "/tmp/accounting-auth-mail"
+DEFAULT_FROM_EMAIL = "Λογιστική πλατφόρμα <noreply@example.invalid>"

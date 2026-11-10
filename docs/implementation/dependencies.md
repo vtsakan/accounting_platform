@@ -1,5 +1,15 @@
 # S03 — controlled dependencies and source packaging
 
+Current-step addendum (S13, 2026-11-10): the historical S03 record below remains
+unchanged. S13 adds django-otp 1.7.5 (TOTP device/middleware/throttling),
+cryptography 50.0.2 (authenticated seed encryption) and qrcode 8.2 (local SVG
+QR), with cffi 2.1.1 and pycparser 3.12 transitively. All seven existing runtime
+versions and the maintenance lock are retained. The current lock has 12 packages,
+verified by a clean hash-checked binary-wheel install on CPython 3.12.16/glibc
+amd64. Both locks reproduce byte-for-byte, pip check passes, and the new
+authentication/PostgreSQL tests exercise these libraries. No Pillow, Redis or
+external QR service is needed. See staff_authentication.md and its evidence.
+
 Reviewed 2026-11-07. [dependency_policy.json](dependency_policy.json) records the selected versions, deployment target and official references. The baseline remains Django 5.2 LTS, Python 3.12, PostgreSQL and templates/Bootstrap. Greek frontend delivery remains required by CR-001; this step changes no screens.
 
 ## Runtime selection

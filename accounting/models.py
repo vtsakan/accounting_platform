@@ -212,3 +212,6 @@ class AccountantProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_username()} — {self.office.name}"
+
+
+from .auth_models import AuthenticatorDevice, AuthRateBucket, AuthSecurityState, MFARecoveryCode  # noqa: E402,F401

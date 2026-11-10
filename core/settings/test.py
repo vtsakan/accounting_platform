@@ -13,3 +13,5 @@ ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 DATABASES = database()
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+AUTH_MAIL_MODE = "test"
+AUTH_PUBLIC_ORIGIN = "http://testserver"

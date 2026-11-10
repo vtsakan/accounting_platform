@@ -22,6 +22,7 @@ from .legacy_membership import backfill, fingerprint, load_mapping, template
 from .membership import change_membership, create_accountant_profile, create_office, require_office_profile
 from .middleware import ActiveOfficeMiddleware
 from .models import AccountantProfile, Entity, Office
+from .tests_auth_support import staff_client_login
 
 A = "00000000-0000-4000-8000-00000000000a"
 B = "00000000-0000-4000-8000-00000000000b"
@@ -116,9 +117,9 @@ class OfficeTests(TestCase):
 
     def test_all_legacy_business_routes_deny_missing_profile_get_and_post(self):
         from .urls import urlpatterns
-        self.client.force_login(self.user)
+        staff_client_login(self.client, self.user)
         for entry in urlpatterns:
-            if entry.name in {"login", "logout"}:
+            if entry.callback.__module__ != "accounting.views":
                 continue
             path = reverse(entry.name, kwargs={"pk": 1} if "<int:pk>" in str(entry.pattern) else {})
             for method in (self.client.get, self.client.post):
@@ -131,7 +132,7 @@ class OfficeTests(TestCase):
 
     def test_superuser_has_no_business_bypass(self):
         self.user.is_staff = self.user.is_superuser = True; self.user.save()
-        self.client.force_login(self.user)
+        staff_client_login(self.client, self.user)
         Entity.objects.create(office_id=A, name="s11-unmapped-admin-canary", entity_type="CUSTOMER")
         for path in ("/", reverse("admin:accounting_entity_changelist"), reverse("admin:accounting_entity_add"),
                      reverse("admin:autocomplete") + "?app_label=accounting&model_name=transaction&field_name=entity&term=s11",
@@ -142,12 +143,12 @@ class OfficeTests(TestCase):
         self.assertEqual(self.client.get("/customers/").status_code, 302)
         self.assertEqual(self.client.get("/login/").status_code, 200)
         self.assertEqual(self.client.get("/health/live/").status_code, 200)
-        self.client.force_login(self.user)
+        staff_client_login(self.client, self.user)
         self.assertEqual(self.client.post("/logout/").status_code, 302)
 
     def test_inactive_office_or_profile_blocks_existing_session_next_request(self):
         profile = self.assign()
-        self.client.force_login(self.user)
+        staff_client_login(self.client, self.user)
         self.assertEqual(self.client.get("/customers/").status_code, 200)
         for model, pk in ((Office, A), (AccountantProfile, profile.pk)):
             model.objects.filter(pk=pk).update(is_active=False)

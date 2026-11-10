@@ -309,3 +309,28 @@ S12 remains Prepared until local Docker reproduction with verify_s12.py. No huma
 account, actual legacy mapping, real import, cloud change or VM deployment occurs.
 The running preview and its backup binding remain at their verified release.
 See office_ownership.md before applying schema changes to any existing database.
+
+## S13 staff authentication and privileged MFA — 2026-11-10
+
+S12 is now operator-Verified at s12-complete (13ef2a1c8c96984da88c4cf73e695d128023555b):
+157 tests, 131 passed, 26 exact known financial failures. Earlier S12 Prepared
+statements above are historical. S13 adds Greek Django sign-in/out/password
+recovery, owner/platform mandatory MFA, local private QR enrolment, single-use
+backup-code recovery, server session bounds/revocation and shared PostgreSQL
+rate budgets. Platform authority gives no office-record bypass. Recovery keeps
+MFA enabled; code reuse and concurrent activation/reset are rejected.
+
+Read staff_authentication.md. Migration 0006 adds authentication metadata only;
+first five migrations, office/business definitions, money calculations and
+financial assertions are preserved. The additional maintained OTP/encryption/QR
+libraries retain all previous framework versions. Authored mail templates are
+included explicitly in the production context; captured mail is excluded.
+Production SMTP is disabled by default, while local recovery uses private capture.
+
+Only isolated native PostgreSQL proof is available in this workspace; S13 remains
+Prepared until the laptop runs tools/verify_s13.py --record on Docker. The gate
+never opens the existing development database or VM. All 85 release acceptances
+remain Pending, including staged Greek/accessibility and full security review.
+Human account onboarding/settings/invitations are S14, after S13's Docker gate.
+No human account, live email, production migration, cloud change or deployment is
+made. Keep the verified VM release and S10 recovery binding unchanged.

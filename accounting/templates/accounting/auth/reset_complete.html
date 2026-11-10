@@ -1,0 +1,3 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Ο κωδικός άλλαξε{% endblock %}
+{% block auth_content %}<h1 class="h3">Ο κωδικός πρόσβασης άλλαξε</h1><p role="status">Συνδεθείτε με τον νέο κωδικό σας. Εάν χρησιμοποιείτε επαλήθευση δύο παραγόντων, θα σας ζητηθεί ξανά.</p><a class="btn btn-primary" href="{% url 'login' %}">Σύνδεση</a>{% endblock %}

@@ -35,6 +35,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:?Generate .env with tools/init_local_env.py}
       DB_HOST: db
       DB_PORT: "5432"
+      AUTH_PUBLIC_ORIGIN: http://localhost:${WEB_PORT:-8000}
     depends_on:
       db:
         condition: service_healthy

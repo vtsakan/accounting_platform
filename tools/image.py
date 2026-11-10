@@ -18,7 +18,9 @@ from verify_s05 import redact
 
 EXACT = {"Dockerfile", ".dockerignore", "manage.py", "requirements.txt", "gunicorn.conf.py",
          "accounting/regression_cases.json", "accounting/fixtures/s11_offices.json", "tools/init_local_env.py",
-         "docker/production-entrypoint.sh", "docker/healthcheck.py"}
+         "docker/production-entrypoint.sh", "docker/healthcheck.py",
+         "accounting/templates/accounting/auth/reset_email.txt",
+         "accounting/templates/accounting/auth/reset_subject.txt"}
 PRIVATE_PARTS = {"private", "secrets", "media", "uploads", "sessions", ".sessions", "backups", "logs", "__pycache__"}
 STATIC_SUFFIXES = {".css", ".js", ".svg", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".ttf", ".map", ".txt"}
 

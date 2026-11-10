@@ -481,6 +481,42 @@ class RecoveryTests(AuthFixtures, TestCase):
 
 
 class AuthBoundaryTests(SimpleTestCase):
+    def test_profile_probe_does_not_inherit_development_mail_or_smtp_credentials(self):
+        import os
+        from core.tests.test_s04 import load_profile, production_env
+        canary = secrets.token_urlsafe(32)
+        inherited = {"AUTH_PUBLIC_ORIGIN": "http://localhost:0", "AUTH_MAIL_MODE": "capture",
+            "AUTH_MAIL_LIVE_ENABLED": "true", "AUTH_MAIL_CAPTURE_ROOT": "/unused/synthetic-capture",
+            "EMAIL_HOST": "synthetic.example.invalid", "EMAIL_HOST_USER": "synthetic-sender",
+            "EMAIL_HOST_PASSWORD": canary, "EMAIL_PORT": "not-a-port",
+            "DEFAULT_FROM_EMAIL": "synthetic@example.invalid"}
+        code = ("import django,json,os; django.setup(); from django.conf import settings; "
+                "print(json.dumps([settings.AUTH_PUBLIC_ORIGIN,settings.AUTH_MAIL_MODE,settings.AUTH_MAIL_LIVE_ENABLED,"
+                "*[os.environ.get(k) for k in ('EMAIL_HOST_PASSWORD','EMAIL_HOST_USER','AUTH_MAIL_CAPTURE_ROOT','DEFAULT_FROM_EMAIL')]]))")
+        with patch.dict(os.environ, inherited):
+            result = load_profile("production", production_env(), code)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            import json
+            self.assertEqual(json.loads(result.stdout), ["https://preview.example.test", "disabled", False, None, None, None, None])
+            self.assertNotIn(canary, result.stdout + result.stderr)
+            self.assertTrue(os.environ["EMAIL_HOST_PASSWORD"] == canary)
+
+    def test_explicit_profile_origin_survives_isolation_and_invalid_origins_still_fail(self):
+        import os
+        from core.tests.test_s04 import load_profile, production_env
+        with patch.dict(os.environ, {"AUTH_PUBLIC_ORIGIN": "http://localhost:0", "AUTH_MAIL_MODE": "capture"}):
+            for origin, allowed in (("https://preview.example.test:8443", True),
+                                    ("http://preview.example.test", False),
+                                    ("https://foreign.example.invalid", False)):
+                result = load_profile("production", {**production_env(), "AUTH_PUBLIC_ORIGIN": origin},
+                    "import django; django.setup(); from django.conf import settings; print(settings.AUTH_PUBLIC_ORIGIN)")
+                with self.subTest(origin=origin):
+                    self.assertEqual(result.returncode == 0, allowed)
+                    if allowed:
+                        self.assertEqual(result.stdout.strip(), origin)
+                    else:
+                        self.assertIn("AUTH_PUBLIC_ORIGIN must be an explicit allowed origin", result.stderr)
+
     def test_production_mail_modes_and_https_origin_fail_closed(self):
         from core.tests.test_s04 import load_profile, production_env
         for extra in ({"AUTH_MAIL_MODE": "capture"}, {"AUTH_MAIL_MODE": "test"},

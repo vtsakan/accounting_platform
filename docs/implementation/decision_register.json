@@ -18,7 +18,7 @@
       "dependent_steps": ["S11", "S12", "S14", "S16", "S17", "S41", "S50"],
       "evidence": ["UR-OFF-01", "UR-OFF-03", "UR-OFF-04", "QR-01"],
       "approval_evidence": null,
-      "implementation_notes": "S13 selects Greek Django authentication, owner/platform MFA, encrypted factors, single-use recovery and bounded sessions. No capability/succession approval is recorded. S14 onboarding and S16 integrated isolation remain Pending; see staff_authentication.md."
+      "implementation_notes": "S13 selects Greek Django authentication, owner/platform MFA, encrypted factors, single-use recovery and bounded sessions. No capability/succession approval is recorded. S14 onboarding and S16 integrated isolation remain Pending; see staff_authentication.md. S13 verification follow-up isolates inherited authentication/mail environment in profile probes; production HTTPS checks and pending approval status are retained."
     },
     {
       "id": "D02", "title": "Client scope and portal grants", "owner": "Product owner and participating office owner",

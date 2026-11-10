@@ -335,6 +335,24 @@ Human account onboarding/settings/invitations are S14, after S13's Docker gate.
 No human account, live email, production migration, cloud change or deployment is
 made. Keep the verified VM release and S10 recovery binding unchanged.
 
+## S13 Docker profile-environment retry — 2026-11-10
+
+The operator's first local Docker run reached the 216-test suite, reproducing
+26 known financial failures plus six unexpected production-configuration
+failures. The test helper had inherited Compose's development AUTH_PUBLIC_ORIGIN
+into synthetic production settings; the production HTTPS/allowed-origin guard
+correctly rejected it. All six failures were reproduced independently with
+AUTH_PUBLIC_ORIGIN=http://localhost:0. This is a profile-test isolation defect.
+
+The follow-up strips inherited authentication/mail/SMTP configuration before
+applying each test's explicit values. Production origin validation and auth
+implementation remain unchanged. Original configuration and financial assertions
+are preserved; two new cases cover credential isolation and explicit valid/
+invalid origin overrides. The current suite has 218 tests, including 61 S13
+checks. See evidence/S13-environment-fix.json and staff_authentication.md.
+S13 remains Prepared until the operator's Docker retry passes. No completion
+tag, human account, cloud change, live mail or VM deployment is made by this fix.
+
 <!-- S13-RESULT -->
 Prepared: 59 authentication/MFA/recovery/session/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Live mail/deployment, S14 onboarding and full release acceptance remain Pending.
 <!-- /S13-RESULT -->

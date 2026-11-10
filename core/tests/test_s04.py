@@ -36,7 +36,10 @@ def production_env():
 
 
 def load_profile(profile, values=None, code=None):
-    environment = {key: value for key, value in os.environ.items() if not key.startswith(("DJANGO_", "DB_"))}
+    # Profile probes own their configuration; Compose/local mail settings and
+    # sender credentials must not cross into a different settings profile.
+    environment = {key: value for key, value in os.environ.items()
+                   if not key.startswith(("DJANGO_", "DB_", "AUTH_", "EMAIL_", "DEFAULT_FROM_EMAIL"))}
     environment.update(values or {})
     environment["DJANGO_SETTINGS_MODULE"] = "core.settings." + profile
     code = code or "import django; django.setup(); from django.conf import settings; print(settings.DEBUG)"

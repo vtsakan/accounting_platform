@@ -35,7 +35,7 @@ def source_checks():
     protected = ["requirements-tools.in", "requirements-tools.txt", "accounting/regression_runner.py",
         "accounting/regression_cases.json", "accounting/membership.py", "accounting/legacy_membership.py",
         "accounting/legacy_ownership.py", "accounting/office_access.py", "accounting/ownership.py", "accounting/forms.py",
-        "accounting/views.py", "accounting/admin.py", "Dockerfile", "core/tests/test_s04.py"]
+        "accounting/views.py", "accounting/admin.py", "Dockerfile"]
     protected += [str(path.relative_to(ROOT)) for path in (ROOT / "accounting/migrations").glob("000[12345]_*.py")]
     protected += ["docs/implementation/evidence/" + step + "-verification.json" for step in ("S10", "S11", "S12")]
     for name in protected:
@@ -44,6 +44,15 @@ def source_checks():
     def tree(name, original=False):
         source = subprocess.check_output(["git", "show", BASE + ":" + name], cwd=ROOT) if original else (ROOT / name).read_bytes()
         return ast.parse(source)
+    old_config, new_config = tree("core/tests/test_s04.py", True), tree("core/tests/test_s04.py")
+    helper = next(node for node in new_config.body if isinstance(node, ast.FunctionDef) and node.name == "load_profile")
+    prefix_filter = next(node for node in ast.walk(helper) if isinstance(node, ast.Call)
+                         and isinstance(node.func, ast.Attribute) and node.func.attr == "startswith")
+    if ast.literal_eval(prefix_filter.args[0]) != ("DJANGO_", "DB_", "AUTH_", "EMAIL_", "DEFAULT_FROM_EMAIL"):
+        raise RuntimeError("Unexpected profile-probe environment policy")
+    prefix_filter.args[0].elts = prefix_filter.args[0].elts[:2]
+    if ast.dump(old_config) != ast.dump(new_config):
+        raise RuntimeError("Original configuration tests or assertions changed beyond profile environment isolation")
     before, after = tree("accounting/models.py", True), tree("accounting/models.py")
     classes = lambda root: {node.name: ast.dump(node) for node in root.body if isinstance(node, ast.ClassDef)}
     if classes(before) != classes(after):
@@ -65,6 +74,7 @@ def source_checks():
     if image.allowed("accounting/templates/accounting/auth/captured.eml"):
         raise RuntimeError("Captured recovery mail must never enter the production image")
     return {"original_migrations_office_business_schema_and_financial_assertions_preserved": True,
+            "configuration_test_assertions_preserved": True,
             "s10_s11_s12_evidence_preserved": True, "existing_runtime_versions_and_tools_lock_preserved": True,
             "recovery_templates_in_production_context": True,
             "application_context_digest": context["digest"]}

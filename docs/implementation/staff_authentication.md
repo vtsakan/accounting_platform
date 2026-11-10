@@ -172,3 +172,30 @@ References: [Django authentication views](https://docs.djangoproject.com/en/5.2/
 [django-otp custom devices](https://django-otp-official.readthedocs.io/en/stable/extend.html),
 [Fernet](https://cryptography.io/en/latest/fernet/),
 [HKDF](https://cryptography.io/en/latest/hazmat/primitives/key-derivation-functions/#hkdf).
+
+## Docker profile-test environment correction — 2026-11-10
+
+The first operator Docker run executed 216 tests with six unexpected
+configuration-test failures and the same 26 registered financial failures.
+Compose sets AUTH_PUBLIC_ORIGIN to the development HTTP origin (localhost:0 in
+the verifier). The profile-test helper removed inherited DJANGO_/DB_ settings,
+but inherited that new AUTH_ setting into its isolated production subprocess.
+Production correctly rejected it against the synthetic HTTPS host. All six
+reported failures were independently reproduced with that inherited value.
+
+The helper now removes inherited AUTH_/EMAIL_/DEFAULT_FROM_EMAIL settings as
+well, then applies the test's explicit configuration. This also prevents
+parent-process SMTP credentials from entering a profile probe. Explicit valid
+HTTPS overrides are retained; explicit HTTP/foreign origins still fail.
+Production settings, origin validation, auth services, migrations and dependency
+locks are unchanged. The source guard checks the complete original configuration
+test AST after normalising only that exact environment-prefix change; every
+original assertion is retained. Two new regression cases cover inheritance and
+explicit origin controls, for 61 S13 tests / 218 total.
+
+See evidence/S13-environment-fix.json and the current S13-verification.json.
+The native full-suite retry deliberately inherits the Compose localhost:0
+origin. Actual Docker retry remains required before S13 is Verified. The
+PermissionDenied messages from deliberate MFA race/denial cases are expected;
+the six failing assertions were configuration-profile checks. Apply the follow-up
+patch on the existing S13 branch, then rerun tools/verify_s13.py --record.

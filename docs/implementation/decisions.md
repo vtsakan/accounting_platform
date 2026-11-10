@@ -17,6 +17,12 @@ These are the selected S13 safeguards, not approval of the outstanding D01
 capability/succession policy. S14 office invitations/regular onboarding and S16
 integrated isolation remain Pending. See staff_authentication.md and S13 evidence.
 
+S13 verification correction (2026-11-10): production-profile probes isolate
+inherited authentication/mail environment settings as well as Django/database
+settings. Explicit production HTTPS/origin validation is retained, including
+negative tests. The six operator-reported configuration failures were reproduced;
+the Docker retry is Pending. No domain-policy approval changes.
+
 ## D01 — Office membership and permissions
 
 Owner: Product owner (vtsakan). Status: **Partly confirmed; permission policy pending**. Gate: G0; before S11/S14/S16 acceptance.

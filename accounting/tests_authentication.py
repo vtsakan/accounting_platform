@@ -55,6 +55,9 @@ class AuthFixtures:
         self.platform = User.objects.create_superuser("s13-platform", "platform@example.invalid", self.password)
         self.unassigned = User.objects.create_user("s13-unassigned", "unassigned@example.invalid", self.password)
         AccountantProfile.objects.create(user=self.owner, office_id=A, role="owner")
+        # Deactivation contracts concern revocation, not last-owner removal.
+        peer_owner = User.objects.create_user("s13-peer-owner", "peer-owner@example.invalid", self.password)
+        AccountantProfile.objects.create(user=peer_owner, office_id=A, role="owner")
         AccountantProfile.objects.create(user=self.accountant, office_id=A, role="accountant")
 
     def login(self, user=None, client=None, **data):

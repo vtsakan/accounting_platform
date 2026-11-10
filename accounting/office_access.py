@@ -5,6 +5,7 @@ from django.http import Http404
 
 from .membership import require_office_profile
 from .models import Agreement, CashAccount, Category, Entity, Transaction
+from .capabilities import model_capability, require_capability
 
 MODELS = (Entity, CashAccount, Category, Agreement, Transaction)
 
@@ -12,7 +13,7 @@ MODELS = (Entity, CashAccount, Category, Agreement, Transaction)
 def records(model, user):
     if model not in MODELS:
         raise PermissionDenied("Η πρόσβαση σε αυτόν τον τύπο εγγραφής δεν υποστηρίζεται.")
-    profile = require_office_profile(user)
+    profile = require_capability(user, model_capability(model))
     return model.objects.filter(office_id=profile.office_id)
 
 
@@ -28,16 +29,19 @@ def save_for_user(instance, user):
     profile = require_office_profile(user)
     if type(instance) not in MODELS or (instance.office_id and str(instance.office_id) != str(profile.office_id)):
         raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
+    require_capability(user, model_capability(type(instance), write=True))
     instance.office_id = profile.office_id
     instance.save()
     return instance
 
 
-def execution_record(*, user_id, expected_office_id, model, key):
+def execution_record(*, user_id, expected_office_id, model, key, capability=None):
     """Call at execution, not enqueue time; expected office is a check, not authority."""
     user = get_user_model().objects.filter(pk=user_id, is_active=True).first()
     if user is None or str(require_office_profile(user).office_id) != str(expected_office_id):
         raise PermissionDenied("Η εξουσιοδότηση για το λογιστικό γραφείο δεν είναι πλέον ενεργή.")
+    if capability is not None:
+        require_capability(user, capability)
     return record(model, user, key)
 
 

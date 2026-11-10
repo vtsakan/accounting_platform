@@ -15,7 +15,7 @@ class StaffSecurityMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if request.path.startswith(("/login/", "/auth/", "/admin/")):
+        if request.path.startswith(("/login/", "/auth/", "/admin/", "/office/", "/join/")):
             response["Cache-Control"] = "no-store, private"
             response["Referrer-Policy"] = "no-referrer"
         return response
@@ -32,6 +32,7 @@ class StaffSecurityMiddleware:
         if not protected or not request.user.is_authenticated:
             return None
         state = state_for(request.user)
+        must_verify = requires_mfa(request.user, state) or bool(getattr(view_func, "staff_mfa_required", False))
         if not session_valid(request, state):
             logout(request)
             return HttpResponseRedirect(reverse("login") + "?expired=1")
@@ -39,7 +40,7 @@ class StaffSecurityMiddleware:
         if not eligible(request.user):
             return render(request, "403.html", status=403)
         if not request.user.is_verified() and not recovery_authorized(request):
-            if time.time() >= request.session.get("s13_mfa_deadline", 0) and requires_mfa(request.user, state):
+            if time.time() >= request.session.get("s13_mfa_deadline", 0) and must_verify:
                 logout(request)
                 return HttpResponseRedirect(reverse("login") + "?expired=1")
         if request.path.startswith("/auth/"):
@@ -49,7 +50,7 @@ class StaffSecurityMiddleware:
             (match.url_name == "autocomplete" and request.GET.get("app_label") == "auth"))
         if admin and (not request.user.is_staff or (global_auth and not request.user.is_superuser)):
             return render(request, "403.html", status=403)
-        if not requires_mfa(request.user, state):
+        if not must_verify:
             return None
         if request.user.is_verified():
             return None

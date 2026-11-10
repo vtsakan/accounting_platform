@@ -7,6 +7,32 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from .membership import require_office_profile
 from .office_access import records, save_for_user
+from .capabilities import require_capability, model_capability
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm
+from .models import AccountantProfile
+
+
+class GuardedUserChangeForm(UserChangeForm):
+    def clean_is_active(self):
+        active = self.cleaned_data["is_active"]
+        if not active and self.instance.pk:
+            profile = AccountantProfile.objects.filter(user=self.instance, user__is_active=True,
+                role="owner", is_active=True, office__is_active=True).first()
+            if profile and not AccountantProfile.objects.filter(office_id=profile.office_id, role="owner",
+                is_active=True, user__is_active=True).exclude(user_id=self.instance.pk).exists():
+                raise forms.ValidationError("Το γραφείο πρέπει να διατηρεί τουλάχιστον έναν ενεργό υπεύθυνο.")
+        return active
+
+
+class PlatformUserAdmin(UserAdmin):
+    form = GuardedUserChangeForm
+
+
+admin.site.unregister(get_user_model())
+admin.site.register(get_user_model(), PlatformUserAdmin)
 
 
 class OfficeRelatedFilter(admin.RelatedFieldListFilter):
@@ -17,6 +43,30 @@ class OfficeRelatedFilter(admin.RelatedFieldListFilter):
 
 class OfficeAdminMixin:
     actions = None
+
+    def has_view_permission(self, request, obj=None):
+        try:
+            require_capability(request.user, model_capability(self.model))
+        except PermissionDenied:
+            return False
+        return super().has_view_permission(request, obj)
+
+    def has_add_permission(self, request):
+        try:
+            require_capability(request.user, model_capability(self.model, write=True))
+        except PermissionDenied:
+            return False
+        return super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        try:
+            require_capability(request.user, model_capability(self.model, write=True))
+        except PermissionDenied:
+            return False
+        return super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return False  # Posted-record deletion awaits the explicit reversal workflows.
 
     def get_queryset(self, request):
         try:

@@ -2,8 +2,18 @@ from django.urls import path
 from . import views  # Import views from the current app directory
 from django.contrib.auth import views as django_auth
 from . import auth_views
+from . import office_views, invite_views
 
 urlpatterns = [
+    path('office/settings/', office_views.settings_view, name='office-settings'),
+    path('office/members/', office_views.members_view, name='office-members'),
+    path('office/invitation/<uuid:key>/<str:action>/', office_views.invitation_action, name='office-invitation-action'),
+    path('office/member/<int:user_id>/<str:action>/', office_views.member_action, name='office-member-action'),
+    path('office/ownership/', office_views.ownership_view, name='office-ownership'),
+    path('office/handover/<uuid:key>/', office_views.handover_detail, name='office-handover-detail'),
+    path('office/audit/', office_views.audit_view, name='office-audit'),
+    path('join/<uuid:key>/<str:token>/', invite_views.token_entry, name='staff-join-token'),
+    path('join/<uuid:key>/', invite_views.join, name='staff-join'),
     # This line maps the root URL ('') to a function named 'dashboard_view' in views.py
     path('login/', auth_views.StaffLoginView.as_view(), name='login'),
     path('logout/', django_auth.LogoutView.as_view(), name='logout'),

@@ -1,0 +1,3 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Αναμονή έγκρισης{% endblock %}
+{% block auth_content %}<h1 class="h3">Η πρόσκληση έγινε δεκτή</h1><p role="status">Η πρόσβασή σας περιμένει την έγκριση του υπευθύνου. Μετά την έγκριση μπορείτε να συνδεθείτε με τον λογαριασμό σας.</p><a href="{% url 'login' %}">Επιστροφή στη σύνδεση</a>{% endblock %}

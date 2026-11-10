@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S13 Verified — staff authentication and privileged MFA**. Next step: **S14**.
+Updated 2026-11-10. Current step: **S14 Prepared — office settings, staff invitations and mutual handover**. Next step: **Complete S14 local Docker gate**.
 
 ## Repository position
 
@@ -361,3 +361,25 @@ The committed-source native retry with the Compose HTTP origin inherited passed
 218 tests: 192 passed, the same 26 registered financial failures, and zero
 unexpected outcomes. Hash-lock/catalog/secret checks and restricted-role DDL also
 passed. This remains native evidence; the operator's Docker retry is Pending.
+
+## S14 current handoff
+
+The actual pushed s13-complete baseline is
+16501f4ffeafc15f7361bce1ef790e8e19031f77. Its operator Docker retry is Verified:
+218 tests, 192 passed plus the same 26 known financial failures. Earlier S13
+retry-Pending text describes historical preparation and is superseded by that
+pushed evidence.
+
+S14 implements Greek office identity/contact settings, expiring single-use
+recipient/office invitations, approval, deactivation, the selected owner/accountant
+capabilities, mutual password/MFA handover, last-owner database guards and an
+append-only office-scoped staff audit. The product owner explicitly selected Read
+and post and Colleague accepts; office_role_policy.json records that scope.
+Future capabilities and all 85 full requirement acceptances remain Pending.
+
+Use tools/verify_s14.py --record on laptop Docker from committed source. Native
+PostgreSQL proof is Prepared. See office_settings_staff.md for a regular first
+owner after that gate, in a separate empty local project with no admin flags.
+No human account, live email, client import or VM deployment has been performed.
+The running S09 image/S10 recovery binding is preserved. S15 follows the Docker
+gate; a reviewed S11–S14 deployment is a separate operation.

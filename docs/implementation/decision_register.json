@@ -10,15 +10,15 @@
   "decisions": [
     {
       "id": "D01", "title": "Office membership and permissions", "owner": "Product owner (vtsakan)",
-      "status": "Partly confirmed; permission policy pending", "gate": "G0; before S11/S14/S16 acceptance",
-      "confirmed": ["One active office per accountant; UR-OFF-01 acceptance allows several accountants in the same office."],
-      "options": ["Office owner and accountant roles, with explicit capabilities for finances, exports, invitations and connections.", "Owner plus custom roles with a configurable capability editor."],
-      "recommendation": "Start with owner/accountant roles and explicit server-side capabilities; defer a custom role editor. Deny protected operations unless a capability is granted.",
-      "unresolved": ["May ordinary accountants view all office finances or only assigned clients?", "Who may post, reverse, export and manage connection secrets?", "Define ownership succession and the last-owner deactivation rule."],
+      "status": "Current S14 operations confirmed; future capabilities pending", "gate": "S14 technical gate; S16 integrated boundary acceptance",
+      "confirmed": ["One active office per accountant; several accountants may share one office.", "Accountants read and post all current clients/finance within their office; office/staff/role administration is owner-only.", "Owner proposes with password/recent MFA; same-office colleague accepts with password/recent MFA; source becomes accountant.", "An already-owned active office retains an active owner; unknown capabilities are denied."],
+      "options": ["Owner/accountant with explicit server-side capabilities", "Custom role editor deferred"],
+      "recommendation": "Implement the selected current-operation matrix; review capabilities separately as future modules arrive.",
+      "unresolved": ["Future reversal/export/connector-secret/job capabilities", "S16 integrated boundary and full release acceptance"],
       "dependent_steps": ["S11", "S12", "S14", "S16", "S17", "S41", "S50"],
-      "evidence": ["UR-OFF-01", "UR-OFF-03", "UR-OFF-04", "QR-01"],
-      "approval_evidence": null,
-      "implementation_notes": "S13 selects Greek Django authentication, owner/platform MFA, encrypted factors, single-use recovery and bounded sessions. No capability/succession approval is recorded. S14 onboarding and S16 integrated isolation remain Pending; see staff_authentication.md. S13 verification follow-up isolates inherited authentication/mail environment in profile probes; production HTTPS checks and pending approval status are retained."
+      "evidence": ["UR-OFF-01", "UR-OFF-03", "UR-OFF-04", "QR-01", "office_role_policy.json", "office_settings_staff.md"],
+      "approval_evidence": "Explicit S14 conversation selections on 2026-11-10: Read and post; Colleague accepts. Recorded in office_role_policy.json.",
+      "implementation_notes": "S13 Docker retry passed and s13-complete is pushed. S14 implements current-operation capabilities, office settings, single-use invitations/approval/deactivation, last-owner protection, mutual handover and scoped staff audit. Live mail/deployment, future module policies and full requirement acceptance remain Pending. Invitation/proposal durations are implementation defaults."
     },
     {
       "id": "D02", "title": "Client scope and portal grants", "owner": "Product owner and participating office owner",

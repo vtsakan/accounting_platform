@@ -26,11 +26,13 @@ def public_origin(value, allowed_hosts, *, production=False):
     return value.rstrip("/")
 
 
-def deliver(subject, body, destination):
+def deliver(subject, body, destination, *, purpose="password-recovery"):
     # This function never logs addresses, tokens, bodies or provider exceptions.
     mode = settings.AUTH_MAIL_MODE
-    if mode == "disabled":
-        return
+    if mode == "disabled" or purpose not in {"password-recovery", "staff"}:
+        return "disabled"
+    if mode == "smtp" and purpose == "staff" and not settings.AUTH_STAFF_MAIL_LIVE_ENABLED:
+        return "disabled"
     message = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, [destination])
     try:
         if mode == "capture":
@@ -38,17 +40,21 @@ def deliver(subject, body, destination):
             root.mkdir(mode=0o700, parents=True, exist_ok=True)
             if root.is_symlink() or root.stat().st_uid != os.getuid() or root.stat().st_mode & 0o077:
                 raise ValueError("Private mail directory required")
-            fd, filename = tempfile.mkstemp(prefix="recovery-", suffix=".eml", dir=root)
+            fd, filename = tempfile.mkstemp(prefix="staff-" if purpose == "staff" else "recovery-", suffix=".eml", dir=root)
             with os.fdopen(fd, "wb") as stream:
                 stream.write(message.message().as_bytes())
+            return "captured"
         elif mode == "test":  # Only test.py selects this; production rejects it.
             message.connection = get_connection("django.core.mail.backends.locmem.EmailBackend")
             message.send()
+            return "test"
         elif mode == "smtp" and settings.AUTH_MAIL_LIVE_ENABLED:
             message.connection = get_connection("django.core.mail.backends.smtp.EmailBackend")
             message.send()
+            return "submitted"
         else:
             raise ValueError("Recovery mail adapter is not enabled")
     except Exception as error:
         # Same public acknowledgement for every outcome, including provider failure.
         logger.warning("Recovery mail delivery unavailable (%s); provider details omitted.", type(error).__name__)
+        return "failed"

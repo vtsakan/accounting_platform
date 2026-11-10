@@ -22,7 +22,7 @@ def inventory():
     return {"users": list(get_user_model().objects.order_by("pk").values(
                 "id", "username", "is_active", "is_staff", "is_superuser")),
             "offices": [{"id": str(o.pk), "name": o.name, "is_active": o.is_active}
-                        for o in Office.objects.order_by("pk")]}
+                        for o in Office.objects.only("id", "name", "is_active").order_by("pk")]}
 
 
 def fingerprint(value):
@@ -114,8 +114,8 @@ def reviewed_plan(document):
 def backfill(document, *, apply=False):
     # Fixed locking order matches the service; validation repeats under these
     # locks. Snapshot changes/new users force review; no partial writes survive.
-    list(get_user_model().objects.select_for_update().order_by("pk").values_list("pk", flat=True))
     list(Office.objects.select_for_update().order_by("pk").values_list("pk", flat=True))
+    list(get_user_model().objects.select_for_update().order_by("pk").values_list("pk", flat=True))
     planned = reviewed_plan(document)
     if apply:
         for row in sorted(planned, key=lambda row: row["user_id"]):

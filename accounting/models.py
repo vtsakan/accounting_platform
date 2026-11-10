@@ -5,6 +5,7 @@ import uuid
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.conf import settings
+from django.core.validators import RegexValidator
 from .ownership import OfficeOwned
 
 
@@ -175,6 +176,14 @@ class Office(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name="Αναγνωριστικό γραφείου")
     name = models.CharField(max_length=255, verbose_name="Επωνυμία γραφείου")
+    vat_number = models.CharField(max_length=9, blank=True, verbose_name="Α.Φ.Μ. γραφείου",
+        validators=[RegexValidator(r"^[0-9]{9}$", "Ο Α.Φ.Μ. πρέπει να αποτελείται από εννέα ψηφία.")])
+    email = models.EmailField(blank=True, verbose_name="Ηλεκτρονική διεύθυνση")
+    phone = models.CharField(max_length=30, blank=True, verbose_name="Τηλέφωνο")
+    address = models.CharField(max_length=255, blank=True, verbose_name="Διεύθυνση")
+    city = models.CharField(max_length=100, blank=True, verbose_name="Πόλη")
+    postal_code = models.CharField(max_length=10, blank=True, verbose_name="Ταχυδρομικός κώδικας")
+    settings_version = models.PositiveBigIntegerField(default=0, editable=False)
     is_active = models.BooleanField(default=True, verbose_name="Ενεργό γραφείο")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Δημιουργήθηκε")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Ενημερώθηκε")
@@ -208,10 +217,12 @@ class AccountantProfile(models.Model):
         verbose_name = "Προφίλ λογιστή"
         verbose_name_plural = "Προφίλ λογιστών"
         constraints = [models.CheckConstraint(condition=models.Q(role__in=["owner", "accountant"]),
-                                               name="accountant_profile_valid_role")]
+                                               name="accountant_profile_valid_role"),
+                       models.UniqueConstraint(fields=["user", "office"], name="accountant_user_office_key")]
 
     def __str__(self):
         return f"{self.user.get_username()} — {self.office.name}"
 
 
 from .auth_models import AuthenticatorDevice, AuthRateBucket, AuthSecurityState, MFARecoveryCode  # noqa: E402,F401
+from .office_models import StaffInvitation, OwnershipHandover, OfficeAuditEvent  # noqa: E402,F401

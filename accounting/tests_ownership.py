@@ -304,8 +304,9 @@ class OwnershipMigrationTests(TransactionTestCase):
 
     def setUp(self):
         apps = self.migrate_to("0003_office_profiles")
-        Office.objects.create(pk=A, name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Α S12")
-        Office.objects.create(pk=B, name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Β S12")
+        historical_office = apps.get_model("accounting", "Office")
+        historical_office.objects.create(pk=A, name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Α S12")
+        historical_office.objects.create(pk=B, name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Β S12")
         entity = apps.get_model("accounting", "Entity").objects.create(name="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΕΓΓΡΑΦΗ", entity_type="CUSTOMER", vat_number="000000111")
         account = apps.get_model("accounting", "CashAccount").objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟ ΠΑΛΑΙΟ ΤΑΜΕΙΟ", opening_balance="1234.56")
         category = apps.get_model("accounting", "Category").objects.create(name="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΚΑΤΗΓΟΡΙΑ")

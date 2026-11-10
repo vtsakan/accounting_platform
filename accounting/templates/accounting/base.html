@@ -25,6 +25,11 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'supplier-list' %}">Προμηθευτές</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'summary-report' %}">Αναφορά</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'security-settings' %}">Ασφάλεια</a></li>
+                {% if request.accountant_profile.role == 'owner' %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'office-settings' %}">Γραφείο</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'office-members' %}">Συνεργάτες</a></li>
+                {% endif %}
+                {% if request.accountant_profile %}<li class="nav-item"><a class="nav-link" href="{% url 'office-ownership' %}">Παράδοση ευθύνης</a></li>{% endif %}
             </ul>
             <span class="navbar-text me-3">
                 Καλώς ήρθατε, {{ user.username }}
@@ -39,6 +44,7 @@
 </nav>
 
     <main class="container mt-4">
+        {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
         {% block content %}
         {% endblock %}
     </main>

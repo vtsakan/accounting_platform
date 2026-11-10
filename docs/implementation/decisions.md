@@ -23,27 +23,40 @@ settings. Explicit production HTTPS/origin validation is retained, including
 negative tests. The six operator-reported configuration failures were reproduced;
 the Docker retry is Pending. No domain-policy approval changes.
 
+S14 follow-up (2026-11-10): the actual S13 Docker retry passed 218 checks
+(192 passed plus 26 known financial failures), and s13-complete is pushed.
+The earlier retry-Pending statements above are historical. D01 choices below
+were then explicitly selected for current operations; unrelated decisions and
+full requirement acceptance are unchanged.
+
 ## D01 — Office membership and permissions
 
-Owner: Product owner (vtsakan). Status: **Partly confirmed; permission policy pending**. Gate: G0; before S11/S14/S16 acceptance.
+Owner: Product owner (vtsakan). Status: **Current S14 operations confirmed; future capabilities pending**. Gate: G0; S14 technical gate and S16 boundary acceptance remain separate.
 
-Options:
+The product owner selected **Read and post** and **Colleague accepts** in the
+S14 implementation conversation on 2026-11-10. Ordinary accountants may manage
+all clients and current financial entries within their office. Office identity,
+staff access and role administration are owner-only. An owner proposes handover
+after password/recent MFA; the addressed same-office colleague accepts after
+password/recent MFA, becomes owner, and the source becomes accountant. An
+already-owned active office must retain an active owner. Unknown operations
+are denied; there is no custom role editor.
 
-- Office owner and accountant roles, with explicit capabilities for finances, exports, invitations and connections.
-- Owner plus custom roles with a configurable capability editor.
+Implementation evidence: `office_role_policy.json`, `office_settings_staff.md`,
+`accounting/capabilities.py`, `accounting/tests_staff.py` and S14 verification.
+Invitations are recipient/office-bound and single-use; acceptance creates an
+inactive accountant profile and explicit owner approval activates access.
+The 24-hour link, seven-day proposal and management-rate defaults are technical
+choices, not separately asserted product-owner approvals.
 
-Confirmed evidence: One active office per accountant; UR-OFF-01 acceptance allows several accountants in the same office.
+Open inputs for later steps:
 
-Recommendation: Start with owner/accountant roles and explicit server-side capabilities; defer a custom role editor. Deny protected operations unless a capability is granted.
-
-Open inputs:
-
-- May ordinary accountants view all office finances or only assigned clients?
-- Who may post, reverse, export and manage connection secrets?
-- Define ownership succession and the last-owner deactivation rule.
+- Capabilities for attributable reversals, exports, connection secrets and jobs.
+- Integrated S16 boundary acceptance and final financial/release acceptance.
 
 Dependent steps: S11, S12, S14, S16, S17, S41, S50.
-Evidence: UR-OFF-01, UR-OFF-03, UR-OFF-04, QR-01. Approval evidence: **not recorded**.
+Evidence: UR-OFF-01, UR-OFF-03, UR-OFF-04, QR-01.
+Approval evidence: **Explicit S14 conversation selections recorded in office_role_policy.json**.
 
 ## D02 — Client scope and portal grants
 

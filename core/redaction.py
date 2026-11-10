@@ -23,6 +23,7 @@ def register_secret(value):
 def redact_text(value):
     text = str(value)
     text = re.sub(r"(/auth/password/reset/)[^/\s]+/[^/\s?]+", r"\1[REDACTED]", text)
+    text = re.sub(r"(/join/)[^/\s]+/[^/\s?]+", r"\1[REDACTED]", text)
     known = set(_registered)
     known.update(v for k, v in os.environ.items() if _sensitive_key.search(k) and len(v) >= 4 and not k.endswith("_FILE"))
     variants = {variant for item in known for variant in (item, quote(item, safe=""), json.dumps(item)[1:-1])}

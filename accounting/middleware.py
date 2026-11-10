@@ -15,7 +15,7 @@ class ActiveOfficeMiddleware(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         model_admin = getattr(view_func, "model_admin", None)
-        business_view = view_func.__module__ == "accounting.views"
+        business_view = view_func.__module__ == "accounting.views" or hasattr(view_func, "office_capability")
         business_admin = model_admin is not None and model_admin.model._meta.app_label == "accounting"
         match = getattr(request, "resolver_match", None)
         # Django's shared autocomplete endpoint is not bound to a ModelAdmin.

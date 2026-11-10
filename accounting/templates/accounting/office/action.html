@@ -1,0 +1,4 @@
+{% extends 'accounting/office/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block office_content %}<h1 class="h3">{{ title }}</h1>{% include 'accounting/office/proof_help.html' %}
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Επανάληψη ενέργειας</button></form><a href="{% url 'office-members' %}">Επιστροφή στους λογιστές</a>{% endblock %}

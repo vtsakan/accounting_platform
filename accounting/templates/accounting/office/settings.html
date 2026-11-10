@@ -1,0 +1,7 @@
+{% extends 'accounting/office/base.html' %}
+{% block title %}Στοιχεία γραφείου{% endblock %}
+{% block office_content %}<div class="row"><section class="col-lg-8">
+<h1 class="h3">Στοιχεία λογιστικού γραφείου</h1>
+{% include 'accounting/office/proof_help.html' %}
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Αποθήκευση στοιχείων</button></form>
+</section></div>{% endblock %}

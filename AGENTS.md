@@ -20,18 +20,23 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
-S12 is operator-Verified and pushed/tagged at s12-complete
-(13ef2a1c8c96984da88c4cf73e695d128023555b), with 157 tests: 131 passed and
-26 exact known financial failures. Selected S13 adds Greek staff authentication,
-password recovery, privileged MFA and bounded sessions/shared PostgreSQL limits.
-Read staff_authentication.md and evidence/S13-verification.json. Use
-tools/verify_s13.py --record for the disposable Docker completion gate; native
-PG17 proof remains Prepared. No human account, live SMTP, VM/database change or
-deployment occurs. S14 handles regular office onboarding/invitations and D01
-capabilities. Preserve original migrations/calculations and the 26 financial
-failure assertions. S13 adds migration 0006 and five runtime packages, retaining
-all seven previous versions and the maintenance lock. Keep the running preview
-and its recovery binding unchanged; do not run old context-pinned installers.
+S13 is operator-Verified and pushed/tagged at s13-complete
+(16501f4ffeafc15f7361bce1ef790e8e19031f77), with 218 tests: 192 passed and
+26 exact known financial failures. Selected S14 adds Greek office settings,
+recipient-bound invitations/approval/deactivation, explicit capabilities,
+mutually verified ownership handover and an append-only scoped staff audit.
+The product owner selected Read and post and Colleague accepts; read
+staff_authentication.md, office_settings_staff.md and office_role_policy.json.
+D01 is resolved for these current operations only. Future reversal/export/
+connector/job capabilities and full release acceptance remain Pending.
+Use tools/verify_s14.py --record for the disposable local Docker completion
+gate; native PG17 proof remains Prepared. Bootstrap the first regular owner
+only after that gate, using the documented separate empty local project and
+bootstrap_office_owner command, not a Django administrator. No human account,
+live SMTP, VM/database change or deployment is performed by implementation.
+S14 adds migrations 0007/0008 without changing the original six, money models,
+financial test assertions or dependency locks. Keep the running preview and
+its recovery binding unchanged; do not run old context-pinned installers.
 
 The following earlier preparation checkpoints are historical.
 

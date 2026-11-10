@@ -36,6 +36,9 @@ STORAGES = {"default": {"BACKEND": "django.core.files.storage.FileSystemStorage"
 AUTH_PUBLIC_ORIGIN = public_origin(env("AUTH_PUBLIC_ORIGIN", "https://" + ALLOWED_HOSTS[0]), ALLOWED_HOSTS, production=True)
 AUTH_MAIL_MODE = env("AUTH_MAIL_MODE", "disabled")
 AUTH_MAIL_LIVE_ENABLED = boolean("AUTH_MAIL_LIVE_ENABLED", False)
+AUTH_STAFF_MAIL_LIVE_ENABLED = boolean("AUTH_STAFF_MAIL_LIVE_ENABLED", False)
+if AUTH_STAFF_MAIL_LIVE_ENABLED and not (AUTH_MAIL_MODE == "smtp" and AUTH_MAIL_LIVE_ENABLED):
+    raise ImproperlyConfigured("Staff mail requires the explicit SMTP opt-in and a reviewed staff-mail scope.")
 if AUTH_MAIL_MODE not in {"disabled", "smtp"} or (AUTH_MAIL_MODE == "smtp" and not AUTH_MAIL_LIVE_ENABLED):
     raise ImproperlyConfigured("Production recovery mail requires disabled mode or explicit SMTP opt-in.")
 if AUTH_MAIL_MODE == "smtp":

@@ -1,0 +1,42 @@
+{
+  "step": "S14",
+  "recorded_at": "2026-11-10",
+  "explicit_user_selection": true,
+  "finance_choice": "read_and_post",
+  "handover_choice": "colleague_accepts",
+  "selection_evidence": {
+    "mechanism": "Product owner selections in this implementation conversation",
+    "finance": "Read and post (Recommended)",
+    "handover": "Colleague accepts (Recommended)"
+  },
+  "owner_capabilities": [
+    "office.settings",
+    "staff.manage",
+    "office.audit",
+    "ownership.propose",
+    "ownership.accept",
+    "clients.read",
+    "clients.write",
+    "finance.read",
+    "finance.write"
+  ],
+  "accountant_capabilities": [
+    "ownership.accept",
+    "clients.read",
+    "clients.write",
+    "finance.read",
+    "finance.write"
+  ],
+  "handover": "Source owner proposes after password plus recent MFA; active same-office colleague accepts after password plus recent MFA. Promote recipient before demoting source; revoke both session revisions.",
+  "last_owner": "Retain at least one active owner with an active user in every already-owned active office. No inferred owner for legacy ownerless offices.",
+  "invitation": "Recipient email and office bound, 24-hour single-use token. Recipient acceptance creates an inactive accountant profile; explicit owner approval activates it.",
+  "reactivation": "Explicit owner action, always accountant role; global user deactivation and pending invitation approval cannot be bypassed.",
+  "unimplemented_capabilities": "Denied by default; future delegated adapters must recheck named capability and office at execution.",
+  "implementation_defaults_not_separate_policy_approvals": [
+    "24-hour invitation expiry",
+    "7-day ownership proposal expiry",
+    "30 management requests per actor per 15 minutes"
+  ],
+  "approval_scope": "Current staff, office, client and legacy finance operations plus mutual ownership handover; later reversal/export/connection/job scope needs its own reviewed capabilities.",
+  "full_requirement_acceptance": "Pending"
+}

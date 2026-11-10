@@ -23,7 +23,7 @@ def source():
             original = {k: v for k, v in row.items() if k != "office_id"}
             digest = fingerprint(json.loads(json.dumps(original, default=str)))
             snapshot.append({"model": name, "id": row["id"], "label": row.get("name", row.get("description", "")), "sha256": digest})
-    offices = [{"id": str(o.pk), "name": o.name, "is_active": o.is_active} for o in Office.objects.order_by("pk")]
+    offices = [{"id": str(o.pk), "name": o.name, "is_active": o.is_active} for o in Office.objects.only("id", "name", "is_active").order_by("pk")]
     return rows, {"records": snapshot, "offices": offices}
 
 

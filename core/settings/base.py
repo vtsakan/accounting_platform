@@ -16,6 +16,7 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "accounting.middleware.ActiveOfficeMiddleware",
     "accounting.auth_middleware.StaffSecurityMiddleware",
+    "accounting.capabilities.OfficeCapabilityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware", "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "core.urls"
@@ -60,10 +61,14 @@ AUTH_REAUTH_SECONDS = 300
 AUTH_MFA_PENDING_SECONDS = 600
 AUTH_RATE_WINDOW_SECONDS = 900
 AUTH_RATE_LIMITS = {"login": (10, 100), "reset": (3, 50), "mfa": (20, 200), "manage": (10, 100)}
+AUTH_RATE_LIMITS.update({"join": (10, 100), "office-manage": (30, 200)})
 SESSION_COOKIE_AGE = AUTH_ABSOLUTE_SECONDS
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AUTH_MAIL_MODE = "disabled"
 AUTH_MAIL_LIVE_ENABLED = False
+AUTH_STAFF_MAIL_LIVE_ENABLED = False
+STAFF_INVITATION_SECONDS = 86400
+OWNERSHIP_HANDOVER_SECONDS = 604800
 AUTH_PUBLIC_ORIGIN = "http://localhost:8000"
 AUTH_MAIL_CAPTURE_ROOT = "/tmp/accounting-auth-mail"
 DEFAULT_FROM_EMAIL = "Λογιστική πλατφόρμα <noreply@example.invalid>"

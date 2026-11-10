@@ -2,7 +2,7 @@
 
 A Django/PostgreSQL accounting-office platform combining the existing application with office management, collaboration, a client portal and authorised tax-data services. **All frontend content must be Greek**, including authentication, errors, emails and human-facing report headings.
 
-S01–S06 are Verified. **S07 prepares the production image and delivery checks:** Gunicorn, liveness/readiness, manifest static assets and a pinned CI workflow. Native PostgreSQL/Gunicorn verification runs 90 tests: 64 pass and 26 known financial failures remain reproduced. Complete the Docker image gate before S08. The Greek locale and existing staff-template translations are retained.
+S01–S10 are Verified, including the DuckDNS HTTPS preview and actual encrypted backup, independent-key recovery and alert checks. **S11 prepares the office/profile foundation:** additive schema, explicit membership/backfill and a missing/inactive-profile gate. Native PostgreSQL verification runs 120 tests: 94 pass and 26 known financial failures remain reproduced. Local Docker reproduction completes S11. Full record ownership follows at S12; authentication and office settings follow at S13/S14.
 
 ## Start here
 
@@ -13,16 +13,15 @@ S01–S06 are Verified. **S07 prepares the production image and delivery checks:
 
 ## Local development and verification
 
-Use a full Git checkout, Linux x86_64/glibc, Python 3.10+ with `venv`, a running local Docker Engine/Compose plugin and package-download access. Start the development stack and create your administrator:
+Use a full Git checkout, Linux x86_64/glibc, Python 3.10+ with `venv`, a running local Docker Engine/Compose plugin and package-download access. Start the development stack:
 
 ```bash
 python3 tools/dev.py up
-python3 tools/dev.py admin
 ```
 
 Open [http://localhost:8000/login/](http://localhost:8000/login/), or [localhost:8001/login/](http://localhost:8001/login/) when `.env` sets `WEB_PORT=8001`. `up` generates private local credentials once and applies migrations; it never imports data. `python3 tools/dev.py down` retains the PostgreSQL volume. [Local development instructions](docs/implementation/local_development.md) cover seeding, tests, ports, restart persistence and the PostgreSQL 15/17 boundary.
 
-Run `python3 tools/dev.py test` for the strict 90-test PostgreSQL command. Run `python3 tools/verify_s07.py --record` from the committed S07 checkout to build/reuse one production image and check explicit migrations, tests, health outage/recovery, static export and private-file exclusion. It selects an unused loopback port and cleans up only its own temporary project. S05/S06 Docker evidence is already pushed; the supplied S07 native proof remains Prepared until its actual image check succeeds.
+Run `python3 tools/dev.py test` for the strict 120-test PostgreSQL command. Use `python3 tools/verify_s11.py --record` for the isolated S11 migration/concurrency gate. Accountants now need an explicitly reviewed profile; an administrator alone does not grant business access. Human account onboarding remains S13/S14. `tools/verify_delivery.py` is the continuing production-image gate; historical S07 verifiers are used only at their tagged snapshots.
 
 [Financial regression instructions](docs/implementation/financial_regressions.md) explain the 26 known failures, ten passing financial controls, exact failure tracking and future fixes. `python3 tools/dev.py test-raw` deliberately exposes the 26 unfixed assertions with a nonzero exit. A passing strict command confirms the recorded baseline, not financial correctness.
 
@@ -38,8 +37,15 @@ The original ACC-URS-001 v0.1 documents remain immutable. [CR-001](docs/requirem
 
 ## Deployment checkpoint
 
-**Create or select the Google Cloud VM at S08, after S07 Docker verification passes.** S03–S07 run locally. S08 prepares the selected VM, storage and static address; S09 deploys the DuckDNS HTTPS preview; S10 verifies off-VM backup and recovery. No cloud resources have been created through S07.
+The selected `accounting-514109/accounting-preview` VM and `totalaccounting.duckdns.org` preview already exist and have passed S08–S10. S11 runs locally with synthetic data. Its schema is not deployed to the VM; complete S12 ownership and S13 authentication before enabling office onboarding.
 
 ## Scope boundary
 
 Every active accountant belongs to exactly one office; several accountants may share it. Portal identity and client grants remain separate. Keep cash, charges, allocations, transfers, reversals and client tax sources distinct. Statutory general-ledger bookkeeping, invoice issuance, payroll, automatic tax filing, bank-payment execution, native mobile apps and subscription billing are outside the current baseline.
+\n## S11 — offices and accountant profiles
+
+The office/profile foundation and reviewed legacy mapping tools are described in
+[office_profiles.md](docs/implementation/office_profiles.md). Run
+`python3 tools/verify_s11.py --record` on a local Docker Engine for the isolated
+PostgreSQL gate. S11 makes no VM change; full record ownership follows at S12,
+regular authentication at S13 and office settings/invitations at S14.

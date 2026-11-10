@@ -17,7 +17,7 @@ from static_export import EXPORT_CODE, extract_static_archive, stream_archive
 from verify_s05 import redact
 
 EXACT = {"Dockerfile", ".dockerignore", "manage.py", "requirements.txt", "gunicorn.conf.py",
-         "accounting/regression_cases.json", "tools/init_local_env.py",
+         "accounting/regression_cases.json", "accounting/fixtures/s11_offices.json", "tools/init_local_env.py",
          "docker/production-entrypoint.sh", "docker/healthcheck.py"}
 PRIVATE_PARTS = {"private", "secrets", "media", "uploads", "sessions", ".sessions", "backups", "logs", "__pycache__"}
 STATIC_SUFFIXES = {".css", ".js", ".svg", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".ttf", ".map", ".txt"}

@@ -58,7 +58,7 @@ if __name__ == "__main__":
         "admin": ["exec", "web", "python", "manage.py", "createsuperuser"],
         "seed": ["exec", "-T", "web", "python", "manage.py", "seed_development_data"],
         "test": ["exec", "-T", "web", "python", "manage.py", "test", "core.tests", "accounting.tests_integration",
-                 "accounting.tests_regressions", "--settings=core.settings.test",
+                 "accounting.tests_regressions", "accounting.tests_offices", "--settings=core.settings.test",
                  "--testrunner=accounting.regression_runner.FinancialRegressionRunner"],
         "test-raw": ["exec", "-T", "web", "python", "manage.py", "test", "accounting.tests_regressions",
                      "--settings=core.settings.test", "--testrunner=django.test.runner.DiscoverRunner"],

@@ -4,6 +4,7 @@ from django.db import models
 import uuid
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.conf import settings
 
 
 # ===================================================================
@@ -155,3 +156,47 @@ class Transaction(models.Model):
         ordering = ['-transaction_date', '-created_at']
         verbose_name = "Κίνηση"
         verbose_name_plural = "Κινήσεις"
+
+
+class Office(models.Model):
+    """S11 membership root. Business-record ownership is introduced in S12."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name="Αναγνωριστικό γραφείου")
+    name = models.CharField(max_length=255, verbose_name="Επωνυμία γραφείου")
+    is_active = models.BooleanField(default=True, verbose_name="Ενεργό γραφείο")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Δημιουργήθηκε")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Ενημερώθηκε")
+
+    class Meta:
+        verbose_name = "Λογιστικό γραφείο"
+        verbose_name_plural = "Λογιστικά γραφεία"
+        constraints = [models.CheckConstraint(condition=~models.Q(name=""), name="office_name_not_empty")]
+
+    def __str__(self):
+        return self.name
+
+
+class AccountantProfile(models.Model):
+    class Role(models.TextChoices):
+        OWNER = "owner", "Υπεύθυνος γραφείου"
+        ACCOUNTANT = "accountant", "Λογιστής"
+
+    id = models.BigAutoField(primary_key=True, verbose_name="Αναγνωριστικό προφίλ")
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+        related_name="accountant_profile", verbose_name="Χρήστης",
+        error_messages={"unique": "Ο χρήστης έχει ήδη προφίλ λογιστή."})
+    office = models.ForeignKey(Office, on_delete=models.PROTECT, related_name="accountants",
+                              verbose_name="Λογιστικό γραφείο")
+    role = models.CharField(max_length=10, choices=Role.choices, verbose_name="Ρόλος")
+    is_active = models.BooleanField(default=True, verbose_name="Ενεργό προφίλ")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Δημιουργήθηκε")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Ενημερώθηκε")
+
+    class Meta:
+        verbose_name = "Προφίλ λογιστή"
+        verbose_name_plural = "Προφίλ λογιστών"
+        constraints = [models.CheckConstraint(condition=models.Q(role__in=["owner", "accountant"]),
+                                               name="accountant_profile_valid_role")]
+
+    def __str__(self):
+        return f"{self.user.get_username()} — {self.office.name}"

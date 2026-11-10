@@ -20,6 +20,20 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S10 is now Verified and pushed/tagged at s10-complete
+(06cb37d3342115aebf53dd47e36b7900c3918fcd). Read its live evidence: actual
+timer/upload, independent-key laptop Docker restore and received alert passed.
+Earlier S10 Prepared statements below describe its historical implementation.
+Selected S11 adds Office/AccountantProfile and a minimum missing/inactive-profile
+gate. Read office_profiles.md and evidence/S11-verification.json. Keep this step
+local and synthetic: full record ownership is S12 and authentication/MFA is S13.
+Office settings/invitations are S14, not S11. No automatic memberships, default
+office, real legacy mapping, human account, cloud change or new app deployment.
+Use tools/verify_s11.py for the disposable PG17 gate; native proof is Prepared,
+local Docker proof completes S11. Preserve the 26 financial failures and S10's
+verified app/bucket/key/timer configuration. Do not run its old context-pinned
+operations installer after the S11 application context changes.
+
 S09 is Verified from the operator's public checks and actual changed-boot-ID
 verification, pushed/tagged at s09-complete (eced8ea70e26f410ce2d234e41169d3fc05f529b).
 S10 adds operator-only encrypted backups, isolated laptop recovery and Monitoring;

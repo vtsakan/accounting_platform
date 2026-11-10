@@ -7,6 +7,8 @@
 !accounting/
 !accounting/**/*.py
 !accounting/regression_cases.json
+!accounting/fixtures/
+!accounting/fixtures/s11_offices.json
 !accounting/templates/
 !accounting/templates/**
 !accounting/static/

@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "inventory": {
+    "users": [
+      {
+        "id": 91011001,
+        "username": "s11-example-owner-a",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false
+      },
+      {
+        "id": 91011002,
+        "username": "s11-example-accountant-a",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false
+      },
+      {
+        "id": 91011003,
+        "username": "s11-example-owner-b",
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false
+      }
+    ],
+    "offices": [
+      {
+        "id": "00000000-0000-4000-8000-00000000000a",
+        "name": "ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Α S11",
+        "is_active": true
+      },
+      {
+        "id": "00000000-0000-4000-8000-00000000000b",
+        "name": "ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Β S11",
+        "is_active": true
+      }
+    ]
+  },
+  "inventory_sha256": "sha256:586d31bb73670ce3b83f3b9cbbb43f457845c3f10c5da3798d26709a37477dc6",
+  "reviewed_by": "S11 synthetic verification only",
+  "reviewed_at": "2026-11-10T00:00:00+00:00",
+  "mappings": [
+    {
+      "user_id": 91011001,
+      "username": "s11-example-owner-a",
+      "office_id": "00000000-0000-4000-8000-00000000000a",
+      "role": "owner"
+    },
+    {
+      "user_id": 91011002,
+      "username": "s11-example-accountant-a",
+      "office_id": "00000000-0000-4000-8000-00000000000a",
+      "role": "accountant"
+    },
+    {
+      "user_id": 91011003,
+      "username": "s11-example-owner-b",
+      "office_id": "00000000-0000-4000-8000-00000000000b",
+      "role": "owner"
+    }
+  ],
+  "excluded_users": []
+}

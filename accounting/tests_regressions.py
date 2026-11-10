@@ -19,6 +19,7 @@ from django.urls import reverse
 
 from accounting.models import Agreement, CashAccount, Category, Entity, Transaction
 from accounting.regression_runner import assert_financial_equal, regression_case
+from accounting.membership import create_accountant_profile, create_office
 
 DAY = date(2026, 1, 15)
 
@@ -29,6 +30,8 @@ class FinancialRegressionTests(TestCase):
         if connection.vendor != "postgresql" or connection.pg_version // 10000 != 17:
             raise AssertionError("S06 financial evidence requires real PostgreSQL 17")
         cls.user = get_user_model().objects.create_user("s06-synthetic-accountant", password=secrets.token_urlsafe(32))
+        create_accountant_profile(user_id=cls.user.pk, office_id=create_office(name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ S06").pk,
+                                  role="accountant")
         cls.customer_a = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Α S06", entity_type="CUSTOMER", vat_number="000000011")
         cls.customer_b = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Β S06", entity_type="CUSTOMER", vat_number="000000012")
         cls.supplier_a = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Α S06", entity_type="SUPPLIER", vat_number="000000013")

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S10 Verified — backup and operating checks**. Next step: **S11 — offices and accountant profiles**.
+Updated 2026-11-10. Current step: **S11 Prepared — offices and accountant profiles**. Next step: **Complete S11 local Docker gate**.
 
 ## Repository position
 
@@ -251,3 +251,26 @@ to select the new immutable operator release on the VM. Rerun status afterward.
 No cloud reconfiguration or app publication is required. S10 remains Prepared
 until the actual scheduled backup, off-VM recovery and observed alert gate pass.
 See evidence/S10-systemd-status-fix.json and backup_restore.md.
+
+<!-- S11-RESULT -->
+Prepared: 30 membership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Full office ownership, policy and release acceptance remain Pending.
+<!-- /S11-RESULT -->
+
+## S11 office/profile foundation — 2026-11-10
+
+Based on pushed s10-complete (06cb37d3342115aebf53dd47e36b7900c3918fcd),
+whose live backup/restore/monitoring gate is Verified. The selected S11 scope is
+the Office/AccountantProfile schema, locked service, explicit reviewed mapping
+and minimum missing/inactive-profile gate. See office_profiles.md. The old
+business model definitions, tables, views, forms, first two migrations and
+financial assertions remain intact; only synthetic auth fixtures gain explicit
+membership. Current-source delivery discovers the new tests. The S11 exact
+synthetic fixture is deliberately included in image context; private mappings
+are not. No new human account, live mapping, VM change or production deployment.
+
+Native PostgreSQL 17.11 upgrade/reversal rehearsal and 120 tests pass: 94 passed,
+26 exact known financial failures, no unexpected outcomes. S11 is Prepared until
+the local Docker verifier completes. Full row ownership is S12, authentication
+S13 and owner office settings/invitations S14. D01 capability/handover and actual
+legacy ownership approvals remain Pending. AT-OFF-01 full boundary and AT-LOC-01
+full Greek release acceptance are not claimed by the S11 schema tests.

@@ -422,3 +422,26 @@ to select the new immutable operator release on the VM. Rerun status afterward.
 No cloud reconfiguration or app publication is required. S10 remains Prepared
 until the actual scheduled backup, off-VM recovery and observed alert gate pass.
 See evidence/S10-systemd-status-fix.json and backup_restore.md.
+
+## S11 implementation boundary — 2026-11-10
+
+The authorised S11 prompt explicitly selects one retained Django user, one
+mandatory-office profile and owner/accountant role values. Implementing this
+schema does not approve D01's unresolved capability matrix or ownership
+succession. Membership services are trusted internal operations, with no new
+public endpoint or admin registration; S14 must enforce actor capabilities and
+last-owner/handover rules before exposing them. Implicit office transfer is
+rejected. Profile/office inactivity denies the next protected request.
+
+D05 remains Pending for real legacy ownership. Complete reviewed mappings are
+validated against the actual ID/username/active-flag inventory and explicit
+existing office UUIDs; no fallback office is created. Tests review synthetic
+mappings only. The original VM was previously observed without human users;
+this is not a current inventory or permission to manufacture a real mapping.
+No legacy/VM mapping is applied here. Each future real inventory needs its own
+reviewer and reviewed SHA-256. See office_profiles.md and its synthetic example.
+
+S10 live proof at s10-complete is preserved. S11 changes the application source
+context locally; its deployment and corresponding S10 backup binding update are
+not part of this step. Keep the working preview and existing resources as they
+are while completing S12 ownership and S13 authentication.

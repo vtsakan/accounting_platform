@@ -11,6 +11,7 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from accounting.models import CashAccount, Entity, Transaction
+from accounting.membership import create_accountant_profile, create_office
 
 
 class PostgreSQLFoundationTests(TestCase):
@@ -49,6 +50,8 @@ class PostgreSQLFoundationTests(TestCase):
     def test_database_backed_login_and_greek_client_list(self):
         password = secrets.token_urlsafe(32)
         user = get_user_model().objects.create_superuser("s05-synthetic-admin", "synthetic@example.invalid", password)
+        create_accountant_profile(user_id=user.pk, office_id=create_office(name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ S05").pk,
+                                  role="owner")
         Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ", entity_type="CUSTOMER", vat_number="000000002")
         self.assertTrue(self.client.login(username=user.username, password=password))
         response = self.client.get("/customers/", HTTP_ACCEPT_LANGUAGE="en-US,en")

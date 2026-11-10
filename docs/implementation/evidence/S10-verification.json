@@ -4,7 +4,7 @@
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
-    "safeguard_tests": 35,
+    "safeguard_tests": 44,
     "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
     "application_migrations_locks_unchanged": true,
     "actual_cloud_execution": false,

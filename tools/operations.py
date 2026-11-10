@@ -115,7 +115,7 @@ def install(config, path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('configure', 'cloud-plan', 'cloud', 'install', 'backup', 'monitor', 'status', 'latest', 'restore', 'alert-test'))
+    parser.add_argument('action', choices=('configure', 'cloud-plan', 'cloud-status', 'cloud', 'install', 'backup', 'monitor', 'status', 'latest', 'restore', 'alert-test'))
     parser.add_argument('--config', type=Path, default=common.PRIVATE)
     parser.add_argument('--identity', type=Path, help='Separately recovered age identity, outside Git (restore only)')
     parser.add_argument('--receipt', type=Path, help='Saved object receipt; restore can run without source-VM access')
@@ -136,6 +136,8 @@ def main():
                 config['cloud'] = cloud.apply(config)
                 preview.private_json(args.config, config)
                 result = {'status': 'Configured', 'monitoring': config['cloud'], 'alert_receipt': 'Pending explicit alert-test and operator observation'}
+            elif args.action == 'cloud-status':
+                result = cloud.summary(config)
             elif args.action == 'install':
                 result = install(config, args.config)
             elif args.action == 'restore':

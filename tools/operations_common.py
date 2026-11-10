@@ -147,9 +147,94 @@ def run(command, *, payload=None, environment=None, output=None, timeout=300):
 
 
 class APIError(RuntimeError):
-    def __init__(self, status):
+    def __init__(self, status, *, operation=None, api_status=None, fields=()):
         self.status = status
-        super().__init__(f"S10 cloud request failed (HTTP {status})")
+        self.operation, self.api_status, self.fields = operation, api_status, tuple(fields)
+        message = f"S10 cloud request failed (HTTP {status})"
+        if operation:
+            message += '; operation=' + operation
+        if api_status:
+            message += '; status=' + api_status
+        if fields:
+            message += '; fields=' + ','.join(fields)
+        super().__init__(message)
+
+
+def api_operation(method, url, body):
+    """Return structural API names only; never project IDs, emails or URLs."""
+    path = urllib.parse.unquote(urllib.parse.urlsplit(url).path).strip('/').split('/')
+    if url.startswith('https://monitoring.googleapis.com/') and len(path) >= 4:
+        resource = path[3]
+        if resource in {'metricDescriptors', 'notificationChannels', 'uptimeCheckConfigs', 'alertPolicies', 'timeSeries'}:
+            verb = {'GET': 'get' if len(path) > 4 else 'list', 'POST': 'create', 'PATCH': 'patch'}.get(method, 'request')
+            label = 'monitoring.' + resource + '.' + verb
+            if resource == 'metricDescriptors' and path[-1] in METRIC_NAMES:
+                label += ':' + path[-1]
+            if resource == 'metricDescriptors' and isinstance(body, dict):
+                name = str(body.get('type', '')).removeprefix(METRIC_PREFIX)
+                if name in METRIC_NAMES:
+                    label += ':' + name
+            if resource == 'alertPolicies' and isinstance(body, dict):
+                labels = body.get('userLabels')
+                name = labels.get('check') if isinstance(labels, dict) else None
+                if isinstance(name, str) and name in {'backup-age', 'backup-failed', 'disk', 'memory', 'certificate', 'readiness', 'alert-test', 'heartbeat', 'public-https'}:
+                    label += ':' + name
+            return label
+    if url.startswith('https://storage.googleapis.com/'):
+        if path[:4] == ['upload', 'storage', 'v1', 'b']:
+            return 'storage.objects.insert'
+        if path[:3] == ['storage', 'v1', 'b']:
+            if len(path) == 4:
+                return 'storage.buckets.' + ('patch' if method == 'PATCH' else 'get')
+            if path[4:] == ['iam']:
+                return 'storage.buckets.getIamPolicy'
+            if path[4:] == ['iam', 'testPermissions']:
+                return 'storage.buckets.testIamPermissions'
+            if path[4:5] == ['o']:
+                return 'storage.objects.' + ('list' if len(path) == 5 else 'get')
+    return 'cloud.request'
+
+
+def api_error_details(raw, body):
+    """Read Google RPC status/field *names*, ignoring all messages and values."""
+    statuses = {'INVALID_ARGUMENT', 'FAILED_PRECONDITION', 'NOT_FOUND', 'PERMISSION_DENIED', 'UNAUTHENTICATED',
+                'RESOURCE_EXHAUSTED', 'INTERNAL', 'UNAVAILABLE', 'DEADLINE_EXCEEDED', 'ABORTED', 'ALREADY_EXISTS',
+                'OUT_OF_RANGE', 'DATA_LOSS', 'CANCELLED', 'UNKNOWN'}
+    keys = {'name', 'parent', 'filter', 'page_size', 'page_token', 'notification_channel', 'metric_descriptor',
+            'uptime_check_config', 'alert_policy', 'bucket'}
+    def collect(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,63}', key):
+                    keys.add(key)
+                    keys.add(re.sub(r'(?<!^)(?=[A-Z])', '_', key).lower())
+                collect(item)
+        elif isinstance(value, list):
+            for item in value:
+                collect(item)
+    try:
+        collect(body)
+        if len(raw) > 16384:
+            return None, []
+        error = json.loads(raw).get('error', {})
+        if not isinstance(error, dict):
+            return None, []
+        api_status = error.get('status') if error.get('status') in statuses else None
+        fields = set()
+        details = error.get('details', [])
+        for detail in details if isinstance(details, list) else []:
+            if not isinstance(detail, dict) or detail.get('@type') != 'type.googleapis.com/google.rpc.BadRequest':
+                continue
+            violations = detail.get('fieldViolations', [])
+            for violation in violations if isinstance(violations, list) else []:
+                field = violation.get('field', '') if isinstance(violation, dict) else ''
+                if not isinstance(field, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]{1,3}\])?(?:\.[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]{1,3}\])?)*', field) or len(field) > 200:
+                    continue
+                if all(component in keys for component in re.findall(r'[A-Za-z_][A-Za-z0-9_]*', field)):
+                    fields.add(field)
+        return api_status, sorted(fields)[:10]
+    except (ValueError, TypeError, AttributeError):
+        return None, []
 
 
 def api(method, url, token, body=None, *, headers=None, json_response=True):
@@ -169,7 +254,11 @@ def api(method, url, token, body=None, *, headers=None, json_response=True):
             require(len(raw) <= 4 * 1024 * 1024, "Oversized API response")
             return json.loads(raw or b"{}")
     except urllib.error.HTTPError as error:
-        raise APIError(error.code) from None
+        try:
+            api_status, fields = api_error_details(error.read(16385), body)
+        except (OSError, ValueError):
+            api_status, fields = None, []
+        raise APIError(error.code, operation=api_operation(method, url, body), api_status=api_status, fields=fields) from None
     except (urllib.error.URLError, TimeoutError):
         raise RuntimeError("S10 cloud request failed; response omitted") from None
 

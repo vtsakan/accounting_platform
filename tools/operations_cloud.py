@@ -40,6 +40,13 @@ def descriptors():
             for name in common.METRIC_NAMES]
 
 
+def descriptor_resource(metric_type):
+    # Monitoring discovery defines this route as v3/{+name}. The reserved
+    # expansion preserves slash separators in the metric resource name.
+    require(metric_type in {common.METRIC_PREFIX + name for name in common.METRIC_NAMES}, 'Unexpected S10 metric type')
+    return 'metricDescriptors/' + metric_type
+
+
 def policies(config, channel, check):
     result = []
 
@@ -94,10 +101,13 @@ class Client:
     def call(self, method, suffix, body=None):
         return common.api(method, self.base + '/' + suffix, self.token, body)
 
-    def listing(self, collection):
+    def listing(self, collection, parameters=None):
         rows, page = [], ''
         for _ in range(100):
-            data = self.call('GET', collection + ('?pageToken=' + urllib.parse.quote(page, safe='') if page else ''))
+            query = dict(parameters or {})
+            if page:
+                query['pageToken'] = page
+            data = self.call('GET', collection + ('?' + urllib.parse.urlencode(query) if query else ''))
             rows.extend(data.get(collection, []))
             page = data.get('nextPageToken')
             if not page:
@@ -135,7 +145,7 @@ def apply(config):
          'type': 'email', 'labels': {'email_address': config['alert_email']}, 'enabled': True,
          'userLabels': {'application': 'accounting-preview', 'step': 's10'}})
     for descriptor in descriptors():
-        suffix = 'metricDescriptors/' + urllib.parse.quote(descriptor['type'], safe='')
+        suffix = descriptor_resource(descriptor['type'])
         try:
             existing = client.call('GET', suffix)
         except common.APIError as error:
@@ -148,6 +158,27 @@ def apply(config):
     return {'channel': channel['name'], 'uptime': check['name'], 'policies': alerts,
             'notification_status': channel.get('verificationStatus', 'VERIFICATION_STATUS_UNSPECIFIED'),
             'lifecycle_days': config['retention_days'], 'applied_at': common.now()}
+
+
+def summary(config):
+    """Read partial setup without creating resources or exposing contact labels."""
+    client = Client(config)
+    bucket = common.api('GET', 'https://storage.googleapis.com/storage/v1/b/' + config['bucket'], client.token)
+    channels = client.listing('notificationChannels')
+    metrics = client.listing('metricDescriptors', {'filter': 'metric.type = starts_with("' + common.METRIC_PREFIX + '")'})
+    checks = client.listing('uptimeCheckConfigs')
+    alerts = client.listing('alertPolicies')
+    owned = lambda rows: [r for r in rows if r.get('userLabels', {}).get('application') == 'accounting-preview'
+                          and r.get('userLabels', {}).get('step') == 's10']
+    metric_names = {r.get('type', '').removeprefix(common.METRIC_PREFIX) for r in metrics}
+    policy_names = {r.get('userLabels', {}).get('check') for r in owned(alerts)}
+    policy_keys = {r['userLabels']['check'] for r in policies(config, 'channel', 'check')}
+    return {'status': 'Inspected', 'retention_days': config['retention_days'],
+            'lifecycle_matches_selected_policy': bucket.get('lifecycle') == lifecycle(config),
+            'notification_channels': len(owned(channels)),
+            'metric_descriptors': sorted(metric_names.intersection(common.METRIC_NAMES)),
+            'uptime_checks': len(owned(checks)), 'alert_policies': sorted(policy_names.intersection(policy_keys)),
+            'cloud_changed': False, 'private_config_changed': False}
 
 
 def inspect(config):

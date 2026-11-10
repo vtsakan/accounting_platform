@@ -382,3 +382,20 @@ application image, model, migration, lock or existing production Compose changes
 See backup_restore.md and evidence/S10-verification.json. Keys/real credentials
 are not in the patch or public evidence. Document recovery is deferred to S38,
 and nonempty private media is refused until that consumer is implemented.
+
+## S10 first cloud retry — 2026-11-10
+
+The operator pushed S10 at git:40fad8974aed810811a10f27e351701c124a7f86.
+Configuration completed with an independently stored key copy and seven-day
+synthetic cleanup retention. Named operator/contact details remain private.
+The first cloud action returned only HTTP 400, without a request identifier;
+its exact failed operation is unproven from that output.
+
+The follow-up aligns metric lookup URLs with Monitoring's reserved resource
+expansion and adds bounded operation/RPC status/field-name diagnostics. It
+provides read-only cloud-status for partial setup. Provider messages and all
+request/contact/credential values are omitted. Retrying preserves the existing
+private key and policy configuration and reuses exact existing resources.
+Application image context, models, migrations, locks and Compose are unchanged.
+S10 remains Prepared pending actual cloud retry, timer/upload, off-VM restore
+and observed alert proof. See evidence/S10-cloud-request-fix.json.

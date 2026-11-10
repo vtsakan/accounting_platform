@@ -271,6 +271,33 @@ not an automatic startup action. Keep the last working release and backups.
 
 ## Evidence and official references
 
+### Cloud setup HTTP 400 follow-up
+
+The first operator cloud attempt returned HTTP 400 without identifying the
+request. That output does not establish which resource rejected it. The follow-up
+corrects metric-descriptor lookup URLs to the official Monitoring discovery
+route `v3/{+name}`, preserving slash separators in the resource name. It also
+reports a structural operation identifier, an allowlisted Google RPC status and
+invalid field names when available. Provider messages, descriptions, request
+values, email labels, access tokens and full URLs remain omitted.
+
+Apply the cloud-request fix on the existing S10 branch and verify/push it. The
+existing private configuration, age identity and confirmed 7-day preview policy
+are reused. Inspect partial setup read-only:
+
+```bash
+python3 tools/operations.py cloud-status
+```
+
+This reports whether the selected lifecycle matches and which S10 channel,
+metric, uptime and alert definitions already exist, without contact information
+or cloud writes. Then retry `python3 tools/operations.py cloud`. Exact existing
+resources are reused; conflicting definitions still stop instead of being
+overwritten. Proceed to `install` only after cloud setup reports Configured.
+If an API request still fails, share its bounded operation/status/field diagnostic;
+do not dump private configuration or enable HTTP logging. Actual cloud execution,
+backup/restore and notification acceptance remain Pending until their live gate.
+
 `evidence/S10-verification.json` separates local safeguard/native proof from live
 execution. Local native proof restored all 16 public tables, including Greek text
 and exact decimals, after a concurrent source write. It rejected wrong keys,

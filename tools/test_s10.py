@@ -11,6 +11,8 @@ import subprocess
 import tarfile
 import tempfile
 import unittest
+import urllib.error
+import urllib.parse
 from unittest.mock import patch
 
 import operations_common as common
@@ -252,6 +254,95 @@ class ObservationTests(unittest.TestCase):
 
 
 class CloudTests(unittest.TestCase):
+    def test_metric_get_uses_google_reserved_resource_expansion(self):
+        client = object.__new__(cloud.Client)
+        client.base = 'https://monitoring.googleapis.com/v3/projects/accounting-514109'
+        client.token = 'synthetic-token'
+        for name in common.METRIC_NAMES:
+            with self.subTest(metric=name), patch.object(common, 'api', return_value={}) as api:
+                suffix = cloud.descriptor_resource(common.METRIC_PREFIX + name)
+                client.call('GET', suffix)
+                # Official discovery route v3/{+name} preserves reserved '/'.
+                resource = 'projects/accounting-514109/metricDescriptors/custom.googleapis.com/accounting_preview/' + name
+                expected = 'https://monitoring.googleapis.com/' + 'v3/{+name}'.replace('{+name}', resource)
+                self.assertEqual(api.call_args.args[1], expected)
+                self.assertNotIn('%2F', api.call_args.args[1])
+
+    def test_unexpected_metric_resource_or_query_injection_is_rejected(self):
+        for value in ('elsewhere/metric', common.METRIC_PREFIX + '../other', common.METRIC_PREFIX + 'heartbeat?private=value'):
+            with self.subTest(value=value), self.assertRaises(ValueError): cloud.descriptor_resource(value)
+
+    def test_http_errors_expose_operation_status_and_structural_fields_only(self):
+        marker = 'S10_cloud_error_redaction_probe'
+        url = 'https://monitoring.googleapis.com/v3/projects/private-project/notificationChannels'
+        body = {'labels': {'email_address': marker}, 'displayName': marker}
+        payload = {'error': {'status': 'INVALID_ARGUMENT', 'message': marker,
+                            'details': [{'@type': 'type.googleapis.com/google.rpc.BadRequest', 'fieldViolations': [
+                                {'field': 'notification_channel.labels', 'description': marker},
+                                {'field': marker, 'description': marker}]}]}}
+        error = urllib.error.HTTPError(url, 400, marker, None, io.BytesIO(json.dumps(payload).encode()))
+        with patch.object(common.urllib.request, 'build_opener') as builder:
+            builder.return_value.open.side_effect = error
+            with self.assertRaises(common.APIError) as raised:
+                common.api('POST', url, marker, body)
+        message = str(raised.exception)
+        self.assertIn('operation=monitoring.notificationChannels.create', message)
+        self.assertIn('status=INVALID_ARGUMENT', message)
+        self.assertIn('fields=notification_channel.labels', message)
+        self.assertNotIn(marker, message); self.assertNotIn('private-project', message)
+        self.assertEqual(raised.exception.status, 400)
+
+    def test_unknown_malformed_oversized_and_value_shaped_error_details_are_omitted(self):
+        marker = 'S10_cloud_error_redaction_probe'
+        values = [b'<html>private provider output</html>', b'x' * 16385, json.dumps({'error': [marker]}).encode(),
+                  json.dumps({'error': {'status': marker, 'message': marker, 'details': [{'@type': 'type.googleapis.com/google.rpc.BadRequest',
+                          'fieldViolations': [{'field': 'labels["' + marker + '"]', 'description': marker}]}]}}).encode()]
+        for raw in values:
+            with self.subTest(size=len(raw)):
+                self.assertEqual(common.api_error_details(raw, {'labels': {'email_address': marker}}), (None, []))
+
+    def test_error_handling_remains_safe_for_malformed_request_shapes(self):
+        self.assertEqual(common.api_error_details(b'{}', {1: 'synthetic value'}), (None, []))
+        url = 'https://monitoring.googleapis.com/v3/projects/private/alertPolicies'
+        for labels in (None, [], {'check': []}):
+            self.assertEqual(common.api_operation('POST', url, {'userLabels': labels}), 'monitoring.alertPolicies.create')
+
+    def test_numeric_rpc_field_paths_and_error_metadata_do_not_include_values(self):
+        body = {'conditions': [{'conditionThreshold': {'filter': 'private filter value'}}]}
+        raw = json.dumps({'error': {'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.BadRequest',
+                    'fieldViolations': [{'field': 'alert_policy.conditions[0].condition_threshold.filter', 'description': 'private filter value'}]}]}}).encode()
+        self.assertEqual(common.api_error_details(raw, body), ('INVALID_ARGUMENT', ['alert_policy.conditions[0].condition_threshold.filter']))
+
+    def test_each_policy_error_is_identified_without_showing_request_labels(self):
+        config = configuration()
+        for policy in cloud.policies(config, 'private-channel', 'private-check'):
+            name = policy['userLabels']['check']
+            actual = common.api_operation('POST', 'https://monitoring.googleapis.com/v3/projects/private-project/alertPolicies', policy)
+            self.assertEqual(actual, 'monitoring.alertPolicies.create:' + name)
+            self.assertNotIn('private', actual)
+
+    def test_storage_and_metric_errors_identify_stage_without_resource_values(self):
+        cases = [('PATCH', 'https://storage.googleapis.com/storage/v1/b/private-bucket?ifMetagenerationMatch=2', 'storage.buckets.patch'),
+                 ('GET', 'https://monitoring.googleapis.com/v3/projects/private-project/metricDescriptors/custom.googleapis.com/accounting_preview/heartbeat', 'monitoring.metricDescriptors.get:heartbeat')]
+        for method, url, expected in cases:
+            self.assertEqual(common.api_operation(method, url, None), expected)
+
+    def test_read_only_cloud_summary_handles_incomplete_setup_and_hides_contacts(self):
+        config = configuration(); config['retention_days'] = 7
+        client = object.__new__(cloud.Client); client.token = 'synthetic-token'
+        owned = {'userLabels': {'application': 'accounting-preview', 'step': 's10'}}
+        collections = {'notificationChannels': [{**owned, 'labels': {'email_address': config['alert_email']}}],
+                       'metricDescriptors': [{'type': common.METRIC_PREFIX + 'heartbeat'}], 'uptimeCheckConfigs': [], 'alertPolicies': []}
+        with patch.object(cloud, 'Client', return_value=client), patch.object(client, 'listing', side_effect=lambda name, *args: collections[name]), \
+             patch.object(common, 'api', return_value={'lifecycle': cloud.lifecycle(config)}) as api:
+            result = cloud.summary(config)
+        self.assertEqual(result['retention_days'], 7)
+        self.assertEqual(result['metric_descriptors'], ['heartbeat'])
+        self.assertEqual(result['notification_channels'], 1)
+        self.assertFalse(result['cloud_changed']); self.assertFalse(result['private_config_changed'])
+        self.assertEqual(api.call_args.args[0], 'GET')
+        self.assertNotIn(config['alert_email'], json.dumps(result))
+
     def test_receipt_discovery_needs_no_source_vm_and_ignores_partial_backups(self):
         config = configuration(); item = receipt(config)
         name = item['object'].removesuffix('.tar.age') + '.receipt.json'

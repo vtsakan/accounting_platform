@@ -1,6 +1,92 @@
 {
   "step": "S10",
-  "status": "Prepared",
+  "verified_at": "2026-11-10T11:43:58+02:00",
+  "status": "Verified",
+  "mode": "operator-gcs-docker-restore-monitoring",
+  "operations_commit": "git:84cd5475a6f1e3e640ca014576c6cc7ce958953f",
+  "source_reference_commit": "git:eced8ea70e26f410ce2d234e41169d3fc05f529b",
+  "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+  "scheduled_backup_trigger_observed": true,
+  "latest_backup": {
+    "bucket": "accounting-514109-backups",
+    "object": "s10/v1/20261110T091753Z-d47ada9afaa342a5bd0c9a89c673e5bd.tar.age",
+    "generation": "1794302274003477",
+    "size": 61640,
+    "sha256": "sha256:9c26cefc118ee0b4b1ceccfd4cc89e87428f8a3cb896eb42bbc7c29619d5f5dc",
+    "crc32c": "9ZlOAQ==",
+    "snapshot_started_at": "2026-11-10T09:17:53+00:00",
+    "uploaded_at": "2026-11-10T09:17:54+00:00",
+    "recipient_id": "sha256:59c85eadfaabef3ed2ae447b59a463794acc95104aafeea708ad00a6833642c9",
+    "project_id": "accounting-514109",
+    "operations_commit": "84cd5475a6f1e3e640ca014576c6cc7ce958953f",
+    "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+    "manifest_sha256": "sha256:30b9bdc70689b3189fd769001109e2f4d95704375101acaf1a69ef2348a9b4d4"
+  },
+  "vm_create_only_backup_access": true,
+  "monitoring": {
+    "private_bucket": true,
+    "create_only_vm_bucket_binding": true,
+    "retention_days": 7,
+    "policies": 9,
+    "external_https_check": true,
+    "notification_channel_enabled": true,
+    "channel_verification": "VERIFICATION_STATUS_UNSPECIFIED",
+    "recent_heartbeat_observed": true,
+    "recent_alert_probe_observed": true,
+    "public_uptime_sample_passed": true
+  },
+  "restore": {
+    "status": "Restored",
+    "mode": "off-vm-gcs-download-local-docker",
+    "verified_at": "2026-11-10T09:25:58+00:00",
+    "receipt": {
+      "bucket": "accounting-514109-backups",
+      "crc32c": "9ZlOAQ==",
+      "generation": "1794302274003477",
+      "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+      "manifest_sha256": "sha256:30b9bdc70689b3189fd769001109e2f4d95704375101acaf1a69ef2348a9b4d4",
+      "object": "s10/v1/20261110T091753Z-d47ada9afaa342a5bd0c9a89c673e5bd.tar.age",
+      "operations_commit": "84cd5475a6f1e3e640ca014576c6cc7ce958953f",
+      "project_id": "accounting-514109",
+      "recipient_id": "sha256:59c85eadfaabef3ed2ae447b59a463794acc95104aafeea708ad00a6833642c9",
+      "sha256": "sha256:9c26cefc118ee0b4b1ceccfd4cc89e87428f8a3cb896eb42bbc7c29619d5f5dc",
+      "size": 61640,
+      "snapshot_started_at": "2026-11-10T09:17:53+00:00",
+      "uploaded_at": "2026-11-10T09:17:54+00:00"
+    },
+    "restore_seconds": 3.502,
+    "rpo_age_seconds": 485.877,
+    "tables_checked": 15,
+    "rows_checked": 79,
+    "all_public_tables_match": true,
+    "isolation": {
+      "container": "accounting-s10-recovery-cb2ae8a993354393",
+      "image": "postgres:17.11-bookworm@sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994",
+      "network": "none",
+      "published_ports": [],
+      "persistent_mounts": []
+    },
+    "recovery_container_removed": true,
+    "plaintext_removed": true,
+    "separate_recovery_key_used": true,
+    "preview_database_modified": false,
+    "scope": "Synthetic database only; document/full-environment recovery and accepted workload targets remain Pending"
+  },
+  "alert_delivery": {
+    "operator_confirmed_received": true,
+    "confirmed_at": "2026-11-10T09:43:58+00:00"
+  },
+  "named_operators_and_preview_retention_recorded_privately": true,
+  "public_certificate": {
+    "fingerprint": "sha256:6feeae12f4a5029ec3dd27b8d8f347c199a5bc45960707646976a0e9a921e266",
+    "not_after": "Feb  7 22:36:50 2027 GMT",
+    "chain_trusted_and_hostname_verified": true
+  },
+  "application_accounts_created": false,
+  "real_client_data_imported": false,
+  "document_recovery": "Deferred to S38; current private media must be empty",
+  "accepted_dataset_rpo_rto": "Pending",
+  "full_requirement_acceptance": "Pending",
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
@@ -11,7 +97,6 @@
     "actual_docker_execution": false,
     "full_acceptances_pending": 85
   },
-  "source_reference_commit": "git:eced8ea70e26f410ce2d234e41169d3fc05f529b",
   "native_recovery_checks": {
     "step": "S10",
     "status": "Prepared",
@@ -39,17 +124,6 @@
     "public_monitoring_or_alert_delivery": false,
     "accepted_dataset_rpo_rto": "Pending"
   },
-  "unit_configuration_checks": {
-    "exit_code": 0,
-    "mode": "systemd-analyze isolated root; existing service/socket fixtures only",
-    "units_executed": false
-  },
-  "policy_status": "Preview operator/retention/key-custody inputs required at configure; business policy remains Pending",
-  "manual_acceptance": "Pending fixed-status VM retry, scheduled encrypted backup/receipt confirmation, separate-key off-VM recovery and observed notification",
-  "app_image_rebuilt": false,
-  "application_accounts_created": false,
-  "google_cloud_resources_changed_in_workspace": false,
-  "full_requirement_acceptance": "Pending",
   "secret_scan": {
     "scanner": "detect-secrets",
     "version": "1.5.0",
@@ -64,28 +138,5 @@
     "unreviewed_findings": 0,
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
-  },
-  "encryption_tool_pin": {
-    "version": "1.3.2",
-    "platform": "linux/amd64",
-    "url": "https://github.com/FiloSottile/age/releases/download/v1.3.2/age-v1.3.2-linux-amd64.tar.gz",
-    "sha256": "cbe24006683f8eb669266162894b9a522a1af52f2665fbc63a4bb032ed26ac10",
-    "source": "https://github.com/FiloSottile/age/releases/tag/v1.3.2",
-    "reviewed_on": "2026-11-10",
-    "scope": "Operator encryption tools only; application image/locks unchanged"
-  },
-  "operator_cloud_setup_observed": {
-    "configured": true,
-    "retention_days": 7,
-    "notification_channels": 1,
-    "uptime_checks": 1,
-    "alert_policies": 9
-  },
-  "operator_install_observed": {
-    "status": "Installed",
-    "operations_commit": "git:d3031b251a80f94c337b1943a3a78d27c868c5a1",
-    "app_restarted": false,
-    "database_migrated_or_restored": false,
-    "status_retry_of_fix": "Pending"
   }
 }

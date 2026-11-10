@@ -1,8 +1,7 @@
 {
-  "mode": "native-postgresql17",
-  "status": "Prepared",
-  "docker_execution": false,
-  "postgresql_binary_version": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+  "mode": "docker-compose-postgresql17",
+  "status": "Verified",
+  "docker_execution": true,
   "postgresql_version_num": 170011,
   "s12_tests": 37,
   "suite": {
@@ -22,8 +21,8 @@
   "execution_adapter_revocation_checked": true,
   "migration_drift": false,
   "step": "S12",
-  "verified_at": "2026-11-10T13:37:43+02:00",
-  "source_commit": "git:6eb714755ad7c200024b3c234846e8f0e99d7409",
+  "verified_at": "2026-11-10T15:13:54+02:00",
+  "source_commit": "git:087d03f9d562d042b2936b4751fe87ed48b4e064",
   "source_dirty": false,
   "source_reference_commit": "git:e314645a4c6decc701fc0dca928d52d6f9b76491",
   "cloud_or_vm_changed": false,
@@ -58,6 +57,5 @@
     "createrole": false,
     "docker_execution": false,
     "cloud_execution": false
-  },
-  "secret_scan_origin": "Implementation workspace; not a fresh operator history scan"
+  }
 }

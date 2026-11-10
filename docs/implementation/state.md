@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S12 Prepared — office ownership and isolation**. Next step: **Complete S12 local Docker gate**.
+Updated 2026-11-10. Current step: **S12 Verified — office ownership and isolation**. Next step: **S13**.
 
 ## Repository position
 
@@ -276,7 +276,7 @@ legacy ownership approvals remain Pending. AT-OFF-01 full boundary and AT-LOC-01
 full Greek release acceptance are not claimed by the S11 schema tests.
 
 <!-- S12-RESULT -->
-Prepared: 37 ownership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Future entry-point coverage, policy and full release acceptance remain Pending.
+Verified: 37 ownership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: True. Future entry-point coverage, policy and full release acceptance remain Pending.
 <!-- /S12-RESULT -->
 
 ## S12 office ownership — 2026-11-10

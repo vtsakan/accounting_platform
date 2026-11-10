@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S12 Verified — office ownership and isolation**. Next step: **S13**.
+Updated 2026-11-10. Current step: **S13 Prepared — staff authentication and privileged MFA**. Next step: **Complete S13 local Docker gate**.
 
 ## Repository position
 
@@ -334,3 +334,7 @@ remain Pending, including staged Greek/accessibility and full security review.
 Human account onboarding/settings/invitations are S14, after S13's Docker gate.
 No human account, live email, production migration, cloud change or deployment is
 made. Keep the verified VM release and S10 recovery binding unchanged.
+
+<!-- S13-RESULT -->
+Prepared: 59 authentication/MFA/recovery/session/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Live mail/deployment, S14 onboarding and full release acceptance remain Pending.
+<!-- /S13-RESULT -->

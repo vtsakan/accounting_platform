@@ -445,3 +445,31 @@ S10 live proof at s10-complete is preserved. S11 changes the application source
 context locally; its deployment and corresponding S10 backup binding update are
 not part of this step. Keep the working preview and existing resources as they
 are while completing S12 ownership and S13 authentication.
+
+## S12 ownership enforcement — 2026-11-10
+
+The selected step adds an immutable mandatory office to all five existing
+business tables. Actor context comes from the active user/profile/office,
+independent of submitted office IDs or superuser flags. Explicit query/saving
+helpers guard current HTTP/admin paths; PostgreSQL composite foreign keys and
+immutable-owner triggers protect linked writes that bypass forms. Table/PK and
+prior migration identities are preserved. No new all-office permission is granted.
+
+The migration is deliberately staged: 0004 adds nullable columns; 0005 rejects
+unassigned/conflicting rows before enforcement. A private complete reviewer-bound
+mapping fills only null offices atomically and preserves original financial row
+values/timestamps. No ownership is inferred from one user, a record name, a
+default office or an arbitrary request ID. Real legacy ownership remains D05
+review work; tests use explicitly synthetic identities/assignments only.
+
+Cash names/nonempty AFMs become office-scoped; S15 retains detailed AFM validation.
+The admin recent-action sidebar is omitted because its historical labels have
+no office context; audit data is not deleted. Existing finance semantics and all
+26 exact known regressions remain scheduled. D01 capability/last-owner policy is
+still not approved by this technical step. Current helpers do not grant portal
+authority or complete future job/file/export integration. See office_ownership.md.
+
+Native PostgreSQL proof is Prepared pending operator Docker reproduction. Schema
+reversal is not an automatic data rollback after names/AFMs are reused across
+offices. Future VM deployment needs a new image and matching S10 backup binding;
+S12 does not change the existing preview or create application accounts.

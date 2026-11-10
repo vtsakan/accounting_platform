@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S11 Verified — offices and accountant profiles**. Next step: **S12**.
+Updated 2026-11-10. Current step: **S12 Prepared — office ownership and isolation**. Next step: **Complete S12 local Docker gate**.
 
 ## Repository position
 
@@ -274,3 +274,38 @@ the local Docker verifier completes. Full row ownership is S12, authentication
 S13 and owner office settings/invitations S14. D01 capability/handover and actual
 legacy ownership approvals remain Pending. AT-OFF-01 full boundary and AT-LOC-01
 full Greek release acceptance are not claimed by the S11 schema tests.
+
+<!-- S12-RESULT -->
+Prepared: 37 ownership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Future entry-point coverage, policy and full release acceptance remain Pending.
+<!-- /S12-RESULT -->
+
+## S12 office ownership — 2026-11-10
+
+Pushed S11 Docker verification is Verified at s11-complete
+(e314645a4c6decc701fc0dca928d52d6f9b76491). Earlier S11 Prepared notes
+are historical. Selected S12 adds nullable office columns at 0004, a complete
+reviewed backfill, then guarded non-null/composite-key enforcement at 0005.
+Original tables, PKs, first three migrations and S11 membership schema remain.
+The five existing business models now validate ownership; views/forms/admin use
+a fresh actor profile and scope every record/related choice. Six composite FKs
+and five immutable-owner triggers protect raw/bulk writes. Cash names and
+nonempty AFMs are unique per office; detailed AFM normalisation remains S15.
+
+Native PostgreSQL 17.11 checks pass: 157 tests, 131 passed and 26 exact known
+financial failures, no unexpected outcomes. The new 37 tests include actual
+concurrency, staged legacy migration/dry run/apply/retry/rollback and source-row
+fingerprint preservation. Existing assertions, registry and financial calculations
+are retained. Malformed-filter/date failures remain S29; no assertion was changed
+to turn an unrelated failure into a pass.
+
+The admin's unscoped historical recent-action widget is omitted, retaining audit
+entries and scoped individual history. Unsupported bulk actions and office
+lookup overrides are denied. records/execution_record helpers are foundations
+for future exports/files/workers, not delivered adapters. Greek access/ownership
+errors and private no-store responses are tested. Full boundary acceptance is
+S16; auth/MFA is S13 and capability/settings/invitations are S14.
+
+S12 remains Prepared until local Docker reproduction with verify_s12.py. No human
+account, actual legacy mapping, real import, cloud change or VM deployment occurs.
+The running preview and its backup binding remain at their verified release.
+See office_ownership.md before applying schema changes to any existing database.

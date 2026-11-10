@@ -1,4 +1,4 @@
-"""S11 existence/activity gate. Full record-level office scoping follows in S12."""
+"""Fresh staff office context for the S12 record-scoped application/admin."""
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
@@ -8,6 +8,11 @@ from .membership import require_office_profile
 
 
 class ActiveOfficeMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        if hasattr(request, "accountant_profile"):
+            response["Cache-Control"] = "no-store, private"
+        return response
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         model_admin = getattr(view_func, "model_admin", None)
         business_view = view_func.__module__ == "accounting.views"

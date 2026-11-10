@@ -12,6 +12,9 @@ from accounting.management.commands.seed_development_data import ACCOUNT_NAME, C
 class Command(BaseCommand):
     help = "Emit non-secret local database/migration and synthetic-marker evidence."
 
+    def add_arguments(self, parser):
+        parser.add_argument('--office', help='Explicit office UUID for synthetic marker inspection')
+
     def handle(self, *args, **options):
         if settings.SETTINGS_MODULE != "core.settings.local":
             raise CommandError("The development probe is allowed only with core.settings.local.")
@@ -21,9 +24,9 @@ class Command(BaseCommand):
         tables = sorted(connection.introspection.table_names())
         applied = sorted(f"{app}.{name}" for app, name in MigrationRecorder(connection).applied_migrations())
         markers = {}
-        if {"accounting_entity", "accounting_cashaccount"} <= set(tables):
-            client = Entity.objects.filter(vat_number=SYNTHETIC_AFM, name=CLIENT_NAME).first()
-            account = CashAccount.objects.filter(name=ACCOUNT_NAME).first()
+        if options['office'] and {"accounting_entity", "accounting_cashaccount"} <= set(tables):
+            client = Entity.objects.filter(office_id=options['office'], vat_number=SYNTHETIC_AFM, name=CLIENT_NAME).first()
+            account = CashAccount.objects.filter(office_id=options['office'], name=ACCOUNT_NAME).first()
             if client and account:
                 markers = {"client_id": client.pk, "afm": client.vat_number,
                            "greek_name_matches": client.name == CLIENT_NAME, "account_id": account.pk,

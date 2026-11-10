@@ -20,6 +20,20 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S11 is now Verified and pushed/tagged at s11-complete
+(e314645a4c6decc701fc0dca928d52d6f9b76491), including the actual Docker
+120-test gate. Selected S12 adds ownership to all five old business tables.
+Read office_ownership.md and evidence/S12-verification.json. Keep this work local
+and synthetic. Migration 0004 is nullable; 0005 refuses unreviewed records before
+non-null/composite-key enforcement. Never fill a default office or alter original
+row identities. Use the dry-run backfill_office_records command with an actual
+reviewed mapping when migrating a selected existing database. Current tests use
+synthetic mappings only. Use tools/verify_s12.py for the disposable PG17 gate;
+native proof is Prepared, local Docker proof completes the step. Keep all 26
+financial failures and original financial assertions/calculations. Full boundary
+coverage is S16, authentication/MFA S13, and capability/settings/invitations S14.
+No human account, VM change, live-data import or production deployment is made.
+
 S10 is now Verified and pushed/tagged at s10-complete
 (06cb37d3342115aebf53dd47e36b7900c3918fcd). Read its live evidence: actual
 timer/upload, independent-key laptop Docker restore and received alert passed.

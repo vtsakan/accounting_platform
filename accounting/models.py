@@ -5,19 +5,21 @@ import uuid
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.conf import settings
+from .ownership import OfficeOwned
 
 
 # ===================================================================
 # Model 1: Entity (For both Customers & Suppliers)
 # ===================================================================
-class Entity(models.Model):
+class Entity(OfficeOwned):
+    office_unique_fields = ("vat_number",)
     class EntityType(models.TextChoices):
         CUSTOMER = 'CUSTOMER', 'Πελάτης'
         SUPPLIER = 'SUPPLIER', 'Προμηθευτής'
 
     entity_type = models.CharField(max_length=10, choices=EntityType.choices, verbose_name="Τύπος")
     name = models.CharField(max_length=255, verbose_name="Επωνυμία")
-    vat_number = models.CharField(max_length=20, unique=True, blank=True, null=True, verbose_name="Α.Φ.Μ.")
+    vat_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Α.Φ.Μ.")
     tax_office = models.CharField(max_length=100, blank=True, verbose_name="Δ.Ο.Υ.")
     address = models.CharField(max_length=255, blank=True, verbose_name="Διεύθυνση")
     city = models.CharField(max_length=100, blank=True, verbose_name="Πόλη")
@@ -33,12 +35,17 @@ class Entity(models.Model):
     class Meta:
         verbose_name = "Οντότητα (Πελάτης/Προμηθευτής)"
         verbose_name_plural = "Οντότητες (Πελάτες/Προμηθευτές)"
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="entity_id_office_key"),
+                       models.UniqueConstraint(fields=["office", "vat_number"],
+                           condition=models.Q(vat_number__isnull=False) & ~models.Q(vat_number=""),
+                           name="entity_office_nonempty_vat_key")]
 
 # ===================================================================
 # Model 2: CashAccount (The "Ταμεία")
 # ===================================================================
-class CashAccount(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name="Όνομα Ταμείου")
+class CashAccount(OfficeOwned):
+    office_unique_fields = ("name",)
+    name = models.CharField(max_length=100, verbose_name="Όνομα Ταμείου")
     opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Αρχικό Υπόλοιπο")
     is_active = models.BooleanField(default=True, verbose_name="Ενεργό")
 
@@ -48,11 +55,13 @@ class CashAccount(models.Model):
     class Meta:
         verbose_name = "Ταμείο"
         verbose_name_plural = "Ταμεία"
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="cashaccount_id_office_key"),
+                       models.UniqueConstraint(fields=["office", "name"], name="cashaccount_office_name_key")]
 
 # ===================================================================
 # Model 3: Category (The "Κατηγορίες")
 # ===================================================================
-class Category(models.Model):
+class Category(OfficeOwned):
     name = models.CharField(max_length=100, verbose_name="Όνομα Κατηγορίας")
     parent = models.ForeignKey(
         'self', 
@@ -69,16 +78,17 @@ class Category(models.Model):
         return self.name
 
     class Meta:
-        unique_together = ('name', 'parent',)
+        unique_together = ('office', 'name', 'parent',)
         verbose_name = "Κατηγορία"
         verbose_name_plural = "Κατηγορίες"
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="category_id_office_key")]
 
 
 
 # ===================================================================
 # Model: Agreement
 # ===================================================================
-class Agreement(models.Model):
+class Agreement(OfficeOwned):
     class AgreementType(models.TextChoices):
         RECEIVABLE = 'RECEIVABLE', 'Receivable (from Customer)'
         PAYABLE = 'PAYABLE', 'Payable (to Supplier)'
@@ -104,11 +114,12 @@ class Agreement(models.Model):
         verbose_name = "Agreement"
         verbose_name_plural = "Agreements"
         ordering = ['-start_date']
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="agreement_id_office_key")]
 
 # ===================================================================
 # Model 4: Transaction (The Core Ledger) - WITH AUTOMATION
 # ===================================================================
-class Transaction(models.Model):
+class Transaction(OfficeOwned):
     class TransactionType(models.TextChoices):
         INCOME = 'INCOME', 'Έσοδο'
         EXPENSE = 'EXPENSE', 'Έξοδο'
@@ -156,6 +167,7 @@ class Transaction(models.Model):
         ordering = ['-transaction_date', '-created_at']
         verbose_name = "Κίνηση"
         verbose_name_plural = "Κινήσεις"
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="transaction_id_office_key")]
 
 
 class Office(models.Model):

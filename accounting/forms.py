@@ -4,12 +4,25 @@ from django import forms
 from .models import CashAccount, Category, Entity, Agreement
 from django.utils.translation import gettext, gettext_lazy as _
 from core.locale import GreekMoneyField, format_euro
+from django.core.exceptions import PermissionDenied
+from .membership import require_office_profile, DENIED
+from .office_access import records, save_for_user
 
 
 class GreekFormMixin:
     def __init__(self, *args, **kwargs):
+        self.actor = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.office_id = require_office_profile(self.actor).office_id if self.actor is not None else None
+        if isinstance(self, forms.ModelForm) and self.office_id:
+            if self.instance.office_id and self.instance.office_id != self.office_id:
+                raise PermissionDenied(DENIED)
+            self.instance.office_id = self.office_id
         for field in self.fields.values():
+            if isinstance(field, forms.ModelChoiceField):
+                model = field.queryset.model
+                field.queryset = (field.queryset.filter(office_id=self.office_id)
+                                  if self.office_id else model.objects.none())
             if field.label:
                 field.label = gettext(str(field.label))
             if isinstance(field, forms.ChoiceField) and not isinstance(field, forms.ModelChoiceField):
@@ -18,6 +31,26 @@ class GreekFormMixin:
                 # Native HTML date controls exchange ISO values, independent of display locale.
                 field.widget.format = "%Y-%m-%d"
                 field.input_formats = ["%Y-%m-%d", "%d/%m/%Y"]
+
+    def clean(self):
+        cleaned = super().clean()
+        if self.actor is None:
+            raise forms.ValidationError(DENIED)
+        profile = require_office_profile(self.actor)
+        if profile.office_id != self.office_id:
+            raise forms.ValidationError(DENIED)
+        return cleaned
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        profile = require_office_profile(self.actor)
+        if profile.office_id != self.office_id:
+            raise PermissionDenied(DENIED)
+        instance.office_id = self.office_id
+        if commit:
+            save_for_user(instance, self.actor)
+            self.save_m2m()
+        return instance
 
 # A dictionary of common Bootstrap attributes to avoid repetition
 bootstrap_form_attrs = {'class': 'form-control'}
@@ -63,7 +96,8 @@ class ExpenseForm(GreekFormMixin, forms.Form):
         agreements_queryset = kwargs.pop('agreements_queryset', None)
         super().__init__(*args, **kwargs)
         if agreements_queryset is not None:
-            self.fields['agreement'].queryset = agreements_queryset
+            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id)
+                                                 if self.office_id else Agreement.objects.none())
 
 class IncomeForm(GreekFormMixin, forms.Form):
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
@@ -83,7 +117,8 @@ class IncomeForm(GreekFormMixin, forms.Form):
         agreements_queryset = kwargs.pop('agreements_queryset', None)
         super().__init__(*args, **kwargs)
         if agreements_queryset is not None:
-            self.fields['agreement'].queryset = agreements_queryset
+            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id)
+                                                 if self.office_id else Agreement.objects.none())
 
 class EntityForm(GreekFormMixin, forms.ModelForm):
     class Meta:

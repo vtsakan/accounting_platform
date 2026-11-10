@@ -132,7 +132,7 @@ class OfficeTests(TestCase):
     def test_superuser_has_no_business_bypass(self):
         self.user.is_staff = self.user.is_superuser = True; self.user.save()
         self.client.force_login(self.user)
-        Entity.objects.create(name="s11-unmapped-admin-canary", entity_type="CUSTOMER")
+        Entity.objects.create(office_id=A, name="s11-unmapped-admin-canary", entity_type="CUSTOMER")
         for path in ("/", reverse("admin:accounting_entity_changelist"), reverse("admin:accounting_entity_add"),
                      reverse("admin:autocomplete") + "?app_label=accounting&model_name=transaction&field_name=entity&term=s11",
                      reverse("admin:app_list", kwargs={"app_label": "accounting"})):

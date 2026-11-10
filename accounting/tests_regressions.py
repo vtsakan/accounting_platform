@@ -30,25 +30,26 @@ class FinancialRegressionTests(TestCase):
         if connection.vendor != "postgresql" or connection.pg_version // 10000 != 17:
             raise AssertionError("S06 financial evidence requires real PostgreSQL 17")
         cls.user = get_user_model().objects.create_user("s06-synthetic-accountant", password=secrets.token_urlsafe(32))
-        create_accountant_profile(user_id=cls.user.pk, office_id=create_office(name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ S06").pk,
+        cls.office = create_office(name="ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ S06")
+        create_accountant_profile(user_id=cls.user.pk, office_id=cls.office.pk,
                                   role="accountant")
-        cls.customer_a = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Α S06", entity_type="CUSTOMER", vat_number="000000011")
-        cls.customer_b = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Β S06", entity_type="CUSTOMER", vat_number="000000012")
-        cls.supplier_a = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Α S06", entity_type="SUPPLIER", vat_number="000000013")
-        cls.supplier_b = Entity.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Β S06", entity_type="SUPPLIER", vat_number="000000014")
-        cls.source = CashAccount.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α S06", opening_balance=Decimal("100.00"))
-        cls.destination = CashAccount.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β S06", opening_balance=Decimal("100.00"))
-        cls.category = Category.objects.create(name="ΔΟΚΙΜΑΣΤΙΚΕΣ ΥΠΗΡΕΣΙΕΣ S06")
-        cls.receivable = Agreement.objects.create(entity=cls.customer_a, agreement_type="RECEIVABLE",
+        cls.customer_a = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Α S06", entity_type="CUSTOMER", vat_number="000000011")
+        cls.customer_b = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Β S06", entity_type="CUSTOMER", vat_number="000000012")
+        cls.supplier_a = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Α S06", entity_type="SUPPLIER", vat_number="000000013")
+        cls.supplier_b = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Β S06", entity_type="SUPPLIER", vat_number="000000014")
+        cls.source = CashAccount.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α S06", opening_balance=Decimal("100.00"))
+        cls.destination = CashAccount.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β S06", opening_balance=Decimal("100.00"))
+        cls.category = Category.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΕΣ ΥΠΗΡΕΣΙΕΣ S06")
+        cls.receivable = Agreement.objects.create(office=cls.office, entity=cls.customer_a, agreement_type="RECEIVABLE",
             description="ΔΟΚΙΜΑΣΤΙΚΗ ΣΥΜΦΩΝΙΑ ΠΕΛΑΤΗ S06", total_amount=Decimal("100.00"), start_date=DAY)
-        cls.payable = Agreement.objects.create(entity=cls.supplier_a, agreement_type="PAYABLE",
+        cls.payable = Agreement.objects.create(office=cls.office, entity=cls.supplier_a, agreement_type="PAYABLE",
             description="ΔΟΚΙΜΑΣΤΙΚΗ ΣΥΜΦΩΝΙΑ ΠΡΟΜΗΘΕΥΤΗ S06", total_amount=Decimal("100.00"), start_date=DAY)
 
     def setUp(self):
         self.client.force_login(self.user)
 
     def movement(self, amount, direction="INCOME", *, account=None, agreement=None):
-        return Transaction.objects.create(transaction_date=DAY, transaction_type=direction,
+        return Transaction.objects.create(office=self.office, transaction_date=DAY, transaction_type=direction,
             amount=Decimal(amount), description="ΔΟΚΙΜΑΣΤΙΚΗ ΚΙΝΗΣΗ S06", cash_account=account or self.source,
             category=self.category, entity=self.customer_a if direction == "INCOME" else self.supplier_a,
             agreement=agreement)

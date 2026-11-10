@@ -18,10 +18,10 @@
     "psycopg": "3.3.8"
   },
   "runtime_pip_check": true,
-  "s13_tests": 59,
+  "s13_tests": 61,
   "suite": {
-    "tests_run": 216,
-    "tests_passed": 190,
+    "tests_run": 218,
+    "tests_passed": 192,
     "known_failures_reproduced": 26,
     "unexpected_failures": 0,
     "unexpected_errors": 0,
@@ -40,11 +40,11 @@
     "network_verification": false,
     "scanner_self_check": "Passed: detected an ephemeral synthetic password",
     "history_scope": "All locally reachable Git refs plus the current candidate source",
-    "history_commits": 62,
-    "unique_history_blobs": 495,
-    "candidate_text_files": 244,
+    "history_commits": 66,
+    "unique_history_blobs": 510,
+    "candidate_text_files": 246,
     "binary_files_or_blobs_skipped": 6,
-    "reviewed_non_secret_matches": 97,
+    "reviewed_non_secret_matches": 98,
     "unreviewed_findings": 0,
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
@@ -52,8 +52,8 @@
   "runtime_and_tools_locks_reproduced": true,
   "greek_catalog_verified": true,
   "step": "S13",
-  "verified_at": "2026-11-10T16:21:17+02:00",
-  "source_commit": "git:b49274684ddb2c0580585e6c15bd2de39489c994",
+  "verified_at": "2026-11-10T17:11:28+02:00",
+  "source_commit": "git:225b15ce26ac0acd45f5a2c714030e4607c0a221",
   "source_dirty": false,
   "source_reference_commit": "git:13ef2a1c8c96984da88c4cf73e695d128023555b",
   "cloud_or_vm_changed": false,
@@ -62,8 +62,9 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "original_migrations_office_business_schema_and_financial_assertions_preserved": true,
+  "configuration_test_assertions_preserved": true,
   "s10_s11_s12_evidence_preserved": true,
   "existing_runtime_versions_and_tools_lock_preserved": true,
   "recovery_templates_in_production_context": true,
-  "application_context_digest": "sha256:b1f620af7a39e45e5afbcb1173b16f0ffa34e871a5898b7bcb2c97585b74ce00"
+  "application_context_digest": "sha256:6702f8dda0f5668cfc1cecd5f7d737417777d969d03eb40828fa2da900e43140"
 }

@@ -27,5 +27,23 @@
   "cloud_or_vm_changed": false,
   "live_mail_sent": false,
   "human_application_account_created": false,
-  "full_requirement_acceptance": "Pending"
+  "full_requirement_acceptance": "Pending",
+  "native_retry": {
+    "mode": "native-postgresql17",
+    "verified_at": "2026-11-10T17:11:28+02:00",
+    "source_commit": "git:225b15ce26ac0acd45f5a2c714030e4607c0a221",
+    "source_dirty": false,
+    "s13_tests": 61,
+    "suite": {
+      "tests_run": 218,
+      "tests_passed": 192,
+      "known_failures_reproduced": 26,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    },
+    "application_context_digest": "sha256:6702f8dda0f5668cfc1cecd5f7d737417777d969d03eb40828fa2da900e43140",
+    "inherited_AUTH_PUBLIC_ORIGIN": "http://localhost:0"
+  }
 }

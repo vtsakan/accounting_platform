@@ -22,28 +22,19 @@
   "execution_adapter_revocation_checked": true,
   "migration_drift": false,
   "step": "S12",
-  "verified_at": "2026-11-10T13:24:46+02:00",
-  "source_commit": "git:e314645a4c6decc701fc0dca928d52d6f9b76491",
-  "source_dirty": true,
+  "verified_at": "2026-11-10T13:37:43+02:00",
+  "source_commit": "git:6eb714755ad7c200024b3c234846e8f0e99d7409",
+  "source_dirty": false,
   "source_reference_commit": "git:e314645a4c6decc701fc0dca928d52d6f9b76491",
   "cloud_or_vm_changed": false,
   "human_application_accounts_created": false,
   "real_client_data_imported": false,
   "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
   "original_migrations_membership_schema_and_locks_preserved": true,
   "financial_assertions_registry_and_calculations_preserved": true,
   "s10_s11_live_evidence_preserved": true,
   "application_context_digest": "sha256:e4919e2e3117150c1454e843184c9c2e10bb51415008e6cafcfd50566f3f466a",
-  "native_restricted_role_ddl": {
-    "postgresql": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
-    "migrations_under_restricted_role": "Passed",
-    "superuser": false,
-    "createdb": false,
-    "createrole": false,
-    "docker_execution": false,
-    "cloud_execution": false
-  },
-  "full_requirement_acceptances_pending": 85,
   "secret_scan": {
     "scanner": "detect-secrets",
     "version": "1.5.0",
@@ -58,6 +49,15 @@
     "unreviewed_findings": 0,
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "native_restricted_role_ddl": {
+    "postgresql": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+    "migrations_under_restricted_role": "Passed",
+    "superuser": false,
+    "createdb": false,
+    "createrole": false,
+    "docker_execution": false,
+    "cloud_execution": false
   },
   "secret_scan_origin": "Implementation workspace; not a fresh operator history scan"
 }

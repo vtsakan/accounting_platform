@@ -4,6 +4,7 @@
 import argparse
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from decimal import Decimal
 import fcntl
 import json
 import os
@@ -225,11 +226,32 @@ def install(config, bundle, digest):
             'database_migrated_or_restored': False, 'first_backup_and_recovery': 'Pending'}
 
 
+def timer_has_triggered(value):
+    """Accept raw microseconds or systemctl's finite formatted time span."""
+    value = value.strip()
+    if value in {'', 'n/a'}:
+        return False
+    require(len(value) <= 256, 'Backup timer trigger value exceeds its size limit')
+    if re.fullmatch(r'[0-9]+', value):
+        return int(value) > 0
+    # Formatting is locale-independent; accept systemd's documented unit aliases
+    # and both Unicode microsecond spellings. Only positivity is needed here.
+    units = ('years', 'year', 'y', 'months', 'month', 'M', 'weeks', 'week', 'w',
+             'days', 'day', 'd', 'hours', 'hour', 'hr', 'h', 'minutes', 'minute', 'min', 'm',
+             'seconds', 'second', 'sec', 's', 'msec', 'ms', 'usec', 'us', '\u00b5s', '\u03bcs', 'nsec', 'ns')
+    suffixes = '|'.join(re.escape(unit) for unit in sorted(units, key=len, reverse=True))
+    part = re.compile(r'([0-9]+(?:\.[0-9]+)?)\s*(?:' + suffixes + ')')
+    require(re.fullmatch(r'(?:' + part.pattern + r'\s*)+', value), 'Unrecognized systemd backup trigger format')
+    return any(Decimal(match.group(1)) > 0 for match in part.finditer(value))
+
+
 def status(config):
+    checkpoint('status')
     check(config)
     enabled = {unit: common.run(['systemctl', 'is-enabled', unit]).decode().strip() for unit in common.UNITS}
     active = {unit: common.run(['systemctl', 'is-active', unit]).decode().strip() for unit in common.UNITS}
     trigger = common.run(['systemctl', 'show', 'accounting-backup.timer', '--property=LastTriggerUSecMonotonic', '--value']).decode().strip()
+    triggered = timer_has_triggered(trigger)
     token = preview.access_token()
     base = 'https://storage.googleapis.com/storage/v1/b/' + config['bucket']
     permissions = ['storage.objects.' + verb for verb in ('create', 'get', 'list', 'update', 'delete')]
@@ -248,7 +270,7 @@ def status(config):
     return {'status': 'Inspected', 'operations_commit': config['code_commit'], 'timers_enabled': enabled,
             'timers_active': active, 'backup': state(),
             'effective_backup_permissions': sorted(allowed), 'backup_read_and_list_denied': bool(last),
-            'scheduled_backup_trigger_observed': int(trigger or '0') > 0,
+            'scheduled_backup_trigger_observed': triggered,
             'backup_service_result': common.run(['systemctl', 'show', 'accounting-backup.service', '--property=Result', '--value']).decode().strip(),
             'backup_service_state': common.run(['systemctl', 'show', 'accounting-backup.service', '--property=ActiveState', '--value']).decode().strip(),
             'monitor': json.loads(common.METRICS.read_text()) if common.METRICS.exists() else None,

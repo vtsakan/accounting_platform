@@ -253,6 +253,77 @@ class ObservationTests(unittest.TestCase):
         self.assertEqual(values['alert_probe'], 0)
 
 
+class TimerStatusTests(unittest.TestCase):
+    def test_operator_reported_duration(self):
+        self.assertTrue(host.timer_has_triggered('9h 5min 11.812969s'))
+
+    def test_integer_and_formatted_positive_times_are_supported(self):
+        for value in ('32711812969', '1', '000001', '1us', '1\u00b5s', '1\u03bcs', '0.000001s',
+                      '1ms', '1ns', '2h30min', '300ms20s 5day', '1y 12month', '1M', '2 hours'):
+            with self.subTest(value=value): self.assertTrue(host.timer_has_triggered(value))
+
+    def test_unset_and_zero_never_claim_a_trigger(self):
+        for value in ('', 'n/a', '0', '0000', '0s', '0us', '0.000000s', '0h 0min 0.000s', ' 0ms\n'):
+            with self.subTest(value=value): self.assertFalse(host.timer_has_triggered(value))
+
+    def test_invalid_negative_nonfinite_or_unknown_values_fail_closed(self):
+        for value in ('infinity', 'NaN', '-1', '-1s', '1e9us', 'n/a 1h', '2fortnights',
+                      '9h unexpected', 'Tue 2026-11-10', '1h\x00', '9' * 257):
+            with self.subTest(value=value), self.assertRaises(ValueError): host.timer_has_triggered(value)
+
+    def status_fixture(self, trigger, last_success=True):
+        config = configuration(); config['retention_days'] = 7
+        previous = {'last_attempt_ok': last_success}
+        if last_success: previous['last_success'] = receipt(config)
+        def run(command, **kwargs):
+            if command[:2] == ['systemctl', 'is-enabled']: return b'enabled\n'
+            if command[:2] == ['systemctl', 'is-active']: return b'active\n'
+            if '--property=LastTriggerUSecMonotonic' in command: return (trigger + '\n').encode()
+            if '--property=Result' in command: return b'success\n'
+            if '--property=ActiveState' in command: return b'inactive\n'
+            raise AssertionError('Unexpected status command')
+        methods = []
+        def api(method, url, token, *args, **kwargs):
+            methods.append(method)
+            if '/iam/testPermissions?' in url: return {'permissions': ['storage.objects.create']}
+            raise common.APIError(403)
+        with tempfile.TemporaryDirectory() as temporary, patch.object(host, 'check'), patch.object(host, 'state', return_value=previous), \
+             patch.object(host.preview, 'access_token', return_value='synthetic-token'), patch.object(common, 'run', side_effect=run), \
+             patch.object(common, 'api', side_effect=api), patch.object(common, 'METRICS', Path(temporary) / 'absent.json'), \
+             redirect_stderr(io.StringIO()):
+            result = host.status(config)
+        return result, previous, methods
+
+    def test_complete_status_report_accepts_duration_without_weakening_guards(self):
+        for value in ('9h 5min 11.812969s', '32711812969'):
+            with self.subTest(value=value):
+                result, previous, methods = self.status_fixture(value)
+                self.assertEqual(result['status'], 'Inspected')
+                self.assertTrue(result['scheduled_backup_trigger_observed'])
+                self.assertEqual(result['backup'], previous)
+                self.assertEqual(result['effective_backup_permissions'], ['storage.objects.create'])
+                self.assertTrue(result['backup_read_and_list_denied'])
+                self.assertEqual(methods, ['GET', 'GET', 'GET'])
+                self.assertEqual(result['backup_service_result'], 'success')
+                self.assertEqual(result['backup_service_state'], 'inactive')
+
+    def test_full_status_keeps_untriggered_or_missing_backup_pending(self):
+        for value in ('n/a', '0s', '0'):
+            with self.subTest(value=value):
+                result, previous, methods = self.status_fixture(value, last_success=False)
+                self.assertFalse(result['scheduled_backup_trigger_observed'])
+                self.assertFalse(result['backup_read_and_list_denied'])
+                self.assertFalse(result['backup']['last_attempt_ok'])
+                self.assertEqual(methods, ['GET'])
+
+    def test_invalid_trigger_stops_before_cloud_inspection(self):
+        config = configuration()
+        with patch.object(host, 'check'), patch.object(common, 'run', side_effect=[b'enabled', b'enabled', b'active', b'active', b'not-a-duration']), \
+             patch.object(common, 'api') as api, redirect_stderr(io.StringIO()), self.assertRaises(ValueError):
+            host.status(config)
+        api.assert_not_called()
+
+
 class CloudTests(unittest.TestCase):
     def test_metric_get_uses_google_reserved_resource_expansion(self):
         client = object.__new__(cloud.Client)

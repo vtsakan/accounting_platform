@@ -4,7 +4,7 @@
   "repository_checks": {
     "mode": "offline",
     "status": "Prepared",
-    "safeguard_tests": 44,
+    "safeguard_tests": 51,
     "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
     "application_migrations_locks_unchanged": true,
     "actual_cloud_execution": false,
@@ -45,7 +45,7 @@
     "units_executed": false
   },
   "policy_status": "Preview operator/retention/key-custody inputs required at configure; business policy remains Pending",
-  "manual_acceptance": "Pending actual selected-resource install, scheduled encrypted upload, separate-key GCS/Docker recovery and observed notification",
+  "manual_acceptance": "Pending fixed-status VM retry, scheduled encrypted backup/receipt confirmation, separate-key off-VM recovery and observed notification",
   "app_image_rebuilt": false,
   "application_accounts_created": false,
   "google_cloud_resources_changed_in_workspace": false,
@@ -73,5 +73,19 @@
     "source": "https://github.com/FiloSottile/age/releases/tag/v1.3.2",
     "reviewed_on": "2026-11-10",
     "scope": "Operator encryption tools only; application image/locks unchanged"
+  },
+  "operator_cloud_setup_observed": {
+    "configured": true,
+    "retention_days": 7,
+    "notification_channels": 1,
+    "uptime_checks": 1,
+    "alert_policies": 9
+  },
+  "operator_install_observed": {
+    "status": "Installed",
+    "operations_commit": "git:d3031b251a80f94c337b1943a3a78d27c868c5a1",
+    "app_restarted": false,
+    "database_migrated_or_restored": false,
+    "status_retry_of_fix": "Pending"
   }
 }

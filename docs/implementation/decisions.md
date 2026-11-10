@@ -399,3 +399,26 @@ private key and policy configuration and reuses exact existing resources.
 Application image context, models, migrations, locks and Compose are unchanged.
 S10 remains Prepared pending actual cloud retry, timer/upload, off-VM restore
 and observed alert proof. See evidence/S10-cloud-request-fix.json.
+
+## S10 systemd status compatibility — 2026-11-10
+
+The operator's cloud retry completed: seven-day lifecycle, one notification
+channel, one uptime check and nine alert policies were configured. Operations
+installed at git:d3031b251a80f94c337b1943a3a78d27c868c5a1 without restarting
+the app or migrating/restoring its database. The subsequent status report failed
+when systemctl returned LastTriggerUSecMonotonic as `9h 5min 11.812969s`;
+our integer-only conversion caused the confirmed ValueError. This status failure
+does not establish the underlying backup/restore/alert outcomes.
+
+The parser now accepts raw numeric microseconds and finite systemd time spans.
+Zero/empty/unset values remain untriggered; malformed, negative, non-finite or
+unknown values fail closed. Full status-report regressions retain the create-only
+VM permission check and actual denied reads/listing. The status action now emits
+its own stage checkpoint. App code, image context, locks, migrations, timer units,
+private configuration, key identity and selected retention are unchanged.
+
+Apply the status fix, verify and push it, then rerun `tools/operations.py install`
+to select the new immutable operator release on the VM. Rerun status afterward.
+No cloud reconfiguration or app publication is required. S10 remains Prepared
+until the actual scheduled backup, off-VM recovery and observed alert gate pass.
+See evidence/S10-systemd-status-fix.json and backup_restore.md.

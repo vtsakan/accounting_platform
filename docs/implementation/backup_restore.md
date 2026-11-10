@@ -315,3 +315,31 @@ verified age 1.3.2 release. It does not claim GCS, Docker, timer or email execut
 - https://docs.cloud.google.com/monitoring/uptime-checks
 - https://docs.cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/create
 - https://docs.cloud.google.com/monitoring/alerts/policies-in-json
+
+## Installed status report: formatted systemd trigger values
+
+The confirmed failure at operator commit git:d3031b251a80f94c337b1943a3a78d27c868c5a1
+was an integer-only conversion of a formatted LastTriggerUSecMonotonic value.
+`9h 5min 11.812969s` is accepted by systemd-analyze as 32711812969 microseconds.
+The compatibility fix checks positivity in either representation, retaining
+unknown-value rejection, untriggered zero values and the existing permission
+and backup-proof requirements. A positive monotonic value alone does not verify
+backup success, freshness, recovery or notification delivery.
+
+Apply accounting-platform-S10-status-fix.patch on the existing S10 branch, then:
+
+```bash
+python3 tools/verify_s10.py
+git push
+python3 tools/operations.py install
+python3 tools/operations.py status
+```
+
+The install step is necessary because the VM runs its immutable, root-owned
+operator release. Updating laptop files alone cannot change that running code.
+Existing key/retention/cloud settings and backup receipts are retained; the
+application image and database are untouched by this operator update. Continue
+with the off-VM restore and explicit alert test only after status is inspected.
+
+Official time-span reference:
+https://www.freedesktop.org/software/systemd/man/latest/systemd.time.html

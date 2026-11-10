@@ -1,0 +1,12 @@
+[Unit]
+Description=Accounting backup twice daily
+
+[Timer]
+OnActiveSec=30s
+OnCalendar=*-*-* 02,14:15:00 UTC
+Persistent=true
+RandomizedDelaySec=30
+Unit=accounting-backup.service
+
+[Install]
+WantedBy=timers.target

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S09 Verified — DuckDNS HTTPS preview**. Next step: **S10 — backup and restore**.
+Updated 2026-11-10. Current step: **S10 Prepared — backup and operating checks**. Next step: **complete S10 operator recovery and alert proof**.
 
 ## Repository position
 
@@ -13,7 +13,8 @@ Updated 2026-11-10. Current step: **S09 Verified — DuckDNS HTTPS preview**. Ne
 - Original source: `3bb4c0240a48ee31ddbb19a26698bc25b3c79486`.
 - Pushed S07 verification baseline: `a215beb91e2e49a5ffd1fa9ce8c751b8f3572234` on `origin/step/s07-production-delivery`; read through GitHub and fetched before S08. No successful CI run is inferred from that push.
 - S08 is pushed at `git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac` on `origin/step/s08-google-cloud`; fetched before S09 implementation.
-- S09 is prepared on `step/s09-https-duckdns` from that exact pushed base. Resolve the applied S09 code commit with `git rev-parse HEAD`; no S09 push/deployed image is invented.
+- S09 is pushed/tagged at `s09-complete`, `git:eced8ea70e26f410ce2d234e41169d3fc05f529b`, with actual public/reboot verification. App commit is `git:70cf0d3dbc601163f33ae9c6f927605be50841aa`; S09 operator commit is `git:1968cd67424a368359c44cbddc055868ecf74d0a`.
+- S10 uses `step/s10-backup-restore` from that exact tag. The actual operations commit is captured by the installer; the tested app image is reused.
 
 ## Completed foundation and selected scope
 
@@ -173,3 +174,40 @@ preview.py ship --current-tools. App image, code, locks, migrations and all 26
 financial failures are unchanged. The application context is still identical.
 Actual app startup, public HTTPS/login and reboot proof remain Pending; S09 stays
 Prepared. See evidence/S09-image-identity.json and the HTTPS retry guide.
+
+## S10 selected backup and operating checks — 2026-11-10
+
+Current S09 HTTPS/login/isolation and actual reboot proof are Verified. Earlier
+Prepared statements above are historical step/retry notes. S10 is Prepared until
+its own operator gate passes; see [backup/recovery instructions](backup_restore.md)
+and evidence/S10-verification.json. No new VM, application image or human account
+is required. The user elected to create a regular application account through
+the office/accountant workflow at S13–S14.
+
+S10 uses a consistent PostgreSQL 17 snapshot and custom dump, streaming age 1.3.2
+encryption to an off-VM object and a non-secret recovery receipt. Decryption
+identities stay on the laptop and in independently controlled recovery storage.
+VM upload-only access is retained. Laptop recovery discovers an exact generation
+without the source VM, authenticates/decrypts it and restores into a temporary
+network-disabled PostgreSQL 17 container. No preview restore/migration occurs.
+
+The source supplies two systemd timers, eight host metrics, external readiness,
+nine Greek alert policies and bounded journal logs. S10 explicitly adds the VM's
+Monitoring metric-writer project role; S08's earlier no-project-role observation
+is historical. Preview retention and named incident/restore/key owners are entered
+by the operator. Business retention, workload, availability and accepted-data RPO/
+RTO approvals remain Pending. Nonempty private media stops backup; S38 must add
+document recovery. Redis/worker/scheduler remain S26.
+
+Native PG17/age proof restored all 16 public tables and 76 rows, including Greek
+text and exact decimals, with the primary key removed. Concurrent writes after
+snapshot export were excluded. Wrong keys, tampered ciphertext, changed restored
+rows and oversized dumps were rejected; snapshot transactions and plaintext were
+removed. These are local native checks, not actual GCS/Docker/timer/email proof.
+All 85 release acceptances and 26 known financial defects retain their status.
+
+Install from committed source; then run the actual isolated restore and explicit
+alert test. Only `tools/verify_s10.py --live --confirm-alert-received --record`
+may mark S10 Verified and make S11 eligible. Do not create s10-complete before
+that gate. Application code, migration/table identities, runtime/maintenance
+locks and production Compose are unchanged.

@@ -343,3 +343,42 @@ Actual startup/public/reboot proof remains separate. See S09-image-identity.json
 Official references:
 - https://docs.docker.com/engine/storage/containerd/
 - https://github.com/moby/moby/blob/master/daemon/containerd/image_inspect.go
+
+## S10 backup and operations selections — 2026-11-10
+
+S09 public/reboot proof is pushed at s09-complete (eced8ea70e26f410ce2d234e41169d3fc05f529b).
+The user authorised S10 and elected to wait for S13–S14 to create a regular
+application account. This step creates no human account.
+
+The implementation reuses the same synthetic VM, UUID-mounted disk and private
+EU backup bucket. A consistent exported PG17 snapshot binds table fingerprints
+and pg_dump. A checksum-pinned age 1.3.2 binary encrypts to a public recipient;
+only the laptop/recovery custodian holds the private identity. A completed
+non-secret receipt in private storage allows off-VM recovery without SSH access
+to the original VM. Unique create-only uploads, generation binding, CRC32C, SHA-256
+and age authentication are checked; the original VM gets no backup read/delete
+permission. Recovery is a bounded, isolated local Docker PG17 database drill.
+
+The operator explicitly chooses synthetic cleanup retention (7–90 days; proposed
+30), incident/restore/key custodians and alert email during configuration. No
+business retention or SLA approval is inferred. Lifecycle deletion is limited
+to s10/v1/ and seven-day soft deletion remains additional. No bucket lock is set.
+
+Systemd schedules twice-daily backups and five-minute observations. Cloud
+Monitoring adds one external HTTPS check, eight custom measurements and nine
+Greek alert policies, including missing telemetry. Only the selected VM receives
+roles/monitoring.metricWriter. A separate namespaced journal is capped at 16 MiB
+with 14-day retention. Monitoring configuration and explicit alert receipt are
+separate evidence; no notification delivery or GCP execution is claimed locally.
+
+Native PostgreSQL 17.11/age proof passes all-table recovery and concurrent-write,
+wrong-key, ciphertext-tamper, changed-row, size-limit and transaction cleanup
+cases. Systemd syntax is checked in an isolated fixture root. Actual cloud
+uploads, source-VM timers, laptop Docker recovery and the configured email
+notification remain the operator's S10 completion gate. D01–D09 business approvals,
+all full acceptance statuses and the 26 financial defects are unchanged. No
+application image, model, migration, lock or existing production Compose changes.
+
+See backup_restore.md and evidence/S10-verification.json. Keys/real credentials
+are not in the patch or public evidence. Document recovery is deferred to S38,
+and nonempty private media is refused until that consumer is implemented.

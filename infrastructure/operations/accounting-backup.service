@@ -1,0 +1,27 @@
+[Unit]
+Description=Accounting encrypted off-VM backup
+Requires=docker.service
+After=docker.service accounting-preview.service network-online.target
+Wants=network-online.target
+RequiresMountsFor=/srv/accounting
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/accounting-operations backup
+User=root
+UMask=0077
+RuntimeDirectory=accounting-s10
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+TimeoutStartSec=15min
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/srv/accounting/operations /run/accounting-s10
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LogNamespace=accounting-ops
+LogRateLimitIntervalSec=1h
+LogRateLimitBurst=120

@@ -1,0 +1,77 @@
+{
+  "step": "S10",
+  "status": "Prepared",
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "safeguard_tests": 35,
+    "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "application_migrations_locks_unchanged": true,
+    "actual_cloud_execution": false,
+    "actual_docker_execution": false,
+    "full_acceptances_pending": 85
+  },
+  "source_reference_commit": "git:eced8ea70e26f410ce2d234e41169d3fc05f529b",
+  "native_recovery_checks": {
+    "step": "S10",
+    "status": "Prepared",
+    "mode": "native-postgresql17-age",
+    "verified_at": "2026-11-10T00:23:48+00:00",
+    "postgresql": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+    "age": "v1.3.2",
+    "restore_seconds_including_negative_tests": 0.305,
+    "tables_checked": 16,
+    "rows_checked": 76,
+    "all_public_tables_match": true,
+    "concurrent_source_write_excluded": true,
+    "separate_key_copy_with_primary_removed": true,
+    "greek_text_and_exact_decimal_recovered": true,
+    "denied_cases": {
+      "wrong_key": true,
+      "tampered_ciphertext": true,
+      "changed_restored_rows": true,
+      "oversized_dump": true
+    },
+    "plaintext_and_test_clusters_removed": true,
+    "gcs_execution": false,
+    "docker_execution": false,
+    "snapshot_transactions_released": true,
+    "public_monitoring_or_alert_delivery": false,
+    "accepted_dataset_rpo_rto": "Pending"
+  },
+  "unit_configuration_checks": {
+    "exit_code": 0,
+    "mode": "systemd-analyze isolated root; existing service/socket fixtures only",
+    "units_executed": false
+  },
+  "policy_status": "Preview operator/retention/key-custody inputs required at configure; business policy remains Pending",
+  "manual_acceptance": "Pending actual selected-resource install, scheduled encrypted upload, separate-key GCS/Docker recovery and observed notification",
+  "app_image_rebuilt": false,
+  "application_accounts_created": false,
+  "google_cloud_resources_changed_in_workspace": false,
+  "full_requirement_acceptance": "Pending",
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 40,
+    "unique_history_blobs": 325,
+    "candidate_text_files": 191,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 80,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "encryption_tool_pin": {
+    "version": "1.3.2",
+    "platform": "linux/amd64",
+    "url": "https://github.com/FiloSottile/age/releases/download/v1.3.2/age-v1.3.2-linux-amd64.tar.gz",
+    "sha256": "cbe24006683f8eb669266162894b9a522a1af52f2665fbc63a4bb032ed26ac10",
+    "source": "https://github.com/FiloSottile/age/releases/tag/v1.3.2",
+    "reviewed_on": "2026-11-10",
+    "scope": "Operator encryption tools only; application image/locks unchanged"
+  }
+}

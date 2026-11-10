@@ -25,6 +25,7 @@ node_modules/
 !.env.example
 *.pem
 *.key
+*.age
 *.p12
 *.pfx
 service-account*.json

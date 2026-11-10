@@ -1,0 +1,11 @@
+[Unit]
+Description=Accounting observation every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=accounting-monitor.service
+
+[Install]
+WantedBy=timers.target

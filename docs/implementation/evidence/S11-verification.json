@@ -1,8 +1,7 @@
 {
-  "mode": "native-postgresql17",
-  "status": "Prepared",
-  "docker_execution": false,
-  "postgresql_binary_version": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+  "mode": "docker-compose-postgresql17",
+  "status": "Verified",
+  "docker_execution": true,
   "postgresql_version_num": 170011,
   "s11_tests": 30,
   "suite": {
@@ -19,8 +18,8 @@
   "migration_drift": false,
   "two_office_fixture_and_real_concurrency": true,
   "step": "S11",
-  "verified_at": "2026-11-10T12:06:41+02:00",
-  "source_commit": "git:9db3f983498d87afad3de55627406cbd72f2cc3a",
+  "verified_at": "2026-11-10T12:16:11+02:00",
+  "source_commit": "git:aa9030302fea79c9358b10946e91ed3c84d7ddf9",
   "source_dirty": false,
   "source_reference_commit": "git:06cb37d3342115aebf53dd47e36b7900c3918fcd",
   "cloud_or_vm_changed": false,
@@ -45,6 +44,5 @@
     "unreviewed_findings": 0,
     "findings": [],
     "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
-  },
-  "compose_config_validated_without_engine": true
+  }
 }

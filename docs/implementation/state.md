@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S11 Prepared — offices and accountant profiles**. Next step: **Complete S11 local Docker gate**.
+Updated 2026-11-10. Current step: **S11 Verified — offices and accountant profiles**. Next step: **S12**.
 
 ## Repository position
 
@@ -253,7 +253,7 @@ until the actual scheduled backup, off-VM recovery and observed alert gate pass.
 See evidence/S10-systemd-status-fix.json and backup_restore.md.
 
 <!-- S11-RESULT -->
-Prepared: 30 membership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Full office ownership, policy and release acceptance remain Pending.
+Verified: 30 membership/backfill/access/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: True. Full office ownership, policy and release acceptance remain Pending.
 <!-- /S11-RESULT -->
 
 ## S11 office/profile foundation — 2026-11-10

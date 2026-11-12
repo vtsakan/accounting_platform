@@ -141,6 +141,14 @@ source/history secret scanning, migration drift, runtime packages and all tests.
 Only the same 26 registered failures are accepted. Commit the four generated
 implementation records after success, before another `--record` run.
 
+The existing local development web container mounts this checkout and reloads
+changed Python files. Therefore the supplied `APPLY_S15.sh` first stops only
+`accounting-client-demo` web and takes encrypted database and `.env` copies
+outside Git, using the configured public recovery recipient. The database
+container/volume is retained. Keep web stopped through the disposable gate,
+then explicitly rebuild/restart that local project to apply both migrations.
+The remote VM uses its separate pinned release and stays available.
+
 Native proof is Prepared: 57 S15 tests, 344 total (318 passed plus 26 known
 failures), migrations under a non-superuser/non-createdb/non-createrole role.
 The native Chromium probe could not open the app: process-singleton socket

@@ -211,7 +211,7 @@ class OfficeSettingsTests(StaffFixtures, TestCase):
                 require_capability(self.member, capability)
         with self.assertRaises(PermissionDenied):
             require_capability(self.owner, "future-unknown-operation")
-        self.assertEqual(self.member_client.post("/entity/add/", {"entity_type": "CUSTOMER", "name": "ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S14"}).status_code, 302)
+        self.assertEqual(self.member_client.post("/entity/add/", {"is_customer": True, "legal_kind": "BUSINESS", "version": 0, "name": "ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S14"}).status_code, 302)
         entity = Entity.objects.get(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S14")
         cash = CashAccount.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ S14")
         category = Category.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΗ ΚΑΤΗΓΟΡΙΑ S14")

@@ -3,8 +3,12 @@ from . import views  # Import views from the current app directory
 from django.contrib.auth import views as django_auth
 from . import auth_views
 from . import office_views, invite_views
+from . import counterparty_views
 
 urlpatterns = [
+    path('counterparties/', counterparty_views.workspace, name='counterparty-list'),
+    path('entity/<int:pk>/archive/', counterparty_views.archive_view, name='archive-entity'),
+    path('entity/<int:pk>/restore/', counterparty_views.restore, name='restore-entity'),
     path('office/settings/', office_views.settings_view, name='office-settings'),
     path('office/members/', office_views.members_view, name='office-members'),
     path('office/invitation/<uuid:key>/<str:action>/', office_views.invitation_action, name='office-invitation-action'),

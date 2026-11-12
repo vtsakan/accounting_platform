@@ -1,0 +1,49 @@
+{% extends 'accounting/base.html' %}
+{% block title %}{{ workspace_title|default:'Συναλλασσόμενοι' }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+  <h1>{{ workspace_title|default:'Συναλλασσόμενοι' }}</h1>
+  <a class="btn btn-primary" href="{% url 'add-entity' %}{% if fixed_role %}?role={{ fixed_role }}{% endif %}">Νέος συναλλασσόμενος</a>
+</div>
+<p>Η ίδια εγγραφή μπορεί να είναι πελάτης και προμηθευτής. Το ιστορικό της παραμένει ενιαίο.</p>
+<form method="get" class="card card-body mb-3" role="search" aria-label="Αναζήτηση συναλλασσομένων">
+  <div class="row g-3">
+  {% for field in form.visible_fields %}
+    {% if field.name != 'role' or not fixed_role %}
+    <div class="col-md-3">{{ field.label_tag }}{{ field }}{% if field.errors %}<div class="text-danger" role="alert">{{ field.errors }}</div>{% endif %}</div>
+    {% endif %}
+  {% endfor %}
+  </div>
+  <div class="mt-3"><button class="btn btn-primary" type="submit">Αναζήτηση</button> <a class="btn btn-outline-secondary" href="{{ request.path|default:'/counterparties/' }}">Καθαρισμός φίλτρων</a></div>
+</form>
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+  <caption>Εγγραφές του λογιστικού γραφείου</caption>
+  <thead><tr><th scope="col">Ονοματεπώνυμο ή επωνυμία</th><th scope="col">Ρόλοι</th><th scope="col">Κατηγορία</th><th scope="col">Α.Φ.Μ.</th><th scope="col">Επικοινωνία</th><th scope="col">Κατάσταση</th><th scope="col">Ενέργειες</th></tr></thead>
+  <tbody>
+  {% for entity in counterparties %}
+  <tr>
+    <td><a href="{% url 'entity-detail' pk=entity.pk %}">{{ entity.name }}</a></td>
+    <td>{% if entity.is_customer %}<span class="badge bg-primary">Πελάτης</span>{% endif %} {% if entity.is_supplier %}<span class="badge bg-info text-dark">Προμηθευτής</span>{% endif %}</td>
+    <td>{{ entity.get_legal_kind_display }}</td><td>{{ entity.vat_number|default:'—' }}</td>
+    <td>{{ entity.phone_number|default:'—' }}<br>{{ entity.email|default:'—' }}</td>
+    <td>{% if entity.is_archived %}Αρχειοθετημένη{% else %}Ενεργή{% endif %}</td>
+    <td><a class="btn btn-sm btn-outline-primary" href="{% url 'entity-detail' pk=entity.pk %}">Καρτέλα</a>
+      {% if not entity.is_archived %}
+        {% if entity.is_customer %}<a class="btn btn-sm btn-outline-success" href="{% url 'add-income' %}?entity_id={{ entity.pk }}">Νέα είσπραξη</a>{% endif %}
+        {% if entity.is_supplier %}<a class="btn btn-sm btn-outline-secondary" href="{% url 'add-expense' %}?entity_id={{ entity.pk }}">Νέα πληρωμή</a>{% endif %}
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="p-4">Δεν βρέθηκαν εγγραφές με αυτά τα φίλτρα. Ελέγξτε την αναζήτηση ή προσθέστε έναν νέο συναλλασσόμενο.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{% if page_obj %}
+<nav aria-label="Σελίδες συναλλασσομένων"><ul class="pagination flex-wrap">
+  {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?{{ page_query }}&amp;page={{ page_obj.previous_page_number }}">Προηγούμενη</a></li>{% endif %}
+  <li class="page-item disabled"><span class="page-link" aria-current="page">Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }}</span></li>
+  {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?{{ page_query }}&amp;page={{ page_obj.next_page_number }}">Επόμενη</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

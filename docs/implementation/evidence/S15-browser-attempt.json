@@ -1,0 +1,12 @@
+{
+  "step": "S15",
+  "attempted_on": "2026-11-12",
+  "mode": "native Chromium headless startup probe",
+  "target": "about:blank; application was not opened",
+  "exit_code": 134,
+  "failure": "process_singleton_posix socket() failed: Operation not permitted (errno 1)",
+  "browser_visual_or_keyboard_acceptance": "Pending",
+  "responsive_widths_tested": [],
+  "screenshots_created": false,
+  "scope": "Runtime startup failure; not evidence of an application rendering defect or a completed accessibility audit"
+}

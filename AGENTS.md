@@ -20,6 +20,21 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S15 is now selected. Start from the actual pushed S14 demo head
+ab9602592cb699684450bc4ee70438f80d30351f, not the older s14-complete tag.
+The user reports the VM demo working after apply/restore/bootstrap/login;
+record that as operator-reported, without inventing missing stage receipts.
+Read docs/implementation/client_supplier_workspace.md, counterparty_migration_map.json
+and S15 evidence. Add independent roles, explicit classification, normalized
+office AFM, Greek workspace and archive/restore retaining financial history.
+Migrations 0009/0010 preserve IDs and all eight prior files; invalid/duplicate
+legacy AFMs stop for review rather than merge or overwrite. Keep existing
+accounts, keys and recovery binding intact. The local Docker completion gate
+is tools/verify_s15.py --record; native PG proof is Prepared. Browser/keyboard
+acceptance remains Pending. Do not rerun the S14A S09-only updater against a
+database with people or deploy S15 as part of this implementation. S16 follows
+the S15 Docker gate. The checkpoints below describe earlier handoffs.
+
 Selected S14A follow-up: the user requests a sample office and regular accounts
 both locally and on the existing VM. The corrected S14 Docker gate was reported
 Verified on 2026-11-12: 287 tests, 261 passes and the same 26 known financial

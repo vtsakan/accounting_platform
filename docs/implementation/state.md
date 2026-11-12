@@ -1,8 +1,30 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S14 Verified — office settings, staff invitations and mutual handover**. Next step: **S15**.
+Updated 2026-11-12. Current step: **S15 Prepared — client and supplier workspace**. Next step: **Complete S15 local Docker gate, then S16**.
 
-## Repository position
+## Current selected work
+
+The corrected S14 Docker gate was operator-Verified (287 tests: 261 passes and
+26 known financial failures). S14A production image delivery/publication and
+the reviewed two-marker plan were then supplied; the user reported the VM
+demonstration working after apply/restore/account instructions. This supersedes
+the earlier S09-only/retry-Pending handoffs below. See
+evidence/S14A-operator-report.json; missing stage receipts are not invented.
+
+S15 starts from the actual pushed step/s14-vm-demo head
+ab9602592cb699684450bc4ee70438f80d30351f. Read client_supplier_workspace.md.
+It supports one identity with both roles, explicit person/business choice,
+normalized office AFM uniqueness, Greek forms/search/detail and archive/restore.
+Migrations 0009/0010 retain original IDs/contacts/financial links, users and MFA
+data; legacy normalization conflicts stop before changes. The working VM and
+account/recovery setup remains unchanged by this implementation.
+
+Native PostgreSQL proof is Prepared until the disposable Docker gate passes.
+Original eight migrations, locks, financial assertions/calculations and S10–S14
+evidence stay intact. All full requirement acceptances remain Pending. Browser/
+keyboard review and a later S15 VM rollout are separate. S16 follows this gate.
+
+## Historical repository position
 
 - Repository: [vtsakan/accounting_platform](https://github.com/vtsakan/accounting_platform), public by user choice.
 - S07 branch: `step/s07-production-delivery`; resolve its implementation commit with `git rev-parse HEAD` after applying the patch.

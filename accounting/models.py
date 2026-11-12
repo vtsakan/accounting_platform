@@ -13,12 +13,27 @@ from .ownership import OfficeOwned
 # Model 1: Entity (For both Customers & Suppliers)
 # ===================================================================
 class Entity(OfficeOwned):
-    office_unique_fields = ("vat_number",)
+    office_unique_fields = ()  # S15 normalised key replaces raw-text uniqueness.
     class EntityType(models.TextChoices):
         CUSTOMER = 'CUSTOMER', 'Πελάτης'
         SUPPLIER = 'SUPPLIER', 'Προμηθευτής'
 
-    entity_type = models.CharField(max_length=10, choices=EntityType.choices, verbose_name="Τύπος")
+    class LegalKind(models.TextChoices):
+        UNREVIEWED = "UNREVIEWED", "Χρειάζεται επιβεβαίωση"
+        INDIVIDUAL = "INDIVIDUAL", "Φυσικό πρόσωπο"
+        BUSINESS = "BUSINESS", "Επιχείρηση"
+
+    # Retained as legacy provenance/compatibility; roles below are authoritative.
+    entity_type = models.CharField(max_length=10, choices=EntityType.choices, editable=False, verbose_name="Αρχικός τύπος")
+    is_customer = models.BooleanField(default=False, verbose_name="Πελάτης")
+    is_supplier = models.BooleanField(default=False, verbose_name="Προμηθευτής")
+    legal_kind = models.CharField(max_length=12, choices=LegalKind.choices, default=LegalKind.UNREVIEWED, verbose_name="Κατηγορία προσώπου")
+    vat_key = models.CharField(max_length=9, default="", editable=False, verbose_name="Κανονικοποιημένος Α.Φ.Μ.")
+    is_archived = models.BooleanField(default=False, editable=False, verbose_name="Αρχειοθετημένος")
+    archived_at = models.DateTimeField(null=True, editable=False, verbose_name="Αρχειοθετήθηκε")
+    archived_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, editable=False,
+                                   related_name="archived_counterparties", verbose_name="Αρχειοθετήθηκε από")
+    record_version = models.PositiveBigIntegerField(default=0, editable=False, verbose_name="Έκδοση εγγραφής")
     name = models.CharField(max_length=255, verbose_name="Επωνυμία")
     vat_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Α.Φ.Μ.")
     tax_office = models.CharField(max_length=100, blank=True, verbose_name="Δ.Ο.Υ.")
@@ -26,20 +41,69 @@ class Entity(OfficeOwned):
     city = models.CharField(max_length=100, blank=True, verbose_name="Πόλη")
     postal_code = models.CharField(max_length=10, blank=True, verbose_name="Τ.Κ.")
     phone_number = models.CharField(max_length=20, blank=True, verbose_name="Τηλέφωνο")
-    email = models.EmailField(blank=True, verbose_name="Email")
+    email = models.EmailField(blank=True, verbose_name="Ηλεκτρονική διεύθυνση")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
+
+    def __init__(self, *args, **kwargs):
+        legacy_only = not args and "entity_type" in kwargs and not {"is_customer", "is_supplier"}.intersection(kwargs)
+        super().__init__(*args, **kwargs)
+        if legacy_only:
+            self.is_customer = self.entity_type == self.EntityType.CUSTOMER
+            self.is_supplier = self.entity_type == self.EntityType.SUPPLIER
+
+    def clean(self):
+        from .counterparty_validation import contact_values, DUPLICATE_AFM
+        from django.core.exceptions import ValidationError
+        names = ("name", "vat_number", "tax_office", "address", "city", "postal_code", "phone_number", "email")
+        values = contact_values({name: getattr(self, name) for name in names})
+        for name, value in values.items():
+            setattr(self, name, value)
+        self.vat_key = values["vat_number"]
+        if not (self.is_customer or self.is_supplier):
+            raise ValidationError("Επιλέξτε τουλάχιστον έναν ρόλο: πελάτης ή προμηθευτής.")
+        if not self.entity_type:
+            self.entity_type = self.EntityType.CUSTOMER if self.is_customer else self.EntityType.SUPPLIER
+        if self.vat_key and self.office_id and type(self).objects.filter(office_id=self.office_id, vat_key=self.vat_key).exclude(pk=self.pk).exists():
+            raise ValidationError({"vat_number": DUPLICATE_AFM})
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
     
     class Meta:
         verbose_name = "Οντότητα (Πελάτης/Προμηθευτής)"
         verbose_name_plural = "Οντότητες (Πελάτες/Προμηθευτές)"
         constraints = [models.UniqueConstraint(fields=["id", "office"], name="entity_id_office_key"),
-                       models.UniqueConstraint(fields=["office", "vat_number"],
-                           condition=models.Q(vat_number__isnull=False) & ~models.Q(vat_number=""),
-                           name="entity_office_nonempty_vat_key")]
+                       models.UniqueConstraint(fields=["office", "vat_key"], condition=~models.Q(vat_key=""),
+                           name="entity_office_afm_key", violation_error_message="Ο Α.Φ.Μ. χρησιμοποιείται ήδη σε αυτό το γραφείο."),
+                       models.CheckConstraint(condition=models.Q(is_customer=True) | models.Q(is_supplier=True), name="entity_commercial_role_required"),
+                       models.CheckConstraint(condition=models.Q(legal_kind__in=["UNREVIEWED", "INDIVIDUAL", "BUSINESS"]), name="entity_valid_legal_kind"),
+                       models.CheckConstraint(condition=~models.Q(name__regex=r"^\s*$"), name="entity_nonempty_name"),
+                       models.CheckConstraint(condition=(models.Q(is_archived=False, archived_at__isnull=True, archived_by__isnull=True) |
+                           models.Q(is_archived=True, archived_at__isnull=False, archived_by__isnull=False)), name="entity_archive_metadata")]
+
+
+class CounterpartyEvent(models.Model):
+    """Append-only workflow attribution; contact values are deliberately omitted."""
+    office = models.ForeignKey("Office", on_delete=models.PROTECT, verbose_name="Γραφείο")
+    entity = models.ForeignKey(Entity, on_delete=models.PROTECT, related_name="workspace_events", verbose_name="Συναλλασσόμενος")
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name="Λογιστής")
+    action = models.CharField(max_length=10, choices=[("create", "Δημιουργία"), ("update", "Ενημέρωση"),
+        ("archive", "Αρχειοθέτηση"), ("restore", "Επαναφορά")], verbose_name="Ενέργεια")
+    version = models.PositiveBigIntegerField(verbose_name="Έκδοση")
+    changed_fields = models.JSONField(default=list, verbose_name="Πεδία που άλλαξαν")
+    occurred_at = models.DateTimeField(auto_now_add=True, verbose_name="Ημερομηνία")
+
+    class Meta:
+        ordering = ["-occurred_at", "-pk"]
+        constraints = [models.CheckConstraint(condition=models.Q(action__in=["create", "update", "archive", "restore"]), name="counterparty_valid_event")]
+        verbose_name = "Ενέργεια συναλλασσομένου"
+        verbose_name_plural = "Ενέργειες συναλλασσομένων"
 
 # ===================================================================
 # Model 2: CashAccount (The "Ταμεία")

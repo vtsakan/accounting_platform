@@ -13,6 +13,7 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
+                        {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
 
                         {% for field in form %}
                             <div class="mb-3">

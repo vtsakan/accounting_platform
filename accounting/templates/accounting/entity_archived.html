@@ -1,0 +1,8 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Αρχειοθετημένη εγγραφή{% endblock %}
+{% block content %}
+<h1>Η εγγραφή είναι αρχειοθετημένη</h1>
+<p>Επαναφέρετε την εγγραφή πριν αλλάξετε τα στοιχεία της ή ξεκινήσετε νέα εργασία.</p>
+<a class="btn btn-primary" href="{% url 'restore-entity' pk=entity.pk %}">Επαναφορά {{ entity.name }}</a>
+<a class="btn btn-secondary" href="{% url 'entity-detail' pk=entity.pk %}">Επιστροφή στην καρτέλα</a>
+{% endblock %}

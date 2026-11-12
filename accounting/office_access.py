@@ -1,6 +1,7 @@
 """Explicit per-action authority, reusable by future export/file/job adapters."""
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import transaction, IntegrityError
 from django.http import Http404
 
 from .membership import require_office_profile
@@ -25,13 +26,21 @@ def record(model, user, key):
         raise Http404("Η εγγραφή δεν βρέθηκε.") from None
 
 
+@transaction.atomic
 def save_for_user(instance, user):
     profile = require_office_profile(user)
     if type(instance) not in MODELS or (instance.office_id and str(instance.office_id) != str(profile.office_id)):
         raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
     require_capability(user, model_capability(type(instance), write=True))
     instance.office_id = profile.office_id
-    instance.save()
+    try:
+        with transaction.atomic():
+            instance.save()
+    except IntegrityError as error:
+        if getattr(getattr(error.__cause__, 'diag', None), 'constraint_name', None) == 's15_archived_work':
+            from .counterparty_services import ARCHIVED
+            raise ValidationError(ARCHIVED) from None
+        raise
     return instance
 
 

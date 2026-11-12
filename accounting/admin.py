@@ -1,10 +1,10 @@
 # accounting/admin.py
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import Entity, CashAccount, Category, Transaction, Agreement
 from django.utils.translation import gettext
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.http import Http404, HttpResponseRedirect
 from .membership import require_office_profile
 from .office_access import records, save_for_user
 from .capabilities import require_capability, model_capability
@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 from .models import AccountantProfile
+from .forms import EntityForm
 
 
 class GuardedUserChangeForm(UserChangeForm):
@@ -96,6 +97,8 @@ class OfficeAdminMixin:
         actor = request.user
         class ScopedAdminForm(parent):
             def __init__(self, *args, **options):
+                if isinstance(self, EntityForm):
+                    options['user'] = actor
                 super().__init__(*args, **options)
                 profile = require_office_profile(actor)
                 if self.instance.office_id and self.instance.office_id != profile.office_id:
@@ -136,12 +139,38 @@ class GreekAdminMixin:
 
 @admin.register(Entity)
 class EntityAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+    form = EntityForm
     # Columns to display in the list view
-    list_display = ('name', 'entity_type', 'vat_number', 'phone_number')
+    list_display = ('name', 'is_customer', 'is_supplier', 'legal_kind', 'vat_number', 'is_archived')
     # Fields to filter by in the right sidebar
-    list_filter = ('entity_type',)
+    list_filter = ('is_customer', 'is_supplier', 'legal_kind', 'is_archived')
     # Fields to search by
     search_fields = ('name', 'vat_number')
+    readonly_fields = ('entity_type', 'vat_key', 'is_archived', 'archived_at', 'archived_by', 'record_version')
+
+    def has_change_permission(self, request, obj=None):
+        return (obj is None or not obj.is_archived) and super().has_change_permission(request, obj)
+
+    def save_model(self, request, obj, form, change):
+        saved = form.save()
+        obj.__dict__.update(saved.__dict__)
+
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        try:
+            return super().changeform_view(request, object_id, form_url, extra_context)
+        except ValidationError as error:
+            # A concurrent edit/archive may occur after ModelForm validation.
+            messages.error(request, ' '.join(error.messages))
+            return HttpResponseRedirect(request.path)
+
+    def get_search_results(self, request, queryset, search_term):
+        result, duplicates = super().get_search_results(request, queryset, search_term)
+        from .counterparty_validation import afm_text
+        import re
+        key = afm_text(search_term)
+        if re.fullmatch(r'[0-9]{1,9}', key):
+            result = result | queryset.filter(vat_key__contains=key)
+        return result, duplicates
 
 @admin.register(CashAccount)
 class CashAccountAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):

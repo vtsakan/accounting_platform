@@ -1,6 +1,7 @@
 # accounting/forms.py
 
 from django import forms
+from django.db import models
 from .models import CashAccount, Category, Entity, Agreement
 from django.utils.translation import gettext, gettext_lazy as _
 from core.locale import GreekMoneyField, format_euro
@@ -63,9 +64,11 @@ class EntityTypeSelectWidget(forms.Select):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         if value:
             # Get the Entity instance for this option
-            entity_instance = self.choices.queryset.get(pk=value.value)
+            entity_instance = value.instance
             # Add the data-type attribute to the HTML option tag
             option['attrs']['data-type'] = entity_instance.entity_type
+            option['attrs']['data-customer'] = '1' if entity_instance.is_customer else '0'
+            option['attrs']['data-supplier'] = '1' if entity_instance.is_supplier else '0'
         return option
 
 # This is the proper way to customize the dropdown labels.
@@ -84,7 +87,7 @@ class ExpenseForm(GreekFormMixin, forms.Form):
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True), label="Ταμείο")
     category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.all(), label="Κατηγορία")
-    entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(entity_type='SUPPLIER'), required=False, label="Προμηθευτής")
+    entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_supplier=True, is_archived=False), required=False, label="Προμηθευτής")
 
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),
@@ -96,7 +99,7 @@ class ExpenseForm(GreekFormMixin, forms.Form):
         agreements_queryset = kwargs.pop('agreements_queryset', None)
         super().__init__(*args, **kwargs)
         if agreements_queryset is not None:
-            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id)
+            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id, entity__is_archived=False)
                                                  if self.office_id else Agreement.objects.none())
 
 class IncomeForm(GreekFormMixin, forms.Form):
@@ -105,7 +108,7 @@ class IncomeForm(GreekFormMixin, forms.Form):
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True), label="Ταμείο")
     category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.all(), label="Κατηγορία")
-    entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(entity_type='CUSTOMER'), required=False, label="Πελάτης")
+    entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_customer=True, is_archived=False), required=False, label="Πελάτης")
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),
         required=False,
@@ -117,16 +120,21 @@ class IncomeForm(GreekFormMixin, forms.Form):
         agreements_queryset = kwargs.pop('agreements_queryset', None)
         super().__init__(*args, **kwargs)
         if agreements_queryset is not None:
-            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id)
+            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id, entity__is_archived=False)
                                                  if self.office_id else Agreement.objects.none())
 
 class EntityForm(GreekFormMixin, forms.ModelForm):
+    vat_number = forms.CharField(label="Α.Φ.Μ.", max_length=64, required=False, widget=forms.TextInput(attrs=bootstrap_form_attrs))
+    version = forms.IntegerField(label="Έκδοση εγγραφής", min_value=0, widget=forms.HiddenInput)
+    legal_kind = forms.ChoiceField(label="Κατηγορία προσώπου", choices=[('', 'Επιλέξτε κατηγορία'),
+        (Entity.LegalKind.INDIVIDUAL, 'Φυσικό πρόσωπο'), (Entity.LegalKind.BUSINESS, 'Επιχείρηση')],
+        widget=forms.Select(attrs=bootstrap_select_attrs))
+
     class Meta:
         model = Entity
-        fields = ['name', 'entity_type', 'vat_number', 'tax_office', 'address', 'city', 'postal_code', 'phone_number', 'email']
+        fields = ['name', 'is_customer', 'is_supplier', 'legal_kind', 'vat_number', 'tax_office', 'address', 'city', 'postal_code', 'phone_number', 'email']
         widgets = {
             'name': forms.TextInput(attrs=bootstrap_form_attrs),
-            'entity_type': forms.Select(attrs=bootstrap_select_attrs),
             'vat_number': forms.TextInput(attrs=bootstrap_form_attrs),
             'tax_office': forms.TextInput(attrs=bootstrap_form_attrs),
             'address': forms.TextInput(attrs=bootstrap_form_attrs),
@@ -135,6 +143,33 @@ class EntityForm(GreekFormMixin, forms.ModelForm):
             'phone_number': forms.TextInput(attrs=bootstrap_form_attrs),
             'email': forms.EmailInput(attrs=bootstrap_form_attrs),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['version'].initial = self.instance.record_version
+        self.fields['name'].label = "Ονοματεπώνυμο ή επωνυμία"
+        self.fields['vat_number'].max_length = 64
+        self.fields['vat_number'].help_text = "Εννέα ψηφία ή κενό. Γίνονται δεκτά κενά, παύλες και το πρόθεμα EL."
+        self.fields['vat_number'].widget.attrs.update(inputmode='text', autocomplete='off')
+        for name in ('is_customer', 'is_supplier'):
+            self.fields[name].widget.attrs['class'] = 'form-check-input'
+
+    def clean(self):
+        cleaned = super().clean()
+        from .counterparty_validation import contact_values
+        if 'name' in cleaned:
+            cleaned.update(contact_values(cleaned))
+        if not (cleaned.get('is_customer') or cleaned.get('is_supplier')):
+            raise forms.ValidationError("Επιλέξτε τουλάχιστον έναν ρόλο: πελάτης ή προμηθευτής.")
+        return cleaned
+
+    def save(self, commit=True):
+        if not commit:
+            return super().save(commit=False)
+        from .counterparty_services import FIELDS, save_counterparty
+        self.instance = save_counterparty(self.actor, {name:self.cleaned_data[name] for name in FIELDS},
+            key=self.instance.pk, version=self.cleaned_data['version'])
+        return self.instance
 
 class AgreementForm(GreekFormMixin, forms.ModelForm):
     total_amount = GreekMoneyField(label=_("Total Agreed Amount"), max_digits=12, decimal_places=2)
@@ -160,6 +195,12 @@ class AgreementForm(GreekFormMixin, forms.ModelForm):
             'description': forms.TextInput(attrs=bootstrap_form_attrs),
             'status': forms.Select(attrs=bootstrap_select_attrs),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Keep an unchanged historical link visible on edit; new choices are active.
+        self.fields['entity'].queryset = self.fields['entity'].queryset.filter(
+            models.Q(is_archived=False) | (models.Q(pk=self.instance.entity_id) if self.instance.pk else models.Q(pk__in=[])))
 
 # accounting/forms.py
 

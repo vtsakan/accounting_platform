@@ -78,6 +78,17 @@ Open inputs:
 Dependent steps: S15, S16, S43, S44, S45, S46, S50, S54.
 Evidence: UR-CRM-06, UR-POR-02, UR-POR-05. Approval evidence: **not recorded**.
 
+S15 implementation boundary (2026-11-12): UR-CRM-06 and the selected prompt
+already require independent office identities/AFMs; the staff workspace uses
+that scope without a global directory. Portal identity, representative proof
+and grants remain S43/S44; those pending policies are not approved here. AFM
+normalization/format checks are a technical input contract, not registry or
+checksum proof. Legacy classification remains explicitly unreviewed until a
+person chooses individual/business. Reversible archive preserves history and
+does not decide statutory retention or authorize deletion under D07. See
+client_supplier_workspace.md and counterparty_migration_map.json. All full
+requirement acceptance statuses remain Pending.
+
 ## D03 — Authorised government-service access
 
 Owner: Service account owner with developer. Status: **Documentary feasibility reviewed; access not demonstrated**. Gate: G0 before connector commitment; S49 contract gate.

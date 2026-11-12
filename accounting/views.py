@@ -1,3 +1,5 @@
+from . import counterparty_views
+from django.core.exceptions import ValidationError
 from .office_access import records, record, save_for_user, validate_filter_ids
 from .membership import require_office_profile
 # accounting/views.py
@@ -118,25 +120,13 @@ from .models import CashAccount, Transaction, Entity # Make sure Entity is impor
 @login_required
 def customer_list_view(request):
     # Fetch only the entities where the entity_type is 'CUSTOMER'
-    customers = records(Entity, request.user).filter(entity_type='CUSTOMER')
-
-    context = {
-        'customers': customers
-    }
-
-    return render(request, 'accounting/customer_list.html', context)
+    return counterparty_views.workspace(request, fixed_role='customer')
 
 
 @login_required
 def supplier_list_view(request):
     # Fetch only the entities where the entity_type is 'SUPPLIER'
-    suppliers = records(Entity, request.user).filter(entity_type='SUPPLIER')
-
-    context = {
-        'suppliers': suppliers
-    }
-
-    return render(request, 'accounting/supplier_list.html', context)
+    return counterparty_views.workspace(request, fixed_role='supplier')
 
 
 from django.shortcuts import render, redirect # Add redirect
@@ -167,8 +157,12 @@ def add_expense_view(request):
                 agreement=form.cleaned_data['agreement'],
                 transaction_type='EXPENSE'
             )
-            save_for_user(new_transaction, request.user)
-            return redirect('transaction-list')
+            try:
+                save_for_user(new_transaction, request.user)
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('transaction-list')
     else:
         initial_data = {}
         entity_id = request.GET.get('entity_id')
@@ -203,8 +197,12 @@ def add_income_view(request):
                 agreement=form.cleaned_data['agreement'],
                 transaction_type='INCOME'
             )
-            save_for_user(new_transaction, request.user)
-            return redirect('transaction-list')
+            try:
+                save_for_user(new_transaction, request.user)
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('transaction-list')
     else:
         initial_data = {}
         entity_id = request.GET.get('entity_id')
@@ -217,64 +215,12 @@ def add_income_view(request):
 
 @login_required
 def add_entity_view(request):
-    if request.method == 'POST':
-        form = EntityForm(request.POST, user=request.user)
-        if form.is_valid():
-            # Save the form and get the new entity object
-            entity = form.save()
-
-            # Check the type of the entity that was just created
-            if entity.entity_type == 'CUSTOMER':
-                # Redirect to the customer list
-                return redirect('customer-list')
-            else:
-                # Redirect to the supplier list
-                return redirect('supplier-list')
-    else:
-        form = EntityForm(user=request.user, )
-
-    return render(request, 'accounting/add_entity.html', {'form': form})
+    return counterparty_views.edit(request)
 
 @login_required
 def entity_detail_view(request, pk):
     # Get the specific Entity object
-    entity = record(Entity, request.user, pk)
-
-    # 1. Get all agreements for this entity and calculate their balances
-    agreements = entity.agreements.filter(office_id=entity.office_id).annotate(
-        # For each agreement, calculate the sum of its associated transactions
-        total_payments=Coalesce(
-            Sum('transactions__amount'),
-            Value(0),
-            output_field=DecimalField()
-        )
-    ).annotate(
-        # For each agreement, calculate the remaining balance
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    # 2. Get all transactions for this entity that are NOT linked to any agreement
-    standalone_transactions = entity.entity_transactions.filter(office_id=entity.office_id, agreement__isnull=True).order_by('-transaction_date')
-
-    # 3. (Optional) Calculate a simple cash balance just for the standalone transactions
-    standalone_balance_data = standalone_transactions.aggregate(
-        total_income=Sum('amount', filter=Q(transaction_type='INCOME'), default=0),
-        total_expense=Sum('amount', filter=Q(transaction_type='EXPENSE'), default=0)
-    )
-    if entity.entity_type == 'CUSTOMER':
-        standalone_balance = standalone_balance_data['total_income'] - standalone_balance_data['total_expense']
-    else:
-        standalone_balance = standalone_balance_data['total_expense'] - standalone_balance_data['total_income']
-
-
-    context = {
-        'entity': entity,
-        'agreements': agreements,
-        'standalone_transactions': standalone_transactions,
-        'standalone_balance': standalone_balance
-    }
-
-    return render(request, 'accounting/entity_detail.html', context)
+    return counterparty_views.detail(request, key=pk)
 
 @login_required
 def summary_report_view(request):
@@ -347,24 +293,7 @@ def summary_report_view(request):
 @login_required
 def edit_entity_view(request, pk):
     # Fetch the existing entity object we want to edit
-    entity_to_edit = record(Entity, request.user, pk)
-
-    if request.method == 'POST':
-        # If the form is submitted, pass the submitted data AND the instance to the form
-        form = EntityForm(request.POST, user=request.user, instance=entity_to_edit)
-        if form.is_valid():
-            form.save() # Save the changes to the existing entity
-            # Redirect back to the detail page for that entity
-            return redirect('entity-detail', pk=entity_to_edit.pk)
-    else:
-        # If it's a GET request, create the form and pre-populate it with the existing entity's data
-        form = EntityForm(user=request.user, instance=entity_to_edit)
-
-    context = {
-        'form': form,
-        'entity': entity_to_edit
-    }
-    return render(request, 'accounting/edit_entity.html', context)
+    return counterparty_views.edit(request, key=pk)
 
 @login_required
 def agreement_list_view(request):
@@ -408,8 +337,12 @@ def add_agreement_view(request):
     if request.method == 'POST':
         form = AgreementForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
-            return redirect('agreement-list')
+            try:
+                form.save()
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('agreement-list')
     else:
         # --- THIS IS THE 'GET' REQUEST PART - START OF CHANGES ---
         initial_data = {}
@@ -451,9 +384,12 @@ def edit_agreement_view(request, pk):
                 else:
                     updated_agreement.status = Agreement.AgreementStatus.ACTIVE
 
-            updated_agreement.save()
-
-            return redirect('agreement-detail', pk=updated_agreement.pk)
+            try:
+                save_for_user(updated_agreement, request.user)
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('agreement-detail', pk=updated_agreement.pk)
     else:
         form = AgreementForm(user=request.user, instance=agreement_to_edit)
 

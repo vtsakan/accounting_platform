@@ -36,4 +36,7 @@ class OfficeOwned(models.Model):
 
     def save(self, *args, **kwargs):
         self.validate_ownership()
+        if self._meta.model_name in {"agreement", "transaction"}:
+            from .counterparty_services import validate_active_references
+            validate_active_references(self)
         return super().save(*args, **kwargs)

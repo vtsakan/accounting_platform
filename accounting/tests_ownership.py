@@ -149,14 +149,14 @@ class OfficeBoundaryTests(TestCase):
         self.assertEqual(Agreement.objects.count(), before)
 
     def test_submitted_office_fields_do_not_select_ownership(self):
-        response = self.client.post("/entity/add/", {"name": "ΔΟΚΙΜΑΣΤΙΚΟΣ ΝΕΟΣ", "entity_type": "CUSTOMER",
+        response = self.client.post("/entity/add/", {"name": "ΔΟΚΙΜΑΣΤΙΚΟΣ ΝΕΟΣ", "is_customer": True, "legal_kind": "BUSINESS", "version": 0,
             "vat_number": "000000199", "office": B, "office_id": B})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(str(Entity.objects.get(vat_number="000000199").office_id), A)
 
     def test_own_entity_and_agreement_edits_remain_allowed(self):
         response = self.client.post(reverse("edit-entity", args=[self.entity_a.pk]), {
-            "name": "ΔΟΚΙΜΑΣΤΙΚΗ ΕΝΗΜΕΡΩΣΗ", "entity_type": "CUSTOMER", "vat_number": self.entity_a.vat_number, "office": B})
+            "name": "ΔΟΚΙΜΑΣΤΙΚΗ ΕΝΗΜΕΡΩΣΗ", "is_customer": True, "legal_kind": "BUSINESS", "version": 0, "vat_number": self.entity_a.vat_number, "office": B})
         self.assertEqual(response.status_code, 302)
         self.entity_a.refresh_from_db(); self.assertEqual(str(self.entity_a.office_id), A)
         response = self.client.post(reverse("edit-agreement", args=[self.agreement_a.pk]), {
@@ -166,7 +166,7 @@ class OfficeBoundaryTests(TestCase):
         self.agreement_a.refresh_from_db(); self.assertEqual(str(self.agreement_a.office_id), A)
 
     def test_validated_form_cannot_save_after_revocation(self):
-        form = EntityForm({"name": "ΔΟΚΙΜΑΣΤΙΚΗ ΝΕΑ", "entity_type": "CUSTOMER", "vat_number": "000000177"}, user=self.user_a)
+        form = EntityForm({"name": "ΔΟΚΙΜΑΣΤΙΚΗ ΝΕΑ", "is_customer": True, "legal_kind": "BUSINESS", "version": 0, "vat_number": "000000177"}, user=self.user_a)
         self.assertTrue(form.is_valid(), form.errors)
         AccountantProfile.objects.filter(user=self.user_a).update(is_active=False)
         with self.assertRaises(PermissionDenied):
@@ -312,7 +312,10 @@ class OwnershipMigrationTests(TransactionTestCase):
         category = apps.get_model("accounting", "Category").objects.create(name="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΚΑΤΗΓΟΡΙΑ")
         agreement = apps.get_model("accounting", "Agreement").objects.create(entity=entity, agreement_type="RECEIVABLE", description="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΣΥΜΦΩΝΙΑ", total_amount=Decimal("100.00"), start_date=DAY)
         apps.get_model("accounting", "Transaction").objects.create(transaction_date=DAY, transaction_type="INCOME", amount="12.34", description="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΚΙΝΗΣΗ", cash_account=account, category=category, entity=entity, agreement=agreement)
-        self.migrate_to("0004_office_ownership_nullable")
+        state = self.migrate_to("0004_office_ownership_nullable")
+        previous = MODELS.copy()
+        MODELS['entity'] = state.get_model('accounting', 'Entity')
+        self.addCleanup(MODELS.update, previous)
 
     def tearDown(self):
         with connection.cursor() as cursor:

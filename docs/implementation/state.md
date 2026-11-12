@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S14 Prepared — office settings, staff invitations and mutual handover**. Next step: **Complete S14 local Docker gate**.
+Updated 2026-11-10. Current step: **S14 Verified — office settings, staff invitations and mutual handover**. Next step: **S15**.
 
 ## Repository position
 
@@ -385,5 +385,5 @@ The running S09 image/S10 recovery binding is preserved. S15 follows the Docker
 gate; a reviewed S11–S14 deployment is a separate operation.
 
 <!-- S14-RESULT -->
-Prepared: 60 office/settings/invitation/role/handover/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: False. Live mail/deployment and full release acceptance remain Pending.
+Verified: 60 office/settings/invitation/role/handover/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: True. Live mail/deployment and full release acceptance remain Pending.
 <!-- /S14-RESULT -->

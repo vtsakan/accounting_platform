@@ -82,14 +82,71 @@
       "evidence": ["QR-02", "QR-09", "QR-11", "QR-12", "deployment_parameters.md"], "approval_evidence": null
     },
     {
-      "id": "D08", "title": "Office financial posting policy", "owner": "Accountant reviewer and office owner",
-      "status": "Pending accountant approval", "gate": "G2/S17 before financial posting acceptance",
+      "id": "D08",
+      "title": "Office financial posting policy",
+      "owner": "Accountant reviewer and office owner",
+      "status": "Pending accountant approval",
+      "gate": "G2/S17 before financial posting acceptance",
       "confirmed": [],
-      "options": ["Separate agreement terms, dated charges, cash, allocations, client credit and linked reversals.", "Treat agreement value as received/paid cash (rejected by the planned separation of obligations and settlement)."],
+      "options": [
+        "Separate agreement terms, dated charges, cash, allocations, client credit and linked reversals.",
+        "Treat agreement value as received/paid cash (rejected by the planned separation of obligations and settlement)."
+      ],
       "recommendation": "Implement the separate posting model in S17 onward with fixed decimal money, atomic transfer pairs and attributable reversals. Never infer paid status from agreement value alone.",
-      "unresolved": ["Fee due dates, proration, VAT treatment, recurrence and amount rounding.", "Allocation order, overpayments, refunds, client credit and payable settlement.", "Prospective agreement changes/cancellations, opening balances and report category treatment."],
-      "dependent_steps": ["S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25", "S27", "S28", "S29", "S30", "S31", "S37"],
-      "evidence": ["UR-CSH-01", "UR-CSH-04", "UR-AGR-01", "UR-BIL-04", "QR-03", "QR-04"], "approval_evidence": null
+      "unresolved": [
+        "Fee due dates, proration, VAT treatment, recurrence and amount rounding.",
+        "Allocation order, overpayments, refunds, client credit and payable settlement.",
+        "Prospective agreement changes/cancellations, opening balances and report category treatment."
+      ],
+      "dependent_steps": [
+        "S17",
+        "S18",
+        "S19",
+        "S20",
+        "S21",
+        "S22",
+        "S23",
+        "S24",
+        "S25",
+        "S27",
+        "S28",
+        "S29",
+        "S30",
+        "S31",
+        "S37"
+      ],
+      "evidence": [
+        "UR-CSH-01",
+        "UR-CSH-04",
+        "UR-AGR-01",
+        "UR-BIL-04",
+        "QR-03",
+        "QR-04"
+      ],
+      "s17_preparation": {
+        "step": "S17",
+        "status": "Prepared; named accountant approval Pending",
+        "document_id": "ACC-FIN-001",
+        "version": "0.1",
+        "policy": "docs/implementation/financial_policy.json",
+        "review_sheet": "docs/implementation/financial_policy_review_el.md",
+        "examples": "docs/implementation/examples/S17-financial-examples.json",
+        "decisions": [
+          "D08-01",
+          "D08-02",
+          "D08-03",
+          "D08-04",
+          "D08-05",
+          "D08-06",
+          "D08-07",
+          "D08-08",
+          "D08-09",
+          "D08-10"
+        ],
+        "approval_record": "Private bound review; no selections or named approvals invented",
+        "application_posting_changes": false
+      },
+      "approval_evidence": null
     },
     {
       "id": "D09", "title": "Release priorities and delivery capacity", "owner": "Product owner (vtsakan)",

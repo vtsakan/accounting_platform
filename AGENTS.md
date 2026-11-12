@@ -20,6 +20,24 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S17 is selected from the actual pushed S16 Docker/G1 head
+e6fde507f634a0ccd2de80b197bfd883d0ab7ac9. S16 is Verified: 382 tests,
+356 passes, 26 exact known financial failures and 652 passing boundary cases.
+Read docs/implementation/financial_policy.md and financial_policy.json, the
+Greek review sheet and all 20 worked examples. S17 specifies 17 operations and
+10 unresolved D08 choices; tools/verify_s17.py checks 65 exact-decimal example
+results and rejects stale/incomplete human-review records. This is document/
+reference arithmetic, not production finance, database or concurrency execution.
+Keep application code, 10 migrations, dependency locks, all 382 tests/26 known
+failures, S16/G1/history evidence, accounts, MFA, local demo and VM unchanged.
+S17 remains Prepared until the accountant/office owner review the exact policy,
+examples and documents. An optional private review file records their actual
+names/roles, time, reference and selections; do not invent them or interpret
+passing arithmetic as business approval. An alternative choice needs revised
+policy/examples and a new bound review. No S18 posting behaviour changes before
+its required D08 decisions are recorded. All 85 full acceptances remain Pending.
+The checkpoints below are historical.
+
 S16 is selected from actual pushed S15 Docker head
 5fc66cb6161c76482501b31499e8745f79181a93 (344 tests: 318 passes and 26 exact
 known failures). Read docs/implementation/office_boundary.md and the reusable

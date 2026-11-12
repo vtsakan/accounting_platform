@@ -4,6 +4,27 @@ Updated 2026-11-12. Current step: **S16 Verified — complete office boundary**.
 
 ## Current selected work
 
+S17 is based on pushed S16 Docker/G1 head
+`e6fde507f634a0ccd2de80b197bfd883d0ab7ac9`, with 382 tests (356 passes and
+26 exact known financial failures) and 652 passing boundary cases. Its actual
+verification/evidence remains unchanged.
+
+Read [financial_policy.md](financial_policy.md), the structured policy and the
+[Greek accountant review sheet](financial_policy_review_el.md). S17 defines
+17 operation contracts, state transitions, 12 invariants, 10 proposed D08
+choices, 20 worked examples and 16 future denied-case specifications. The
+reference checker validates 65 exact-decimal calculations; it does not execute
+financial operations or replace PostgreSQL/concurrency tests at later steps.
+
+D08 remains Pending accountant/office-owner review. Source, migrations, locks,
+financial assertions, local demo/accounts/MFA and the VM are retained. The
+review template binds the exact policy/example/document digests and keeps
+named review records in ignored private/ or outside Git. All full requirement
+acceptances remain Pending. S18 is blocked until the required reviewed choices
+are recorded; a Prepared reference check is not that approval.
+
+## Historical selected work through S16
+
 S15 is pushed at `5fc66cb6161c76482501b31499e8745f79181a93` with actual Docker
 verification: 344 tests, 318 passes and the same 26 exact known financial
 failures. S16 audits the complete implemented office boundary from that base.

@@ -217,6 +217,21 @@ Open inputs:
 Dependent steps: S17, S18, S19, S20, S21, S22, S23, S24, S25, S27, S28, S29, S30, S31, S37.
 Evidence: UR-CSH-01, UR-CSH-04, UR-AGR-01, UR-BIL-04, QR-03, QR-04. Approval evidence: **not recorded**.
 
+### S17 D08 review packet — Prepared, approval not recorded
+
+The candidate ACC-FIN-001 v0.1 is in `financial_policy.md` /
+`financial_policy.json`. It specifies 17 operations, dated state transitions,
+12 invariants and 20 worked examples. The 10 D08-01–D08-10 choices name the
+steps they block; see `financial_policy_review_el.md`. D08-10 also needs the
+explicit D01 correction-capability extension at its implementation step.
+
+No option is selected on the accountant's behalf. A passing
+`tools/verify_s17.py` arithmetic check leaves S17 Prepared until a named,
+bound human review is recorded. The verifier checks an operator-supplied review
+attestation; it does not establish identity or a digital signature. Alternative
+choices or conditions require revising/reviewing the policy/examples. Existing
+financial behaviour and all 26 known financial failures remain unchanged.
+
 ## D09 — Release priorities and delivery capacity
 
 Owner: Product owner (vtsakan). Status: **Implementation sequence authorised; release approval pending**. Gate: G0 and each release gate.

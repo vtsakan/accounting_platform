@@ -20,6 +20,14 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S14's operator Docker gate is Verified at s14-complete (dc4cdc5). Its browser
+login subsequently exposed the no-referrer/Origin:null defect. The selected
+S14 follow-up uses same-origin on forms and no-referrer only on bearer-link
+redirects, including proxy errors. Read referrer_csrf_fix.md and its evidence.
+Do not trust null origins or disable CSRF. Existing accounts/volumes and the
+original eight migrations are preserved. The correction is Prepared pending
+its own local Docker/browser retry; keep the existing completion tag immutable.
+
 S13 is operator-Verified and pushed/tagged at s13-complete
 (16501f4ffeafc15f7361bce1ef790e8e19031f77), with 218 tests: 192 passed and
 26 exact known financial failures. Selected S14 adds Greek office settings,

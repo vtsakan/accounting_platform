@@ -48,8 +48,10 @@ An unguessable 24-hour bearer token is emailed through the explicit mail adapter
 only its keyed digest is stored in the invitation row. A valid GET exchanges the
 token for a server-side session proof and redirects to a token-free form. It
 does not consume the invitation or create a user. All join responses, including
-denials, are private/no-store with `Referrer-Policy: no-referrer`. The application
-redacts invitation paths, and the proxy keeps request URIs out of access logs.
+denials, are private/no-store. Bearer-link redirects use `no-referrer`; the
+token-free forms use `same-origin` so browser POST Origin/CSRF checks work. See
+`referrer_csrf_fix.md`. The application redacts invitation paths, and the proxy
+keeps request URIs out of access logs.
 
 The recipient creates a validated regular account, or proves the password of an
 existing unique, active, unaffiliated regular account with the invited email.

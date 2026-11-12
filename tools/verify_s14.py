@@ -58,7 +58,19 @@ def source_checks():
     for name in ("accounting/tests_regressions.py", "accounting/tests_authentication.py", "accounting/tests_ownership.py"):
         def tests(root):
             return {n.name:ast.dump(n) for n in ast.walk(root) if isinstance(n,ast.FunctionDef) and n.name.startswith("test_")}
-        if tests(tree(name,True)) != tests(tree(name)):
+        original = tree(name,True)
+        if name == "accounting/tests_authentication.py":
+            # The reported browser regression requires one corrected form-header
+            # assertion. Preserve every other old auth assertion, including the
+            # no-referrer assertion on the secret reset-link redirect.
+            node = next(n for n in ast.walk(original) if isinstance(n,ast.FunctionDef)
+                and n.name == "test_greek_form_errors_no_store_and_autocomplete_with_english_browser")
+            header = next(n for n in ast.walk(node) if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute)
+                and n.func.attr == "assertEqual" and len(n.args) == 2 and isinstance(n.args[0],ast.Subscript)
+                and isinstance(n.args[0].slice,ast.Constant) and n.args[0].slice.value == "Referrer-Policy")
+            assert isinstance(header.args[1],ast.Constant) and header.args[1].value == "no-referrer"
+            header.args[1].value = "same-origin"
+        if tests(original) != tests(tree(name)):
             raise RuntimeError("Existing test assertions changed: "+name)
     policy = json.loads((RECORDS/"office_role_policy.json").read_text())
     if policy["finance_choice"] != "read_and_post" or policy["handover_choice"] != "colleague_accepts" or not policy["explicit_user_selection"]:
@@ -68,10 +80,10 @@ def source_checks():
         if "accounting/templates/accounting/office/"+name not in context["paths"]:
             raise RuntimeError("Staff email omitted from production context")
     caddy=(ROOT/"infrastructure/Caddyfile").read_text()
-    if "request>uri delete" not in caddy or "Referrer-Policy no-referrer" not in caddy:
+    if any(value not in caddy for value in ("request>uri delete", "?Referrer-Policy same-origin", "header @bearer >Referrer-Policy no-referrer", "not path /auth/password/reset/*/set-password/")):
         raise RuntimeError("Invitation path/referrer privacy missing from proxy configuration")
     return {"original_six_migrations_and_financial_models_assertions_preserved":True,
-        "existing_authentication_assertions_preserved":True,"s10_through_s13_evidence_preserved":True,
+        "authentication_assertions_preserved_except_form_referrer_policy":True,"s10_through_s13_evidence_preserved":True,
         "dependency_locks_unchanged":True,"approved_s14_role_and_handover_choices_recorded":True,
         "staff_email_templates_in_production_context":True,"invitation_proxy_log_referrer_guards":True,
         "application_context_digest":context["digest"]}
@@ -90,13 +102,15 @@ def verification(manage, read_suite):
     suite = read_suite()
     new_tests = sum(isinstance(n, ast.FunctionDef) and n.name.startswith("test_")
                     for n in ast.walk(ast.parse((ROOT / "accounting/tests_staff.py").read_text())))
-    if suite["tests_run"] != 218 + new_tests or suite["known_failures_reproduced"] != 26 or any(
+    referrer_tests = sum(isinstance(n, ast.FunctionDef) and n.name.startswith("test_")
+        for n in ast.walk(ast.parse((ROOT / "core/tests/test_referrer.py").read_text())))
+    if suite["tests_run"] != 218 + new_tests + referrer_tests or suite["known_failures_reproduced"] != 26 or any(
             suite[key] for key in ("unexpected_failures", "unexpected_errors", "unexpected_successes", "skips")):
         raise RuntimeError("Unexpected S14/financial test outcome")
     version = int(manage("shell", "--no-imports", "-c", "from django.db import connection; print(connection.pg_version)").stdout.strip())
     if version // 10000 != 17:
         raise RuntimeError("PostgreSQL 17 required")
-    return {"postgresql_version_num": version, "runtime_packages": packages, "runtime_pip_check": True, "s14_tests": new_tests,
+    return {"postgresql_version_num": version, "runtime_packages": packages, "runtime_pip_check": True, "s14_tests": new_tests, "referrer_regression_tests": referrer_tests,
             "suite": {k: v for k, v in suite.items() if k != "cases"},
             "greek_office_settings_and_stale_update_control":True,
             "recipient_bound_single_use_invitations_and_owner_approval":True,

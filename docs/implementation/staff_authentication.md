@@ -24,7 +24,8 @@ Owners, staff/platform administrators and anybody who has enrolled MFA must
 verify a confirmed authenticator before business or admin access. Ordinary
 accountants may opt in; future logins then require MFA. The password session is
 limited to setup/challenge/recovery until verification succeeds. Auth routes
-are Greek, private/no-store and no-referrer; POST operations require CSRF.
+are Greek and private/no-store; token-free forms use same-origin and bearer-link
+redirects keep no-referrer. POST operations require CSRF. See referrer_csrf_fix.md.
 Foreign `next` URLs are rejected. Logout is POST-only and destroys the session.
 
 | Rule | S13 implementation default |

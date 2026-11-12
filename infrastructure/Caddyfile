@@ -21,9 +21,14 @@
 	encode zstd gzip
 	header {
 		X-Content-Type-Options nosniff
-		Referrer-Policy no-referrer
+		?Referrer-Policy same-origin
 		-Server
 	}
+	@bearer {
+		path_regexp bearer ^/(join/[^/]+/[^/]+|auth/password/reset/[^/]+/[^/]+)/?$
+		not path /auth/password/reset/*/set-password/
+	}
+	header @bearer >Referrer-Policy no-referrer
 	@private path /media/* /private/* /.env /.git/*
 	handle @private {
 		header Content-Type "text/plain; charset=utf-8"
@@ -43,6 +48,8 @@
 		}
 	}
 	handle_errors {
+		header ?Referrer-Policy same-origin
+		header @bearer >Referrer-Policy no-referrer
 		header Content-Type "text/plain; charset=utf-8"
 		respond "Η υπηρεσία δεν είναι διαθέσιμη αυτή τη στιγμή." {err.status_code}
 	}

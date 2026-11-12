@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from core.referrer import referrer_policy
 
 from .auth_policy import bind_session, eligible, recovery_authorized, requires_mfa, session_valid, state_for
 from .auth_models import AuthenticatorDevice
@@ -17,7 +18,7 @@ class StaffSecurityMiddleware:
         response = self.get_response(request)
         if request.path.startswith(("/login/", "/auth/", "/admin/", "/office/", "/join/")):
             response["Cache-Control"] = "no-store, private"
-            response["Referrer-Policy"] = "no-referrer"
+            response["Referrer-Policy"] = referrer_policy(request)
         return response
 
     def process_view(self, request, view_func, view_args, view_kwargs):

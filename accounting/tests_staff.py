@@ -130,7 +130,7 @@ class OfficeSettingsTests(StaffFixtures, TestCase):
         self.assertContains(response, "Στοιχεία λογιστικού γραφείου")
         self.assertEqual(response["Content-Language"], "el")
         self.assertIn("no-store", response["Cache-Control"])
-        self.assertEqual(response["Referrer-Policy"], "no-referrer")
+        self.assertEqual(response["Referrer-Policy"], "same-origin")
         self.assertEqual(self.client.post(reverse("office-settings"), self.settings_data()).status_code, 302)
         office = Office.objects.get(pk=A)
         for field, value in self.settings_data().items():
@@ -268,7 +268,7 @@ class InvitationTests(StaffFixtures, TestCase):
         self.assertNotIn(token, location)
         self.assertNotIn(token, str(dict(visitor.session)))
         response = visitor.get(location)
-        self.assertEqual(response["Referrer-Policy"], "no-referrer")
+        self.assertEqual(response["Referrer-Policy"], "same-origin")
         self.assertIn("no-store", response["Cache-Control"])
         self.assertContains(response, "Αποδοχή πρόσκλησης")
 

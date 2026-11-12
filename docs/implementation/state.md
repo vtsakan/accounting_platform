@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-10. Current step: **S14 Verified — office settings, staff invitations and mutual handover**. Next step: **S15**.
+Updated 2026-11-12. Current step: **S14 referrer/CSRF correction Prepared**. Next step: **Verify the correction on local Docker and the browser, then S15**.
 
 ## Repository position
 
@@ -387,3 +387,16 @@ gate; a reviewed S11–S14 deployment is a separate operation.
 <!-- S14-RESULT -->
 Verified: 60 office/settings/invitation/role/handover/concurrency checks pass on PostgreSQL 17; the strict suite retains 26 known financial failures. Docker execution: True. Live mail/deployment and full release acceptance remain Pending.
 <!-- /S14-RESULT -->
+
+## S14 referrer/CSRF follow-up — 2026-11-12
+
+The pushed S14 Docker result remains historical Verified evidence. The owner
+account bootstrap succeeded, but actual browser login exposed Origin:null caused
+by blanket no-referrer response headers. The follow-up changes normal form
+responses to same-origin, retains no-referrer on bearer-link redirects/errors,
+and fixes the proxy default. No CSRF/origin checks, office/MFA controls, accounts,
+passwords, migrations, locks or financial assertions are removed or reset.
+Read referrer_csrf_fix.md and evidence/S14-referrer-fix.json. The new native
+PostgreSQL proof remains Prepared until the operator's Docker and browser retry.
+The client demo stays in accounting-client-demo on port 8003; reuse the existing
+vtsakan owner. VM migration/image inspection and demo deployment are still pending.

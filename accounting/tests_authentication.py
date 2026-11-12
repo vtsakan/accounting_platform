@@ -174,7 +174,7 @@ class StaffLoginTests(AuthFixtures, TestCase):
             self.assertContains(response, text)
         self.assertEqual(response["Content-Language"], "el")
         self.assertIn("no-store", response["Cache-Control"])
-        self.assertEqual(response["Referrer-Policy"], "no-referrer")
+        self.assertEqual(response["Referrer-Policy"], "same-origin")
 
     def test_idle_and_absolute_timeouts_and_missing_metadata_fail_closed(self):
         for field, value in (("s13_last_activity", time.time() - 1801), ("s13_started", time.time() - 28801), ("s13_revision", -1)):

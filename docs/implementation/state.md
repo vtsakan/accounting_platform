@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S16 Verified — complete office boundary**. Next step: **S17 financial policy review**.
+Updated 2026-11-12. Current step: **S17 Prepared — financial policy**. Next step: **Record D08 review before S18**.
 
 ## Current selected work
 
@@ -477,3 +477,7 @@ Verified: 57 workspace/migration/archival/concurrency checks; 344 total tests wi
 <!-- S16-RESULT -->
 Verified: 38 integrated tests; 652 explicit boundary cases; 382 total tests with 26 exact known financial failures and no unexpected outcomes. Docker execution: True. G1 technical evidence is recorded; browser/client, future modules and full requirement acceptance remain Pending.
 <!-- /S16-RESULT -->
+
+<!-- S17-RESULT -->
+Prepared: 17 operation contracts, 10 explicit D08 decisions, 20 worked examples and 65 exact-decimal arithmetic checks; 16 denied specifications are for future application tests. Application/database/cloud execution this step: none. D08 review: Pending. All full requirement acceptances remain Pending.
+<!-- /S17-RESULT -->

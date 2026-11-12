@@ -1,10 +1,10 @@
 {
   "gate": "G1",
-  "status": "Prepared",
-  "verified_at": "2026-11-12T14:21:32+02:00",
-  "mode": "native-postgresql17",
+  "status": "Verified",
+  "verified_at": "2026-11-12T15:32:16+02:00",
+  "mode": "docker-compose-postgresql17",
   "scope": "Technical office foundation through S16; synthetic local PostgreSQL workflow",
-  "source_commit": "git:cc2920872b3b03c4380a56497d4c9520e5626d86",
+  "source_commit": "git:36d21133409a74346a3207e203a77bf728f97b8d",
   "source_reference_commit": "git:5fc66cb6161c76482501b31499e8745f79181a93",
   "technical_evidence": {
     "cases": 652,
@@ -71,23 +71,23 @@
   },
   "requirements": {
     "UR-OFF-01": {
-      "technical_scope": "Prepared",
+      "technical_scope": "Verified",
       "full_acceptance": "Pending"
     },
     "UR-OFF-04": {
-      "technical_scope": "Prepared",
+      "technical_scope": "Verified",
       "full_acceptance": "Pending"
     },
     "UR-OFF-05": {
-      "technical_scope": "Prepared",
+      "technical_scope": "Verified",
       "full_acceptance": "Pending"
     },
     "UR-OFF-07": {
-      "technical_scope": "Prepared",
+      "technical_scope": "Verified",
       "full_acceptance": "Pending"
     },
     "QR-01": {
-      "technical_scope": "Prepared",
+      "technical_scope": "Verified",
       "full_acceptance": "Pending"
     }
   },

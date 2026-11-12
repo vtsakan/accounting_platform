@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S16 Prepared — complete office boundary**. Next step: **Complete S16 local Docker gate**.
+Updated 2026-11-12. Current step: **S16 Verified — complete office boundary**. Next step: **S17 financial policy review**.
 
 ## Current selected work
 
@@ -454,5 +454,5 @@ Verified: 57 workspace/migration/archival/concurrency checks; 344 total tests wi
 <!-- /S15-RESULT -->
 
 <!-- S16-RESULT -->
-Prepared: 38 integrated tests; 652 explicit boundary cases; 382 total tests with 26 exact known financial failures and no unexpected outcomes. Docker execution: False. G1 technical evidence is recorded; browser/client, future modules and full requirement acceptance remain Pending.
+Verified: 38 integrated tests; 652 explicit boundary cases; 382 total tests with 26 exact known financial failures and no unexpected outcomes. Docker execution: True. G1 technical evidence is recorded; browser/client, future modules and full requirement acceptance remain Pending.
 <!-- /S16-RESULT -->

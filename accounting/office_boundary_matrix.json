@@ -1,0 +1,376 @@
+{
+  "step": "S16",
+  "scope": "Implemented Django routes, registered business admin, database links, explicit operator commands, execution adapter",
+  "requirements": [
+    "UR-OFF-01",
+    "UR-OFF-04",
+    "UR-OFF-05",
+    "UR-OFF-07",
+    "QR-01"
+  ],
+  "business_personas": [
+    "anonymous",
+    "owner",
+    "accountant",
+    "inactive-profile",
+    "inactive-user",
+    "missing-profile",
+    "inactive-office",
+    "platform-no-profile"
+  ],
+  "routes": [
+    {
+      "route": "counterparty-list",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "archive-entity",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "restore-entity",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "office-settings",
+      "realm": "office-business",
+      "capability": "office.settings",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "office-members",
+      "realm": "office-business",
+      "capability": "staff.manage",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "office-invitation-action",
+      "realm": "office-business",
+      "capability": "staff.manage",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "office-member-action",
+      "realm": "office-business",
+      "capability": "staff.manage",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "office-ownership",
+      "realm": "office-business",
+      "capability": "ownership.accept",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "office-handover-detail",
+      "realm": "office-business",
+      "capability": "ownership.accept",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "office-audit",
+      "realm": "office-business",
+      "capability": "office.audit",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "staff-join-token",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "staff-join",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "login",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "logout",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "password-reset",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "password-reset-done",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "password-reset-confirm",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "password-reset-complete",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "mfa-setup",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "mfa-qr",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "mfa-verify",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "mfa-recover",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "security-settings",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "dashboard",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "transaction-list",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "customer-list",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "supplier-list",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "add-expense",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "add-income",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "add-entity",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "entity-detail",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "summary-report",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "edit-entity",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "agreement-list",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "agreement-detail",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "add-agreement",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "edit-agreement",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "add-transfer",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  ],
+  "public_probes": [
+    "health-live",
+    "health-ready"
+  ],
+  "business_admin_models": [
+    "entity",
+    "cashaccount",
+    "category",
+    "agreement",
+    "transaction"
+  ],
+  "operator_commands": [
+    "backfill_accountant_profiles",
+    "backfill_office_records",
+    "bootstrap_office_owner",
+    "prune_auth_attempts",
+    "probe_development_database",
+    "seed_development_data"
+  ],
+  "operator_boundary": "Trusted process/database credentials; complete private mapping, reviewed digest or explicit office; no staff HTTP route to management commands.",
+  "future_pending": {
+    "export-downloads": "No implemented CSV/PDF/export-download route. Current /report/ is scoped HTML only.",
+    "private-files": "Document upload, object ownership, download and restore deferred to their implementation steps.",
+    "workers": "execution_record is a synchronous adapter proof; no deployed queue/worker is claimed.",
+    "portal": "Client portal, representation and cross-office grants remain unimplemented and policy Pending.",
+    "connectors": "External tax connectors and their tenant credentials are not implemented."
+  },
+  "acceptance": "G1 technical foundation scope only; all 85 full requirements and browser/client acceptance remain Pending."
+}

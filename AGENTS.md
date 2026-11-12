@@ -20,6 +20,25 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S16 is selected from actual pushed S15 Docker head
+5fc66cb6161c76482501b31499e8745f79181a93 (344 tests: 318 passes and 26 exact
+known failures). Read docs/implementation/office_boundary.md and the reusable
+accounting/office_boundary_matrix.json. Run tools/verify_s16.py --record in a
+disposable local Docker project to complete the G1 technical gate; native PG17
+proof is Prepared. Retain all ten migrations and original 344 tests, money
+calculations, locks, auth/MFA/referrer policy, accounts and recovery material.
+New business routes need a declared capability and matrix coverage; identity
+exceptions bind exact module/name and admin uses its dedicated permissions.
+Write authority is checked after the office/user lock wait. Maintenance CLI is
+an operator/database trust realm, not an unscoped staff API. Files, actual jobs,
+exports, portal and connectors stay Pending until implemented and added to the
+matrix. All 85 full acceptances and manual Greek browser/client review remain
+Pending. Keep the working VM unchanged by this step. Do not rerun the old S14A
+updater against existing people/office data. After a successful --record, commit
+the six generated evidence/state files once; do not reapply or rerun solely to
+save their output. Next is S17 accountant review of D08, not financial changes.
+The checkpoints below are historical.
+
 S15 is now selected. Start from the actual pushed S14 demo head
 ab9602592cb699684450bc4ee70438f80d30351f, not the older s14-complete tag.
 The user reports the VM demo working after apply/restore/bootstrap/login;

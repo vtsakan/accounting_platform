@@ -9,6 +9,7 @@ from .membership import require_office_profile
 from .office_access import records, save_for_user
 from .capabilities import require_capability, model_capability
 from django import forms
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
@@ -71,7 +72,13 @@ class OfficeAdminMixin:
 
     def get_queryset(self, request):
         try:
-            return records(self.model, request.user)
+            queryset = records(self.model, request.user)
+            if getattr(request, '_office_autocomplete_target', None) is self.model:
+                if self.model is Entity:
+                    queryset = queryset.filter(is_archived=False)
+                elif self.model is Agreement:
+                    queryset = queryset.filter(entity__is_archived=False)
+            return queryset
         except PermissionDenied:
             return self.model.objects.none()
 
@@ -89,7 +96,13 @@ class OfficeAdminMixin:
         return super().has_module_permission(request)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        kwargs['queryset'] = records(db_field.remote_field.model, request.user)
+        remote = db_field.remote_field.model
+        queryset = records(remote, request.user)
+        if remote is Entity:
+            queryset = queryset.filter(is_archived=False)
+        elif remote is Agreement:
+            queryset = queryset.filter(entity__is_archived=False)
+        kwargs['queryset'] = queryset
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -104,10 +117,26 @@ class OfficeAdminMixin:
                 if self.instance.office_id and self.instance.office_id != profile.office_id:
                     raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
                 self.instance.office_id = profile.office_id
+                # Historical links stay editable without reopening archived
+                # identities for new work. Only the stored link is restored.
+                if self.instance.pk:
+                    for name, field in self.fields.items():
+                        if isinstance(field, forms.ModelChoiceField):
+                            old_key = getattr(self.instance, name + '_id', None)
+                            if old_key is not None and field.queryset.model in (Entity, Agreement):
+                                allowed = records(field.queryset.model, actor)
+                                field.queryset = allowed.filter(Q(pk__in=field.queryset.values('pk')) | Q(pk=old_key))
         return ScopedAdminForm
 
     def save_model(self, request, obj, form, change):
         save_for_user(obj, request.user)
+
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        try:
+            return super().changeform_view(request, object_id, form_url, extra_context)
+        except ValidationError as error:
+            messages.error(request, ' '.join(error.messages))
+            return HttpResponseRedirect(request.path)
 
     def changelist_view(self, request, extra_context=None):
         if request.method == 'POST' and request.POST.get('action'):

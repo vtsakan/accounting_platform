@@ -511,3 +511,13 @@ Native PostgreSQL proof is Prepared pending operator Docker reproduction. Schema
 reversal is not an automatic data rollback after names/AFMs are reused across
 offices. Future VM deployment needs a new image and matching S10 backup binding;
 S12 does not change the existing preview or create application accounts.
+
+### S16 implementation review — existing D01 policy retained
+
+The S16 matrix applies the owner/accountant capabilities and mutual handover
+already selected for S14. It adds no role, cross-office grant, platform-to-office
+bypass or membership transfer policy. The global auth administrator and trusted
+maintenance process are separate operator realms; neither supplies staff office
+authority. D02 portal/grants and D08 financial semantics retain their existing
+Pending decisions. G1 is recorded as a scoped technical foundation check;
+client/browser and full requirement acceptance are not inferred from it.

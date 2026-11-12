@@ -24,6 +24,7 @@ EXACT = {"Dockerfile", ".dockerignore", "manage.py", "requirements.txt", "gunico
 EXACT.update({"accounting/templates/accounting/office/invitation_email.txt",
               "accounting/templates/accounting/office/approval_email.txt",
               "accounting/templates/accounting/office/handover_email.txt"})
+EXACT.add("accounting/office_boundary_matrix.json")  # Non-secret S16 route contract.
 PRIVATE_PARTS = {"private", "secrets", "media", "uploads", "sessions", ".sessions", "backups", "logs", "__pycache__"}
 STATIC_SUFFIXES = {".css", ".js", ".svg", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".ttf", ".map", ".txt"}
 

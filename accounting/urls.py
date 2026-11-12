@@ -4,6 +4,7 @@ from django.contrib.auth import views as django_auth
 from . import auth_views
 from . import office_views, invite_views
 from . import counterparty_views
+from .office_access import office_write_guard
 
 urlpatterns = [
     path('counterparties/', counterparty_views.workspace, name='counterparty-list'),
@@ -44,7 +45,7 @@ urlpatterns = [
     path('agreement/<int:pk>/', views.agreement_detail_view, name='agreement-detail'),
     path('agreement/add/', views.add_agreement_view, name='add-agreement'),
     path('agreement/<int:pk>/edit/', views.edit_agreement_view, name='edit-agreement'),
-    path('transfer/add/', views.add_transfer_view, name='add-transfer'),
+    path('transfer/add/', office_write_guard('finance.write')(views.add_transfer_view), name='add-transfer'),
 
 
 

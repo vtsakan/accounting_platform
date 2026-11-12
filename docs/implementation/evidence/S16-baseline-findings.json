@@ -1,0 +1,43 @@
+{
+  "step": "S16",
+  "baseline_commit": "git:5fc66cb6161c76482501b31499e8745f79181a93",
+  "mode": "native-postgresql17-disposable",
+  "postgresql": "17.11",
+  "docker_execution": false,
+  "cloud_or_vm_changed": false,
+  "baseline_reproductions": [
+    {
+      "check": "undeclared-business-route-anonymous",
+      "observed": 200,
+      "required": 302
+    },
+    {
+      "check": "undeclared-business-route-authenticated",
+      "observed": 200,
+      "required": 403
+    },
+    {
+      "check": "readonly-archive-field-global-user-autocomplete",
+      "observed": 200,
+      "required": 403
+    },
+    {
+      "check": "admin-archived-new-work-choices",
+      "observed": "Archived identity and agreement present",
+      "required": "Excluded"
+    },
+    {
+      "check": "save-helper-revocation-lock-wait",
+      "observed": "Transaction created after committed profile deactivation",
+      "required": "Denied without write"
+    }
+  ],
+  "original_write_race_control": {
+    "tests_run": 2,
+    "failures": 1,
+    "service_write_created_after_revocation": true,
+    "original_transfer_pair_rolled_back": true,
+    "actual_independent_postgresql_lock_wait": true
+  },
+  "scope": "Synthetic reproduction; final fixed-source proof is S16-verification.json. No unimplemented export/file/worker claimed."
+}

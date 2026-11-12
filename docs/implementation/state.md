@@ -1,28 +1,30 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S15 Verified — client and supplier workspace**. Next step: **S16**.
+Updated 2026-11-12. Current step: **S16 Prepared — complete office boundary**. Next step: **Complete S16 local Docker gate**.
 
 ## Current selected work
 
-The corrected S14 Docker gate was operator-Verified (287 tests: 261 passes and
-26 known financial failures). S14A production image delivery/publication and
-the reviewed two-marker plan were then supplied; the user reported the VM
-demonstration working after apply/restore/account instructions. This supersedes
-the earlier S09-only/retry-Pending handoffs below. See
-evidence/S14A-operator-report.json; missing stage receipts are not invented.
+S15 is pushed at `5fc66cb6161c76482501b31499e8745f79181a93` with actual Docker
+verification: 344 tests, 318 passes and the same 26 exact known financial
+failures. S16 audits the complete implemented office boundary from that base.
+Read [office_boundary.md](office_boundary.md) and the reusable inventory in
+`accounting/office_boundary_matrix.json`.
 
-S15 starts from the actual pushed step/s14-vm-demo head
-ab9602592cb699684450bc4ee70438f80d30351f. Read client_supplier_workspace.md.
-It supports one identity with both roles, explicit person/business choice,
-normalized office AFM uniqueness, Greek forms/search/detail and archive/restore.
-Migrations 0009/0010 retain original IDs/contacts/financial links, users and MFA
-data; legacy normalization conflicts stop before changes. The working VM and
-account/recovery setup remains unchanged by this implementation.
+S16 adds a route/admin/autocomplete/SQL/operator/adapter matrix and independent
+PostgreSQL revocation lock-wait tests. Undeclared business routes fail closed;
+admin autocomplete validates its source; archived new-work choices are removed;
+the save helper rechecks authority after locking the office/user. Business
+calculations and ten existing migrations remain unchanged. Local owner/MFA,
+private configuration and the working VM are retained. The S14A demonstration
+remains operator-reported at the limits in `evidence/S14A-operator-report.json`;
+S16 does not perform a new deployment or create human accounts.
 
-Native PostgreSQL proof is Prepared until the disposable Docker gate passes.
-Original eight migrations, locks, financial assertions/calculations and S10–S14
-evidence stay intact. All full requirement acceptances remain Pending. Browser/
-keyboard review and a later S15 VM rollout are separate. S16 follows this gate.
+Native proof is Prepared until `python3 tools/verify_s16.py --record` passes in
+its disposable laptop Docker project. The G1 record covers technical foundation
+checks only. Future jobs/files/exports/portal/connectors, manual Greek browser/
+client acceptance and all 85 full requirements stay Pending. After the Docker
+gate, S17 requires the accountant's financial policy decisions before posting
+changes. Historical completion records follow.
 
 ## Historical repository position
 

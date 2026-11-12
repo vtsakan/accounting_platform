@@ -1,14 +1,45 @@
 """Explicit per-action authority, reusable by future export/file/job adapters."""
+from functools import wraps
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction, IntegrityError
 from django.http import Http404
 
 from .membership import require_office_profile
-from .models import Agreement, CashAccount, Category, Entity, Transaction
+from .models import Agreement, CashAccount, Category, Entity, Office, Transaction
 from .capabilities import model_capability, require_capability
 
 MODELS = (Entity, CashAccount, Category, Agreement, Transaction)
+
+
+def locked_office(user, capability):
+    """Use inside an atomic write: office, user, then fresh authority.
+
+    Staff revocation holds the same locks. A writer waiting behind it must
+    re-check membership after the wait, before creating any business record.
+    """
+    profile = require_capability(user, capability)
+    office = Office.objects.select_for_update().get(pk=profile.office_id)
+    get_user_model().objects.select_for_update().get(pk=user.pk)
+    fresh = require_capability(user, capability)
+    if fresh.office_id != office.pk or not office.is_active:
+        raise PermissionDenied("Η πρόσβαση στο λογιστικό γραφείο δεν είναι πλέον ενεργή.")
+    return office
+
+
+def office_write_guard(capability):
+    """Keep legacy calculations intact while serializing their direct writes."""
+    def decorate(view):
+        @wraps(view)
+        def wrapped(request, *args, **kwargs):
+            if request.method == "POST" and request.user.is_authenticated:
+                with transaction.atomic():
+                    locked_office(request.user, capability)
+                    return view(request, *args, **kwargs)
+            return view(request, *args, **kwargs)
+        wrapped.office_capability = capability
+        return wrapped
+    return decorate
 
 
 def records(model, user):
@@ -28,11 +59,12 @@ def record(model, user, key):
 
 @transaction.atomic
 def save_for_user(instance, user):
-    profile = require_office_profile(user)
-    if type(instance) not in MODELS or (instance.office_id and str(instance.office_id) != str(profile.office_id)):
+    if type(instance) not in MODELS:
         raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
-    require_capability(user, model_capability(type(instance), write=True))
-    instance.office_id = profile.office_id
+    office = locked_office(user, model_capability(type(instance), write=True))
+    if instance.office_id and str(instance.office_id) != str(office.pk):
+        raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
+    instance.office_id = office.pk
     try:
         with transaction.atomic():
             instance.save()

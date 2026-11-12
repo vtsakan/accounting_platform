@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
@@ -23,7 +24,7 @@ class Command(BaseCommand):
             raise CommandError("Synthetic development seeding is allowed only with core.settings.local.")
         try:
             office = Office.objects.get(pk=options['office'], is_active=True)
-        except (Office.DoesNotExist, ValueError, TypeError):
+        except (Office.DoesNotExist, ValidationError, ValueError, TypeError):
             raise CommandError("Select an existing active synthetic office with --office; no default office is created.") from None
         with transaction.atomic():
             self.seed(office)

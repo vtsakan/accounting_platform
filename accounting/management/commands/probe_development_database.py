@@ -1,4 +1,5 @@
 import json
+from uuid import UUID
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -18,6 +19,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if settings.SETTINGS_MODULE != "core.settings.local":
             raise CommandError("The development probe is allowed only with core.settings.local.")
+        if options['office']:
+            try:
+                options['office'] = str(UUID(options['office']))
+            except (ValueError, TypeError, AttributeError):
+                raise CommandError("Select a valid office UUID with --office.") from None
         with connection.cursor() as cursor:
             cursor.execute("SHOW server_encoding")
             encoding = cursor.fetchone()[0]

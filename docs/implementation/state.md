@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S14 referrer/CSRF correction Prepared**. Next step: **Verify the correction on local Docker and the browser, then S15**.
+Updated 2026-11-12. Current step: **S14 Verified — office settings, staff invitations and mutual handover**. Next step: **S15**.
 
 ## Repository position
 

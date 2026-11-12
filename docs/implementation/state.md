@@ -452,3 +452,7 @@ acceptances stay Pending. S15 is unchanged.
 <!-- S15-RESULT -->
 Verified: 57 workspace/migration/archival/concurrency checks; 344 total tests with 26 known financial failures and no unexpected outcomes. Docker execution: True. Greek browser and full requirement acceptance remain Pending.
 <!-- /S15-RESULT -->
+
+<!-- S16-RESULT -->
+Prepared: 38 integrated tests; 652 explicit boundary cases; 382 total tests with 26 exact known financial failures and no unexpected outcomes. Docker execution: False. G1 technical evidence is recorded; browser/client, future modules and full requirement acceptance remain Pending.
+<!-- /S16-RESULT -->

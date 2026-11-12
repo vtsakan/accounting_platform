@@ -1,0 +1,108 @@
+{
+  "gate": "G1",
+  "status": "Prepared",
+  "verified_at": "2026-11-12T14:21:32+02:00",
+  "mode": "native-postgresql17",
+  "scope": "Technical office foundation through S16; synthetic local PostgreSQL workflow",
+  "source_commit": "git:cc2920872b3b03c4380a56497d4c9520e5626d86",
+  "source_reference_commit": "git:5fc66cb6161c76482501b31499e8745f79181a93",
+  "technical_evidence": {
+    "cases": 652,
+    "by_area": {
+      "http-get": 200,
+      "http-post": 90,
+      "foreign-id": 36,
+      "foreign-choice": 24,
+      "filter": 20,
+      "role": 8,
+      "guessed-id": 8,
+      "workflow": 1,
+      "admin": 110,
+      "admin-entry": 25,
+      "autocomplete": 9,
+      "autocomplete-source": 16,
+      "admin-post": 5,
+      "admin-history": 1,
+      "global-auth": 2,
+      "database": 28,
+      "execution-adapter": 9,
+      "inventory": 39,
+      "operator": 10,
+      "concurrency": 5,
+      "gap": 6
+    },
+    "all_passed": true,
+    "business_routes": 25,
+    "identity_or_recipient_routes": 13,
+    "business_personas": [
+      "anonymous",
+      "owner",
+      "accountant",
+      "inactive-profile",
+      "inactive-user",
+      "missing-profile",
+      "inactive-office",
+      "platform-no-profile"
+    ],
+    "business_admin_models": [
+      "entity",
+      "cashaccount",
+      "category",
+      "agreement",
+      "transaction"
+    ],
+    "operator_commands": [
+      "backfill_accountant_profiles",
+      "backfill_office_records",
+      "bootstrap_office_owner",
+      "prune_auth_attempts",
+      "probe_development_database",
+      "seed_development_data"
+    ],
+    "future_pending": {
+      "export-downloads": "No implemented CSV/PDF/export-download route. Current /report/ is scoped HTML only.",
+      "private-files": "Document upload, object ownership, download and restore deferred to their implementation steps.",
+      "workers": "execution_record is a synchronous adapter proof; no deployed queue/worker is claimed.",
+      "portal": "Client portal, representation and cross-office grants remain unimplemented and policy Pending.",
+      "connectors": "External tax connectors and their tenant credentials are not implemented."
+    },
+    "evidence": "docs/implementation/evidence/S16-office-boundary.csv",
+    "sha256": "sha256:d6ed36dec48d24aea336f264c46c043856b412edf274d8b42fe7b92d55cfb0cd"
+  },
+  "requirements": {
+    "UR-OFF-01": {
+      "technical_scope": "Prepared",
+      "full_acceptance": "Pending"
+    },
+    "UR-OFF-04": {
+      "technical_scope": "Prepared",
+      "full_acceptance": "Pending"
+    },
+    "UR-OFF-05": {
+      "technical_scope": "Prepared",
+      "full_acceptance": "Pending"
+    },
+    "UR-OFF-07": {
+      "technical_scope": "Prepared",
+      "full_acceptance": "Pending"
+    },
+    "QR-01": {
+      "technical_scope": "Prepared",
+      "full_acceptance": "Pending"
+    }
+  },
+  "full_requirement_acceptances_pending": 85,
+  "known_financial_failures_preserved": 26,
+  "operator_maintenance": "Privileged database process; not a staff API. See office_boundary.md.",
+  "future_pending": {
+    "export-downloads": "No implemented CSV/PDF/export-download route. Current /report/ is scoped HTML only.",
+    "private-files": "Document upload, object ownership, download and restore deferred to their implementation steps.",
+    "workers": "execution_record is a synchronous adapter proof; no deployed queue/worker is claimed.",
+    "portal": "Client portal, representation and cross-office grants remain unimplemented and policy Pending.",
+    "connectors": "External tax connectors and their tenant credentials are not implemented."
+  },
+  "human_browser_client_acceptance": "Pending",
+  "live_vm_rollout": "Not performed by S16",
+  "real_data_cutover": "Not authorised by this gate",
+  "next_step": "S17: accountant review of D08 financial rules before posting changes"
+}

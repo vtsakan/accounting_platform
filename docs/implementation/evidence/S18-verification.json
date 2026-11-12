@@ -18,10 +18,10 @@
     "psycopg": "3.3.8"
   },
   "runtime_pip_check": true,
-  "s18_tests": 44,
+  "s18_tests": 45,
   "suite": {
-    "tests_run": 426,
-    "tests_passed": 413,
+    "tests_run": 427,
+    "tests_passed": 414,
     "known_failures_reproduced": 13,
     "unexpected_failures": 0,
     "unexpected_errors": 0,
@@ -698,9 +698,9 @@
     "network_verification": false,
     "scanner_self_check": "Passed: detected an ephemeral synthetic password",
     "history_scope": "All locally reachable Git refs plus the current candidate source",
-    "history_commits": 114,
-    "unique_history_blobs": 749,
-    "candidate_text_files": 331,
+    "history_commits": 116,
+    "unique_history_blobs": 755,
+    "candidate_text_files": 332,
     "binary_files_or_blobs_skipped": 6,
     "reviewed_non_secret_matches": 119,
     "unreviewed_findings": 0,
@@ -710,8 +710,8 @@
   "runtime_and_tools_locks_reproduced": true,
   "greek_catalog_verified": true,
   "step": "S18",
-  "verified_at": "2026-11-12T18:05:22+02:00",
-  "source_commit": "git:cb93b5974b9a3557e2b1fc5dd0ca4c1469104d1a",
+  "verified_at": "2026-11-12T18:08:39+02:00",
+  "source_commit": "git:4e0cb893add0ef8ab27a1feeb2213b4d36a87738",
   "source_dirty": false,
   "source_reference_commit": "git:0870a08e9ff43b5380957084c511d0679b9825c3",
   "cloud_or_vm_changed": false,
@@ -732,5 +732,5 @@
   "financial_expected_value_assertions_preserved": true,
   "all_existing_test_names_retained": true,
   "dependency_locks_authentication_mfa_referrer_preserved": true,
-  "application_context_digest": "sha256:fae4f423cd8fd818294b97ce9c0f2bcb2a0a9cafbb859122a020036cd39f9e32"
+  "application_context_digest": "sha256:25b5f89b0514e2c7d57d91ccdc0d30e862b23cba7f6bf38e63bd5f0be7b2a8c3"
 }

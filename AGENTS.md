@@ -20,6 +20,23 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+Selected S14A follow-up: the user requests a sample office and regular accounts
+both locally and on the existing VM. The corrected S14 Docker gate was reported
+Verified on 2026-11-12: 287 tests, 261 passes and the same 26 known financial
+failures; actual local owner login now works. Reuse that local demo/owner.
+Read docs/implementation/vm_demo_upgrade.md. The VM remains S09/0001–0002.
+The new operator flow accepts only its exact two markers with no users, clones
+the original database, applies an explicitly reviewed ownership map, and binds
+the new image/database to S10 backups. Keep the original database unchanged.
+Native proof is Prepared; actual Docker publication/VM cutover/new off-VM
+restore/browser MFA are operator gates. No human VM account is made by apply.
+Do not use the old context-pinned ship/installer to bypass the staged migration,
+nor alter existing completion tags, original migrations/locks or financial
+assertions. Captured invitations do not send live mail or implicitly approve
+staff. Stop after this S14A follow-up; S15 has not been selected.
+
+The following S14 checkpoint text records the earlier handoff.
+
 S14's operator Docker gate is Verified at s14-complete (dc4cdc5). Its browser
 login subsequently exposed the no-referrer/Origin:null defect. The selected
 S14 follow-up uses same-origin on forms and no-referrer only on bearer-link

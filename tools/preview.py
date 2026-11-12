@@ -56,10 +56,10 @@ def verified_delivery(built, report):
     cloud.require(all(report["suite"][key] == 0 for key in ("unexpected_failures", "unexpected_errors", "unexpected_successes", "skips")), "Delivery proof contains unexpected outcomes")
 
 
-def publish(config, path):
+def publish(config, path, proof_path=None):
     require_local_docker()
     built = image.build()
-    proof = common.ROOT / "private/s09-delivery.json"
+    proof = Path(proof_path) if proof_path else common.ROOT / "private/s09-delivery.json"
     verified_delivery(built, json.loads(proof.read_text()))
     commit = built["revision"].removeprefix("git:")
     gcp = config["gcp"]

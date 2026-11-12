@@ -400,3 +400,27 @@ Read referrer_csrf_fix.md and evidence/S14-referrer-fix.json. The new native
 PostgreSQL proof remains Prepared until the operator's Docker and browser retry.
 The client demo stays in accounting-client-demo on port 8003; reuse the existing
 vtsakan owner. VM migration/image inspection and demo deployment are still pending.
+
+## S14A selected VM demo follow-up — 2026-11-12
+
+The operator has now reported the corrected S14 Docker gate: 287 tests, 261
+passes, 26 registered financial failures and no unexpected outcomes. Actual
+local owner login also succeeded; recovery downloads were moved outside Git.
+These observations supersede the retry-Pending text immediately above.
+
+Selected work prepares the requested sample office/accounts on the existing VM.
+Read vm_demo_upgrade.md and evidence/S14A-demo-preparation.json. The inspected VM
+still runs S09 and accounting migrations 0001/0002 with working S10 operations.
+The prepared operator flow rejects users/non-marker business data, preserves the
+source database, clones/migrates only the selected synthetic database, requires
+an explicit two-record ownership plan, updates backup binding and proves the
+new backup off-VM before interactive regular-owner bootstrap. It also supports
+password/TOTP-verified captured staff invitations without live SMTP.
+
+Native PG17 restricted-role migration, source preservation, invitation and
+current production smoke proof is Prepared. Actual Docker image delivery,
+publication, VM cutover, new backup/restore and browser MFA/accountant approval
+remain Pending. No VM change, human account or live message is made while
+preparing this follow-up. Original S10–S14 evidence, completion tags, migrations,
+dependency locks and financial assertions remain intact; all full requirement
+acceptances stay Pending. S15 is unchanged.

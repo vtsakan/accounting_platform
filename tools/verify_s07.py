@@ -151,7 +151,14 @@ def live_ready(address, ready=True):
     assert "no-store" in {key.lower(): value for key, value in database[1].items()}["cache-control"]
 
 
-def native_verification(bin_dir, directory, python):
+def current_admin_probe(address):
+    return ("import django;django.setup();import urllib.request,re;from django.template.loader import render_to_string;"
+        "from django.templatetags.static import static;r=urllib.request.urlopen(urllib.request.Request("+repr('http://'+address+'/admin/login/')+
+        ",headers={'X-Forwarded-Proto':'https'}));assert r.status==200 and '/login/' in r.url and 'Σύνδεση στην εφαρμογή' in r.read().decode();"
+        "asset=static('admin/css/base.css');assert re.fullmatch(r'/static/admin/css/base\\.[0-9a-f]{12}\\.css',asset) and asset in render_to_string('admin/login.html',{})")
+
+
+def native_verification(bin_dir, directory, python, *, current_source=False):
     with native_database(bin_dir, directory) as (environment, version):
         static = directory / "static"
         environment.update({"DJANGO_SETTINGS_MODULE": "core.settings.production", "DJANGO_DEBUG": "false",
@@ -168,7 +175,7 @@ def native_verification(bin_dir, directory, python):
         execute("manage.py", "migrate", "--noinput")
         migrated = json.loads(execute("manage.py", "probe_development_database", "--settings=core.settings.local").stdout); check_probe(migrated)
         print("[S07] Running PostgreSQL tests with the 26 tracked financial failures.", flush=True)
-        suite = strict_suite(execute, lambda: json.loads(Path(environment["ACCOUNTING_REGRESSION_REPORT"]).read_text()))
+        suite = strict_suite(execute, lambda: json.loads(Path(environment["ACCOUNTING_REGRESSION_REPORT"]).read_text()),current_source=current_source)
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0)); port = sock.getsockname()[1]
         address = "127.0.0.1:" + str(port)
@@ -184,8 +191,11 @@ def native_verification(bin_dir, directory, python):
                                 {"X-Forwarded-Proto": "https", "Accept-Language": "en-US,en"})
                 assert login[0] == 200 and "Όνομα χρήστη" in login[2].decode()
                 assert {key.lower(): value for key, value in login[1].items()}["content-language"] == "el"
-                admin = request(address, "/admin/login/", {"X-Forwarded-Proto": "https", "Accept-Language": "en"})
-                assert admin[0] == 200 and b"/static/admin/css/base." in admin[2]
+                if current_source:
+                    execute('-c',current_admin_probe(address))
+                else:
+                    admin = request(address, "/admin/login/", {"X-Forwarded-Proto": "https", "Accept-Language": "en"})
+                    assert admin[0] == 200 and b"/static/admin/css/base." in admin[2]
                 print("[S07] Stopping PostgreSQL: readiness must fail while liveness stays available.", flush=True)
                 run([bin_dir / "pg_ctl", "-D", directory / "pg-data", "-m", "fast", "-w", "stop"])
                 try:
@@ -277,6 +287,10 @@ def docker_verification(directory, *, current_source=False, image_reference=None
         login_code = "import urllib.request,json;r=urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/login/',headers={'X-Forwarded-Proto':'https','Accept-Language':'en'}));print(json.dumps({'status':r.status,'language':r.headers['Content-Language'],'greek':'Όνομα χρήστη' in r.read().decode()}))"
         assert json.loads(execute("-c", login_code).stdout) == {"status": 200, "language": "el", "greek": True}
         admin_code = "import urllib.request; r=urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/admin/login/',headers={'X-Forwarded-Proto':'https'})); assert r.status==200 and b'/static/admin/css/base.' in r.read()"
+        if current_source:
+            # S13 deliberately delegates anonymous admin login to staff login.
+            # Check that route plus the real manifest-backed admin template.
+            admin_code = current_admin_probe('127.0.0.1:8000')
         execute("-c", admin_code)
         marker = secrets.token_urlsafe(32)
         request(address, "/health/live/?api_token=" + marker)

@@ -205,7 +205,8 @@ CREATE CONSTRAINT TRIGGER s18_complete_cash AFTER INSERT ON accounting_transacti
 
 REVERSE="""
 DO $$ BEGIN
- IF EXISTS(SELECT 1 FROM accounting_financecommand) OR EXISTS(SELECT 1 FROM accounting_transaction WHERE posting_kind<>'LEGACY') THEN
+ IF EXISTS(SELECT 1 FROM accounting_financecommand) OR EXISTS(SELECT 1 FROM accounting_transaction WHERE posting_kind<>'LEGACY') OR
+    EXISTS(SELECT 1 FROM accounting_financeauditevent WHERE origin<>'legacy') THEN
   RAISE EXCEPTION 'S18 downgrade requires a reviewed ledger/audit preservation plan';
  END IF;
 END $$;

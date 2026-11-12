@@ -432,3 +432,11 @@ class PostingMigrationTests(TransactionTestCase):
         with self.assertRaises(Exception) as error:self.migrate(self.old)
         self.assertIn('preservation plan',str(error.exception));self.assertTrue(Transaction.objects.filter(pk=entry.pk).exists())
         self.assertTrue(FinanceAuditEvent.objects.filter(entry_id=entry.pk).exists())
+
+    def test_new_database_operator_audit_also_blocks_unsafe_downgrade(self):
+        self.migrate(self.current)
+        CashAccount.objects.filter(pk=self.account.pk).update(is_active=False)
+        self.assertTrue(FinanceAuditEvent.objects.filter(origin='database').exists())
+        with self.assertRaises(Exception) as error:self.migrate(self.old)
+        self.assertIn('preservation plan',str(error.exception))
+        self.assertTrue(FinanceAuditEvent.objects.filter(origin='database').exists())

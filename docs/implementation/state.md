@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S15 Prepared — client and supplier workspace**. Next step: **Complete S15 local Docker gate**.
+Updated 2026-11-12. Current step: **S15 Verified — client and supplier workspace**. Next step: **S16**.
 
 ## Current selected work
 
@@ -448,5 +448,5 @@ dependency locks and financial assertions remain intact; all full requirement
 acceptances stay Pending. S15 is unchanged.
 
 <!-- S15-RESULT -->
-Prepared: 57 workspace/migration/archival/concurrency checks; 344 total tests with 26 known financial failures and no unexpected outcomes. Docker execution: False. Greek browser and full requirement acceptance remain Pending.
+Verified: 57 workspace/migration/archival/concurrency checks; 344 total tests with 26 known financial failures and no unexpected outcomes. Docker execution: True. Greek browser and full requirement acceptance remain Pending.
 <!-- /S15-RESULT -->

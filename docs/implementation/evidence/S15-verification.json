@@ -1,14 +1,7 @@
 {
-  "mode": "native-postgresql17",
-  "status": "Prepared",
-  "docker_execution": false,
-  "postgresql_binary_version": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
-  "native_restricted_role_ddl": {
-    "all_migrations_passed": true,
-    "superuser": false,
-    "createdb": false,
-    "createrole": false
-  },
+  "mode": "docker-compose-postgresql17",
+  "status": "Verified",
+  "docker_execution": true,
   "postgresql_version_num": 170011,
   "runtime_packages": {
     "Django": "5.2.19",
@@ -47,9 +40,9 @@
     "network_verification": false,
     "scanner_self_check": "Passed: detected an ephemeral synthetic password",
     "history_scope": "All locally reachable Git refs plus the current candidate source",
-    "history_commits": 93,
-    "unique_history_blobs": 653,
-    "candidate_text_files": 303,
+    "history_commits": 46,
+    "unique_history_blobs": 657,
+    "candidate_text_files": 304,
     "binary_files_or_blobs_skipped": 6,
     "reviewed_non_secret_matches": 110,
     "unreviewed_findings": 0,
@@ -59,8 +52,8 @@
   "runtime_and_tools_locks_reproduced": true,
   "greek_catalog_verified": true,
   "step": "S15",
-  "verified_at": "2026-11-12T13:24:56+02:00",
-  "source_commit": "git:ea5b8df91f0514e91f814f4e2b156dfe244f56ef",
+  "verified_at": "2026-11-12T13:37:23+02:00",
+  "source_commit": "git:0288246be2a1f8d894778064d785ad3e2d7de57c",
   "source_dirty": false,
   "source_reference_commit": "git:ab9602592cb699684450bc4ee70438f80d30351f",
   "cloud_or_vm_changed": false,
@@ -76,5 +69,11 @@
   "s10_through_s14_evidence_preserved": true,
   "authentication_office_policy_referrer_and_dependency_locks_preserved": true,
   "workspace_and_migrations_in_production_context": true,
-  "application_context_digest": "sha256:7ee9086875d57c83f03c580822c11d9e0bbb832432aa9eb8362bb18e9ac00c5c"
+  "application_context_digest": "sha256:7ee9086875d57c83f03c580822c11d9e0bbb832432aa9eb8362bb18e9ac00c5c",
+  "native_restricted_role_ddl": {
+    "all_migrations_passed": true,
+    "superuser": false,
+    "createdb": false,
+    "createrole": false
+  }
 }

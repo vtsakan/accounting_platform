@@ -11,6 +11,8 @@ from .models import Agreement, CashAccount, Category, Entity, Office, Transactio
 MODELS = {model._meta.model_name: model for model in (Entity, CashAccount, Category, Agreement, Transaction)}
 ENTITY_FIELDS = ('id','entity_type','name','vat_number','tax_office','address','city','postal_code',
                  'phone_number','email','created_at','updated_at','office_id')
+TRANSACTION_FIELDS=('id','transaction_date','transaction_type','amount','description','remarks','transfer_id',
+    'cash_account_id','category_id','entity_id','agreement_id','created_at','updated_at','office_id')
 LINKS = (("category", "parent_id", "category"), ("agreement", "entity_id", "entity"),
          ("transaction", "cash_account_id", "cashaccount"), ("transaction", "category_id", "category"),
          ("transaction", "entity_id", "entity"), ("transaction", "agreement_id", "agreement"))
@@ -20,7 +22,7 @@ def source():
     rows, snapshot = {}, []
     for name, model in MODELS.items():
         # This is the S12 historical mapping contract, not later workspace data.
-        for row in model.objects.order_by("pk").values(*(ENTITY_FIELDS if name == 'entity' else ())):
+        for row in model.objects.order_by("pk").values(*(ENTITY_FIELDS if name == 'entity' else TRANSACTION_FIELDS if name == 'transaction' else ())):
             key = (name, row["id"])
             rows[key] = row
             original = {k: v for k, v in row.items() if k != "office_id"}

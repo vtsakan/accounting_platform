@@ -20,6 +20,19 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+S18 is selected. Read docs/implementation/financial_posting.md. Keep original
+migrations 0001–0010, S17 bound policy/review and historical evidence intact.
+S18 adds exact money, immutable cash, explicit commands/services and database-
+written append-only audit with migrations 0011/0012. The core correction API
+requires owner/password/recent MFA; its full UI is S24. Retain every financial
+expected-value assertion: 13 cases now pass, 13 known defects remain. Keep all
+old test names and the 652-case S16 matrix. Native PG proof is Prepared until
+tools/verify_s18.py --record succeeds in disposable laptop Docker. Commit its
+four generated files once, then explicitly migrate/restart the retained demo.
+Never auto-upgrade the working VM or reuse old context-pinned installers. No
+human accounts, keys, MFA or volumes are recreated. S19 dated balances follows
+this gate; all full requirement acceptances remain Pending. Below is history.
+
 <!-- S17-REVIEW-CLOSED -->
 S17 financial-policy choices D08-01–D08-10 are accepted by the product owner.
 The named accountant/office-owner review was supplied in the project

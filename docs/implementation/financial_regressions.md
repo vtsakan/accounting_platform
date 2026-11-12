@@ -1,5 +1,14 @@
 # S06 financial regression baseline
 
+Current S18 checkpoint: the correct expected-value assertions below are retained.
+13 former failures now pass (AMT-001–008, SET-001–002, STA-001–002, CAN-001);
+13 remain explicitly known (BAL-001–003, TRF-001, FLT-001–009). The two STA
+adapters now use approved linked owner/MFA reversal/replacement, preserving the
+expected balances/statuses. Historical S06 evidence remains immutable. Read
+[financial_posting.md](financial_posting.md) and S18 verification for the new
+technical scope; full application acceptance remains Pending.
+
+
 S06 captures defects in the preserved legacy financial code. A Verified S06 means the failures are reproducible and tracked; it does **not** mean financial correctness or application acceptance. S19–S24 implement the principal fixes, with supporting model constraints at S18 and report reuse at S29. No business model, form, view, route or original migration changes in S06.
 
 The prerequisite is the user's successful S05 Docker verification, pushed at `5a65a72906f7d3a5fccdcfd8aad0d0362a2bd7fa`. Its actual [S05 evidence](evidence/S05-verification.json) confirms build, migrations, tests, Greek HTTP login and persisted data after container recreation. A later port conflict on the normal development stack was resolved through the existing `WEB_PORT=8001` option; no service or database was removed.

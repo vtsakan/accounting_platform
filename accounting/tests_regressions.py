@@ -3,7 +3,7 @@
 KnownFinancialMismatch is still a failing assertion under Django's ordinary
 runner. Only the explicit accounting runner recognises its exact legacy shape.
 Legacy edit/delete probes here are diagnostics, not approved correction flows;
-S24 replaces their adapter with attributable reversal/replacement operations.
+S18 replaces those two adapters with attributable reversal/replacement operations.
 """
 
 from datetime import date
@@ -50,7 +50,8 @@ class FinancialRegressionTests(TestCase):
         staff_client_login(self.client, self.user)
 
     def movement(self, amount, direction="INCOME", *, account=None, agreement=None):
-        return Transaction.objects.create(office=self.office, transaction_date=DAY, transaction_type=direction,
+        from .finance_services import post_cash
+        return post_cash(self.user,idempotency_key=secrets.token_hex(16), transaction_date=DAY, transaction_type=direction,
             amount=Decimal(amount), description="ΔΟΚΙΜΑΣΤΙΚΗ ΚΙΝΗΣΗ S06", cash_account=account or self.source,
             category=self.category, entity=self.customer_a if direction == "INCOME" else self.supplier_a,
             agreement=agreement)
@@ -161,7 +162,8 @@ class FinancialRegressionTests(TestCase):
         before = Transaction.objects.count()
         try:
             with transaction.atomic():
-                self.movement(amount)
+                Transaction.objects.create(office=self.office,amount=Decimal(amount),transaction_date=DAY,
+                    transaction_type='INCOME',description='ΔΟΚΙΜΗ ΟΡΙΟΥ ΜΟΝΤΕΛΟΥ',cash_account=self.source)
         except (IntegrityError, ValidationError):
             pass
         assert_financial_equal(self, Transaction.objects.count() - before, 0, legacy=1)
@@ -174,11 +176,26 @@ class FinancialRegressionTests(TestCase):
     def test_model_negative(self):
         self.nonpositive_model("-1.00")
 
+    def reverse_posting(self,receipt,replacement_amount=None):
+        from django.test import Client
+        from .tests_auth_support import staff_client_login
+        from .finance_services import reverse_cash
+        password=secrets.token_urlsafe(32)
+        owner=get_user_model().objects.create_user('s18-correction-owner',password=password)
+        create_accountant_profile(user_id=owner.pk,office_id=self.office.pk,role='owner')
+        client=Client();staff_client_login(client,owner)
+        request=client.get('/office/settings/').wsgi_request
+        replacement=None if replacement_amount is None else dict(amount=replacement_amount,transaction_date=DAY,
+            transaction_type=receipt.transaction_type,cash_account=receipt.cash_account_id,category=receipt.category_id,
+            entity=receipt.entity_id,agreement=receipt.agreement_id,description='ΔΟΚΙΜΑΣΤΙΚΗ ΑΝΤΙΚΑΤΑΣΤΑΣΗ S18')
+        reverse_cash(request,entry_id=receipt.pk,password=password,reason='Διόρθωση δοκιμαστικής είσπραξης',
+            effective_date=DAY,idempotency_key=secrets.token_hex(16),replacement=replacement)
+
     @regression_case("STA-001")
     def test_reduced_receipt_reopens_agreement(self):
         receipt = self.movement("100.00", agreement=self.receivable)
         self.assertEqual(self.agreement_state(self.receivable), (Decimal("0.00"), "COMPLETED"))
-        receipt.amount = Decimal("25.00"); receipt.save()
+        self.reverse_posting(receipt,replacement_amount='25.00')
         assert_financial_equal(self, self.agreement_state(self.receivable), (Decimal("75.00"), "ACTIVE"),
                                legacy=(Decimal("75.00"), "COMPLETED"))
 
@@ -186,7 +203,7 @@ class FinancialRegressionTests(TestCase):
     def test_deleted_receipt_reopens_agreement(self):
         receipt = self.movement("100.00", agreement=self.receivable)
         self.assertEqual(self.agreement_state(self.receivable), (Decimal("0.00"), "COMPLETED"))
-        receipt.delete()
+        self.reverse_posting(receipt)
         assert_financial_equal(self, self.agreement_state(self.receivable), (Decimal("100.00"), "ACTIVE"),
                                legacy=(Decimal("100.00"), "COMPLETED"))
 

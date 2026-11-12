@@ -15,6 +15,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 from .models import AccountantProfile
 from .forms import EntityForm
+from core.locale import GreekMoneyField
 
 
 class GuardedUserChangeForm(UserChangeForm):
@@ -212,13 +213,35 @@ class CategoryAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
     list_filter = (('parent', OfficeRelatedFilter),)
     search_fields = ('name',)
 
+class TransactionPostingForm(forms.ModelForm):
+    amount=GreekMoneyField(max_digits=12,decimal_places=2,label='Ποσό')
+    import uuid
+    posting_key=forms.UUIDField(required=False,initial=uuid.uuid4,widget=forms.HiddenInput,label='Ταυτότητα καταχώρισης')
+    class Meta:
+        model=Transaction
+        fields='__all__'
+
+
 @admin.register(Transaction)
 class TransactionAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+    readonly_fields=('transfer_id',)
+    form=TransactionPostingForm
+
+    def save_model(self,request,obj,form,change):
+        from .finance_services import submission_key
+        save_for_user(obj,request.user,idempotency_key=submission_key(request,form.cleaned_data))
+
     list_display = ('transaction_date', 'description', 'amount', 'transaction_type', 'cash_account', 'category', 'entity')
     list_filter = ('transaction_type', ('cash_account', OfficeRelatedFilter), 'transaction_date')
     search_fields = ('description', 'entity__name')
     # Make the date have a nice hierarchy filter
     date_hierarchy = 'transaction_date'
+
+    def has_change_permission(self,request,obj=None):
+        return obj is None and super().has_change_permission(request,obj)
+
+    def get_readonly_fields(self,request,obj=None):
+        return tuple(f.name for f in self.model._meta.fields) if obj is not None else super().get_readonly_fields(request,obj)
 
 @admin.register(Agreement)
 class AgreementAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):

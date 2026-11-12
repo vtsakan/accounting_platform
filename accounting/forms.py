@@ -14,6 +14,9 @@ class GreekFormMixin:
     def __init__(self, *args, **kwargs):
         self.actor = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        if self.__class__.__name__ in {'IncomeForm','ExpenseForm','TransferForm'}:
+            import uuid
+            self.fields['posting_key']=forms.UUIDField(required=False,initial=uuid.uuid4,widget=forms.HiddenInput,label='Ταυτότητα καταχώρισης')
         self.office_id = require_office_profile(self.actor).office_id if self.actor is not None else None
         if isinstance(self, forms.ModelForm) and self.office_id:
             if self.instance.office_id and self.instance.office_id != self.office_id:
@@ -40,6 +43,14 @@ class GreekFormMixin:
         profile = require_office_profile(self.actor)
         if profile.office_id != self.office_id:
             raise forms.ValidationError(DENIED)
+        from .finance_money import money
+        for name in ('amount','total_amount'):
+            if name in cleaned:
+                try:cleaned[name]=money(cleaned[name])
+                except forms.ValidationError as error:self.add_error(name,error)
+        selected,agreement=cleaned.get('entity'),cleaned.get('agreement')
+        if agreement and selected and selected.pk!=agreement.entity_id:
+            self.add_error('agreement','Η συμφωνία πρέπει να ανήκει στον ίδιο συναλλασσόμενο.')
         return cleaned
 
     def save(self, commit=True):

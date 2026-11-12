@@ -3,7 +3,8 @@
 from django.db import models
 import uuid
 from django.db.models import Sum
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Round
+from decimal import Decimal
 from django.conf import settings
 from django.core.validators import RegexValidator
 from .ownership import OfficeOwned
@@ -111,7 +112,7 @@ class CounterpartyEvent(models.Model):
 class CashAccount(OfficeOwned):
     office_unique_fields = ("name",)
     name = models.CharField(max_length=100, verbose_name="Όνομα Ταμείου")
-    opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Αρχικό Υπόλοιπο")
+    opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"), verbose_name="Αρχικό Υπόλοιπο")
     is_active = models.BooleanField(default=True, verbose_name="Ενεργό")
 
     def __str__(self):
@@ -120,7 +121,8 @@ class CashAccount(OfficeOwned):
     class Meta:
         verbose_name = "Ταμείο"
         verbose_name_plural = "Ταμεία"
-        constraints = [models.UniqueConstraint(fields=["id", "office"], name="cashaccount_id_office_key"),
+        constraints = [models.CheckConstraint(condition=models.Q(opening_balance__gte=Decimal('-9999999999.99'),opening_balance__lte=Decimal('9999999999.99'),opening_balance=Round('opening_balance',2)),name='s18_cash_opening_cents',violation_error_message='Το ποσό πρέπει να είναι έγκυρο και να έχει έως δύο δεκαδικά ψηφία.'),
+                       models.UniqueConstraint(fields=["id", "office"], name="cashaccount_id_office_key"),
                        models.UniqueConstraint(fields=["office", "name"], name="cashaccount_office_name_key")]
 
 # ===================================================================
@@ -173,16 +175,17 @@ class Agreement(OfficeOwned):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Agreement with {self.entity.name} for {self.total_amount}€"
+        return f"Συμφωνία με {self.entity.name} για {self.total_amount}€"
 
     class Meta:
         verbose_name = "Agreement"
         verbose_name_plural = "Agreements"
         ordering = ['-start_date']
-        constraints = [models.UniqueConstraint(fields=["id", "office"], name="agreement_id_office_key")]
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="agreement_id_office_key"),
+            models.CheckConstraint(condition=models.Q(total_amount__gt=0,total_amount__lte=Decimal("9999999999.99"),total_amount=Round("total_amount",2)),name="s18_agreement_positive_cents",violation_error_message="Το ποσό πρέπει να είναι έγκυρο και να έχει έως δύο δεκαδικά ψηφία.")]
 
 # ===================================================================
-# Model 4: Transaction (The Core Ledger) - WITH AUTOMATION
+# Model 4: Transaction — immutable cash ledger; services own posting rules
 # ===================================================================
 class Transaction(OfficeOwned):
     class TransactionType(models.TextChoices):
@@ -190,7 +193,6 @@ class Transaction(OfficeOwned):
         EXPENSE = 'EXPENSE', 'Έξοδο'
         TRANSFER = 'TRANSFER', 'Μεταφορά'
 
-    # ... (all the fields are the same down to 'agreement') ...
     transaction_date = models.DateField(verbose_name="Ημερομηνία")
     transaction_type = models.CharField(max_length=10, choices=TransactionType.choices, verbose_name="Τύπος Κίνησης")
     amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Ποσό")
@@ -199,31 +201,33 @@ class Transaction(OfficeOwned):
     cash_account = models.ForeignKey(CashAccount, on_delete=models.PROTECT, verbose_name="Ταμείο")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Κατηγορία")
     entity = models.ForeignKey(Entity, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Πελάτης/Προμηθευτής", related_name='entity_transactions')
-    agreement = models.ForeignKey(Agreement, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions')
-    transfer_id = models.UUIDField(default=uuid.uuid4, editable=False, help_text="Used to link two transactions for internal transfers")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    agreement = models.ForeignKey(Agreement, on_delete=models.SET_NULL, null=True, blank=True, related_name='transactions', verbose_name='Συμφωνία')
+    transfer_id = models.UUIDField(default=uuid.uuid4, editable=False, verbose_name="Ομάδα μεταφοράς", help_text="Συνδέει τα δύο σκέλη εσωτερικής μεταφοράς")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Καταχωρίστηκε")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Ενημερώθηκε")
 
 
-    # --- NEW AUTOMATION LOGIC ---
-    def save(self, *args, **kwargs):
-        # First, run the standard save method to save the transaction itself
-        super().save(*args, **kwargs)
+    posting_kind = models.CharField(max_length=12,default='LEGACY',editable=False,verbose_name='Είδος καταχώρισης',choices=[
+        ('LEGACY','Αρχική/διαχειριστική εγγραφή'),('ORDINARY','Κανονική κίνηση'),
+        ('TRANSFER','Εσωτερική μεταφορά'),('REVERSAL','Αντιλογισμός')])
+    command = models.ForeignKey('accounting.FinanceCommand',on_delete=models.PROTECT,null=True,editable=False,related_name='entries',verbose_name='Οικονομική ενέργεια')
+    reversal_of = models.OneToOneField('self',on_delete=models.PROTECT,null=True,editable=False,related_name='reversal',verbose_name='Αρχική κίνηση αντιλογισμού')
 
-        # Now, check if this transaction is linked to an agreement
-        if self.agreement:
-            # If so, recalculate the balance for that agreement
-            associated_agreement = self.agreement
-            
-            total_payments = associated_agreement.transactions.aggregate(total=Sum('amount'))['total'] or 0
-            
-            remaining_balance = associated_agreement.total_amount - total_payments
+    def save(self,*args,**kwargs):
+        from .finance_money import money, IMMUTABLE
+        from django.core.exceptions import ValidationError
+        self.amount=money(self.amount)
+        if self.pk and type(self).objects.filter(pk=self.pk).exists():
+            old=type(self).objects.get(pk=self.pk)
+            fields=[f.attname for f in self._meta.concrete_fields if f.name not in {'updated_at'}]
+            if any(getattr(self,name)!=getattr(old,name) for name in fields):raise ValidationError(IMMUTABLE)
+            return  # A no-op is harmless; never re-run settlement side effects.
+        return super().save(*args,**kwargs)
 
-            # If the balance is zero or less, and the status is not already 'Completed'
-            if remaining_balance <= 0 and associated_agreement.status != 'COMPLETED':
-                # Update the status to 'Completed'
-                associated_agreement.status = Agreement.AgreementStatus.COMPLETED
-                associated_agreement.save() # Save the change to the agreement
+    def delete(self,*args,**kwargs):
+        from .finance_money import IMMUTABLE
+        from django.core.exceptions import ValidationError
+        raise ValidationError(IMMUTABLE)
 
     def __str__(self):
         return f"{self.transaction_date} - {self.description} - {self.amount}€"
@@ -232,7 +236,9 @@ class Transaction(OfficeOwned):
         ordering = ['-transaction_date', '-created_at']
         verbose_name = "Κίνηση"
         verbose_name_plural = "Κινήσεις"
-        constraints = [models.UniqueConstraint(fields=["id", "office"], name="transaction_id_office_key")]
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="transaction_id_office_key"),
+            models.CheckConstraint(condition=models.Q(amount__gt=0,amount__lte=Decimal('9999999999.99'),amount=Round('amount',2)),name='s18_transaction_positive_cents',violation_error_message='Το ποσό πρέπει να είναι έγκυρο και να έχει έως δύο δεκαδικά ψηφία.'),
+            models.CheckConstraint(condition=(models.Q(posting_kind='REVERSAL',reversal_of__isnull=False)|models.Q(posting_kind__in=['LEGACY','ORDINARY','TRANSFER'],reversal_of__isnull=True)),name='s18_reversal_reference')]
 
 
 class Office(models.Model):
@@ -290,3 +296,5 @@ class AccountantProfile(models.Model):
 
 from .auth_models import AuthenticatorDevice, AuthRateBucket, AuthSecurityState, MFARecoveryCode  # noqa: E402,F401
 from .office_models import StaffInvitation, OwnershipHandover, OfficeAuditEvent  # noqa: E402,F401
+
+from .finance_models import FinanceCommand, FinanceAuditEvent

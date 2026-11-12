@@ -16,6 +16,7 @@
                         {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
 
                         {% for field in form %}
+                            {% if field.is_hidden %}{{ field }}{% else %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
                                 {{ field }}
@@ -25,7 +26,7 @@
                                     </div>
                                 {% endif %}
                             </div>
-                        {% endfor %}
+                        {% endif %}{% endfor %}
 
                         <hr>
                         <button type="submit" class="btn btn-success">Αποθήκευση εσόδου</button>

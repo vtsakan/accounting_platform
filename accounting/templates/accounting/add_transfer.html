@@ -19,6 +19,7 @@
                         {% endif %}
 
                         {% for field in form %}
+                            {% if field.is_hidden %}{{ field }}{% else %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
                                 {{ field }}
@@ -26,7 +27,7 @@
                                     <div class="alert alert-danger mt-1 p-2">{{ field.errors|striptags }}</div>
                                 {% endif %}
                             </div>
-                        {% endfor %}
+                        {% endif %}{% endfor %}
 
                         <hr>
                         <button type="submit" class="btn btn-primary">Καταχώρηση μεταφοράς</button>

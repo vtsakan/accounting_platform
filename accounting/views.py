@@ -1,3 +1,4 @@
+from .finance_services import legacy_settlement, submission_key, post_transfer
 from . import counterparty_views
 from django.core.exceptions import ValidationError
 from .office_access import records, record, save_for_user, validate_filter_ids
@@ -139,7 +140,7 @@ def add_expense_view(request):
     validate_filter_ids(request)
     # Pre-calculate balances with the explicit output_field
     payable_agreements = records(Agreement, request.user).filter(agreement_type='PAYABLE', status='ACTIVE').annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).annotate(
         remaining_balance=F('total_amount') - F('total_payments')
     )
@@ -158,7 +159,7 @@ def add_expense_view(request):
                 transaction_type='EXPENSE'
             )
             try:
-                save_for_user(new_transaction, request.user)
+                save_for_user(new_transaction, request.user, idempotency_key=submission_key(request, form.cleaned_data))
             except ValidationError as error:
                 form.add_error(None, error)
             else:
@@ -179,7 +180,7 @@ def add_income_view(request):
     validate_filter_ids(request)
     # Pre-calculate balances with the explicit output_field
     receivable_agreements = records(Agreement, request.user).filter(agreement_type='RECEIVABLE', status='ACTIVE').annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).annotate(
         remaining_balance=F('total_amount') - F('total_payments')
     )
@@ -198,7 +199,7 @@ def add_income_view(request):
                 transaction_type='INCOME'
             )
             try:
-                save_for_user(new_transaction, request.user)
+                save_for_user(new_transaction, request.user, idempotency_key=submission_key(request, form.cleaned_data))
             except ValidationError as error:
                 form.add_error(None, error)
             else:
@@ -258,14 +259,14 @@ def summary_report_view(request):
     # --- FINAL CORRECTED AGREEMENT ANALYTICS ---
     receivable_agreements = records(Agreement, request.user).filter(agreement_type='RECEIVABLE', status='ACTIVE')
     total_receivable = receivable_agreements.annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).aggregate(
         total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
     )['total']
 
     payable_agreements = records(Agreement, request.user).filter(agreement_type='PAYABLE', status='ACTIVE')
     total_payable = payable_agreements.annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).aggregate(
         total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
     )['total']
@@ -299,7 +300,7 @@ def edit_entity_view(request, pk):
 def agreement_list_view(request):
     # This query now calculates the remaining balance for every agreement
     agreements = records(Agreement, request.user).annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).annotate(
         remaining_balance=F('total_amount') - F('total_payments')
     )
@@ -318,7 +319,7 @@ def agreement_detail_view(request, pk):
     transactions = agreement.transactions.filter(office_id=agreement.office_id).order_by('-transaction_date')
 
     # Calculate the sum of all payments made against this agreement
-    total_payments = transactions.aggregate(total=Sum('amount'))['total'] or 0
+    total_payments = transactions.aggregate(total=legacy_settlement())['total']
 
     # Calculate the remaining balance
     remaining_balance = agreement.total_amount - total_payments
@@ -370,20 +371,6 @@ def edit_agreement_view(request, pk):
         if form.is_valid():
             updated_agreement = form.save(commit=False)
 
-            # We must specify the output_field in this calculation
-            total_payments = updated_agreement.transactions.aggregate(
-                total=Coalesce(Sum('amount'), Value(0), output_field=DecimalField())
-            )['total']
-            # --- END OF FIX ---
-
-            remaining_balance = updated_agreement.total_amount - total_payments
-
-            if updated_agreement.status != 'CANCELLED':
-                if remaining_balance <= 0:
-                    updated_agreement.status = Agreement.AgreementStatus.COMPLETED
-                else:
-                    updated_agreement.status = Agreement.AgreementStatus.ACTIVE
-
             try:
                 save_for_user(updated_agreement, request.user)
             except ValidationError as error:
@@ -409,36 +396,14 @@ from .forms import TransferForm # <-- Add TransferForm to your form imports
 
 # ADD THIS NEW VIEW
 @login_required
-@transaction.atomic # This is a decorator that ensures the two transactions are created together or not at all
 def add_transfer_view(request):
-    if request.method == 'POST':
-        form = TransferForm(request.POST, user=request.user)
-        if form.is_valid():
-            data = form.cleaned_data
-            transfer_uuid = uuid.uuid4() # A unique ID for this transfer
-
-            # Create the EXPENSE transaction from the source account
-            Transaction.objects.create(office_id=require_office_profile(request.user).office_id,
-                transaction_date=data['transfer_date'],
-                description=f"Transfer to {data['to_account'].name}: {data['description']}",
-                amount=data['amount'],
-                cash_account=data['from_account'],
-                transaction_type=Transaction.TransactionType.EXPENSE,
-                transfer_id=transfer_uuid
-            )
-
-            # Create the INCOME transaction to the destination account
-            Transaction.objects.create(office_id=require_office_profile(request.user).office_id,
-                transaction_date=data['transfer_date'],
-                description=f"Transfer from {data['from_account'].name}: {data['description']}",
-                amount=data['amount'],
-                cash_account=data['to_account'],
-                transaction_type=Transaction.TransactionType.INCOME,
-                transfer_id=transfer_uuid
-            )
-
-            return redirect('transaction-list')
-    else:
-        form = TransferForm(user=request.user, )
-
-    return render(request, 'accounting/add_transfer.html', {'form': form})
+    form=TransferForm(request.POST if request.method=='POST' else None,user=request.user)
+    if request.method=='POST' and form.is_valid():
+        data=form.cleaned_data
+        try:
+            post_transfer(request.user,from_account=data['from_account'],to_account=data['to_account'],
+                amount=data['amount'],transfer_date=data['transfer_date'],description=data['description'],
+                idempotency_key=submission_key(request,data))
+        except ValidationError as error:form.add_error(None,error)
+        else:return redirect('transaction-list')
+    return render(request,'accounting/add_transfer.html',{'form':form})

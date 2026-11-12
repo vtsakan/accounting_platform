@@ -525,3 +525,17 @@ maintenance process are separate operator realms; neither supplies staff office
 authority. D02 portal/grants and D08 financial semantics retain their existing
 Pending decisions. G1 is recorded as a scoped technical foundation check;
 client/browser and full requirement acceptance are not inferred from it.
+
+
+### S18 implementation of the accepted D08 scope
+
+The S17 product-owner acceptance and declared named accountant/owner review
+already authorize D08-06/08/10 for the current cash foundation. S18 adds the
+owner-only `finance.reverse` capability with password and recent real MFA,
+exact cents and reason, retained originals and atomic database audit. Read/post
+roles remain as selected at S14. No public human name or secret is introduced.
+This is the core service boundary; opening-date administration, allocations,
+paired transfer correction, closed-period management and the complete
+lifecycle/correction UI remain their S19/S21–S24 steps. The historical S14 role
+snapshot remains unchanged; the current implementation extension is recorded
+here and in financial_posting.md. Full release acceptance is still Pending.

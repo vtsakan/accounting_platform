@@ -470,10 +470,15 @@ class BoundaryAdminTests(BoundaryFixtures,TestCase):
         archive_counterparty(self.member,other.pk,version=0,archive=True)
         client=self.client_for(self.staff)
         response=client.get(reverse('admin:accounting_transaction_change',args=[self.movement_a.pk]))
+        self.assertEqual(response.status_code,200)
         form=response.context['adminform'].form
-        self.assertIn(self.entity_a.pk,form.fields['entity'].queryset.values_list('pk',flat=True))
-        self.assertNotIn(other.pk,form.fields['entity'].queryset.values_list('pk',flat=True))
-        self.assertNotIn(self.entity_b.pk,form.fields['entity'].queryset.values_list('pk',flat=True))
+        self.assertNotIn('entity',form.fields)  # Posted originals are wholly read-only.
+        self.assertContains(response,self.entity_a.name)
+        self.assertNotContains(response,other.name)
+        self.assertNotContains(response,self.entity_b.name)
+        self.assertEqual(client.post(reverse('admin:accounting_transaction_change',args=[self.movement_a.pk]),
+            {'entity':other.pk,'amount':'999.00'}).status_code,403)
+        self.movement_a.refresh_from_db();self.assertEqual(self.movement_a.entity_id,self.entity_a.pk)
         mark('admin-history','transaction','limited-staff','only-existing-archived-link')
 
 

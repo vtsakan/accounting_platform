@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "S06 synthetic legacy regression baseline; known failures remain unfixed",
+  "scope": "S06 correct financial contracts retained; S18 posting protections/correction adapters fix 13 cases. Other known defects remain visible.",
   "cases": [
     {
       "case_id": "BAL-001",
@@ -61,33 +61,35 @@
       "case_id": "SET-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_income",
       "issue_id": "LEG-005",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-AGR-02"
       ],
       "fix_steps": [
         "S23"
       ],
-      "description": "A settlement for counterparty B must not reduce counterparty A obligation"
+      "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+      "fixed_in": "S18"
     },
     {
       "case_id": "SET-002",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_expense",
       "issue_id": "LEG-005",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-AGR-02"
       ],
       "fix_steps": [
         "S23"
       ],
-      "description": "A settlement for counterparty B must not reduce counterparty A obligation"
+      "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_zero",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -95,13 +97,14 @@
       "fix_steps": [
         "S20"
       ],
-      "description": "Reject zero income without financial writes"
+      "description": "Reject zero income without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-002",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_negative",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -109,13 +112,14 @@
       "fix_steps": [
         "S20"
       ],
-      "description": "Reject negative income without financial writes"
+      "description": "Reject negative income without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-003",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_zero",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -123,13 +127,14 @@
       "fix_steps": [
         "S20"
       ],
-      "description": "Reject zero expense without financial writes"
+      "description": "Reject zero expense without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-004",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_negative",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -137,13 +142,14 @@
       "fix_steps": [
         "S20"
       ],
-      "description": "Reject negative expense without financial writes"
+      "description": "Reject negative expense without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-005",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_zero",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-04",
         "QR-03"
@@ -151,13 +157,14 @@
       "fix_steps": [
         "S21"
       ],
-      "description": "Reject zero transfer without financial writes"
+      "description": "Reject zero transfer without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-006",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_negative",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-04",
         "QR-03"
@@ -165,13 +172,14 @@
       "fix_steps": [
         "S21"
       ],
-      "description": "Reject negative transfer without financial writes"
+      "description": "Reject negative transfer without financial writes",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-007",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_zero",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -180,13 +188,14 @@
         "S18",
         "S20"
       ],
-      "description": "Reject zero ordinary cash amount at the model/database boundary"
+      "description": "Reject zero ordinary cash amount at the model/database boundary",
+      "fixed_in": "S18"
     },
     {
       "case_id": "AMT-008",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_negative",
       "issue_id": "LEG-006",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-02",
         "QR-03"
@@ -195,13 +204,14 @@
         "S18",
         "S20"
       ],
-      "description": "Reject negative ordinary cash amount at the model/database boundary"
+      "description": "Reject negative ordinary cash amount at the model/database boundary",
+      "fixed_in": "S18"
     },
     {
       "case_id": "STA-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_reduced_receipt_reopens_agreement",
       "issue_id": "LEG-007",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-AGR-04",
         "UR-CSH-07"
@@ -210,13 +220,15 @@
         "S23",
         "S24"
       ],
-      "description": "Legacy receipt change from 100 to 25 leaves 75 outstanding and must reopen settlement status"
+      "description": "Legacy receipt change from 100 to 25 leaves 75 outstanding and must reopen settlement status",
+      "fixed_in": "S18",
+      "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained."
     },
     {
       "case_id": "STA-002",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_deleted_receipt_reopens_agreement",
       "issue_id": "LEG-007",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-AGR-04",
         "UR-CSH-07"
@@ -225,13 +237,15 @@
         "S23",
         "S24"
       ],
-      "description": "Legacy receipt deletion leaves 100 outstanding and must reopen settlement status"
+      "description": "Legacy receipt deletion leaves 100 outstanding and must reopen settlement status",
+      "fixed_in": "S18",
+      "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained."
     },
     {
       "case_id": "CAN-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_transaction_resave_preserves_cancellation",
       "issue_id": "LEG-008",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-AGR-04",
         "UR-AGR-05"
@@ -239,7 +253,8 @@
       "fix_steps": [
         "S24"
       ],
-      "description": "Resaving a linked receipt must not change explicit CANCELLED status"
+      "description": "Resaving a linked receipt must not change explicit CANCELLED status",
+      "fixed_in": "S18"
     },
     {
       "case_id": "FLT-001",

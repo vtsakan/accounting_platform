@@ -58,7 +58,7 @@ def record(model, user, key):
 
 
 @transaction.atomic
-def save_for_user(instance, user):
+def save_for_user(instance, user, *, idempotency_key=None):
     if type(instance) not in MODELS:
         raise PermissionDenied("Δεν έχετε πρόσβαση σε αυτή την εγγραφή.")
     office = locked_office(user, model_capability(type(instance), write=True))
@@ -67,7 +67,22 @@ def save_for_user(instance, user):
     instance.office_id = office.pk
     try:
         with transaction.atomic():
-            instance.save()
+            if isinstance(instance, Transaction):
+                if instance.pk:
+                    instance.save()
+                    return instance
+                from .finance_services import post_cash
+                import uuid
+                saved=post_cash(user,idempotency_key=idempotency_key or str(uuid.uuid4()),
+                    amount=instance.amount,transaction_date=instance.transaction_date,transaction_type=instance.transaction_type,
+                    cash_account=instance.cash_account_id,category=instance.category_id,entity=instance.entity_id,
+                    agreement=instance.agreement_id,description=instance.description,remarks=instance.remarks)
+                instance.__dict__.update(saved.__dict__)
+            elif isinstance(instance,(CashAccount,Category,Agreement)):
+                from .finance_services import save_master
+                save_master(instance,user)
+            else:
+                instance.save()
     except IntegrityError as error:
         if getattr(getattr(error.__cause__, 'diag', None), 'constraint_name', None) == 's15_archived_work':
             from .counterparty_services import ARCHIVED

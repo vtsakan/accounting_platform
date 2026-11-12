@@ -314,7 +314,8 @@ class OwnershipMigrationTests(TransactionTestCase):
         apps.get_model("accounting", "Transaction").objects.create(transaction_date=DAY, transaction_type="INCOME", amount="12.34", description="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΚΙΝΗΣΗ", cash_account=account, category=category, entity=entity, agreement=agreement)
         state = self.migrate_to("0004_office_ownership_nullable")
         previous = MODELS.copy()
-        MODELS['entity'] = state.get_model('accounting', 'Entity')
+        for name in ('entity','transaction'):
+            MODELS[name] = state.get_model('accounting', name)
         self.addCleanup(MODELS.update, previous)
 
     def tearDown(self):
@@ -371,7 +372,7 @@ class OwnershipMigrationTests(TransactionTestCase):
 
     def test_partial_backfill_failure_rolls_back_all_tables(self):
         document = self.mapping()
-        with patch.object(Transaction.objects, "filter", side_effect=RuntimeError("Synthetic backfill failure")):
+        with patch.object(MODELS["transaction"].objects, "filter", side_effect=RuntimeError("Synthetic backfill failure")):
             with self.assertRaises(RuntimeError):
                 backfill(document, apply=True)
         self.assertTrue(all(model.objects.get().office_id is None for model in MODELS.values()))

@@ -102,6 +102,9 @@ def validate_active_references(instance):
     model = instance._meta.model_name
     if model not in {"agreement", "transaction"}:
         return
+    if model == 'transaction' and getattr(instance,'posting_kind',None)=='REVERSAL':
+        return  # S18 SQL guard verifies the exact retained original and command.
+
     fields = ["entity_id"] + (["agreement_id"] if model == "transaction" else [])
     if instance.pk:
         old = type(instance).objects.filter(pk=instance.pk).values(*fields).first()

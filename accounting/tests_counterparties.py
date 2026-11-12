@@ -371,7 +371,10 @@ class CounterpartyWorkspaceTests(TestCase):
 
     def test_historical_reference_stays_valid_but_new_link_to_archive_is_denied(self):
         agreement,payment=self.history();self.archive()
-        Transaction.objects.filter(pk=payment.pk).update(description='ΔΟΚΙΜΑΣΤΙΚΟ ΙΣΤΟΡΙΚΟ')
+        original_description=payment.description
+        with self.assertRaises(IntegrityError),transaction.atomic():
+            Transaction.objects.filter(pk=payment.pk).update(description='ΔΟΚΙΜΑΣΤΙΚΟ ΙΣΤΟΡΙΚΟ')
+        payment.refresh_from_db();self.assertEqual(payment.description,original_description)
         other=Entity.objects.create(office_id=A,entity_type='CUSTOMER',name='ΔΟΚΙΜΑΣΤΙΚΟ ΕΝΕΡΓΟ')
         entry=Transaction.objects.create(office_id=A,entity=other,cash_account=self.cash,transaction_type='INCOME',
             description='ΔΟΚΙΜΗ',amount='1.00',transaction_date=DAY)

@@ -174,6 +174,16 @@ class PostingContractTests(Fixtures,TestCase):
         serialized+=json.dumps(list(FinanceCommand.objects.values()),default=str)
         self.assertNotIn(canary,serialized);self.assertIn('[REDACTED]',serialized)
         self.assertEqual(Transaction.objects.get(pk=entry.pk).description,canary) # Original user content retained.
+    def test_sql_cash_date_uses_greek_day_independent_of_session_timezone(self):
+        today=timezone.localdate()
+        for zone in ('Pacific/Kiritimati','Etc/GMT+12'):
+            with self.subTest(zone=zone),transaction.atomic():
+                with connection.cursor() as cursor:cursor.execute("SELECT set_config('TimeZone',%s,true)",[zone])
+                entry=self.sql_clone(transaction_date=today)
+                self.assertEqual(entry.transaction_date,today)
+                with self.assertRaises(IntegrityError),transaction.atomic():
+                    self.sql_clone(transaction_date=today+timedelta(days=1))
+
     def test_owner_history_reader_scopes_office_and_denies_accountant(self):
         entry=self.post();events=finance_history(self.owner,target_model='transaction',target_id=entry.pk)
         self.assertEqual([e.pk for e in events],[entry.finance_audit.pk])

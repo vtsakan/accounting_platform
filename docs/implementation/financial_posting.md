@@ -47,7 +47,8 @@ JSON values are decimal **strings** to prevent downstream floating-point decode.
 
 References use the existing composite office foreign keys plus command/actor/
 reversal/audit composite links. New SQL cash inserts also require a valid
-cash direction, date, account and matching settlement target. Ordinary updates
+cash direction, Greek business date, account and matching settlement target.
+The SQL day is explicitly Europe/Athens, independently of the session timezone. Ordinary updates
 and deletes of every cash row, including historical LEGACY rows and free text,
 are denied by PostgreSQL. A harmless model re-save returns without a write;
 it never re-runs a settlement side effect. Django admin displays posted rows

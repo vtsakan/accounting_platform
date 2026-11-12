@@ -112,7 +112,7 @@ BEGIN
  IF TG_OP<>'INSERT' THEN
    RAISE EXCEPTION 'Posted cash is immutable; append a linked reversal' USING ERRCODE='23514',CONSTRAINT='s18_cash_immutable';
  END IF;
- IF NEW.transaction_type NOT IN ('INCOME','EXPENSE') OR NEW.transaction_date>CURRENT_DATE THEN
+ IF NEW.transaction_type NOT IN ('INCOME','EXPENSE') OR NEW.transaction_date>(CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Athens')::date THEN
    RAISE EXCEPTION 'Invalid cash type or future date' USING ERRCODE='23514',CONSTRAINT='s18_cash_input';
  END IF;
  IF NEW.command_id IS NOT NULL THEN

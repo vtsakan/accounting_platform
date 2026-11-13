@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-13. Current step: **S18 Verified — financial posting foundation**. Next step: **S19 dated cash accounts and balances**.
+Updated 2026-11-13. Current step: **S19 Prepared — dated cash accounts and categories**. Next step: **Complete S19 Docker gate**.
 
 ## Current selected work
 
@@ -486,3 +486,7 @@ Verified: 17 operation contracts, 10 explicit D08 decisions, 20 worked examples 
 <!-- S18-RESULT -->
 Verified: 46 S18 tests; 428 total; 13 corrected known cases, 13 still reproduced, no unexpected outcomes. The 652-case office boundary is retained. Docker execution: True. Core correction uses owner/password/recent MFA; correction UI, dated opening/balance/report/allocation work remain later steps. No existing demo/VM migration performed.
 <!-- /S18-RESULT -->
+
+<!-- S19-RESULT -->
+Prepared: 67 S19 tests; 495 total; BAL-001–003 corrected, 10 known failures still reproduced, no unexpected outcomes. All 784 current boundary cases passed, retaining the original 652. Docker execution: False. Legacy amounts and history remain; opening dates require explicit owner/password/recent-MFA review. Signed adjustments are immutable and do not create operating cash. No existing demo/VM migration performed by verification.
+<!-- /S19-RESULT -->

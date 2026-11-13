@@ -350,6 +350,7 @@ class WorkspaceHTTPTests(Support,TestCase):
         values={'amount':'100,00','effective_date':DAY.isoformat(),'reason':'Αρχική δοκιμαστική επιβεβαίωση','review_reference':'Δοκιμαστική κατάσταση',
             'idempotency_key':str(form['idempotency_key'].value()),'action':'preview'}
         before=self.snapshot();response=client.post(url,values);self.assertEqual(response.status_code,200);self.assertIsNotNone(response.context['proposal'])
+        self.assertContains(response,'0,00 €');self.assertIsInstance(response.context['proposal']['excluded_net_amount'],Decimal)
         self.assertEqual(self.snapshot(),before)
         values.update(action='confirm',password=self.password,acknowledged='on',review_token=response.context['form']['review_token'].value())
         response=client.post(url,values);self.assertEqual(response.status_code,302)

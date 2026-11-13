@@ -1,4 +1,5 @@
 """Greek staff account/category screens with explicit version and owner proof."""
+from decimal import Decimal
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
@@ -87,7 +88,10 @@ def account_opening(request,pk):
                         reason=data['reason'],review_reference=data['review_reference'],password=data['password'],idempotency_key=str(data['idempotency_key']),acknowledged=data['acknowledged'])
                     messages.success(request,'Το αρχικό υπόλοιπο και η ημερομηνία εγκρίθηκαν.')
                     return redirect('cash-account-detail',pk=pk)
-                proposal,token=preview_opening(request.user,account_id=pk,amount=data['amount'],effective_date=data['effective_date'])
+                plan,token=preview_opening(request.user,account_id=pk,amount=data['amount'],effective_date=data['effective_date'])
+                # Keep JSON-bound signed values separate from exact money used
+                # by the strict Greek currency renderer.
+                proposal={**plan,'excluded_net_amount':Decimal(plan['inventory']['excluded_net'])}
                 values=request.POST.copy();values['review_token']=token;values['password']='';form=OpeningForm(values)
             except ValidationError as error:form.add_error(None,error)
             except DatabaseError as error:

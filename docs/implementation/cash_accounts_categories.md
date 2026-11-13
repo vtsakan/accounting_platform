@@ -131,6 +131,9 @@ bootstrap. The installation backup is retained under
 `~/.config/totalaccounting/local-demo-backups/s18-before-s19.*`.
 
 ```bash
+bash <<'SH'
+set -euo pipefail
+cd ~/accountant_cloud/accounting_v5/accounting-platform
 python3 - <<'PY'
 import json
 from pathlib import Path
@@ -142,6 +145,7 @@ WEB_PORT=8003 docker compose -p accounting-client-demo run --rm --no-deps \
   --entrypoint python web manage.py migrate --noinput </dev/null
 WEB_PORT=8003 docker compose -p accounting-client-demo up -d --no-deps web </dev/null
 WEB_PORT=8003 docker compose -p accounting-client-demo ps </dev/null
+SH
 ```
 
 Sign in with the existing owner at `http://localhost:8003/`. For each old cash
@@ -163,3 +167,12 @@ Manual Greek desktop/mobile/keyboard acceptance, real dataset financial and
 recovery targets, complete closed-period administration and all 85 full
 requirements remain **Pending**. S20 is eligible after the laptop Docker S19
 gate. Stop after S19; do not fix unrelated report/filter defects in this step.
+
+For implementation environments with slow temporary filesystem sync, native
+verification accepts `--native-fast-io` **only** alongside `--native-bin`. It
+changes fsync/synchronous_commit only in the newly created disposable synthetic
+cluster, records `native_io` explicitly and still runs real PostgreSQL commits,
+constraints, independent connections and the full suite. It does not establish
+power-loss/crash durability. The default native and laptop Docker modes retain
+their normal durability settings; no retained database is configured by this
+option. S09/S10 recovery evidence remains unchanged.

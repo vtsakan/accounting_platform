@@ -9,7 +9,7 @@
 {% if proposal %}<section class="alert alert-warning" aria-label="Έλεγχος ορίου αρχικού υπολοίπου"><h2 class="h4">Ελέγξτε πριν από την έγκριση</h2>
 <p>Ποσό: {{ form.amount.value }} · Ημερομηνία: {{ form.effective_date.value }}</p>
 <p>Προγενέστερες κινήσεις που εξαιρούνται: <strong>{{ proposal.inventory.excluded_count }}</strong>. Κινήσεις από την έναρξη και μετά: <strong>{{ proposal.inventory.included_count }}</strong>.</p>
-<p>Καθαρό ποσό προγενέστερων κινήσεων: {{ proposal.inventory.excluded_net|euro }}. Πρώτη διατηρημένη κίνηση: {% if proposal.inventory.earliest %}{{ proposal.inventory.earliest }}{% else %}Δεν υπάρχουν κινήσεις{% endif %}.</p>
+<p>Καθαρό ποσό προγενέστερων κινήσεων: {{ proposal.excluded_net_amount|euro }}. Πρώτη διατηρημένη κίνηση: {% if proposal.inventory.earliest %}{{ proposal.inventory.earliest }}{% else %}Δεν υπάρχουν κινήσεις{% endif %}.</p>
 <p>Η προεπισκόπηση ισχύει για 15 λεπτά. Η επιβεβαίωση απαιτεί τον κωδικό σας και MFA των τελευταίων πέντε λεπτών.</p></section>{% endif %}
 <form method="post" class="card card-body">{% csrf_token %}
 {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}

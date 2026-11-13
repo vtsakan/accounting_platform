@@ -158,6 +158,23 @@ def verification(manage,read_suite,read_boundary):
 def native(args, directory):
     with native_database(args.native_bin, directory) as (environment, version):
         environment['ACCOUNTING_BOUNDARY_REPORT']=str(directory/'boundary.jsonl')
+        if args.native_fast_io:
+            # This newly created synthetic cluster is discarded after the run.
+            # Logical commit/constraint/isolation tests remain PostgreSQL tests;
+            # no power-loss or crash durability is claimed with this option.
+            run([args.python,'-c','''import os,time,psycopg
+def connect():
+    return psycopg.connect(dbname=os.environ['DB_NAME'],user=os.environ['DB_USER'],password=os.environ['DB_PASSWORD'],host=os.environ['DB_HOST'],port=os.environ['DB_PORT'],autocommit=True)
+with connect() as c:
+    c.execute("ALTER SYSTEM SET fsync='off'")
+    c.execute("ALTER SYSTEM SET synchronous_commit='off'")
+    c.execute('SELECT pg_reload_conf()')
+for attempt in range(30):
+    with connect() as c:
+        if c.execute('SHOW fsync').fetchone()[0]=='off' and c.execute('SHOW synchronous_commit').fetchone()[0]=='off':break
+    time.sleep(.05)
+else:raise RuntimeError('Disposable native I/O settings were not applied')
+'''],environment=environment)
         setup = '''import os, psycopg
 with psycopg.connect(dbname=os.environ["DB_NAME"], user=os.environ["DB_USER"], password=os.environ["DB_PASSWORD"],
                      host=os.environ["DB_HOST"], port=os.environ["DB_PORT"], autocommit=True) as conn:
@@ -176,6 +193,8 @@ with psycopg.connect(dbname=os.environ["DB_NAME"], user=os.environ["DB_USER"], p
         result = verification(manage, lambda: json.loads(Path(environment["ACCOUNTING_REGRESSION_REPORT"]).read_text()),
             lambda: [json.loads(line) for line in Path(environment["ACCOUNTING_BOUNDARY_REPORT"]).read_text().splitlines()])
     return {"mode": "native-postgresql17", "status": "Prepared", "docker_execution": False,
+            "native_io": {"fsync": not args.native_fast_io, "synchronous_commit": not args.native_fast_io,
+                "scope": "Disposable synthetic cluster; no power-loss/crash durability proof"},
             "postgresql_binary_version": version, "native_restricted_role_ddl": {
                 "all_migrations_passed": True, "superuser": False, "createdb": False, "createrole": False}, **result}
 
@@ -272,11 +291,14 @@ def record(report,rows=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native-bin", type=Path)
+    parser.add_argument("--native-fast-io", action="store_true", help="Only for the disposable native cluster: no fsync/synchronous commit; no crash durability proof")
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
     parser.add_argument("--tools-python", type=Path, help="Reuse an existing pinned maintenance environment")
     parser.add_argument("--record", action="store_true")
     args = parser.parse_args()
     try:
+        if args.native_fast_io and not args.native_bin:
+            raise RuntimeError("--native-fast-io requires --native-bin; Docker and retained environments are never altered by this option")
         if args.record and subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip():
             raise RuntimeError("Commit the candidate source before recording its verification")
         protected = source_checks()

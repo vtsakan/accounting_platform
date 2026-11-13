@@ -20,6 +20,22 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
+<!-- S17-REVIEW-CLOSED -->
+S17 financial-policy choices D08-01–D08-10 are accepted by the product owner.
+The named accountant/office-owner review was supplied in the project
+conversation and recorded privately against the unchanged ACC-FIN-001
+v0.1 policy/example/document digests. Read evidence/S17-verification.json
+and evidence/S17-product-owner-acceptance.json. This is a declared human
+review, not independent identity verification or application acceptance.
+S17 is Verified for this scope; S18 is next when selected. D08-10 records
+owner correction rights with recent MFA; actual capabilities/services
+remain to be implemented at S18/S24. All 26 known financial failures,
+85 full acceptances, original migrations/locks and S16/G1 proof remain
+unchanged. Keep the local demo, accounts/MFA and VM intact. Names stay
+in ignored private/; never add the named review file to Git.
+<!-- /S17-REVIEW-CLOSED -->
+The checkpoints below are historical.
+
 S17 is selected from the actual pushed S16 Docker/G1 head
 e6fde507f634a0ccd2de80b197bfd883d0ab7ac9. S16 is Verified: 382 tests,
 356 passes, 26 exact known financial failures and 652 passing boundary cases.

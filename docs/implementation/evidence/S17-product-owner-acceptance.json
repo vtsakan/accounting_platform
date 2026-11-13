@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "step": "S17",
+  "document_id": "ACC-FIN-001",
+  "version": "0.1",
+  "accepted_by": "vtsakan",
+  "declared_capacity": "Product owner",
+  "accepted_on": "2026-11-12",
+  "source": "Explicit policy acceptance and named-reviewer response in the Accounting app project conversation",
+  "source_statement": "συμφωνω με το review policy.",
+  "bindings": {
+    "policy_sha256": "sha256:9390a211fc76e545ec40114abc6bdcc89b593931bb57da6a51de47b64a38f798",
+    "examples_sha256": "sha256:290ab374c0e60aa6995ac129e8f9ae60935afcd15134ceb3681f9a019b82a0d8",
+    "documents_sha256": "sha256:62a69ac614d631a535a07ac98ed7b072384db8c41b88d075a76ae766d122db11"
+  },
+  "accepted_choices": [
+    {
+      "id": "D08-01",
+      "selected_option": "start-of-day-opening"
+    },
+    {
+      "id": "D08-02",
+      "selected_option": "calendar-month-reviewed-first-period"
+    },
+    {
+      "id": "D08-03",
+      "selected_option": "explicit-allocation-confirmation"
+    },
+    {
+      "id": "D08-04",
+      "selected_option": "separate-credit-and-advance"
+    },
+    {
+      "id": "D08-05",
+      "selected_option": "gross-office-ledger-only"
+    },
+    {
+      "id": "D08-06",
+      "selected_option": "eur-line-half-up"
+    },
+    {
+      "id": "D08-07",
+      "selected_option": "prospective-terms-retain-posted-debt"
+    },
+    {
+      "id": "D08-08",
+      "selected_option": "dated-full-reversal-and-replacement"
+    },
+    {
+      "id": "D08-09",
+      "selected_option": "separate-lifecycle-and-settlement"
+    },
+    {
+      "id": "D08-10",
+      "selected_option": "owner-corrections-recent-mfa"
+    }
+  ],
+  "accountant_and_office_owner_recorded": true,
+  "same_person_for_both_roles": true,
+  "named_review_file": "Ignored private/S17-financial-review.json",
+  "named_review_sha256": "sha256:d5126b8b31483ab3178348e8c40cc818e4f7787bd610063907cdaa8803546562",
+  "recording_basis": "The user supplied one name when asked for accountant and office-owner reviewers, with the same-person option explicitly offered.",
+  "attestation": "User-declared review; no independent identity, qualification or signature verification claimed.",
+  "s17_completion": "Verified for the bound financial-policy snapshot",
+  "application_financial_acceptance": "Pending",
+  "application_or_vm_changed": false
+}

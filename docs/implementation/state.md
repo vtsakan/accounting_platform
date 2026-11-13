@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S17 Prepared — financial policy**. Next step: **Record D08 review before S18**.
+Updated 2026-11-12. Current step: **S17 Verified — financial policy**. Next step: **S18 for approved operations only**.
 
 ## Current selected work
 
@@ -16,12 +16,13 @@ choices, 20 worked examples and 16 future denied-case specifications. The
 reference checker validates 65 exact-decimal calculations; it does not execute
 financial operations or replace PostgreSQL/concurrency tests at later steps.
 
-D08 remains Pending accountant/office-owner review. Source, migrations, locks,
-financial assertions, local demo/accounts/MFA and the VM are retained. The
-review template binds the exact policy/example/document digests and keeps
-named review records in ignored private/ or outside Git. All full requirement
-acceptances remain Pending. S18 is blocked until the required reviewed choices
-are recorded; a Prepared reference check is not that approval.
+D08 choices D08-01–D08-10 are accepted by the product owner and the named
+accountant/office-owner review is recorded against the unchanged policy,
+examples and document hashes. Names remain in the ignored private review;
+the public receipt records its digest and declared review status. S17 is
+Verified for this policy scope. S18 may implement the approved operations.
+All 85 full application acceptances and the 26 financial fixes remain
+Pending; no application/database/VM change is made by this completion.
 
 ## Historical selected work through S16
 
@@ -479,5 +480,5 @@ Verified: 38 integrated tests; 652 explicit boundary cases; 382 total tests with
 <!-- /S16-RESULT -->
 
 <!-- S17-RESULT -->
-Prepared: 17 operation contracts, 10 explicit D08 decisions, 20 worked examples and 65 exact-decimal arithmetic checks; 16 denied specifications are for future application tests. Application/database/cloud execution this step: none. D08 review: Pending. All full requirement acceptances remain Pending.
+Verified: 17 operation contracts, 10 explicit D08 decisions, 20 worked examples and 65 exact-decimal arithmetic checks; 16 denied specifications are for future application tests. Application/database/cloud execution this step: none. D08 review: Approved. All full requirement acceptances remain Pending.
 <!-- /S17-RESULT -->

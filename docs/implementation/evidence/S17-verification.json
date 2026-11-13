@@ -1,9 +1,9 @@
 {
   "step": "S17",
-  "status": "Prepared",
+  "status": "Verified",
   "mode": "policy-document-and-reference-arithmetic",
-  "verified_at": "2026-11-12T16:44:21+02:00",
-  "source_commit": "git:1c9b2b6706d092c13722a8b63fb2af8c3779e82d",
+  "verified_at": "2026-11-12T17:21:27+02:00",
+  "source_commit": "git:0870a08e9ff43b5380957084c511d0679b9825c3",
   "source_dirty": false,
   "source_reference_commit": "git:e6fde507f634a0ccd2de80b197bfd883d0ab7ac9",
   "s16_status": "Verified",
@@ -33,7 +33,7 @@
     "all_matched": true,
     "rounding": "Proposed ROUND_HALF_UP per derived line; not an approved tax rule",
     "evidence": "docs/implementation/evidence/S17-reference-checks.csv",
-    "sha256": "sha256:c3c06dd37aa553141219ee4839f4a9341706fe1e247b174e34edf542910ba34c"
+    "sha256": "sha256:1ceff905b4bf0f60c04aec9be3c16ba2a1e5b9072f0f0c42128dc517e5f1beff"
   },
   "operation_contracts": 17,
   "pending_or_bound_decisions": 10,
@@ -52,20 +52,25 @@
     "changed-policy-choice"
   ],
   "review": {
-    "status": "Pending",
-    "blocked_decisions": [
-      "D08-01",
-      "D08-02",
-      "D08-03",
-      "D08-04",
-      "D08-05",
-      "D08-06",
-      "D08-07",
-      "D08-08",
-      "D08-09",
-      "D08-10"
-    ],
-    "reason": "Named accountant/office-owner review not recorded"
+    "status": "Approved",
+    "blocked_decisions": [],
+    "reviewed_at": "2026-11-12T16:58:37+02:00",
+    "accountant_and_owner_named": true,
+    "examples_reviewed": true,
+    "choices": {
+      "D08-01": "start-of-day-opening",
+      "D08-02": "calendar-month-reviewed-first-period",
+      "D08-03": "explicit-allocation-confirmation",
+      "D08-04": "separate-credit-and-advance",
+      "D08-05": "gross-office-ledger-only",
+      "D08-06": "eur-line-half-up",
+      "D08-07": "prospective-terms-retain-posted-debt",
+      "D08-08": "dated-full-reversal-and-replacement",
+      "D08-09": "separate-lifecycle-and-settlement",
+      "D08-10": "owner-corrections-recent-mfa"
+    },
+    "attestation": "Operator-supplied human-review record; not identity verification or a digital signature",
+    "sha256": "sha256:d5126b8b31483ab3178348e8c40cc818e4f7787bd610063907cdaa8803546562"
   },
   "application_tests_run_this_step": false,
   "database_or_migration_execution": false,
@@ -75,6 +80,6 @@
   "known_financial_failures_fixed": 0,
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "next_step": "Accountant/office-owner decisions before S18",
+  "next_step": "S18 for the reviewed scope",
   "secret_scan_this_step": "Not rerun; supply --tools-python with the pinned maintenance environment to scan history/candidate"
 }

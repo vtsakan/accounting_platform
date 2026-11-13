@@ -199,7 +199,7 @@ Evidence: QR-02, QR-09, QR-11, QR-12, deployment_parameters.md. Approval evidenc
 
 ## D08 — Office financial posting policy
 
-Owner: Accountant reviewer and office owner. Status: **Pending accountant approval**. Gate: G2/S17 before financial posting acceptance.
+Owner: Accountant reviewer and office owner. Status: **Approved for the bound ACC-FIN-001 v0.1 scope; implementation/release acceptance Pending**. Gate: G2/S17 before financial posting acceptance.
 
 Options:
 
@@ -208,29 +208,18 @@ Options:
 
 Recommendation: Implement the separate posting model in S17 onward with fixed decimal money, atomic transfer pairs and attributable reversals. Never infer paid status from agreement value alone.
 
-Open inputs:
+Review topics resolved for the bound first scope:
 
 - Fee due dates, proration, VAT treatment, recurrence and amount rounding.
 - Allocation order, overpayments, refunds, client credit and payable settlement.
 - Prospective agreement changes/cancellations, opening balances and report category treatment.
 
 Dependent steps: S17, S18, S19, S20, S21, S22, S23, S24, S25, S27, S28, S29, S30, S31, S37.
-Evidence: UR-CSH-01, UR-CSH-04, UR-AGR-01, UR-BIL-04, QR-03, QR-04. Approval evidence: **not recorded**.
+Evidence: UR-CSH-01, UR-CSH-04, UR-AGR-01, UR-BIL-04, QR-03, QR-04. Approval evidence: bound S17 receipt in evidence/S17-verification.json; named review retained privately.
 
-### S17 D08 review packet — Prepared, approval not recorded
+### S17 D08 review packet — Approved bound snapshot
 
-The candidate ACC-FIN-001 v0.1 is in `financial_policy.md` /
-`financial_policy.json`. It specifies 17 operations, dated state transitions,
-12 invariants and 20 worked examples. The 10 D08-01–D08-10 choices name the
-steps they block; see `financial_policy_review_el.md`. D08-10 also needs the
-explicit D01 correction-capability extension at its implementation step.
-
-No option is selected on the accountant's behalf. A passing
-`tools/verify_s17.py` arithmetic check leaves S17 Prepared until a named,
-bound human review is recorded. The verifier checks an operator-supplied review
-attestation; it does not establish identity or a digital signature. Alternative
-choices or conditions require revising/reviewing the policy/examples. Existing
-financial behaviour and all 26 known financial failures remain unchanged.
+Declared accountant/office-owner review recorded at 2026-11-12T16:58:37+02:00. The receipt binds the exact candidate policy, examples and documents. Names and source reference remain private. This records adoption of the reviewed contents, not application correctness or release acceptance.
 
 ## D09 — Release priorities and delivery capacity
 

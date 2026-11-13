@@ -1,8 +1,22 @@
 # Implementation state
 
-Updated 2026-11-13. Current step: **S19 Prepared — dated cash accounts and categories**. Next step: **Complete S19 Docker gate**.
+Updated 2026-11-13. Current step: **S20 Prepared — ordinary cash and validated filters**. Next step: **Operator testing; S21 source follows**.
 
-## Current selected work
+
+## Current selected work — S20
+
+<!-- S20-RESULT -->
+Prepared: code-only delivery at the user's request. Greek ordinary cash forms
+include remarks/optional references and stable operation identities. Shared typed
+historical filters, pagination and full matching-scope cash totals are supplied.
+The nine FLT cases are expected-pass targets, not observed passes. No S20 tests,
+builds, Docker, database or cloud actions were executed by the implementation
+agent. Original migrations 0001–0014 and all previous receipts remain intact.
+Operator command, when desired: python3 tools/verify_s20.py --record.
+Full requirement acceptance remains Pending.
+<!-- /S20-RESULT -->
+
+## Historical selected work
 
 S17 is based on pushed S16 Docker/G1 head
 `e6fde507f634a0ccd2de80b197bfd883d0ab7ac9`, with 382 tests (356 passes and

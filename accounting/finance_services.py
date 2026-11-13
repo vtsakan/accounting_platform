@@ -210,7 +210,7 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
 
 
 @transaction.atomic
-def save_master(instance,user):
+def save_master(instance,user,*,reason='Ενημέρωση οικονομικών στοιχείων'):
     if isinstance(instance,(CashAccount,Category)):
         from .account_services import save_reference
         return save_reference(instance,user)
@@ -219,10 +219,14 @@ def save_master(instance,user):
     instance.office_id=office.pk
     if isinstance(instance,Agreement):
         instance.total_amount=money(instance.total_amount)
+        if instance.agreement_type not in {'RECEIVABLE','PAYABLE'}:raise ValidationError('Ο τύπος συμφωνίας δεν είναι έγκυρος.')
         entity=scoped_lock(Entity,office,instance.entity_id,active=not bool(instance.pk))
         if not (entity.is_customer if instance.agreement_type=='RECEIVABLE' else entity.is_supplier):raise ValidationError('Ο συναλλασσόμενος δεν έχει τον κατάλληλο ρόλο.')
         if instance.pk:
             old=scoped_lock(Agreement,office,instance.pk)
+            from .models import Charge
+            if Charge.objects.filter(office=office,agreement=old).exists() and any(getattr(old,n)!=getattr(instance,n) for n in ('entity_id','agreement_type','total_amount','start_date','description')):
+                raise ValidationError('Η συμφωνία έχει καταχωρισμένες χρεώσεις. Οι αλλαγές όρων απαιτούν την ειδική διαδικασία ιστορικού.')
             if old.status!=instance.status and old.status=='CANCELLED':raise ValidationError('Η ακυρωμένη συμφωνία δεν ενεργοποιείται από απλή επεξεργασία.')
             if Transaction.objects.filter(agreement=old).exists() and any(getattr(old,n)!=getattr(instance,n) for n in ('entity_id','agreement_type','total_amount','start_date','status')):
                 raise ValidationError('Η συμφωνία έχει καταχωρισμένες κινήσεις. Οι αλλαγές όρων απαιτούν την ειδική διαδικασία ιστορικού.')
@@ -232,7 +236,7 @@ def save_master(instance,user):
             old=scoped_lock(CashAccount,office,instance.pk)
             if old.opening_balance!=instance.opening_balance and Transaction.objects.filter(cash_account=old).exists():
                 raise ValidationError('Το αρχικό υπόλοιπο χρησιμοποιούμενου ταμείου διορθώνεται μόνο με τεκμηριωμένη προσαρμογή.')
-    with audit_context(user,'Ενημέρωση οικονομικών στοιχείων'):
+    with audit_context(user,reason):
         instance.save()
     return instance
 

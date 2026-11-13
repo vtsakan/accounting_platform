@@ -33,8 +33,8 @@
 <section class="card card-body mb-4" aria-labelledby="agreements-heading">
   <h2 id="agreements-heading">Συμφωνίες</h2>
   <div class="table-responsive"><table class="table table-hover">
-    <thead><tr><th scope="col">Περιγραφή</th><th scope="col">Συνολικό ποσό</th><th scope="col">Ανεξόφλητο ποσό</th><th scope="col">Κατάσταση</th></tr></thead>
-    <tbody>{% for agreement in agreements %}<tr><td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.total_amount|euro }}</td><td>{{ agreement.remaining_balance|euro }}</td><td>{{ agreement.get_status_display|greek_label }}</td></tr>
+    <thead><tr><th scope="col">Περιγραφή</th><th scope="col">Συνολικό ποσό</th><th scope="col">Καταχωρισμένες χρεώσεις</th><th scope="col">Τρόπος χρέωσης</th></tr></thead>
+    <tbody>{% for agreement in agreements %}<tr><td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.total_amount|euro }}</td><td>{{ agreement.charge_total|default:0|euro }}</td><td>{% if agreement.billing_mode == 'ONE_OFF' %}Εφάπαξ{% elif agreement.billing_mode == 'MONTHLY' %}Μηνιαία{% else %}Σε αναμονή επιλογής{% endif %}</td></tr>
     {% empty %}<tr><td colspan="4">Δεν βρέθηκαν συμφωνίες για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
   </table></div>
   {% if agreement_page.has_other_pages %}<nav aria-label="Σελίδες συμφωνιών">{% if agreement_page.has_previous %}<a href="?agreement_page={{ agreement_page.previous_page_number }}&amp;movement_page={{ movement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ agreement_page.number }} από {{ agreement_page.paginator.num_pages }} {% if agreement_page.has_next %}<a href="?agreement_page={{ agreement_page.next_page_number }}&amp;movement_page={{ movement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}

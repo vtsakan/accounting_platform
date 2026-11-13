@@ -1,61 +1,9 @@
-{% extends 'accounting/base.html' %}
-{% load greek %}
-
+{% extends 'accounting/base.html' %}{% load greek %}
 {% block title %}Συμφωνίες{% endblock %}
-
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Συμφωνίες</h1>
-        <a href="{% url 'add-agreement' %}" class="btn btn-primary"><strong>+ Νέα συμφωνία</strong></a>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Συναλλασσόμενος</th>
-                        <th>Τύπος</th>
-                        <th>Κατάσταση</th>
-                        <th>Ημερομηνία έναρξης</th> <th>Περιγραφή</th>
-                        <th class="text-end">Συνολικό ποσό</th>
-                        <th class="text-end">Ανεξόφλητο ποσό</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agreement in agreements %}
-                    <tr>
-                        <td><a href="{% url 'entity-detail' pk=agreement.entity.pk %}">{{ agreement.entity.name }}</a></td>
-                        <td>
-                            {% if agreement.agreement_type == 'RECEIVABLE' %}
-                                <span class="badge bg-success">Εισπρακτέα</span>
-                            {% else %}
-                                <span class="badge bg-warning text-dark">Πληρωτέα</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if agreement.status == 'ACTIVE' %}
-                                <span class="badge bg-info">{{ agreement.get_status_display|greek_label }}</span>
-                            {% elif agreement.status == 'COMPLETED' %}
-                                <span class="badge bg-success">{{ agreement.get_status_display|greek_label }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">{{ agreement.get_status_display|greek_label }}</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ agreement.start_date|el_date }}</td>
-                        <td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td>
-                        <td class="text-end">{{ agreement.total_amount|euro }}</td>
-                        <td class="text-end fw-bold">{{ agreement.remaining_balance|euro }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="7" class="text-center p-4">
-                            Δεν βρέθηκαν συμφωνίες. Μπορείτε να προσθέσετε μια νέα συμφωνία.
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Συμφωνίες</h1><a class="btn btn-primary" href="{% url 'add-agreement' %}">Νέα συμφωνία</a></div>
+<p>Οι όροι, οι καταχωρισμένες χρεώσεις και οι εισπράξεις / πληρωμές παρακολουθούνται χωριστά.</p>
+<div class="table-responsive"><table class="table table-striped"><caption>Συμφωνίες του λογιστικού γραφείου</caption><thead><tr><th scope="col">Συναλλασσόμενος</th><th scope="col">Τύπος</th><th scope="col">Περιγραφή</th><th scope="col">Έναρξη</th><th scope="col">Συμφωνημένο ποσό</th><th scope="col">Χρεώσεις</th><th scope="col">Τρόπος χρέωσης</th></tr></thead><tbody>
+{% for agreement in agreements %}<tr><td><a href="{% url 'entity-detail' agreement.entity.pk %}">{{ agreement.entity.name }}</a></td><td>{{ agreement.get_agreement_type_display|greek_label }}</td><td><a href="{% url 'agreement-detail' agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.start_date|el_date }}</td><td>{{ agreement.total_amount|euro }}</td><td>{{ agreement.charge_total|default:0|euro }}</td><td>{% if agreement.billing_mode == 'ONE_OFF' %}Εφάπαξ{% elif agreement.billing_mode == 'MONTHLY' %}Ανά ημερολογιακό μήνα{% else %}Σε αναμονή επιλογής{% endif %}</td></tr>{% empty %}<tr><td colspan="7">Δεν υπάρχουν συμφωνίες.</td></tr>{% endfor %}</tbody></table></div>
+{% if page_obj %}<nav aria-label="Σελίδες συμφωνιών">{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }} {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
 {% endblock %}

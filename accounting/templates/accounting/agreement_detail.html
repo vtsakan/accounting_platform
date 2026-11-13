@@ -1,79 +1,20 @@
-{% extends 'accounting/base.html' %}
-{% load greek %}
-
+{% extends 'accounting/base.html' %}{% load greek %}
 {% block title %}Στοιχεία συμφωνίας με {{ agreement.entity.name }}{% endblock %}
-
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Στοιχεία συμφωνίας</h1>
-        <a href="{% url 'edit-agreement' pk=agreement.pk %}" class="btn btn-secondary">Επεξεργασία συμφωνίας</a>    </div>
-    <hr>
-
-    <div class="row">
-        <div class="col-md-4">
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Επισκόπηση</h4>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Συναλλασσόμενος:</strong> <a href="{% url 'entity-detail' pk=agreement.entity.pk %}">{{ agreement.entity.name }}</a></li>
-                    <li class="list-group-item"><strong>Τύπος:</strong> {{ agreement.get_agreement_type_display|greek_label }}</li>
-                    <li class="list-group-item"><strong>Κατάσταση:</strong> {{ agreement.get_status_display|greek_label }}</li>
-                    <li class="list-group-item"><strong>Ημερομηνία έναρξης:</strong> {{ agreement.start_date|el_date }}</li>
-                </ul>
-            </div>
-
-            <div class="card text-center mb-4">
-                <div class="card-header">
-                    <h5>Συνολικό ποσό</h5>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title fw-light">{{ agreement.total_amount|euro }}</h3>
-                </div>
-            </div>
-
-            <div class="card text-center text-white bg-primary mb-4">
-                <div class="card-header">
-                    <h5>Ανεξόφλητο ποσό</h5>
-                </div>
-                <div class="card-body">
-                    <h2 class="card-title fw-bold">{{ remaining_balance|euro }}</h2>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-md-8">
-            <h3>Συνδεδεμένες πληρωμές</h3>
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Ημερομηνία</th>
-                                <th>Περιγραφή</th>
-                                <th class="text-end">Ποσό</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for tx in transactions %}
-                            <tr>
-                                <td>{{ tx.transaction_date|el_date }}</td>
-                                <td>{{ tx.description }}</td>
-                                <td class="text-end">{{ tx.amount|euro }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="3" class="text-center p-4">
-                                    Δεν έχουν συνδεθεί πληρωμές με αυτή τη συμφωνία.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="d-flex flex-wrap justify-content-between gap-2 mb-3"><h1>Στοιχεία συμφωνίας</h1><div><a class="btn btn-secondary" href="{% url 'edit-agreement' agreement.pk %}">Επεξεργασία όρων</a> <a class="btn btn-primary" href="{% url 'agreement-charge-add' agreement.pk %}">Νέα χρέωση</a></div></div>
+<p><a href="{% url 'entity-detail' agreement.entity.pk %}">{{ agreement.entity.name }}</a> · {{ agreement.get_agreement_type_display|greek_label }} · Έναρξη: {{ agreement.start_date|el_date }}</p><p>{{ agreement.description }}</p>
+<div class="row g-3 mb-4">
+<section class="col-md-4"><div class="card card-body h-100"><h2 class="h5">Συμφωνημένο ποσό</h2><strong>{{ agreement.total_amount|euro }}</strong><p class="small mb-0">Ποσό όρων· δεν προστίθεται ξανά στις χρεώσεις.</p></div></section>
+<section class="col-md-4"><div class="card card-body h-100"><h2 class="h5">Καταχωρισμένες χρεώσεις</h2><strong>{{ charge_total|default:0|euro }}</strong><p class="small mb-0">{{ settlement_label|default:'Χωρίς χρεώσεις' }}. Οι εισπράξεις και πληρωμές εμφανίζονται χωριστά.</p></div></section>
+<section class="col-md-4"><div class="card card-body h-100"><h2 class="h5">Συνδεδεμένες εισπράξεις / πληρωμές</h2><strong>{{ cash_total|default:0|euro }}</strong><p class="small mb-0">Καθαρό ποσό μετά τους συνδεδεμένους αντιλογισμούς· δεν σημαίνει αυτόματη αντιστοίχιση σε χρέωση.</p></div></section>
+</div>
+<section class="card card-body mb-4"><h2 class="h4">Κατάσταση όρων</h2>
+{% if terms and terms.billing_mode != 'UNREVIEWED' %}<p>{{ terms.get_lifecycle_display }} · {{ terms.get_billing_mode_display }} · Έκδοση {{ terms.revision }}</p>{% else %}<p class="alert alert-warning">Οι παλιοί ή μη ελεγμένοι όροι χρειάζονται ρητή επιλογή τρόπου χρέωσης. Δεν δημιουργήθηκαν αυτόματα χρεώσεις.</p>{% endif %}
+<p class="small mb-0">Διατηρημένη προηγούμενη ένδειξη: {{ agreement.get_status_display|greek_label }}. Η ένδειξη αυτή δεν αποδεικνύει εξόφληση καταχωρισμένων χρεώσεων.</p></section>
+<h2 class="h4">Χρεώσεις και προθεσμίες</h2><div class="table-responsive"><table class="table table-striped"><caption>Αυτοτελείς υποχρεώσεις πληρωμής της συμφωνίας</caption><thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Προθεσμία</th><th scope="col">Ποσό</th><th scope="col">Πηγή και αναφορά</th></tr></thead><tbody>
+{% for charge in charge_page %}<tr><td>{{ charge.effective_date|el_date }}</td><td>{{ charge.due_date|el_date }}</td><td>{{ charge.amount|euro }}</td><td class="text-break"><code>{{ charge.source_key }}</code><div><code>{{ charge.pk }}</code> · Όροι έκδοσης {{ charge.terms.revision }}</div></td></tr>{% empty %}<tr><td colspan="4">Δεν έχουν καταχωριστεί χρεώσεις. Η συμφωνία χωρίς χρεώσεις δεν χαρακτηρίζεται εξοφλημένη.</td></tr>{% endfor %}</tbody></table></div>
+{% if charge_page %}<nav aria-label="Σελίδες χρεώσεων">{% if charge_page.has_previous %}<a href="?page={{ charge_page.previous_page_number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ charge_page.number }} από {{ charge_page.paginator.num_pages }} {% if charge_page.has_next %}<a href="?page={{ charge_page.next_page_number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
+<h2 class="h4 mt-4">Ιστορικό εισπράξεων / πληρωμών</h2><div class="table-responsive"><table class="table"><thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Περιγραφή</th><th scope="col">Ποσό</th></tr></thead><tbody>
+{% for tx in transactions %}<tr><td>{{ tx.transaction_date|el_date }}</td><td>{{ tx.description }}{% if tx.reversal_of_id %} · Αντιλογισμός #{{ tx.reversal_of_id }}{% endif %}</td><td>{{ tx.amount|euro }}</td></tr>{% empty %}<tr><td colspan="3">Δεν υπάρχουν συνδεδεμένες εισπράξεις ή πληρωμές.</td></tr>{% endfor %}</tbody></table></div>
+<h2 class="h4 mt-4">Διατηρημένες εκδόσεις όρων</h2><ul class="list-group mb-4">{% for version in terms_history %}<li class="list-group-item">Έκδοση {{ version.revision }} · {{ version.get_billing_mode_display }} · {{ version.get_lifecycle_display }} · {{ version.agreed_amount|euro }} · {{ version.recorded_at|el_date }} · {{ version.reason }}</li>{% empty %}<li class="list-group-item">Δεν υπάρχει διαθέσιμη έκδοση όρων.</li>{% endfor %}</ul>
 {% endblock %}

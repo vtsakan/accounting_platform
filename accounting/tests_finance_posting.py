@@ -412,7 +412,8 @@ class PostingMigrationTests(TransactionTestCase):
         self.entry=apps.get_model('accounting','Transaction').objects.create(office_id=self.office.pk,entity_id=self.customer.pk,agreement_id=self.agreement.pk,
             cash_account_id=self.account.pk,transaction_type='INCOME',amount='12.34',transaction_date=DAY,description='ΠΑΛΑΙΑ ΔΟΚΙΜΑΣΤΙΚΗ ΚΙΝΗΣΗ',transfer_id=uuid.uuid4())
     def tearDown(self):
-        self.migrate(self.current)
+        executor=MigrationExecutor(connection)
+        executor.migrate(executor.loader.graph.leaf_nodes())
         super().tearDown()
     def test_upgrade_preserves_all_original_columns_and_baselines_unknown_human(self):
         self.entry.refresh_from_db();before={f.attname:getattr(self.entry,f.attname) for f in self.entry._meta.concrete_fields}

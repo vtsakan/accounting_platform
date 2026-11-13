@@ -341,3 +341,5 @@ from .office_models import StaffInvitation, OwnershipHandover, OfficeAuditEvent 
 from .finance_models import FinanceCommand, FinanceAuditEvent
 
 from .account_models import CashAdjustment, FinanceStructureLock
+
+from .charge_models import AgreementTermsVersion, Charge

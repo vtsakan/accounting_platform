@@ -180,7 +180,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         suffix='b' if foreign else 'a'
         kwargs={}
         if name in {'entity-detail','edit-entity','archive-entity','restore-entity'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
-        if name in {'agreement-detail','edit-agreement'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
+        if name in {'agreement-detail','edit-agreement','agreement-charge-add'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
         if name in {'cash-account-detail','cash-account-edit','cash-account-opening','cash-account-adjustment'}:kwargs={'pk':getattr(self,'cash_'+suffix).pk}
         if name in {'category-edit','category-retire'}:kwargs={'pk':getattr(self,'category_'+suffix).pk}
         if name=='office-invitation-action':kwargs={'key':getattr(self,'invite_'+suffix).pk,'action':'cancel'}

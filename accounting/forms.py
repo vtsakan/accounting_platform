@@ -192,6 +192,13 @@ class EntityForm(GreekFormMixin, forms.ModelForm):
         return self.instance
 
 class AgreementForm(GreekFormMixin, forms.ModelForm):
+    from .charge_models import BILLING, LIFECYCLE
+    billing_mode = forms.ChoiceField(choices=BILLING, required=False, label='Τρόπος χρέωσης', initial='UNREVIEWED',
+                                     help_text='Η συμφωνία δεν δημιουργεί από μόνη της χρέωση ή είσπραξη.')
+    lifecycle = forms.ChoiceField(choices=LIFECYCLE, required=False, label='Κατάσταση όρων', initial='UNREVIEWED')
+    terms_revision = forms.IntegerField(required=False, min_value=0, widget=forms.HiddenInput, label='Έκδοση όρων')
+    reason = forms.CharField(required=False, max_length=500, label='Αιτιολογία ελέγχου όρων',
+                             initial='Έλεγχος και επιβεβαίωση όρων συμφωνίας')
     total_amount = GreekMoneyField(label=_("Total Agreed Amount"), max_digits=12, decimal_places=2)
     start_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}),
@@ -207,13 +214,14 @@ class AgreementForm(GreekFormMixin, forms.ModelForm):
             'total_amount',
             'start_date',
             'status',
+            'billing_mode', 'lifecycle', 'reason', 'terms_revision',
         ]
         widgets = {
             # Use our new custom widget for the 'entity' field
             'entity': EntityTypeSelectWidget(attrs=bootstrap_select_attrs),
             'agreement_type': forms.Select(attrs=bootstrap_select_attrs),
             'description': forms.TextInput(attrs=bootstrap_form_attrs),
-            'status': forms.Select(attrs=bootstrap_select_attrs),
+            'status': forms.HiddenInput(),  # Retained legacy field, not settlement truth.
         }
 
     def __init__(self, *args, **kwargs):
@@ -221,6 +229,35 @@ class AgreementForm(GreekFormMixin, forms.ModelForm):
         # Keep an unchanged historical link visible on edit; new choices are active.
         self.fields['entity'].queryset = self.fields['entity'].queryset.filter(
             models.Q(is_archived=False) | (models.Q(pk=self.instance.entity_id) if self.instance.pk else models.Q(pk__in=[])))
+        if self.actor and self.instance.pk:
+            from .models import AgreementTermsVersion
+            terms = AgreementTermsVersion.objects.filter(office_id=self.office_id, agreement=self.instance).first()
+            if terms:
+                self.initial.update(billing_mode=terms.billing_mode, lifecycle=terms.lifecycle, terms_revision=terms.revision)
+        else:
+            self.initial['terms_revision'] = 0
+
+    def clean(self):
+        values = super().clean()
+        entity, direction = values.get('entity'), values.get('agreement_type')
+        if entity and direction and not (entity.is_customer if direction == 'RECEIVABLE' else entity.is_supplier):
+            self.add_error('entity', 'Ο συναλλασσόμενος δεν έχει τον κατάλληλο ρόλο για τη συμφωνία.')
+        mode, lifecycle = values.get('billing_mode') or 'UNREVIEWED', values.get('lifecycle') or 'UNREVIEWED'
+        if mode != 'UNREVIEWED' and lifecycle == 'UNREVIEWED':
+            self.add_error('lifecycle', 'Επιλέξτε την κατάσταση των ελεγμένων όρων.')
+        if mode != 'UNREVIEWED' and len((values.get('reason') or '').strip()) < 4:
+            self.add_error('reason', 'Συμπληρώστε αιτιολογία ελέγχου των όρων.')
+        return values
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if not commit:
+            return instance
+        from .charge_services import save_terms
+        return save_terms(self.actor, instance, billing_mode=self.cleaned_data.get('billing_mode') or 'UNREVIEWED',
+                          lifecycle=self.cleaned_data.get('lifecycle') or 'UNREVIEWED',
+                          expected_revision=self.cleaned_data.get('terms_revision'),
+                          reason=self.cleaned_data.get('reason') or 'Ενημέρωση μη ελεγμένων όρων συμφωνίας')
 
 # accounting/forms.py
 

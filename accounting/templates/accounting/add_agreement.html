@@ -11,21 +11,24 @@
                     <h2 class="mb-0">Νέα συμφωνία</h2>
                 </div>
                 <div class="card-body">
+                    <p>Η αποθήκευση όρων δεν δημιουργεί χρέωση ή κίνηση ταμείου. Η χρέωση καταχωρίζεται χωριστά, μετά τον έλεγχο των όρων.</p>
                     <form method="post">
                         {% csrf_token %}
                         {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
 
                         {% for field in form %}
+                            {% if field.is_hidden %}{{ field }}{% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}{% else %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
                                 {{ field }}
+                                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
                                 {% if field.errors %}
                                     <div class="alert alert-danger mt-1 p-2">
                                         {{ field.errors|striptags }}
                                     </div>
                                 {% endif %}
                             </div>
-                        {% endfor %}
+                        {% endif %}{% endfor %}
 
                         <hr>
                         <button type="submit" class="btn btn-primary">Αποθήκευση συμφωνίας</button>

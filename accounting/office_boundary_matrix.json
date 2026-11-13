@@ -430,6 +430,15 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "agreement-charge-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [

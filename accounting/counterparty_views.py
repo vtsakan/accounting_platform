@@ -112,6 +112,8 @@ def detail(request, key):
     agreements = records(Agreement, request.user).filter(entity=entity).annotate(
         total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
     ).annotate(remaining_balance=F('total_amount') - F('total_payments')).order_by('-start_date', '-pk')
+    from .agreement_selectors import agreement_rows
+    agreements = agreement_rows(agreements)
     movements = records(Transaction, request.user).filter(entity=entity).select_related('agreement', 'cash_account').order_by('-transaction_date', '-pk')
     agreement_page = Paginator(agreements, 10).get_page(request.GET.get('agreement_page'))
     movement_page = Paginator(movements, 10).get_page(request.GET.get('movement_page'))

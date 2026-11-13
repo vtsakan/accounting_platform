@@ -141,6 +141,8 @@ def summary_report_view(request):
         'selected_category_id': category_id,
     }
 
+    from .agreement_selectors import obligation_totals
+    context.update(obligation_totals(request.user))
     return render(request, 'accounting/summary_report.html', context)
 
 @login_required
@@ -150,38 +152,20 @@ def edit_entity_view(request, pk):
 
 @login_required
 def agreement_list_view(request):
-    # This query now calculates the remaining balance for every agreement
-    agreements = records(Agreement, request.user).annotate(
-        total_payments=legacy_settlement('transactions__')
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    context = {
-        'agreements': agreements
-    }
+    from django.core.paginator import Paginator
+    from .agreement_selectors import agreement_rows
+    page = Paginator(agreement_rows(records(Agreement, request.user)), 25).get_page(request.GET.get('page'))
+    context = {'agreements': page.object_list, 'page_obj': page}
     return render(request, 'accounting/agreement_list.html', context)
 
 @login_required
 def agreement_detail_view(request, pk):
-    # Get the specific Agreement object from the database
     agreement = record(Agreement, request.user, pk)
-
-    # Get all transactions that are linked to this specific agreement
-    transactions = agreement.transactions.filter(office_id=agreement.office_id).order_by('-transaction_date')
-
-    # Calculate the sum of all payments made against this agreement
-    total_payments = transactions.aggregate(total=legacy_settlement())['total']
-
-    # Calculate the remaining balance
-    remaining_balance = agreement.total_amount - total_payments
-
-    context = {
-        'agreement': agreement,
-        'transactions': transactions,
-        'total_payments': total_payments,
-        'remaining_balance': remaining_balance
-    }
+    from .agreement_selectors import agreement_projection
+    from django.core.paginator import Paginator
+    context = {'agreement': agreement, **agreement_projection(agreement)}
+    context['charge_page'] = Paginator(context['charges'], 25).get_page(request.GET.get('page'))
+    context['terms_history'] = agreement.terms_versions.filter(office_id=agreement.office_id)[:20]
     return render(request, 'accounting/agreement_detail.html', context)
 
 @login_required
@@ -224,7 +208,7 @@ def edit_agreement_view(request, pk):
             updated_agreement = form.save(commit=False)
 
             try:
-                save_for_user(updated_agreement, request.user)
+                updated_agreement = form.save()
             except ValidationError as error:
                 form.add_error(None, error)
             else:

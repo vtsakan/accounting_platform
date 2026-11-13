@@ -29,24 +29,35 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, fourteen migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Current checkpoint — S21
+## Current checkpoint — S22
 
-Deliver S21 as code only; the operator owns all test/build execution. Start from
-pushed S20 head 8871e76c20c20dd912b55861da5209f72a17978c, whose operator receipt
-records 511 tests, 510 passes and only TRF-001 reproduced. Keep that historical
-receipt unchanged. Read internal_transfers.md. Reuse S18 command/pair/audit SQL
-and all fourteen migrations. Normalize transfer account IDs, preserve stable
-retry identity including retired-reference replay, and expose a common audit
-reference in the Greek interface. Cash balances/history include both legs;
-operating totals/categories exclude explicit transfers before filtering totals.
-Legacy UUIDs alone never classify transfers; reviewed legacy pairing is S25.
-Single-leg correction stays denied; paired correction administration remains
-S24. Preserve all 511 previous test names/assertions, the 784 boundary cases,
-auth/MFA/referrer policies and locks. TRF-001 is now an expected-pass target,
-not an observed pass. New optional S21 tests are supplied but unexecuted.
-Source is Prepared until the operator runs tools/verify_s21.py --record. The
-apply script must only change Git/source/metadata. Do not touch Docker, local
-demo, accounts, keys, databases or VM on apply. Stop after S21.
+Deliver code only. No agent-run tests, builds, Docker or database operations.
+Start from actual pushed S21 head 6f67b4c8c079f6cbdc299db623966fe3f4e222d9:
+533/533 operator tests, all 36 finance assertions and 784 boundary cases passed.
+Read agreement_charges.md. S22 adds migrations 0015/0016 and separate immutable
+agreement snapshots / source-bound obligations. Preserve every original
+migration, ID, cash command, financial assertion and historical receipt. No
+legacy charge or paid state is inferred; baseline terms are UNREVIEWED. An
+explicit terms review and a separate confirmed charge are different actions.
+ONE_OFF uses one agreement source; MONTHLY uses its calendar-month source,
+independent of version/scheduler IDs. Full allocations/reversals/generation stay
+S23/S24/S27/S28. New Greek detail/report panes separate terms, charges and cash;
+legacy compatibility contexts are not the new settlement truth. Append-only
+snapshot/charge guards and composite office links apply to SQL too. New models
+are not exposed in admin/records/job adapters. Add the one new charge route to
+the matrix and retain all old cases/assertions; migration-test teardown restores
+the latest schema without changing any historical target or assertion. Supply
+27 new tests and optional tools/verify_s22.py; 560 passes / 799 boundary cases
+are targets, NOT observed results. Source is Prepared. APPLY only changes
+Git/source/metadata; no migration/demo/VM/account/key action. Stop after S22.
+
+## Historical S21 checkpoint
+
+S21 is Verified by the operator's PostgreSQL 17 run: 533 tests all passed,
+zero known/unexpected failures and 784 office-boundary cases. Both retirement
+fixture actions refresh database-written approval metadata. The receipt remains
+unchanged. Explicit transfer pairs, retries, references, dated balances and
+operating exclusion remain intact; no financial assertion is waived.
 
 ## Historical S20 checkpoint
 

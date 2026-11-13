@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import account_views  # Import views from the current app directory
+from . import charge_views
 from django.contrib.auth import views as django_auth
 from . import auth_views
 from . import office_views, invite_views
@@ -56,6 +57,7 @@ urlpatterns = [
     path('agreement/<int:pk>/', views.agreement_detail_view, name='agreement-detail'),
     path('agreement/add/', views.add_agreement_view, name='add-agreement'),
     path('agreement/<int:pk>/edit/', views.edit_agreement_view, name='edit-agreement'),
+    path('agreement/<int:pk>/charges/add/', charge_views.add, name='agreement-charge-add'),
     path('transfer/add/', office_write_guard('finance.write')(views.add_transfer_view), name='add-transfer'),
 
 

@@ -567,7 +567,8 @@ class WorkspaceMigrationTests(Support,TransactionTestCase):
         self.same_day=model.objects.create(office_id=self.office.pk,cash_account_id=self.account.pk,category_id=self.category.pk,
             amount='50.00',transaction_type='INCOME',transaction_date=DAY,description='ΔΟΚΙΜΑΣΤΙΚΗ ΙΔΙΑΣ ΗΜΕΡΑΣ')
     def tearDown(self):
-        self.migrate(self.current);super().tearDown()
+        executor=MigrationExecutor(connection);executor.migrate(executor.loader.graph.leaf_nodes())
+        super().tearDown()
     def test_upgrade_keeps_original_columns_ids_and_explicit_cutoff_avoids_double_counting(self):
         before={model._meta.model_name:list(model.objects.order_by('pk').values()) for model in (type(self.account),type(self.category),type(self.earlier))}
         audits=list(FinanceAuditEvent.objects.order_by('pk').values())

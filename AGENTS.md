@@ -29,18 +29,33 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, fourteen migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Current checkpoint — S20
+## Current checkpoint — S21
 
-Implement ordinary income/expense entry, optional category/counterparty,
-remarks, UUID-backed submission identity, typed combined historical filters,
-pagination and full filtered-scope cash totals. Reuse S18/S19 financial services;
-posted originals remain immutable. Share typed filters with the existing report
-without changing its legacy transfer/operating calculation (S21/S29). All nine
-FLT cases are expected to pass after this change, but have NOT been executed.
-Retain every existing financial assertion and the 784-route boundary inventory.
-Only TRF-001 remains registered as an expected failure. No migration, deployment,
-account/bootstrap/key change is introduced. Read cash_movements.md. Tests and
-builds are user-owned and optional to invoke from the supplied verify_s20.py.
+Deliver S21 as code only; the operator owns all test/build execution. Start from
+pushed S20 head 8871e76c20c20dd912b55861da5209f72a17978c, whose operator receipt
+records 511 tests, 510 passes and only TRF-001 reproduced. Keep that historical
+receipt unchanged. Read internal_transfers.md. Reuse S18 command/pair/audit SQL
+and all fourteen migrations. Normalize transfer account IDs, preserve stable
+retry identity including retired-reference replay, and expose a common audit
+reference in the Greek interface. Cash balances/history include both legs;
+operating totals/categories exclude explicit transfers before filtering totals.
+Legacy UUIDs alone never classify transfers; reviewed legacy pairing is S25.
+Single-leg correction stays denied; paired correction administration remains
+S24. Preserve all 511 previous test names/assertions, the 784 boundary cases,
+auth/MFA/referrer policies and locks. TRF-001 is now an expected-pass target,
+not an observed pass. New optional S21 tests are supplied but unexecuted.
+Source is Prepared until the operator runs tools/verify_s21.py --record. The
+apply script must only change Git/source/metadata. Do not touch Docker, local
+demo, accounts, keys, databases or VM on apply. Stop after S21.
+
+## Historical S20 checkpoint
+
+S20 was verified by the operator on PostgreSQL 17: 511 tests, 510 passes and
+TRF-001 as the sole expected failure. The S20 receipt is historical evidence;
+S21 code delivery must not overwrite it. Greek ordinary entry, remarks,
+optional references, typed combined filters, full-scope cash totals and
+pagination are retained. The template-link correction preserves the S04
+presentation fixture and real ORM links. No S20 test assertions are relaxed.
 
 ## Historical S19 checkpoint
 

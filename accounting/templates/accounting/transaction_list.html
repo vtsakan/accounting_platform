@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-3">
     <h1>Κινήσεις ταμείων</h1>
-    <div><a href="{% url 'add-income' %}" class="btn btn-success">Νέο έσοδο</a> <a href="{% url 'add-expense' %}" class="btn btn-danger">Νέο έξοδο</a></div>
+    <div><a href="{% url 'add-income' %}" class="btn btn-success">Νέο έσοδο</a> <a href="{% url 'add-expense' %}" class="btn btn-danger">Νέο έξοδο</a> <a href="{% url 'add-transfer' %}" class="btn btn-primary">Εσωτερική μεταφορά</a></div>
 </div>
 <div class="card card-body bg-light mb-3">{% include 'accounting/movement_filters.html' %}</div>
 {% if filters_valid %}
@@ -22,7 +22,7 @@
     {% for tx in transactions %}
     <tr>
         <td>{{ tx.transaction_date|el_date }}</td>
-        <td><strong>{{ tx.description }}</strong><div class="small text-muted">Κίνηση #{{ tx.pk }}</div>{% if tx.remarks %}<details><summary>Παρατηρήσεις</summary><p class="text-break">{{ tx.remarks|linebreaksbr }}</p></details>{% endif %}</td>
+        <td><strong>{{ tx.description }}</strong><div class="small text-muted">Κίνηση #{{ tx.pk }}</div>{% if tx.posting_kind == 'TRANSFER' %}<div class="small text-break">Αναφορά μεταφοράς: <code>{{ tx.command_id }}</code></div><div class="small text-break">Σύνδεση σκελών: <code>{{ tx.transfer_id }}</code></div>{% endif %}{% if tx.remarks %}<details><summary>Παρατηρήσεις</summary><p class="text-break">{{ tx.remarks|linebreaksbr }}</p></details>{% endif %}</td>
         <td>{% if tx.cash_account_id %}<a href="{% url 'cash-account-detail' tx.cash_account_id %}">{{ tx.cash_account }}</a>{% else %}{{ tx.cash_account }}{% endif %}</td>
         <td>{% if tx.entity.pk %}<a href="{% url 'entity-detail' tx.entity.pk %}">{{ tx.entity }}</a>{% else %}{{ tx.entity|default:'—' }}{% endif %}</td>
         <td>{{ tx.category|default:'—' }}</td>

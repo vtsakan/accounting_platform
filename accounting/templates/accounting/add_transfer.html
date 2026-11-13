@@ -11,7 +11,8 @@
                     <h2 class="mb-0">Νέα εσωτερική μεταφορά</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <p id="transfer-help">Το ποσό αφαιρείται από το ταμείο προέλευσης και προστίθεται στο ταμείο προορισμού με μία ενιαία καταχώριση. Δεν δημιουργεί λειτουργικό έσοδο, έξοδο ή οφειλή πελάτη.</p>
+                    <form method="post" aria-describedby="transfer-help transfer-retry">
                         {% csrf_token %}
 
                         {% if form.non_field_errors %}
@@ -19,10 +20,11 @@
                         {% endif %}
 
                         {% for field in form %}
-                            {% if field.is_hidden %}{{ field }}{% else %}
+                            {% if field.is_hidden %}{{ field }}{% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}{% else %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
                                 {{ field }}
+                                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
                                 {% if field.errors %}
                                     <div class="alert alert-danger mt-1 p-2">{{ field.errors|striptags }}</div>
                                 {% endif %}
@@ -30,6 +32,7 @@
                         {% endif %}{% endfor %}
 
                         <hr>
+                        <p id="transfer-retry" class="small text-muted">Σε αβέβαιο αποτέλεσμα επαναλάβετε την ίδια υποβολή. Η ταυτότητα καταχώρισης διατηρείται ώστε να μην προκύψει δεύτερη μεταφορά. Για νέα μεταφορά ανοίξτε ξανά τη φόρμα.</p>
                         <button type="submit" class="btn btn-primary">Καταχώρηση μεταφοράς</button>
                         <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ακύρωση</a>
                     </form>

@@ -89,21 +89,19 @@ def entity_detail_view(request, pk):
 def summary_report_view(request):
     validate_filter_ids(request)
     from .movement_forms import CashMovementFilterForm
-    from .movement_selectors import filtered_movements
+    from .movement_selectors import filtered_movements, operating_movements, movement_totals
     filter_form = CashMovementFilterForm(request.GET, user=request.user)
-    transactions = filtered_movements(request.user, filter_form)
+    transactions = operating_movements(filtered_movements(request.user, filter_form))
     start_date_str = request.GET.get('start_date', '')
     end_date_str = request.GET.get('end_date', '')
     transaction_type = request.GET.get('transaction_type', '')
     cash_account_id = request.GET.get('cash_account', '')
     category_id = request.GET.get('category', '')
 
-    # --- Transaction Calculations (unchanged) ---
-    totals = transactions.aggregate(
-        total_income=Sum('amount', filter=Q(transaction_type='INCOME'), default=0),
-        total_expense=Sum('amount', filter=Q(transaction_type='EXPENSE'), default=0)
-    )
-    net_for_period = totals['total_income'] - totals['total_expense']
+    # Operating cash totals exclude explicit transfers before every aggregate.
+    # Cash balances/history continue to include both legs on their own dates.
+    totals = movement_totals(transactions)
+    net_for_period = totals['net_for_period']
 
     income_by_category = transactions.filter(transaction_type='INCOME').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
     expense_by_category = transactions.filter(transaction_type='EXPENSE').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
@@ -251,13 +249,5 @@ from .forms import TransferForm # <-- Add TransferForm to your form imports
 # ADD THIS NEW VIEW
 @login_required
 def add_transfer_view(request):
-    form=TransferForm(request.POST if request.method=='POST' else None,user=request.user)
-    if request.method=='POST' and form.is_valid():
-        data=form.cleaned_data
-        try:
-            post_transfer(request.user,from_account=data['from_account'],to_account=data['to_account'],
-                amount=data['amount'],transfer_date=data['transfer_date'],description=data['description'],
-                idempotency_key=submission_key(request,data))
-        except ValidationError as error:form.add_error(None,error)
-        else:return redirect('transaction-list')
-    return render(request,'accounting/add_transfer.html',{'form':form})
+    from .transfer_views import transfer
+    return transfer(request)

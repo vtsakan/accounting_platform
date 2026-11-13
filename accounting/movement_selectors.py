@@ -20,8 +20,25 @@ def filtered_movements(user, form):
 
 
 def movement_totals(rows):
+    """Cash inflows/outflows, including transfers; use operating_movements first
+    when the caller needs operating totals instead of a cash movement total.
+    """
     totals = rows.aggregate(
         total_income=Coalesce(Sum('amount', filter=Q(transaction_type='INCOME')), Value(Decimal('0.00')), output_field=DecimalField()),
         total_expense=Coalesce(Sum('amount', filter=Q(transaction_type='EXPENSE')), Value(Decimal('0.00')), output_field=DecimalField()))
     totals['net_for_period'] = totals['total_income'] - totals['total_expense']
     return totals
+
+
+def internal_transfer_condition():
+    """Only an explicit posting kind is authoritative, never a legacy UUID.
+
+    Linked transfer reversals are included in this exclusion for later S24
+    pair corrections; the current service/SQL still deny single-leg reversal.
+    Legacy pairing and reconciliation remain an explicit S25 review.
+    """
+    return Q(posting_kind='TRANSFER') | Q(posting_kind='REVERSAL', reversal_of__posting_kind='TRANSFER')
+
+
+def operating_movements(rows):
+    return rows.exclude(internal_transfer_condition())

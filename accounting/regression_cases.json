@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "Correct financial assertions retained. S20 targets all nine malformed-filter cases; execution is left to the user. TRF-001 remains a known failure for S21/S29.",
+  "scope": "Correct financial assertions retained. S21 supplies explicit-transfer exclusion from operating totals. All 36 cases are expected to pass; S21 execution is pending operator testing.",
   "cases": [
     {
       "case_id": "BAL-001",
@@ -48,7 +48,7 @@
       "case_id": "TRF-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_excluded_from_operating_totals",
       "issue_id": "LEG-004",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-04",
         "UR-REP-02",
@@ -58,7 +58,9 @@
         "S21",
         "S29"
       ],
-      "description": "Transfer 1000 must leave operating income 50 and expense 20 unchanged"
+      "description": "Transfer 1000 must leave operating income 50 and expense 20 unchanged",
+      "fixed_in": "S21",
+      "verification": "Not run for S21; user executes tests"
     },
     {
       "case_id": "SET-001",

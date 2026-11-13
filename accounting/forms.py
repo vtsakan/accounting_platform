@@ -250,7 +250,7 @@ class TransferForm(GreekFormMixin, forms.Form):
         label=_("To Account"),
         widget=forms.Select(attrs=bootstrap_select_attrs)
     )
-    description = forms.CharField(label=_("Description"), max_length=255, widget=forms.TextInput(attrs=bootstrap_form_attrs))
+    description = forms.CharField(label=_("Description"), max_length=200, widget=forms.TextInput(attrs=bootstrap_form_attrs))
 
     # This is a custom validation method
     def clean(self):
@@ -260,5 +260,18 @@ class TransferForm(GreekFormMixin, forms.Form):
 
         if from_account and to_account and from_account == to_account:
             raise forms.ValidationError(_("The source and destination cash accounts must differ."))
+
+        day = cleaned_data.get('transfer_date')
+        if day and day > timezone.localdate():
+            self.add_error('transfer_date', 'Η ημερομηνία μεταφοράς δεν μπορεί να είναι μελλοντική.')
+        elif day and not getattr(self, 'replay_transfer', False):
+            for account in (from_account, to_account):
+                if account and account.opening_date and day < account.opening_date:
+                    self.add_error('transfer_date', 'Η μεταφορά δεν μπορεί να προηγείται του αρχικού υπολοίπου κανενός από τα δύο ταμεία.')
+                    break
+        if hasattr(self.data, 'getlist'):
+            for name in self.fields:
+                if len(self.data.getlist(name)) > 1:
+                    self.add_error(name, 'Υποβάλετε μία μόνο τιμή για αυτό το πεδίο.')
 
         return cleaned_data

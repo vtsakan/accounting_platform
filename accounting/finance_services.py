@@ -139,14 +139,20 @@ def post_cash(user,*,idempotency_key,reason='Καταχώρηση κίνησης
 
 @transaction.atomic
 def post_transfer(user,*,from_account,to_account,amount,transfer_date,description,idempotency_key):
+    """One command and two immutable legs; a completed retry returns that pair.
+
+    Office/user locks serialize submissions with revocation and other commands.
+    The existing deferred SQL guards validate the entire pair at commit. No
+    legacy row is classified or repaired by this service.
+    """
     office=locked_office(user,'finance.write');amount=money(amount)
     if type(transfer_date) is not date or transfer_date>timezone.localdate():raise ValidationError('Επιλέξτε έγκυρη ημερομηνία μεταφοράς έως σήμερα.')
-    source_key,dest_key=getattr(from_account,'pk',from_account),getattr(to_account,'pk',to_account)
+    source_key,dest_key=transfer_account_key(from_account),transfer_account_key(to_account)
     if source_key==dest_key:raise ValidationError('Τα ταμεία προέλευσης και προορισμού πρέπει να διαφέρουν.')
     if not isinstance(description,str) or not description.strip() or len(description)>200:raise ValidationError('Συμπληρώστε σύντομη περιγραφή μεταφοράς.')
     command,replay=command_for(user,office,'cash.transfer',idempotency_key,
         {'from':source_key,'to':dest_key,'amount':str(amount),'date':transfer_date.isoformat(),'description_digest':fingerprint(description)},'Εσωτερική μεταφορά')
-    if replay:return list(command.entries.order_by('pk'))
+    if replay:return list(command.entries.filter(office=office).order_by('pk'))
     accounts={key:scoped_lock(CashAccount,office,key,active=True) for key in sorted((source_key,dest_key))}
     from .account_services import validate_account_date
     for account in accounts.values():validate_account_date(account,transfer_date)
@@ -158,6 +164,17 @@ def post_transfer(user,*,from_account,to_account,amount,transfer_date,descriptio
                 ('EXPENSE',source_key,'Μεταφορά προς άλλο ταμείο: '),('INCOME',dest_key,'Μεταφορά από άλλο ταμείο: '))]
         complete(command)
     return entries
+
+
+def transfer_account_key(value):
+    """Normalize object/integer/HTML IDs without truncating floats or booleans."""
+    value=getattr(value,'pk',value)
+    if type(value) is int and 0<value<=9223372036854775807:
+        return value
+    if isinstance(value,str) and value.isascii() and value.isdecimal() and 0<len(value)<=19:
+        result=int(value)
+        if 0<result<=9223372036854775807:return result
+    raise ValidationError('Επιλέξτε έγκυρο ταμείο προέλευσης και προορισμού.')
 
 
 @transaction.atomic

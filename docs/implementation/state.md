@@ -1,19 +1,12 @@
 # Implementation state
 
-Updated 2026-11-13. Current step: **S20 Prepared — ordinary cash and validated filters**. Next step: **Operator testing; S21 source follows**.
+Updated 2026-11-13. Current step: **S20 Verified — ordinary cash and validated filters**. Next step: **S21**.
 
 
 ## Current selected work — S20
 
 <!-- S20-RESULT -->
-Prepared: code-only delivery at the user's request. Greek ordinary cash forms
-include remarks/optional references and stable operation identities. Shared typed
-historical filters, pagination and full matching-scope cash totals are supplied.
-The nine FLT cases are expected-pass targets, not observed passes. No S20 tests,
-builds, Docker, database or cloud actions were executed by the implementation
-agent. Original migrations 0001–0014 and all previous receipts remain intact.
-Operator command, when desired: python3 tools/verify_s20.py --record.
-Full requirement acceptance remains Pending.
+Verified by operator-run Docker/PostgreSQL suite; see S20-verification.json. Historical S19 evidence is unchanged. Full acceptance remains Pending.
 <!-- /S20-RESULT -->
 
 ## Historical selected work

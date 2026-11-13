@@ -50,7 +50,7 @@ class OfficeBoundaryTests(TestCase):
         for suffix, office, income in (("a", A, "5.00"), ("b", B, "777.00")):
             entity = Entity.objects.create(office_id=office, name="ΠΕΛΑΤΗΣ_ΓΡΑΦΕΙΟΥ_" + ("Α" if suffix == "a" else "Β"), entity_type="CUSTOMER", vat_number="000000101")
             supplier = Entity.objects.create(office_id=office, name="ΠΡΟΜΗΘΕΥΤΗΣ_ΓΡΑΦΕΙΟΥ_" + ("Α" if suffix == "a" else "Β"), entity_type="SUPPLIER", vat_number="000000102")
-            account = CashAccount.objects.create(office_id=office, name="ΚΟΙΝΟ ΤΑΜΕΙΟ", opening_balance=Decimal("100.00"))
+            account = CashAccount.objects.create(opening_date=DAY,office_id=office, name="ΚΟΙΝΟ ΤΑΜΕΙΟ", opening_balance=Decimal("100.00"))
             category = Category.objects.create(office_id=office, name="ΚΑΤΗΓΟΡΙΑ_ΓΡΑΦΕΙΟΥ_" + ("Α" if suffix == "a" else "Β"))
             agreement = Agreement.objects.create(office_id=office, entity=entity, agreement_type="RECEIVABLE", description="ΣΥΜΦΩΝΙΑ_ΓΡΑΦΕΙΟΥ_" + ("Α" if suffix == "a" else "Β"), total_amount=Decimal("9999.00"), start_date=DAY)
             payable = Agreement.objects.create(office_id=office, entity=supplier, agreement_type="PAYABLE", description="ΥΠΟΧΡΕΩΣΗ_ΓΡΑΦΕΙΟΥ_" + ("Α" if suffix == "a" else "Β"), total_amount=Decimal("100.00"), start_date=DAY)
@@ -314,7 +314,7 @@ class OwnershipMigrationTests(TransactionTestCase):
         apps.get_model("accounting", "Transaction").objects.create(transaction_date=DAY, transaction_type="INCOME", amount="12.34", description="ΔΟΚΙΜΑΣΤΙΚΗ ΠΑΛΑΙΑ ΚΙΝΗΣΗ", cash_account=account, category=category, entity=entity, agreement=agreement)
         state = self.migrate_to("0004_office_ownership_nullable")
         previous = MODELS.copy()
-        for name in ('entity','transaction'):
+        for name in ('entity','transaction','cashaccount','category'):
             MODELS[name] = state.get_model('accounting', name)
         self.addCleanup(MODELS.update, previous)
 

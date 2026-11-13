@@ -37,8 +37,8 @@ class FinancialRegressionTests(TestCase):
         cls.customer_b = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Β S06", entity_type="CUSTOMER", vat_number="000000012")
         cls.supplier_a = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Α S06", entity_type="SUPPLIER", vat_number="000000013")
         cls.supplier_b = Entity.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ Β S06", entity_type="SUPPLIER", vat_number="000000014")
-        cls.source = CashAccount.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α S06", opening_balance=Decimal("100.00"))
-        cls.destination = CashAccount.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β S06", opening_balance=Decimal("100.00"))
+        cls.source = CashAccount.objects.create(opening_date=DAY,office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α S06", opening_balance=Decimal("100.00"))
+        cls.destination = CashAccount.objects.create(opening_date=DAY,office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β S06", opening_balance=Decimal("100.00"))
         cls.category = Category.objects.create(office=cls.office, name="ΔΟΚΙΜΑΣΤΙΚΕΣ ΥΠΗΡΕΣΙΕΣ S06")
         cls.receivable = Agreement.objects.create(office=cls.office, entity=cls.customer_a, agreement_type="RECEIVABLE",
             description="ΔΟΚΙΜΑΣΤΙΚΗ ΣΥΜΦΩΝΙΑ ΠΕΛΑΤΗ S06", total_amount=Decimal("100.00"), start_date=DAY)
@@ -287,7 +287,8 @@ class FinancialRegressionTests(TestCase):
 
     @regression_case("CTL-004")
     def test_transfer_moves_1000(self):
-        self.source.opening_balance = Decimal("2000.00"); self.source.save()
+        self.source = CashAccount.objects.create(office=self.office,name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ ΜΕΤΑΦΟΡΑΣ S19",
+            opening_balance=Decimal("2000.00"),opening_date=DAY)
         # Nonzero cancelling movements keep LEG-003 from masking this control.
         for account in (self.source, self.destination):
             self.movement("1.00", account=account); self.movement("1.00", "EXPENSE", account=account)

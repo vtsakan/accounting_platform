@@ -1,0 +1,19 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Έγκριση αρχικού υπολοίπου{% endblock %}
+{% block content %}
+<h1>Αρχικό υπόλοιπο — {{ account.name }}</h1>
+{% if account.opening_date %}<p class="alert alert-info">Το αρχικό υπόλοιπο έχει εγκριθεί: {{ account.opening_balance|euro }}, έναρξη {{ account.opening_date|el_date }}. Οι διορθώσεις γίνονται με προσαρμογή.</p>{% else %}
+<p>Το αρχικό υπόλοιπο ισχύει στην αρχή της επιλεγμένης ημέρας. Οι κινήσεις της ίδιας ημέρας προσμετρώνται. Οι παλαιότερες διατηρούνται στο ιστορικό και δεν προσμετρώνται ξανά.</p>
+{% if account.legacy_opening %}<p class="alert alert-warning">Διατηρημένο παλαιό ποσό: <strong>{{ account.opening_balance|euro }}</strong>. Η ημερομηνία χρειάζεται δικό σας έλεγχο· το ποσό δεν αλλάζει σε αυτό το βήμα.</p>{% endif %}
+{% endif %}
+{% if proposal %}<section class="alert alert-warning" aria-label="Έλεγχος ορίου αρχικού υπολοίπου"><h2 class="h4">Ελέγξτε πριν από την έγκριση</h2>
+<p>Ποσό: {{ form.amount.value }} · Ημερομηνία: {{ form.effective_date.value }}</p>
+<p>Προγενέστερες κινήσεις που εξαιρούνται: <strong>{{ proposal.inventory.excluded_count }}</strong>. Κινήσεις από την έναρξη και μετά: <strong>{{ proposal.inventory.included_count }}</strong>.</p>
+<p>Καθαρό ποσό προγενέστερων κινήσεων: {{ proposal.inventory.excluded_net|euro }}. Πρώτη διατηρημένη κίνηση: {% if proposal.inventory.earliest %}{{ proposal.inventory.earliest }}{% else %}Δεν υπάρχουν κινήσεις{% endif %}.</p>
+<p>Η προεπισκόπηση ισχύει για 15 λεπτά. Η επιβεβαίωση απαιτεί τον κωδικό σας και MFA των τελευταίων πέντε λεπτών.</p></section>{% endif %}
+<form method="post" class="card card-body">{% csrf_token %}
+{% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{% for field in form %}{% if field.is_hidden %}{{ field }}{% else %}<div class="mb-3">{{ field.label_tag }} {{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% for error in field.errors %}<div class="text-danger" role="alert">{{ error }}</div>{% endfor %}</div>{% endif %}{% endfor %}
+<div><button type="submit" name="action" value="preview" class="btn btn-outline-primary">Προεπισκόπηση ορίου</button> {% if proposal %}<button type="submit" name="action" value="confirm" class="btn btn-primary">Έγκριση αρχικού υπολοίπου</button>{% endif %} <a href="{% url 'cash-account-detail' account.pk %}">Επιστροφή στο ταμείο</a></div>
+</form>
+{% endblock %}

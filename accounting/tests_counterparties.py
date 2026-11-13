@@ -71,7 +71,7 @@ class CounterpartyWorkspaceTests(TestCase):
         cls.other = actor('s15-other', B)
         cls.entity = Entity.objects.create(office_id=A, entity_type='CUSTOMER', name='ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ Α', vat_number='000000101')
         cls.foreign = Entity.objects.create(office_id=B, entity_type='SUPPLIER', name='ΑΠΟΡΡΗΤΟ ΓΡΑΦΕΙΟΥ Β', vat_number='000000101')
-        cls.cash = CashAccount.objects.create(office_id=A, name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ', opening_balance='100.00')
+        cls.cash = CashAccount.objects.create(opening_date=DAY,office_id=A, name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ', opening_balance='100.00')
         cls.category = Category.objects.create(office_id=A, name='ΔΟΚΙΜΑΣΤΙΚΗ ΚΑΤΗΓΟΡΙΑ')
 
     def setUp(self):
@@ -441,7 +441,7 @@ class CounterpartyConcurrencyTests(TransactionTestCase):
     def setUp(self):
         self.user=actor('s15-race')
         self.entity=Entity.objects.create(office_id=A,entity_type='CUSTOMER',name='ΔΟΚΙΜΑΣΤΙΚΟΣ ΑΓΩΝΑΣ',vat_number='000000301')
-        self.cash=CashAccount.objects.create(office_id=A,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ ΑΓΩΝΑ')
+        self.cash=CashAccount.objects.create(opening_date=DAY,office_id=A,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ ΑΓΩΝΑ')
 
     def test_parallel_normalised_duplicate_is_one_record(self):
         gate=Barrier(2)

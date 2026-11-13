@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views  # Import views from the current app directory
+from . import views
+from . import account_views  # Import views from the current app directory
 from django.contrib.auth import views as django_auth
 from . import auth_views
 from . import office_views, invite_views
@@ -7,6 +8,16 @@ from . import counterparty_views
 from .office_access import office_write_guard
 
 urlpatterns = [
+    path('cash/', account_views.account_list, name='cash-account-list'),
+    path('cash/add/', account_views.account_add, name='cash-account-add'),
+    path('cash/<int:pk>/', account_views.account_detail, name='cash-account-detail'),
+    path('cash/<int:pk>/edit/', account_views.account_edit, name='cash-account-edit'),
+    path('cash/<int:pk>/opening/', account_views.account_opening, name='cash-account-opening'),
+    path('cash/<int:pk>/adjustment/', account_views.account_adjustment, name='cash-account-adjustment'),
+    path('categories/', account_views.category_list, name='category-list'),
+    path('categories/add/', account_views.category_add, name='category-add'),
+    path('categories/<int:pk>/edit/', account_views.category_edit, name='category-edit'),
+    path('categories/<int:pk>/retire/', account_views.category_retire, name='category-retire'),
     path('counterparties/', counterparty_views.workspace, name='counterparty-list'),
     path('entity/<int:pk>/archive/', counterparty_views.archive_view, name='archive-entity'),
     path('entity/<int:pk>/restore/', counterparty_views.restore, name='restore-entity'),

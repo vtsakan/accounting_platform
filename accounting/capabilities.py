@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from .membership import require_office_profile
 
 COMMON = frozenset({"clients.read", "clients.write", "finance.read", "finance.write", "ownership.accept"})
-MATRIX = {"accountant": COMMON, "owner": COMMON | {"office.settings", "staff.manage", "office.audit", "ownership.propose", "finance.reverse"}}
+MATRIX = {"accountant": COMMON, "owner": COMMON | {"office.settings", "staff.manage", "office.audit", "ownership.propose", "finance.reverse", "finance.opening"}}
 
 
 def require_capability(user, capability):

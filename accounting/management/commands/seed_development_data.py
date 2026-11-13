@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 
 from django.conf import settings
@@ -34,6 +35,6 @@ class Command(BaseCommand):
         client, _ = Entity.objects.get_or_create(office=office, vat_number=SYNTHETIC_AFM, defaults={
             "name": CLIENT_NAME, "entity_type": Entity.EntityType.CUSTOMER,
         })
-        account, _ = CashAccount.objects.get_or_create(office=office, name=ACCOUNT_NAME, defaults={"opening_balance": OPENING})
+        account, _ = CashAccount.objects.get_or_create(office=office, name=ACCOUNT_NAME, defaults={"opening_balance": OPENING, "opening_date": date(2026,1,1)})
         if client.name != CLIENT_NAME or client.entity_type != Entity.EntityType.CUSTOMER or account.opening_balance != OPENING:
             raise CommandError("The synthetic identifiers already contain different data; nothing was overwritten.")

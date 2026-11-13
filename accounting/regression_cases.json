@@ -1,45 +1,48 @@
 {
   "schema_version": 1,
-  "scope": "S06 correct financial contracts retained; S18 posting protections/correction adapters fix 13 cases. Other known defects remain visible.",
+  "scope": "Correct financial assertions retained; S18 fixes 13 cases and S19 fixes BAL-001–003; 10 remaining known cases are still explicit.",
   "cases": [
     {
       "case_id": "BAL-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_empty_account",
       "issue_id": "LEG-003",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-03"
       ],
       "fix_steps": [
         "S19"
       ],
-      "description": "Opening 100 with no movements must display 100"
+      "description": "Opening 100 with no movements must display 100",
+      "fixed_in": "S19"
     },
     {
       "case_id": "BAL-002",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_only",
       "issue_id": "LEG-003",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-03"
       ],
       "fix_steps": [
         "S19"
       ],
-      "description": "Opening 100 plus income 50 without expenses must display 150"
+      "description": "Opening 100 plus income 50 without expenses must display 150",
+      "fixed_in": "S19"
     },
     {
       "case_id": "BAL-003",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_only",
       "issue_id": "LEG-003",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-03"
       ],
       "fix_steps": [
         "S19"
       ],
-      "description": "Opening 100 minus expense 20 without income must display 80"
+      "description": "Opening 100 minus expense 20 without income must display 80",
+      "fixed_in": "S19"
     },
     {
       "case_id": "TRF-001",

@@ -1,0 +1,14 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Ταμεία{% endblock %}
+{% block content %}
+<h1>Ταμεία</h1>
+<a class="btn btn-primary mb-3" href="{% url 'cash-account-add' %}">Νέο ταμείο</a>
+<form method="get" class="mb-3"><label for="account-state">Κατάσταση</label>
+<select id="account-state" name="state"><option value="all"{% if state == 'all' %} selected{% endif %}>Όλα</option><option value="active"{% if state == 'active' %} selected{% endif %}>Ενεργά</option><option value="inactive"{% if state == 'inactive' %} selected{% endif %}>Ανενεργά</option><option value="pending"{% if state == 'pending' %} selected{% endif %}>Αναμονή αρχικού υπολοίπου</option></select>
+<button type="submit" class="btn btn-outline-secondary">Εμφάνιση</button></form>
+{% if error %}<p class="alert alert-danger" role="alert">{{ error }}</p>{% endif %}
+<div class="table-responsive"><table class="table"><caption>Ταμεία λογιστικού γραφείου</caption><thead><tr><th scope="col">Όνομα</th><th scope="col">Κατάσταση</th><th scope="col">Έναρξη</th><th scope="col">Υπόλοιπο σήμερα</th></tr></thead><tbody>
+{% for account in page %}<tr><td><a href="{% url 'cash-account-detail' account.pk %}">{{ account.name }}</a></td><td>{% if account.is_active %}Ενεργό{% else %}Ανενεργό{% endif %}</td><td>{% if account.opening_date %}{{ account.opening_date|el_date }}{% else %}Χρειάζεται επιβεβαίωση{% endif %}</td><td>{% if account.current_balance == None %}Δεν έχει οριστεί{% else %}{{ account.current_balance|euro }}{% endif %}</td></tr>
+{% empty %}<tr><td colspan="4">Δεν βρέθηκαν ταμεία.</td></tr>{% endfor %}</tbody></table></div>
+<nav aria-label="Σελίδες ταμείων">{% if page.has_previous %}<a href="?state={{ state|urlencode }}&amp;page={{ page.previous_page_number }}">Προηγούμενη</a>{% endif %} <span>Σελίδα {{ page.number }} από {{ page.paginator.num_pages }}</span> {% if page.has_next %}<a href="?state={{ state|urlencode }}&amp;page={{ page.next_page_number }}">Επόμενη</a>{% endif %}</nav>
+{% endblock %}

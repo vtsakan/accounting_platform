@@ -99,8 +99,10 @@ def cash_values(*,amount,transaction_date,transaction_type,cash_account,category
 
 
 def validate_references(values,office):
-    scoped_lock(CashAccount,office,values['cash_account_id'],active=True)
-    if values['category_id']:scoped_lock(Category,office,values['category_id'])
+    account=scoped_lock(CashAccount,office,values['cash_account_id'],active=True)
+    from .account_services import validate_account_date
+    validate_account_date(account,values['transaction_date'])
+    if values['category_id']:scoped_lock(Category,office,values['category_id'],active=True)
     agreement=scoped_lock(Agreement,office,values['agreement_id']) if values['agreement_id'] else None
     entity=scoped_lock(Entity,office,values['entity_id'],active=True) if values['entity_id'] else None
     if agreement:
@@ -146,6 +148,8 @@ def post_transfer(user,*,from_account,to_account,amount,transfer_date,descriptio
         {'from':source_key,'to':dest_key,'amount':str(amount),'date':transfer_date.isoformat(),'description_digest':fingerprint(description)},'Εσωτερική μεταφορά')
     if replay:return list(command.entries.order_by('pk'))
     accounts={key:scoped_lock(CashAccount,office,key,active=True) for key in sorted((source_key,dest_key))}
+    from .account_services import validate_account_date
+    for account in accounts.values():validate_account_date(account,transfer_date)
     group=uuid.uuid4()
     with audit_context(user,'Εσωτερική μεταφορά',command):
         entries=[Transaction.objects.create(office=office,command=command,posting_kind='TRANSFER',transfer_id=group,
@@ -168,6 +172,8 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
         {'entry':entry_id,'date':effective_date.isoformat(),'reason_digest':fingerprint(reason),'replacement':replacement_payload},reason)
     if replay:return list(command.entries.order_by('pk'))
     original=scoped_lock(Transaction,office,entry_id)
+    from .account_services import validate_account_date
+    validate_account_date(scoped_lock(CashAccount,office,original.cash_account_id),effective_date)
     if effective_date<original.transaction_date:raise ValidationError('Ο αντιλογισμός δεν προηγείται της αρχικής κίνησης.')
     if original.posting_kind=='REVERSAL' or Transaction.objects.filter(reversal_of=original).exists():raise ValidationError('Η κίνηση έχει ήδη αντιλογιστεί ή αποτελεί αντιλογισμό.')
     # Legacy UUIDs also exist on ordinary rows: only an actual peer/pair means transfer.
@@ -188,6 +194,9 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
 
 @transaction.atomic
 def save_master(instance,user):
+    if isinstance(instance,(CashAccount,Category)):
+        from .account_services import save_reference
+        return save_reference(instance,user)
     office=locked_office(user,'finance.write')
     if instance.office_id and instance.office_id!=office.pk:raise PermissionDenied('Δεν έχετε πρόσβαση σε αυτή την εγγραφή.')
     instance.office_id=office.pk
@@ -227,7 +236,7 @@ def finance_history(user,*,target_model,target_id):
     from .capabilities import require_capability
     from .finance_models import FinanceAuditEvent
     profile=require_capability(user,'office.audit')
-    if target_model not in {'transaction','agreement','cashaccount','category'}:
+    if target_model not in {'transaction','agreement','cashaccount','category','cashadjustment'}:
         raise ValidationError('Ο τύπος οικονομικού ιστορικού δεν υποστηρίζεται.')
     return list(FinanceAuditEvent.objects.filter(office_id=profile.office_id,target_model=target_model,target_id=target_id)
         .select_related('actor').order_by('-recorded_at','-pk')[:100])

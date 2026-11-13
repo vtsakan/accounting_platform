@@ -13,6 +13,8 @@ ENTITY_FIELDS = ('id','entity_type','name','vat_number','tax_office','address','
                  'phone_number','email','created_at','updated_at','office_id')
 TRANSACTION_FIELDS=('id','transaction_date','transaction_type','amount','description','remarks','transfer_id',
     'cash_account_id','category_id','entity_id','agreement_id','created_at','updated_at','office_id')
+CASH_FIELDS=('id','name','opening_balance','is_active','office_id')
+CATEGORY_FIELDS=('id','name','parent_id','office_id')
 LINKS = (("category", "parent_id", "category"), ("agreement", "entity_id", "entity"),
          ("transaction", "cash_account_id", "cashaccount"), ("transaction", "category_id", "category"),
          ("transaction", "entity_id", "entity"), ("transaction", "agreement_id", "agreement"))
@@ -22,7 +24,7 @@ def source():
     rows, snapshot = {}, []
     for name, model in MODELS.items():
         # This is the S12 historical mapping contract, not later workspace data.
-        for row in model.objects.order_by("pk").values(*(ENTITY_FIELDS if name == 'entity' else TRANSACTION_FIELDS if name == 'transaction' else ())):
+        for row in model.objects.order_by("pk").values(*(ENTITY_FIELDS if name == 'entity' else TRANSACTION_FIELDS if name == 'transaction' else CASH_FIELDS if name=='cashaccount' else CATEGORY_FIELDS if name=='category' else ())):
             key = (name, row["id"])
             rows[key] = row
             original = {k: v for k, v in row.items() if k != "office_id"}

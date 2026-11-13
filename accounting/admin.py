@@ -79,6 +79,10 @@ class OfficeAdminMixin:
                     queryset = queryset.filter(is_archived=False)
                 elif self.model is Agreement:
                     queryset = queryset.filter(entity__is_archived=False)
+                elif self.model is CashAccount:
+                    queryset = queryset.filter(is_active=True,opening_date__isnull=False)
+                elif self.model is Category:
+                    queryset = queryset.filter(is_active=True)
             return queryset
         except PermissionDenied:
             return self.model.objects.none()
@@ -103,6 +107,10 @@ class OfficeAdminMixin:
             queryset = queryset.filter(is_archived=False)
         elif remote is Agreement:
             queryset = queryset.filter(entity__is_archived=False)
+        elif remote is CashAccount:
+            queryset = queryset.filter(is_active=True,opening_date__isnull=False)
+        elif remote is Category:
+            queryset = queryset.filter(is_active=True)
         kwargs['queryset'] = queryset
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
@@ -124,7 +132,7 @@ class OfficeAdminMixin:
                     for name, field in self.fields.items():
                         if isinstance(field, forms.ModelChoiceField):
                             old_key = getattr(self.instance, name + '_id', None)
-                            if old_key is not None and field.queryset.model in (Entity, Agreement):
+                            if old_key is not None and field.queryset.model in (Entity, Agreement, CashAccount, Category):
                                 allowed = records(field.queryset.model, actor)
                                 field.queryset = allowed.filter(Q(pk__in=field.queryset.values('pk')) | Q(pk=old_key))
         return ScopedAdminForm
@@ -202,13 +210,39 @@ class EntityAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
             result = result | queryset.filter(vat_key__contains=key)
         return result, duplicates
 
+class ReferenceAdminForm(forms.ModelForm):
+    version=forms.IntegerField(required=False,min_value=0,widget=forms.HiddenInput,label='Έκδοση εγγραφής')
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        if not self.is_bound:self.initial['version']=self.instance.record_version
+
+class AccountAdminForm(ReferenceAdminForm):
+    class Meta:
+        model=CashAccount
+        fields='__all__'
+
+class CategoryAdminForm(ReferenceAdminForm):
+    class Meta:
+        model=Category
+        fields='__all__'
+
+class ReferenceAdminMixin:
+    def save_model(self,request,obj,form,change):
+        from .account_services import save_reference
+        if change and form.cleaned_data.get('version') is None:raise ValidationError('Ανανεώστε τη σελίδα πριν από την επεξεργασία.')
+        save_reference(obj,request.user,expected_version=form.cleaned_data.get('version'))
+
 @admin.register(CashAccount)
-class CashAccountAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+class CashAccountAdmin(ReferenceAdminMixin, OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+    form=AccountAdminForm
+    readonly_fields=('opening_balance','opening_date','opening_approved_at','legacy_opening','record_version')
     list_display = ('name', 'opening_balance', 'is_active')
     list_filter = ('is_active',)
 
 @admin.register(Category)
-class CategoryAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+class CategoryAdmin(ReferenceAdminMixin, OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
+    form=CategoryAdminForm
+    readonly_fields=('record_version',)
     list_display = ('name', 'parent')
     list_filter = (('parent', OfficeRelatedFilter),)
     search_fields = ('name',)

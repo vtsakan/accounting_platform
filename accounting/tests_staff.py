@@ -1,3 +1,5 @@
+from datetime import date
+S19_SYNTHETIC_OPENING_DAY=date(2026,1,1)
 """S14 policy, onboarding, office boundaries, audit and PostgreSQL races."""
 from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
@@ -213,7 +215,7 @@ class OfficeSettingsTests(StaffFixtures, TestCase):
             require_capability(self.owner, "future-unknown-operation")
         self.assertEqual(self.member_client.post("/entity/add/", {"is_customer": True, "legal_kind": "BUSINESS", "version": 0, "name": "ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S14"}).status_code, 302)
         entity = Entity.objects.get(name="ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ S14")
-        cash = CashAccount.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ S14")
+        cash = CashAccount.objects.create(opening_date=S19_SYNTHETIC_OPENING_DAY,office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ S14")
         category = Category.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΗ ΚΑΤΗΓΟΡΙΑ S14")
         response = self.member_client.post("/income/add/", {"transaction_date": "2026-11-10", "amount": "12,34",
             "description": "ΔΟΚΙΜΑΣΤΙΚΗ ΕΙΣΠΡΑΞΗ S14", "cash_account": cash.pk, "category": category.pk, "entity": entity.pk, "agreement": ""})

@@ -1,5 +1,5 @@
 {
-  "step": "S16",
+  "step": "S19",
   "scope": "Implemented Django routes, registered business admin, database links, explicit operator commands, execution adapter",
   "requirements": [
     "UR-OFF-01",
@@ -337,6 +337,93 @@
     },
     {
       "route": "add-transfer",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "cash-account-list",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "cash-account-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "cash-account-detail",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "cash-account-edit",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "cash-account-opening",
+      "realm": "office-business",
+      "capability": "finance.opening",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "cash-account-adjustment",
+      "realm": "office-business",
+      "capability": "finance.opening",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "category-list",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "category-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "category-edit",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "category-retire",
       "realm": "office-business",
       "capability": "finance.write",
       "methods": [

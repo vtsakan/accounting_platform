@@ -1,0 +1,18 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Ταμείο — {{ account.name }}{% endblock %}
+{% block content %}
+<h1>{{ account.name }}</h1><p>{% if account.is_active %}Ενεργό ταμείο{% else %}Ανενεργό ταμείο — το ιστορικό διατηρείται{% endif %}</p>
+<p><a href="{% url 'cash-account-edit' account.pk %}">Επεξεργασία στοιχείων</a> · <a href="{% url 'cash-account-list' %}">Όλα τα ταμεία</a></p>
+<form method="get" class="mb-3">{{ form.as_p }}<button type="submit" class="btn btn-outline-secondary">Υπολογισμός</button></form>
+<section class="card card-body mb-3" aria-label="Υπολογισμός υπολοίπου"><h2 class="h4">Υπόλοιπο στις {{ day|el_date }}</h2>
+{% if account.current_balance == None %}<p class="alert alert-warning">Δεν υπάρχει εγκεκριμένο αρχικό υπόλοιπο για αυτή την ημερομηνία.</p>{% else %}
+<p>Αρχικό: {{ account.opening_balance|euro }} από {{ account.opening_date|el_date }} · Εισερχόμενα: {{ account.total_income|euro }} · Εξερχόμενα: {{ account.total_expense|euro }} · Προσαρμογές: {{ account.adjustment_total|euro }}</p>
+<strong class="fs-4">{{ account.current_balance|euro }}</strong>{% endif %}
+{% if request.accountant_profile.role == 'owner' %}<p class="mt-3">{% if account.opening_date %}<a href="{% url 'cash-account-adjustment' account.pk %}">Τεκμηριωμένη προσαρμογή αρχικού υπολοίπου</a>{% else %}<a href="{% url 'cash-account-opening' account.pk %}">Έλεγχος και έγκριση αρχικού υπολοίπου</a>{% endif %}</p>{% endif %}
+</section>
+<h2 class="h4">Διατηρημένο ιστορικό κινήσεων</h2><div class="table-responsive"><table class="table"><thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Περιγραφή</th><th scope="col">Τύπος</th><th scope="col">Ποσό</th><th scope="col">Ένταξη στο υπόλοιπο</th></tr></thead><tbody>
+{% for entry in page %}<tr><td>{{ entry.transaction_date|el_date }}</td><td>{{ entry.description }}</td><td>{{ entry.get_transaction_type_display }}</td><td>{{ entry.amount|euro }}</td><td>{% if not account.opening_date %}Αναμονή επιβεβαίωσης{% elif entry.transaction_date < account.opening_date %}Πριν από την έναρξη{% elif entry.transaction_date > day %}Μετά την ημερομηνία προβολής{% else %}Περιλαμβάνεται{% endif %}</td></tr>{% empty %}<tr><td colspan="5">Δεν υπάρχουν κινήσεις.</td></tr>{% endfor %}</tbody></table></div>
+<nav aria-label="Σελίδες ιστορικού">{% if page.has_previous %}<a href="?as_of={{ day|date:'Y-m-d' }}&amp;page={{ page.previous_page_number }}">Προηγούμενη</a>{% endif %} <span>Σελίδα {{ page.number }} από {{ page.paginator.num_pages }}</span> {% if page.has_next %}<a href="?as_of={{ day|date:'Y-m-d' }}&amp;page={{ page.next_page_number }}">Επόμενη</a>{% endif %}</nav>
+<h2 class="h4 mt-4">Προσαρμογές αρχικού υπολοίπου</h2>
+<ul class="list-group mb-4">{% for entry in adjustments %}<li class="list-group-item">#{{ entry.pk }} · {{ entry.effective_date|el_date }} · {{ entry.amount|euro }} · {{ entry.reason }}{% if entry.reversal_of_id %} · Αντιλογισμός #{{ entry.reversal_of_id }}{% elif request.accountant_profile.role == 'owner' %} · <a href="{% url 'cash-account-adjustment' account.pk %}?reverse={{ entry.pk }}">Αντιλογισμός προσαρμογής</a>{% endif %}</li>{% empty %}<li class="list-group-item">Δεν υπάρχουν προσαρμογές.</li>{% endfor %}</ul>
+{% endblock %}

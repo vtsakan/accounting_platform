@@ -1,3 +1,5 @@
+from datetime import date
+S19_SYNTHETIC_OPENING_DAY=date(2026,1,1)
 import io
 import secrets
 from decimal import Decimal
@@ -28,7 +30,7 @@ class PostgreSQLFoundationTests(TestCase):
 
     def test_greek_text_afm_decimal_and_aware_timestamp_persist(self):
         client = Entity.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΗ ΕΤΑΙΡΕΙΑ Ωμέγα", entity_type="CUSTOMER", vat_number="000000001")
-        account = CashAccount.objects.create(office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ", opening_balance=Decimal("1234.56"))
+        account = CashAccount.objects.create(opening_date=S19_SYNTHETIC_OPENING_DAY,office=self.office, name="ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ", opening_balance=Decimal("1234.56"))
         movement = Transaction.objects.create(office=self.office, transaction_date=timezone.localdate(), transaction_type="INCOME",
             amount=Decimal("12.34"), description="ΔΟΚΙΜΑΣΤΙΚΗ ΕΙΣΠΡΑΞΗ", cash_account=account, entity=client)
         client.refresh_from_db(); account.refresh_from_db(); movement.refresh_from_db()

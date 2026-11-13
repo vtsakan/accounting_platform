@@ -20,18 +20,33 @@ Finish with a concise result: what changed; files/migrations and commands; check
 
 ## Current checkpoint
 
-S18 is selected. Read docs/implementation/financial_posting.md. Keep original
-migrations 0001–0010, S17 bound policy/review and historical evidence intact.
-S18 adds exact money, immutable cash, explicit commands/services and database-
-written append-only audit with migrations 0011/0012. The core correction API
-requires owner/password/recent MFA; its full UI is S24. Retain every financial
-expected-value assertion: 13 cases now pass, 13 known defects remain. Keep all
-old test names and the 652-case S16 matrix. Native PG proof is Prepared until
-tools/verify_s18.py --record succeeds in disposable laptop Docker. Commit its
-four generated files once, then explicitly migrate/restart the retained demo.
-Never auto-upgrade the working VM or reuse old context-pinned installers. No
-human accounts, keys, MFA or volumes are recreated. S19 dated balances follows
-this gate; all full requirement acceptances remain Pending. Below is history.
+S19 is selected from the actual pushed/verified S18 head
+22dbd3a12816cfaceb62958ad45e19231669f3be (428 tests, 415 passed, 13 exact
+known failures). Read docs/implementation/cash_accounts_categories.md.
+Preserve original migrations 0001–0012, all historical evidence, approved S17
+policy/review, exact-money guards, every old test name and financial assertion.
+S19 adds migrations 0013/0014, Greek cash/category screens, one dated cash
+selector, explicit owner/password/recent-MFA opening approval and immutable
+signed adjustments outside operating cash. Existing opening amounts are retained
+with an unknown date until their owner reviews the cutoff; never infer it or
+silently rewrite a legacy amount. Human adjustments are effective today; wider
+closed-period/correction UI remains S24. Categories cannot cycle, cross offices
+or delete history. New work excludes retired references; original-linked
+reversals retain them. Retain all 652 old boundary cases and cover every new
+route. BAL-001–003 now pass; the other 10 known defects remain for their steps.
+Native PostgreSQL proof is Prepared. Complete tools/verify_s19.py --record on
+laptop Docker, commit the generated evidence/state once, then explicitly migrate
+and restart the retained local demo. Keep the VM, people, MFA/keys/volumes and
+all 85 full acceptances unchanged. Do not reuse old context-pinned deployment
+installers. Stop after S19; S20 follows its Docker gate. Below is history.
+
+## Historical S18 checkpoint
+
+S18 is Verified in the operator's Docker proof: 428 tests, 415 passed and 13
+exact known failures. The retained demo was explicitly migrated through 0012
+and restarted successfully. Core correction requires owner/password/recent MFA;
+its full UI is S24. See docs/implementation/financial_posting.md and the
+unchanged S18 verification evidence. This history is not a new VM deployment.
 
 <!-- S17-REVIEW-CLOSED -->
 S17 financial-policy choices D08-01–D08-10 are accepted by the product owner.

@@ -539,3 +539,35 @@ paired transfer correction, closed-period management and the complete
 lifecycle/correction UI remain their S19/S21–S24 steps. The historical S14 role
 snapshot remains unchanged; the current implementation extension is recorded
 here and in financial_posting.md. Full release acceptance is still Pending.
+
+
+## S19 cash-account and category implementation — 2026-11-13
+
+Selected from actual S18 Docker head `22dbd3a12816cfaceb62958ad45e19231669f3be`.
+This implements the already accepted D08 opening/decimal/correction boundaries;
+it does not manufacture a new accountant approval or tax rule.
+
+- An opening is a signed amount at the **start** of its approved business date.
+  Same-day cash is included; older cash is retained and excluded. All old amounts
+  remain byte-for-value equivalent and their new date is NULL until explicit
+  owner review. New staff-created accounts also await review, including zero.
+- Metadata maintenance remains `finance.write` for owner/accountant. Financial
+  opening approval/correction uses owner-only `finance.opening`, real password,
+  MFA within five minutes, office/user lock and an exact operation identity.
+  Approval binds a 15-minute signed amount/date/version/history preview and an
+  acknowledgement. A legacy amount cannot change while establishing its date.
+- Approved base amount/date cannot be edited. Signed, attributable, immutable
+  adjustments and their exact linked inverses are separate from operating cash.
+  Human adjustments use today's Athens business date to preserve prior daily
+  balances. Backdating/closed-period administration remains S24; no automatic
+  period inference is introduced.
+- Used and unused references are retained, with deactivate/retire actions and
+  optimistic versions. Category parent must belong to the same office, with no
+  cycles, a 64-level ceiling and unique sibling/root names. Retire or move active
+  children first. Category changes do not change posted cash amounts or links.
+- A writable per-office PostgreSQL structure guard prevents raw-SQL write skew
+  under both Read Committed and Repeatable Read. The existing operator/DDL trust
+  realm remains explicit; database-role audit never invents a human actor.
+- Native proof is Prepared; laptop Docker is the S19 completion gate. Preserve
+  the actual S18 evidence, original twelve migrations, existing accounts, local
+  encrypted backup policy and live VM. All 85 full acceptances remain Pending.

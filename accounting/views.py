@@ -18,26 +18,8 @@ import uuid
 
 @login_required
 def dashboard_view(request):
-    # This is an advanced but very efficient way to calculate balances for all accounts in one go.
-    # It gets the sum of all 'INCOME' transactions and subtracts the sum of all 'EXPENSE' transactions.
-
-    accounts_with_balances = records(CashAccount, request.user).filter(is_active=True).annotate(
-        # Calculate the total income for each account
-        total_income=Sum(
-            'transaction__amount',
-            filter=Q(transaction__transaction_type='INCOME'),
-            output_field=DecimalField()
-        ),
-        # Calculate the total expense for each account
-        total_expense=Sum(
-            'transaction__amount',
-            filter=Q(transaction__transaction_type='EXPENSE'),
-            output_field=DecimalField()
-        )
-    ).annotate(
-        # Calculate the final balance
-        current_balance=F('opening_balance') + F('total_income') - F('total_expense')
-    )
+    from .cash_selectors import cash_accounts
+    accounts_with_balances=cash_accounts(request.user)
 
     # Prepare the data to be sent to the template
     context = {

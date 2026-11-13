@@ -96,8 +96,8 @@ class ExpenseForm(GreekFormMixin, forms.Form):
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
-    cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True), label="Ταμείο")
-    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.all(), label="Κατηγορία")
+    cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
+    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_supplier=True, is_archived=False), required=False, label="Προμηθευτής")
 
     agreement = AgreementChoiceField( # Use our new custom field
@@ -117,8 +117,8 @@ class IncomeForm(GreekFormMixin, forms.Form):
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
-    cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True), label="Ταμείο")
-    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.all(), label="Κατηγορία")
+    cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
+    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_customer=True, is_archived=False), required=False, label="Πελάτης")
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),
@@ -232,12 +232,12 @@ class TransferForm(GreekFormMixin, forms.Form):
         decimal_places=2,
     )
     from_account = forms.ModelChoiceField(
-        queryset=CashAccount.objects.filter(is_active=True),
+        queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False),
         label=_("From Account"),
         widget=forms.Select(attrs=bootstrap_select_attrs)
     )
     to_account = forms.ModelChoiceField(
-        queryset=CashAccount.objects.filter(is_active=True),
+        queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False),
         label=_("To Account"),
         widget=forms.Select(attrs=bootstrap_select_attrs)
     )

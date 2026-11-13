@@ -82,8 +82,8 @@ class BoundaryFixtures:
             label='ΔΟΚΙΜΑΣΤΙΚΟ ΓΡΑΦΕΙΟ Α ' if suffix=='a' else 'ΞΕΝΟ_ΓΡΑΦΕΙΟ_Β_S16 '
             item=Entity.objects.create(office_id=office,entity_type='CUSTOMER',is_customer=True,is_supplier=True,
                 name=label+'ΣΥΝΑΛΛΑΣΣΟΜΕΝΟΣ',vat_number='000000601')
-            cash=CashAccount.objects.create(office_id=office,name=label+'ΤΑΜΕΙΟ',opening_balance=Decimal('100.00'))
-            second=CashAccount.objects.create(office_id=office,name=label+'ΔΕΥΤΕΡΟ ΤΑΜΕΙΟ')
+            cash=CashAccount.objects.create(opening_date=DAY,office_id=office,name=label+'ΤΑΜΕΙΟ',opening_balance=Decimal('100.00'))
+            second=CashAccount.objects.create(opening_date=DAY,office_id=office,name=label+'ΔΕΥΤΕΡΟ ΤΑΜΕΙΟ')
             category=Category.objects.create(office_id=office,name=label+'ΚΑΤΗΓΟΡΙΑ')
             agreement=Agreement.objects.create(office_id=office,entity=item,agreement_type='RECEIVABLE',description=label+'ΣΥΜΦΩΝΙΑ',total_amount=Decimal('100.00'),start_date=DAY)
             payable=Agreement.objects.create(office_id=office,entity=item,agreement_type='PAYABLE',description=label+'ΠΛΗΡΩΤΕΑ ΣΥΜΦΩΝΙΑ',total_amount=Decimal('100.00'),start_date=DAY)
@@ -181,6 +181,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         kwargs={}
         if name in {'entity-detail','edit-entity','archive-entity','restore-entity'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
         if name in {'agreement-detail','edit-agreement'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
+        if name in {'cash-account-detail','cash-account-edit','cash-account-opening','cash-account-adjustment'}:kwargs={'pk':getattr(self,'cash_'+suffix).pk}
+        if name in {'category-edit','category-retire'}:kwargs={'pk':getattr(self,'category_'+suffix).pk}
         if name=='office-invitation-action':kwargs={'key':getattr(self,'invite_'+suffix).pk,'action':'cancel'}
         if name=='office-member-action':kwargs={'user_id':(self.member_b if foreign else self.member).pk,'action':'deactivate'}
         if name=='office-handover-detail':kwargs={'key':getattr(self,'handover_'+suffix).pk}
@@ -214,7 +216,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
                 with self.subTest(persona=persona,route=name):
                     if persona in {'anonymous','inactive-user'}:expected=302
                     elif persona not in {'owner','accountant'}:expected=403
-                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit'}:expected=403
+                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening'}:expected=403
                     elif row['methods']==['POST']:expected=405
                     else:expected=200
                     response=client.get(self.url(name))
@@ -447,7 +449,7 @@ class BoundaryAdminTests(BoundaryFixtures,TestCase):
             'name':'ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ ADMIN G1','opening_balance':'12.34','is_active':'on','office_id':B,'_save':'1'})
         self.assertEqual(response.status_code,302, response.context['adminform'].form.errors if response.status_code==200 else '')
         item=CashAccount.objects.get(name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ ADMIN G1')
-        self.assertEqual(str(item.office_id),A);self.assertEqual(item.opening_balance,Decimal('12.34'))
+        self.assertEqual(str(item.office_id),A);self.assertEqual(item.opening_balance,Decimal('0.00'));self.assertIsNone(item.opening_date)  # Untrusted admin amount cannot approve an opening.
         self.assertEqual(snapshot(B),before_b)
         limited=self.client_for(self.staff)
         for target in (reverse('admin:auth_user_changelist'),reverse('admin:auth_user_change',args=[self.owner_b.pk]),

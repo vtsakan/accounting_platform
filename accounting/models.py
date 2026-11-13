@@ -112,8 +112,19 @@ class CounterpartyEvent(models.Model):
 class CashAccount(OfficeOwned):
     office_unique_fields = ("name",)
     name = models.CharField(max_length=100, verbose_name="Όνομα Ταμείου")
-    opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"), verbose_name="Αρχικό Υπόλοιπο")
+    opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"), editable=False, verbose_name="Αρχικό Υπόλοιπο")
     is_active = models.BooleanField(default=True, verbose_name="Ενεργό")
+    opening_date = models.DateField(null=True, blank=True, editable=False, verbose_name="Ημερομηνία αρχικού υπολοίπου")
+    opening_approved_at = models.DateTimeField(null=True, blank=True, editable=False, verbose_name="Καταγραφή έγκρισης")
+    legacy_opening = models.BooleanField(default=False, editable=False, verbose_name="Αρχικό ποσό από παλαιά εγγραφή")
+    opening_key_digest = models.CharField(max_length=71, blank=True, default='', editable=False)
+    opening_payload_digest = models.CharField(max_length=71, blank=True, default='', editable=False)
+    record_version = models.PositiveBigIntegerField(default=0, editable=False, verbose_name="Έκδοση εγγραφής")
+
+    def delete(self,*args,**kwargs):
+        from django.core.exceptions import ValidationError
+        raise ValidationError("Το ταμείο διατηρείται με το ιστορικό του. Χρησιμοποιήστε απενεργοποίηση.")
+
 
     def __str__(self):
         return self.name
@@ -123,7 +134,8 @@ class CashAccount(OfficeOwned):
         verbose_name_plural = "Ταμεία"
         constraints = [models.CheckConstraint(condition=models.Q(opening_balance__gte=Decimal('-9999999999.99'),opening_balance__lte=Decimal('9999999999.99'),opening_balance=Round('opening_balance',2)),name='s18_cash_opening_cents',violation_error_message='Το ποσό πρέπει να είναι έγκυρο και να έχει έως δύο δεκαδικά ψηφία.'),
                        models.UniqueConstraint(fields=["id", "office"], name="cashaccount_id_office_key"),
-                       models.UniqueConstraint(fields=["office", "name"], name="cashaccount_office_name_key")]
+                       models.UniqueConstraint(fields=["office", "name"], name="cashaccount_office_name_key"),
+                       models.UniqueConstraint(fields=['office','opening_key_digest'],condition=~models.Q(opening_key_digest=''),name='s19_opening_key') ]
 
 # ===================================================================
 # Model 3: Category (The "Κατηγορίες")
@@ -132,12 +144,40 @@ class Category(OfficeOwned):
     name = models.CharField(max_length=100, verbose_name="Όνομα Κατηγορίας")
     parent = models.ForeignKey(
         'self', 
-        on_delete=models.CASCADE, 
+        on_delete=models.PROTECT,
         null=True, 
         blank=True, 
         related_name='subcategories',
         verbose_name="Γονική Κατηγορία"
     )
+
+    is_active = models.BooleanField(default=True, verbose_name="Ενεργή κατηγορία")
+    record_version = models.PositiveBigIntegerField(default=0, editable=False, verbose_name="Έκδοση εγγραφής")
+
+    def validate_hierarchy(self):
+        from django.core.exceptions import ValidationError
+        seen={self.pk} if self.pk else set()
+        key=self.parent_id
+        for depth in range(64):
+            if key is None:return
+            if key in seen:raise ValidationError({'parent':"Η ιεραρχία κατηγοριών δεν επιτρέπεται να περιέχει κύκλο."})
+            seen.add(key)
+            row=type(self).objects.filter(pk=key,office_id=self.office_id).values('parent_id','is_active').first()
+            if row is None:raise ValidationError({'parent':"Η γονική κατηγορία δεν είναι διαθέσιμη στο γραφείο."})
+            if self.is_active and not row['is_active']:raise ValidationError({'parent':"Επιλέξτε ενεργή γονική κατηγορία."})
+            key=row['parent_id']
+        raise ValidationError({'parent':"Η ιεραρχία περιορίζεται σε 64 επίπεδα."})
+
+    def clean(self):
+        super().clean();self.validate_hierarchy()
+
+    def save(self,*args,**kwargs):
+        self.validate_hierarchy()
+        return super().save(*args,**kwargs)
+
+    def delete(self,*args,**kwargs):
+        from django.core.exceptions import ValidationError
+        raise ValidationError("Η κατηγορία διατηρείται με το ιστορικό της. Χρησιμοποιήστε απόσυρση.")
 
     def __str__(self):
         if self.parent:
@@ -148,7 +188,8 @@ class Category(OfficeOwned):
         unique_together = ('office', 'name', 'parent',)
         verbose_name = "Κατηγορία"
         verbose_name_plural = "Κατηγορίες"
-        constraints = [models.UniqueConstraint(fields=["id", "office"], name="category_id_office_key")]
+        constraints = [models.UniqueConstraint(fields=["id", "office"], name="category_id_office_key"),
+            models.UniqueConstraint(fields=['office','name'],condition=models.Q(parent__isnull=True),name='s19_root_category_name',violation_error_message="Υπάρχει ήδη βασική κατηγορία με αυτό το όνομα.")]
 
 
 
@@ -298,3 +339,5 @@ from .auth_models import AuthenticatorDevice, AuthRateBucket, AuthSecurityState,
 from .office_models import StaffInvitation, OwnershipHandover, OfficeAuditEvent  # noqa: E402,F401
 
 from .finance_models import FinanceCommand, FinanceAuditEvent
+
+from .account_models import CashAdjustment, FinanceStructureLock

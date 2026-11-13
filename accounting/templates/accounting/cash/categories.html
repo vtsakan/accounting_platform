@@ -1,0 +1,10 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Κατηγορίες κινήσεων{% endblock %}
+{% block content %}
+<h1>Κατηγορίες κινήσεων</h1><a class="btn btn-primary mb-3" href="{% url 'category-add' %}">Νέα κατηγορία</a>
+<p>Τα ποσά και οι συνδέσεις του ιστορικού διατηρούνται κατά τη μετονομασία ή την απόσυρση.</p>
+<div class="table-responsive"><table class="table"><caption>Ιεραρχία κατηγοριών γραφείου</caption><thead><tr><th scope="col">Όνομα</th><th scope="col">Γονική κατηγορία</th><th scope="col">Κατάσταση</th><th scope="col">Ενέργειες</th></tr></thead><tbody>
+{% for category in page %}<tr><td>{{ category.name }}</td><td>{{ category.parent.name|default:'Χωρίς γονική κατηγορία' }}</td><td>{% if category.is_active %}Ενεργή{% else %}Αποσυρμένη{% endif %}</td><td><a href="{% url 'category-edit' category.pk %}">Επεξεργασία</a> · <a href="{% url 'category-retire' category.pk %}">{% if category.is_active %}Απόσυρση{% else %}Επαναφορά{% endif %}</a></td></tr>{% empty %}<tr><td colspan="4">Δεν υπάρχουν κατηγορίες.</td></tr>{% endfor %}
+</tbody></table></div>
+<nav aria-label="Σελίδες κατηγοριών">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Προηγούμενη</a>{% endif %} <span>Σελίδα {{ page.number }} από {{ page.paginator.num_pages }}</span> {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Επόμενη</a>{% endif %}</nav>
+{% endblock %}

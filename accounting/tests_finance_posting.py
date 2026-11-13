@@ -34,9 +34,9 @@ class Fixtures:
         create_accountant_profile(user_id=self.member.pk,office_id=self.office.pk,role='accountant')
         self.customer=Entity.objects.create(office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΕΛΑΤΗΣ',entity_type='CUSTOMER')
         self.supplier=Entity.objects.create(office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟΣ ΠΡΟΜΗΘΕΥΤΗΣ',entity_type='SUPPLIER')
-        self.account=CashAccount.objects.create(office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α',opening_balance='100.00')
-        self.other=CashAccount.objects.create(office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β',opening_balance='0.00')
-        self.foreign_account=CashAccount.objects.create(office=self.foreign,name='ΔΟΚΙΜΑΣΤΙΚΟ ΞΕΝΟ ΤΑΜΕΙΟ')
+        self.account=CashAccount.objects.create(opening_date=DAY,office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Α',opening_balance='100.00')
+        self.other=CashAccount.objects.create(opening_date=DAY,office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΟ ΤΑΜΕΙΟ Β',opening_balance='0.00')
+        self.foreign_account=CashAccount.objects.create(opening_date=DAY,office=self.foreign,name='ΔΟΚΙΜΑΣΤΙΚΟ ΞΕΝΟ ΤΑΜΕΙΟ')
         self.category=Category.objects.create(office=self.office,name='ΔΟΚΙΜΑΣΤΙΚΗ ΚΑΤΗΓΟΡΙΑ')
         self.agreement=Agreement.objects.create(office=self.office,entity=self.customer,agreement_type='RECEIVABLE',
             description='ΔΟΚΙΜΑΣΤΙΚΗ ΣΥΜΦΩΝΙΑ',total_amount='100.00',start_date=DAY)
@@ -398,7 +398,7 @@ class PostingCommitTests(Fixtures,TransactionTestCase):
 
 class PostingMigrationTests(TransactionTestCase):
     old=('accounting','0010_counterparty_database_guards')
-    current=('accounting','0012_financial_database_guards')
+    current=('accounting','0014_cash_workspace_guards')
     def migrate(self,target):
         executor=MigrationExecutor(connection);executor.migrate([target]);return executor.loader.project_state([target]).apps
     def setUp(self):
@@ -435,6 +435,7 @@ class PostingMigrationTests(TransactionTestCase):
         self.migrate(self.current)
     def test_posted_history_blocks_unsafe_downgrade(self):
         self.migrate(self.current)
+        CashAccount.objects.filter(pk=self.account.pk).update(opening_date=DAY)
         user=get_user_model().objects.create_user('s18-migration-operator')
         create_accountant_profile(user_id=user.pk,office_id=self.office.pk,role='accountant')
         entry=post_cash(user,idempotency_key=secrets.token_hex(16),amount='1.00',transaction_date=DAY,transaction_type='INCOME',

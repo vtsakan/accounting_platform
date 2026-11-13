@@ -22,5 +22,7 @@
   ],
   "remaining_known_failure": "TRF-001 (S21/S29)",
   "full_requirement_acceptance": "Pending",
-  "operator_verifier": "python3 tools/verify_s20.py --record"
+  "operator_verifier": "python3 tools/verify_s20.py --record",
+  "source_commit": "git:fb1b3b50ec2d7948fc5ed8c3a6378111545d108a",
+  "prepared_at": "2026-11-13"
 }

@@ -2,7 +2,7 @@
   "step": "S21",
   "status": "Prepared",
   "mode": "code-only-delivery",
-  "source_commit": null,
+  "source_commit": "git:799415c0f5071262e474bcfdee6e002c3bc0a1a4",
   "source_reference_commit": "git:8871e76c20c20dd912b55861da5209f72a17978c",
   "previous_operator_receipt": "docs/implementation/evidence/S20-verification.json",
   "previous_operator_suite": {
@@ -36,5 +36,6 @@
   "operator_command": "python3 tools/verify_s21.py --record",
   "browser_greek_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
-  "full_requirement_acceptances_pending": 85
+  "full_requirement_acceptances_pending": 85,
+  "prepared_at": "2026-11-13"
 }

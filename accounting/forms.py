@@ -2,6 +2,7 @@
 
 from django import forms
 from django.db import models
+from django.utils import timezone
 from .models import CashAccount, Category, Entity, Agreement
 from django.utils.translation import gettext, gettext_lazy as _
 from core.locale import GreekMoneyField, format_euro
@@ -48,6 +49,12 @@ class GreekFormMixin:
             if name in cleaned:
                 try:cleaned[name]=money(cleaned[name])
                 except forms.ValidationError as error:self.add_error(name,error)
+        if self.__class__.__name__ in {'IncomeForm', 'ExpenseForm'} and not getattr(self, 'replay_entry', None):
+            day, account = cleaned.get('transaction_date'), cleaned.get('cash_account')
+            if day and day > timezone.localdate():
+                self.add_error('transaction_date', 'Η ημερομηνία κίνησης δεν μπορεί να είναι μελλοντική.')
+            elif day and account and account.opening_date and day < account.opening_date:
+                self.add_error('transaction_date', 'Η κίνηση δεν μπορεί να προηγείται του αρχικού υπολοίπου του ταμείου.')
         selected,agreement=cleaned.get('entity'),cleaned.get('agreement')
         if agreement and selected and selected.pk!=agreement.entity_id:
             self.add_error('agreement','Η συμφωνία πρέπει να ανήκει στον ίδιο συναλλασσόμενο.')
@@ -96,8 +103,9 @@ class ExpenseForm(GreekFormMixin, forms.Form):
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
+    remarks = forms.CharField(required=False, max_length=10000, label="Παρατηρήσεις", widget=forms.Textarea(attrs={'rows': 3, **bootstrap_form_attrs}))
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
-    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), label="Κατηγορία")
+    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), required=False, label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_supplier=True, is_archived=False), required=False, label="Προμηθευτής")
 
     agreement = AgreementChoiceField( # Use our new custom field
@@ -117,8 +125,9 @@ class IncomeForm(GreekFormMixin, forms.Form):
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
+    remarks = forms.CharField(required=False, max_length=10000, label="Παρατηρήσεις", widget=forms.Textarea(attrs={'rows': 3, **bootstrap_form_attrs}))
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
-    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), label="Κατηγορία")
+    category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), required=False, label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_customer=True, is_archived=False), required=False, label="Πελάτης")
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),

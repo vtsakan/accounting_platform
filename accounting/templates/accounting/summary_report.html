@@ -10,56 +10,12 @@
 
     <div class="card bg-light mb-4">
         <div class="card-body">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-lg-2 col-md-4">
-                    <label for="start_date" class="form-label">Από ημερομηνία:</label>
-                    <input type="date" name="start_date" id="start_date" value="{{ start_date_str|default:'' }}" class="form-control">
-                </div>
-                <div class="col-lg-2 col-md-4">
-                    <label for="end_date" class="form-label">Έως ημερομηνία:</label>
-                    <input type="date" name="end_date" id="end_date" value="{{ end_date_str|default:'' }}" class="form-control">
-                </div>
-
-                <div class="col-lg-2 col-md-4">
-                    <label for="transaction_type" class="form-label">Τύπος:</label>
-                    <select name="transaction_type" id="transaction_type" class="form-select">
-                        <option value="">Όλοι οι τύποι</option>
-                        <option value="INCOME" {% if selected_type == 'INCOME' %}selected{% endif %}>Έσοδο</option>
-                        <option value="EXPENSE" {% if selected_type == 'EXPENSE' %}selected{% endif %}>Έξοδο</option>
-                    </select>
-                </div>
-
-                <div class="col-lg-2 col-md-4">
-                    <label for="cash_account" class="form-label">Ταμείο:</label>
-                    <select name="cash_account" id="cash_account" class="form-select">
-                        <option value="">Όλα τα ταμεία</option>
-                        {% for account in all_cash_accounts %}
-                            <option value="{{ account.pk }}" {% if account.pk|stringformat:"s" == selected_cash_account_id %}selected{% endif %}>
-                                {{ account.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-lg-2 col-md-4">
-                    <label for="category" class="form-label">Κατηγορία:</label>
-                    <select name="category" id="category" class="form-select">
-                        <option value="">Όλες οι κατηγορίες</option>
-                        {% for cat in all_categories %}
-                            <option value="{{ cat.pk }}" {% if cat.pk|stringformat:"s" == selected_category_id %}selected{% endif %}>
-                                {{ cat.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-lg-2 col-md-4">
-                    <button type="submit" class="btn btn-primary w-100">Εφαρμογή φίλτρων</button>
-                </div>
-            </form>
+            {% include 'accounting/movement_filters.html' %}
         </div>
     </div>
 
+    {% if not filter_form.errors %}
+    <p class="small text-muted">Τα σύνολα περιόδου αφορούν τις επιλεγμένες κινήσεις ταμείων, συμπεριλαμβανομένων των μεταφορών. Οι εκκρεμότητες συμφωνιών αφορούν όλες τις ενεργές συμφωνίες του γραφείου.</p>
     <div class="card mb-4">
         <div class="card-header">
             <h2>Σύνολα περιόδου</h2>
@@ -149,4 +105,5 @@
 
     <div class="row">
         </div>
+    {% endif %}
 {% endblock %}

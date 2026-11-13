@@ -571,3 +571,22 @@ it does not manufacture a new accountant approval or tax rule.
 - Native proof is Prepared; laptop Docker is the S19 completion gate. Preserve
   the actual S18 evidence, original twelve migrations, existing accounts, local
   encrypted backup policy and live VM. All 85 full acceptances remain Pending.
+
+
+## S20 code-only delivery — 2026-11-13
+
+The user will run tests/builds; agent execution is explicitly disabled. Deliver
+Prepared source without inferring S19 operator completion or new acceptance.
+Reuse S18 posting/identity/audit services and S19 opening/category safeguards.
+Ordinary forms add remarks and optional category; all submitted references remain
+scoped/active with service revalidation. UUID retries recover only their stored
+references when these later retire or settle; payload/authority checks remain in
+the atomic service. Legacy tokenless session fallback remains for compatibility;
+a fresh UI form UUID distinguishes an intentional second identical movement.
+Typed historical filters are shared by list/report, with 25/50/100 paging and
+full matching-scope cash totals. History includes retired/archived references.
+Foreign numeric keys retain 404, malformed values become Greek field errors.
+No posted edit/delete API or new migration/dependency is added. All nine FLT
+cases are switched to expected-pass targets, with execution explicitly Pending.
+TRF-001 and report/transfer semantics remain S21/S29. All full acceptances remain
+Pending. The apply helper does not run tests, builds, Docker or database actions.

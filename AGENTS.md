@@ -18,6 +18,32 @@ Run meaningful checks for the change on PostgreSQL where financial or database b
 
 Finish with a concise result: what changed; files/migrations and commands; checks passed/failed/not run; manual acceptance still needed; and the next eligible step. Stop after this selected step. If its scope needs subdivision, record SxxA and SxxB under the original identifier without renumbering later steps.
 
+## User execution preference — effective from S20
+
+The user explicitly requests code-only delivery and will execute tests/builds.
+Do not run test suites, Docker builds/containers, database migrations or native
+verification during implementation. Provide source/patch and optional operator
+commands. Record unexecuted work as Prepared, never Verified. Do not block
+code delivery on a missing operator receipt for the previous source step. This
+explicit preference supersedes the historical agent-run verification workflow.
+Preserve existing accounts, MFA, volumes, fourteen migrations and historical
+receipts. The S20 apply helper performs Git/source operations only.
+
+## Current checkpoint — S20
+
+Implement ordinary income/expense entry, optional category/counterparty,
+remarks, UUID-backed submission identity, typed combined historical filters,
+pagination and full filtered-scope cash totals. Reuse S18/S19 financial services;
+posted originals remain immutable. Share typed filters with the existing report
+without changing its legacy transfer/operating calculation (S21/S29). All nine
+FLT cases are expected to pass after this change, but have NOT been executed.
+Retain every existing financial assertion and the 784-route boundary inventory.
+Only TRF-001 remains registered as an expected failure. No migration, deployment,
+account/bootstrap/key change is introduced. Read cash_movements.md. Tests and
+builds are user-owned and optional to invoke from the supplied verify_s20.py.
+
+## Historical S19 checkpoint
+
 ## Current checkpoint
 
 S19 is selected from the actual pushed/verified S18 head

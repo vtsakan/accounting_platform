@@ -38,62 +38,9 @@ from .models import CashAccount, Transaction
 
 @login_required
 def transaction_list_view(request):
-    validate_filter_ids(request)
-    # --- Get Filter Data from the URL ---
-    start_date_str = request.GET.get('start_date')
-    end_date_str = request.GET.get('end_date')
-    transaction_type = request.GET.get('transaction_type')
-    cash_account_id = request.GET.get('cash_account')
-    category_id = request.GET.get('category')
-    entity_id = request.GET.get('entity')
-    query = request.GET.get('query')
+    from .movement_views import movement_list
+    return movement_list(request)
 
-    # --- Start with a base queryset ---
-    transactions = records(Transaction, request.user).select_related('cash_account', 'category', 'entity').all()
-
-    # --- Apply Filters if they exist (WITH CORRECTION) ---
-    if start_date_str:
-        # Convert the string to a date object before filtering
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-        transactions = transactions.filter(transaction_date__gte=start_date)
-
-    if end_date_str:
-        # Convert the string to a date object before filtering
-        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-        transactions = transactions.filter(transaction_date__lte=end_date)
-
-    if transaction_type:
-        transactions = transactions.filter(transaction_type=transaction_type)
-
-    if cash_account_id:
-        transactions = transactions.filter(cash_account_id=cash_account_id)
-
-    if category_id:
-        transactions = transactions.filter(category_id=category_id)
-
-    if entity_id:
-        transactions = transactions.filter(entity_id=entity_id)
-
-    if query:
-        transactions = transactions.filter(description__icontains=query)
-
-    context = {
-        'transactions': transactions,
-        # Data for populating the filter dropdowns
-        'all_cash_accounts': records(CashAccount, request.user).all(),
-        'all_categories': records(Category, request.user).all(),
-        'all_entities': records(Entity, request.user).all(),
-        # Pass selected filter values back to the template
-        'selected_start_date': start_date_str,
-        'selected_end_date': end_date_str,
-        'selected_type': transaction_type,
-        'selected_cash_account_id': cash_account_id,
-        'selected_category_id': category_id,
-        'selected_entity_id': entity_id,
-        'query': query,
-    }
-
-    return render(request, 'accounting/transaction_list.html', context)
 
 # accounting/views.py
 
@@ -119,82 +66,15 @@ from .forms import ExpenseForm # Import our new form
 
 @login_required
 def add_expense_view(request):
-    validate_filter_ids(request)
-    # Pre-calculate balances with the explicit output_field
-    payable_agreements = records(Agreement, request.user).filter(agreement_type='PAYABLE', status='ACTIVE').annotate(
-        total_payments=legacy_settlement('transactions__')
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    if request.method == 'POST':
-        form = ExpenseForm(request.POST, user=request.user, agreements_queryset=payable_agreements)
-        if form.is_valid():
-            new_transaction = Transaction(
-                transaction_date=form.cleaned_data['transaction_date'],
-                description=form.cleaned_data['description'],
-                amount=form.cleaned_data['amount'],
-                cash_account=form.cleaned_data['cash_account'],
-                category=form.cleaned_data['category'],
-                entity=form.cleaned_data['entity'],
-                agreement=form.cleaned_data['agreement'],
-                transaction_type='EXPENSE'
-            )
-            try:
-                save_for_user(new_transaction, request.user, idempotency_key=submission_key(request, form.cleaned_data))
-            except ValidationError as error:
-                form.add_error(None, error)
-            else:
-                return redirect('transaction-list')
-    else:
-        initial_data = {}
-        entity_id = request.GET.get('entity_id')
-        if entity_id:
-            initial_data['entity'] = entity_id
-
-        form = ExpenseForm(user=request.user, initial=initial_data, agreements_queryset=payable_agreements)
-
-    return render(request, 'accounting/add_expense.html', {'form': form})
+    from .movement_views import expense
+    return expense(request)
 
 
 @login_required
 def add_income_view(request):
-    validate_filter_ids(request)
-    # Pre-calculate balances with the explicit output_field
-    receivable_agreements = records(Agreement, request.user).filter(agreement_type='RECEIVABLE', status='ACTIVE').annotate(
-        total_payments=legacy_settlement('transactions__')
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
+    from .movement_views import income
+    return income(request)
 
-    if request.method == 'POST':
-        form = IncomeForm(request.POST, user=request.user, agreements_queryset=receivable_agreements)
-        if form.is_valid():
-            new_transaction = Transaction(
-                transaction_date=form.cleaned_data['transaction_date'],
-                description=form.cleaned_data['description'],
-                amount=form.cleaned_data['amount'],
-                cash_account=form.cleaned_data['cash_account'],
-                category=form.cleaned_data['category'],
-                entity=form.cleaned_data['entity'],
-                agreement=form.cleaned_data['agreement'],
-                transaction_type='INCOME'
-            )
-            try:
-                save_for_user(new_transaction, request.user, idempotency_key=submission_key(request, form.cleaned_data))
-            except ValidationError as error:
-                form.add_error(None, error)
-            else:
-                return redirect('transaction-list')
-    else:
-        initial_data = {}
-        entity_id = request.GET.get('entity_id')
-        if entity_id:
-            initial_data['entity'] = entity_id
-
-        form = IncomeForm(user=request.user, initial=initial_data, agreements_queryset=receivable_agreements)
-
-    return render(request, 'accounting/add_income.html', {'form': form})
 
 @login_required
 def add_entity_view(request):
@@ -208,24 +88,15 @@ def entity_detail_view(request, pk):
 @login_required
 def summary_report_view(request):
     validate_filter_ids(request)
-    # --- Transaction Filtering (unchanged) ---
-    start_date_str = request.GET.get('start_date')
-    end_date_str = request.GET.get('end_date')
-    transaction_type = request.GET.get('transaction_type')
-    cash_account_id = request.GET.get('cash_account')
-    category_id = request.GET.get('category')
-
-    transactions = records(Transaction, request.user).all()
-    if start_date_str:
-        transactions = transactions.filter(transaction_date__gte=start_date_str)
-    if end_date_str:
-        transactions = transactions.filter(transaction_date__lte=end_date_str)
-    if transaction_type:
-        transactions = transactions.filter(transaction_type=transaction_type)
-    if cash_account_id:
-        transactions = transactions.filter(cash_account_id=cash_account_id)
-    if category_id:
-        transactions = transactions.filter(category_id=category_id)
+    from .movement_forms import CashMovementFilterForm
+    from .movement_selectors import filtered_movements
+    filter_form = CashMovementFilterForm(request.GET, user=request.user)
+    transactions = filtered_movements(request.user, filter_form)
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+    transaction_type = request.GET.get('transaction_type', '')
+    cash_account_id = request.GET.get('cash_account', '')
+    category_id = request.GET.get('category', '')
 
     # --- Transaction Calculations (unchanged) ---
     totals = transactions.aggregate(
@@ -255,6 +126,7 @@ def summary_report_view(request):
     # --- END OF CORRECTION ---
 
     context = {
+        'filter_form': filter_form,
         'total_income': totals['total_income'],
         'total_expense': totals['total_expense'],
         'net_for_period': net_for_period,

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "Correct financial assertions retained; S18 fixes 13 cases and S19 fixes BAL-001–003; 10 remaining known cases are still explicit.",
+  "scope": "Correct financial assertions retained. S20 targets all nine malformed-filter cases; execution is left to the user. TRF-001 remains a known failure for S21/S29.",
   "cases": [
     {
       "case_id": "BAL-001",
@@ -263,72 +263,82 @@
       "case_id": "FLT-001",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_start_date",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
       "fix_steps": [
         "S20"
       ],
-      "description": "Malformed start_date on list must return field validation instead of HTTP 500"
+      "description": "Malformed start_date on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-002",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_end_date",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
       "fix_steps": [
         "S20"
       ],
-      "description": "Malformed end_date on list must return field validation instead of HTTP 500"
+      "description": "Malformed end_date on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-003",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_cash_account",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
       "fix_steps": [
         "S20"
       ],
-      "description": "Malformed cash_account on list must return field validation instead of HTTP 500"
+      "description": "Malformed cash_account on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-004",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_category",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
       "fix_steps": [
         "S20"
       ],
-      "description": "Malformed category on list must return field validation instead of HTTP 500"
+      "description": "Malformed category on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-005",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_entity",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
       "fix_steps": [
         "S20"
       ],
-      "description": "Malformed entity on list must return field validation instead of HTTP 500"
+      "description": "Malformed entity on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-006",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_start_date",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
@@ -336,13 +346,15 @@
         "S20",
         "S29"
       ],
-      "description": "Malformed start_date on report must return field validation instead of HTTP 500"
+      "description": "Malformed start_date on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-007",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_end_date",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
@@ -350,13 +362,15 @@
         "S20",
         "S29"
       ],
-      "description": "Malformed end_date on report must return field validation instead of HTTP 500"
+      "description": "Malformed end_date on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-008",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_cash_account",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
@@ -364,13 +378,15 @@
         "S20",
         "S29"
       ],
-      "description": "Malformed cash_account on report must return field validation instead of HTTP 500"
+      "description": "Malformed cash_account on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "FLT-009",
       "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_category",
       "issue_id": "LEG-009",
-      "expected_outcome": "known_failure",
+      "expected_outcome": "pass",
       "requirements": [
         "UR-CSH-06"
       ],
@@ -378,7 +394,9 @@
         "S20",
         "S29"
       ],
-      "description": "Malformed category on report must return field validation instead of HTTP 500"
+      "description": "Malformed category on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests"
     },
     {
       "case_id": "CTL-001",

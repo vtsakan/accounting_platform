@@ -1,0 +1,14 @@
+{% if filter_form.errors %}<div class="alert alert-danger" role="alert">Διορθώστε τα φίλτρα. Δεν εμφανίζονται αποτελέσματα ή σύνολα με μη έγκυρα στοιχεία.{{ filter_form.non_field_errors }}{% for error in filter_form.page.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+<form method="get" class="row g-3 align-items-end" aria-label="Φίλτρα κινήσεων">
+    <input type="hidden" name="page" value="1">
+    {% for field in filter_form.visible_fields %}
+    <div class="col-lg-3 col-md-6">
+        {{ field.label_tag }} {{ field }}
+        {% for error in field.errors %}<div class="text-danger" role="alert">{{ error }}</div>{% endfor %}
+    </div>
+    {% endfor %}
+    <div class="col-lg-3 col-md-6 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Εφαρμογή φίλτρων</button>
+        <a href="{{ request.path }}" class="btn btn-outline-secondary">Καθαρισμός</a>
+    </div>
+</form>

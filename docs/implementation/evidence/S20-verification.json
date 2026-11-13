@@ -1,0 +1,26 @@
+{
+  "step": "S20",
+  "status": "Prepared",
+  "delivery": "Code only, requested by user",
+  "source_base": "S19 package source; no published S19 branch was found at implementation time",
+  "application_tests_run": false,
+  "builds_run": false,
+  "docker_execution": false,
+  "database_or_migration_execution": false,
+  "cloud_or_vm_changed": false,
+  "migration_added": false,
+  "financial_filter_fixes_expected": [
+    "FLT-001",
+    "FLT-002",
+    "FLT-003",
+    "FLT-004",
+    "FLT-005",
+    "FLT-006",
+    "FLT-007",
+    "FLT-008",
+    "FLT-009"
+  ],
+  "remaining_known_failure": "TRF-001 (S21/S29)",
+  "full_requirement_acceptance": "Pending",
+  "operator_verifier": "python3 tools/verify_s20.py --record"
+}

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-12. Current step: **S17 Verified — financial policy**. Next step: **S18 for approved operations only**.
+Updated 2026-11-12. Current step: **S18 Prepared — financial posting foundation**. Next step: **Complete S18 Docker gate**.
 
 ## Current selected work
 
@@ -482,3 +482,7 @@ Verified: 38 integrated tests; 652 explicit boundary cases; 382 total tests with
 <!-- S17-RESULT -->
 Verified: 17 operation contracts, 10 explicit D08 decisions, 20 worked examples and 65 exact-decimal arithmetic checks; 16 denied specifications are for future application tests. Application/database/cloud execution this step: none. D08 review: Approved. All full requirement acceptances remain Pending.
 <!-- /S17-RESULT -->
+
+<!-- S18-RESULT -->
+Prepared: 46 S18 tests; 428 total; 13 corrected known cases, 13 still reproduced, no unexpected outcomes. The 652-case office boundary is retained. Docker execution: False. Core correction uses owner/password/recent MFA; correction UI, dated opening/balance/report/allocation work remain later steps. No existing demo/VM migration performed.
+<!-- /S18-RESULT -->

@@ -1,14 +1,7 @@
 {
-  "mode": "native-postgresql17",
-  "status": "Prepared",
-  "docker_execution": false,
-  "postgresql_binary_version": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
-  "native_restricted_role_ddl": {
-    "all_migrations_passed": true,
-    "superuser": false,
-    "createdb": false,
-    "createrole": false
-  },
+  "mode": "docker-compose-postgresql17",
+  "status": "Verified",
+  "docker_execution": true,
   "postgresql_version_num": 170011,
   "runtime_packages": {
     "Django": "5.2.19",
@@ -698,8 +691,8 @@
     "network_verification": false,
     "scanner_self_check": "Passed: detected an ephemeral synthetic password",
     "history_scope": "All locally reachable Git refs plus the current candidate source",
-    "history_commits": 118,
-    "unique_history_blobs": 761,
+    "history_commits": 61,
+    "unique_history_blobs": 759,
     "candidate_text_files": 332,
     "binary_files_or_blobs_skipped": 6,
     "reviewed_non_secret_matches": 119,
@@ -710,8 +703,8 @@
   "runtime_and_tools_locks_reproduced": true,
   "greek_catalog_verified": true,
   "step": "S18",
-  "verified_at": "2026-11-12T18:17:34+02:00",
-  "source_commit": "git:478a99a6b251cfb4293db1ebc60e16d947e0d926",
+  "verified_at": "2026-11-13T10:58:53+02:00",
+  "source_commit": "git:948c345af383a8a5f4eebdaa15fa6fbcce3dffa2",
   "source_dirty": false,
   "source_reference_commit": "git:0870a08e9ff43b5380957084c511d0679b9825c3",
   "cloud_or_vm_changed": false,
@@ -732,5 +725,11 @@
   "financial_expected_value_assertions_preserved": true,
   "all_existing_test_names_retained": true,
   "dependency_locks_authentication_mfa_referrer_preserved": true,
-  "application_context_digest": "sha256:cd2cbc24777fe11947449a584c9e3ec040e5330cc64c7acd3a467e981599392a"
+  "application_context_digest": "sha256:cd2cbc24777fe11947449a584c9e3ec040e5330cc64c7acd3a467e981599392a",
+  "native_restricted_role_ddl": {
+    "all_migrations_passed": true,
+    "superuser": false,
+    "createdb": false,
+    "createrole": false
+  }
 }

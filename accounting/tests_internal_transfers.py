@@ -119,6 +119,7 @@ class TransferWorkspaceTests(Fixtures, TestCase):
     def test_exact_retry_after_retirement_succeeds_but_new_or_changed_work_does_not(self):
         values = self.data()
         self.assertEqual(self.send(values).status_code, 302)
+        self.other.refresh_from_db()  # Load approval metadata written by the database trigger.
         self.other.is_active = False
         save_reference(self.other, self.owner)
         before = self.snapshot()
@@ -178,6 +179,7 @@ class TransferWorkspaceTests(Fixtures, TestCase):
 
     def test_unreviewed_or_retired_accounts_are_not_new_transfer_choices(self):
         unreviewed = CashAccount.objects.create(office=self.office, name='ΣΕ ΑΝΑΜΟΝΗ S21')
+        self.other.refresh_from_db()  # Retirement must preserve the actual approved opening.
         self.other.is_active = False
         save_reference(self.other, self.owner)
         for account in (unreviewed, self.other):

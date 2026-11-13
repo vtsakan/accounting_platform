@@ -1,22 +1,13 @@
 # Implementation state
 
-Updated 2026-11-13. Current step: **S21 Prepared — atomic internal transfers**. Next step: **Operator testing; S22 source follows**.
+Updated 2026-11-13. Current step: **S21 Verified — atomic internal transfers**. Next step: **S22**.
 
 
 
 ## Current selected work — S21
 
 <!-- S21-RESULT -->
-Prepared: code-only delivery. Explicit paired transfers retain one command,
-atomic writes, stable retries and shared Greek audit references. Dated cash
-balances/history include the legs; operating/category totals exclude explicit
-transfers. Legacy UUIDs remain unclassified for S25. S20's actual 511-test
-operator receipt remains unchanged. The 22 new test sources are unexecuted;
-all 533 tests, 36 financial cases and 784 boundary cases are expected to pass,
-not observed passes. No S21 tests/builds/containers/database/cloud actions were
-executed by the implementation agent. Fourteen migrations, existing test
-assertions, accounts/MFA/keys and dependency locks remain intact. Optional
-operator command: python3 tools/verify_s21.py --record. Full acceptance Pending.
+Verified by operator-run Docker/PostgreSQL suite; see S21-verification.json. Historical S20 evidence is unchanged. Full acceptance remains Pending.
 <!-- /S21-RESULT -->
 
 ## Historical selected work — S20

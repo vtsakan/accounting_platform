@@ -81,6 +81,8 @@ def allocate_cash(user, *, source_cash, lines, effective_date, reason, idempoten
     existing = replay_command(office, 'ALLOCATE', key_digest, payload_digest)
     if existing:
         return existing
+    from .correction_services import ensure_open
+    ensure_open(office,effective_date)
     source = scoped_lock(Transaction, office, source_id)
     eligible_source(source)
     party = scoped_lock(Entity, office, source.entity_id, active=True)
@@ -127,6 +129,8 @@ def release_allocation(request, *, allocation, effective_date, password, reason,
     existing = replay_command(office, 'RELEASE', key_digest, payload_digest)
     if existing:
         return existing
+    from .correction_services import ensure_open
+    ensure_open(office,effective_date)
     allocated = scoped_lock(CashAllocation, office, key)
     scoped_lock(Transaction, office, allocated.source_cash_id)
     scoped_lock(Charge, office, allocated.charge_id)

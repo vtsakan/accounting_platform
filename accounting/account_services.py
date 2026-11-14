@@ -88,6 +88,8 @@ def approve_opening(request,*,account_id,review_token,amount,effective_date,reas
     if account.opening_date is not None:
         if account.opening_key_digest==key and account.opening_payload_digest==payload:return account
         raise ValidationError('Το αρχικό υπόλοιπο έχει εγκριθεί και δεν αντικαθίσταται. Χρησιμοποιήστε προσαρμογή.')
+    from .correction_services import ensure_open
+    ensure_open(office,effective_date)
     require_version(plan.get('version'),account.record_version)
     if plan.get('inventory')!=inventory(account,effective_date):raise ValidationError(STALE)
     if account.legacy_opening and amount!=account.opening_balance:raise ValidationError('Το διατηρημένο ποσό δεν αλλάζει κατά την επιβεβαίωση.')
@@ -151,6 +153,8 @@ def adjust_opening(request,*,account_id,amount,effective_date,reason,review_refe
     if previous:
         if previous.payload_digest==payload:return previous
         raise ValidationError('Η ταυτότητα αιτήματος χρησιμοποιήθηκε με διαφορετικά στοιχεία.')
+    from .correction_services import ensure_open
+    ensure_open(office,effective_date)
     if original and (original.reversal_of_id or CashAdjustment.objects.filter(reversal_of=original).exists()):raise ValidationError('Η προσαρμογή έχει ήδη αντιλογιστεί ή αποτελεί αντιλογισμό.')
     with audit_context(request.user,reason+' · '+reference):
         return CashAdjustment.objects.create(office=office,account=account,actor=request.user,amount=amount,effective_date=effective_date,

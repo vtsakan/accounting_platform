@@ -7,7 +7,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from .capabilities import require_capability
 from .models import CashAccount,CashAdjustment,Transaction
-from .movement_selectors import operating_movements,internal_transfer_condition
+from .movement_selectors import operating_movements,internal_transfer_condition,operating_component
 
 
 def cash_accounts(user,*,as_of=None,include_inactive=False):
@@ -22,13 +22,19 @@ def cash_accounts(user,*,as_of=None,include_inactive=False):
     if not include_inactive:qs=qs.filter(is_active=True)
     operating=operating_movements(cash)
     internal=cash.filter(internal_transfer_condition())
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT to_regclass('accounting_cashrefund') IS NOT NULL"); refund_schema=cursor.fetchone()[0]
+    def operating_total(direction):
+        values=operating.annotate(effect=operating_component(direction,refunds=refund_schema)).values('cash_account_id').annotate(value=Sum('effect')).values('value')
+        return Coalesce(Subquery(values,output_field=DecimalField()),Value(Decimal('0.00')),output_field=DecimalField())
     # total_income/expense retain their original cash-flow meaning for balances.
     # New projections make the transfer/operating distinction explicit without
     # removing either leg from its own account's dated cash balance.
     return qs.annotate(total_income=total(cash.filter(transaction_type='INCOME'),'cash_account_id'),
         total_expense=total(cash.filter(transaction_type='EXPENSE'),'cash_account_id'),
-        operating_income=total(operating.filter(transaction_type='INCOME'),'cash_account_id'),
-        operating_expense=total(operating.filter(transaction_type='EXPENSE'),'cash_account_id'),
+        operating_income=operating_total('INCOME'),
+        operating_expense=operating_total('EXPENSE'),
         transfer_in=total(internal.filter(transaction_type='INCOME'),'cash_account_id'),
         transfer_out=total(internal.filter(transaction_type='EXPENSE'),'cash_account_id'),
         adjustment_total=total(adjustments,'account_id')).annotate(current_balance=Case(

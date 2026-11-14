@@ -2,7 +2,7 @@
 {% block title %}Κινήσεις ταμείων{% endblock %}
 {% block content %}
 <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-3">
-    <h1>Κινήσεις ταμείων</h1>
+    <h1>Κινήσεις ταμείων</h1><a href="{% url 'finance-correction-history' %}">Ιστορικό διορθώσεων</a>
     <div><a href="{% url 'add-income' %}" class="btn btn-success">Νέο έσοδο</a> <a href="{% url 'add-expense' %}" class="btn btn-danger">Νέο έξοδο</a> <a href="{% url 'add-transfer' %}" class="btn btn-primary">Εσωτερική μεταφορά</a></div>
 </div>
 <div class="card card-body bg-light mb-3">{% include 'accounting/movement_filters.html' %}</div>
@@ -13,7 +13,7 @@
     <p class="small text-muted mb-0">Τα σύνολα αφορούν όλα τα αποτελέσματα των φίλτρων. Οι μεταφορές περιλαμβάνονται ως κινήσεις ταμείου· τα παραπάνω ποσά δεν αποτελούν λειτουργικό κέρδος ή υπόλοιπο ταμείου.</p>
 </section>
 {% endif %}
-<div class="alert alert-info">Οι καταχωρισμένες κινήσεις διατηρούνται. Η διόρθωση γίνεται με συνδεδεμένο αντιλογισμό και αντικατάσταση· η ειδική οθόνη διορθώσεων ακολουθεί σε επόμενο βήμα.</div>
+<div class="alert alert-info">Οι καταχωρισμένες κινήσεις διατηρούνται. Η διόρθωση γίνεται με συνδεδεμένο αντιλογισμό και προαιρετική αντικατάσταση από υπεύθυνο γραφείου.</div>
 <div class="table-responsive">
 <table class="table table-striped align-middle">
     <caption>Ιστορικό κινήσεων του λογιστικού γραφείου</caption>
@@ -22,11 +22,11 @@
     {% for tx in transactions %}
     <tr>
         <td>{{ tx.transaction_date|el_date }}</td>
-        <td><strong>{{ tx.description }}</strong><div class="small text-muted">Κίνηση #{{ tx.pk }}</div>{% if tx.posting_kind == 'TRANSFER' %}<div class="small text-break">Αναφορά μεταφοράς: <code>{{ tx.command_id }}</code></div><div class="small text-break">Σύνδεση σκελών: <code>{{ tx.transfer_id }}</code></div>{% endif %}{% if tx.pk and tx.posting_kind == 'ORDINARY' and tx.entity.pk %}<div><a href="{% url 'cash-allocation-add' tx.pk %}">Αντιστοίχιση σε χρεώσεις</a></div>{% endif %}{% if tx.remarks %}<details><summary>Παρατηρήσεις</summary><p class="text-break">{{ tx.remarks|linebreaksbr }}</p></details>{% endif %}</td>
+        <td><strong>{{ tx.description }}</strong><div class="small text-muted">Κίνηση #{{ tx.pk }}</div>{% if tx.posting_kind == 'TRANSFER' %}<div class="small text-break">Αναφορά μεταφοράς: <code>{{ tx.command_id }}</code></div><div class="small text-break">Σύνδεση σκελών: <code>{{ tx.transfer_id }}</code></div>{% endif %}{% if tx.pk and tx.posting_kind == 'ORDINARY' and tx.entity.pk %}<div><a href="{% url 'cash-allocation-add' tx.pk %}">Αντιστοίχιση σε χρεώσεις</a></div>{% endif %}{% if tx.pk and tx.posting_kind != 'REVERSAL' and request.accountant_profile.role == 'owner' %}<div><a href="{% url 'cash-correction' tx.pk %}">Διόρθωση / αντιλογισμός</a></div>{% endif %}{% if tx.remarks %}<details><summary>Παρατηρήσεις</summary><p class="text-break">{{ tx.remarks|linebreaksbr }}</p></details>{% endif %}</td>
         <td>{% if tx.cash_account_id %}<a href="{% url 'cash-account-detail' tx.cash_account_id %}">{{ tx.cash_account }}</a>{% else %}{{ tx.cash_account }}{% endif %}</td>
         <td>{% if tx.entity.pk %}<a href="{% url 'entity-detail' tx.entity.pk %}">{{ tx.entity }}</a>{% else %}{{ tx.entity|default:'—' }}{% endif %}</td>
         <td>{{ tx.category|default:'—' }}</td>
-        <td>{{ tx.get_transaction_type_display }}{% if tx.posting_kind == 'TRANSFER' %}<div class="small">Εσωτερική μεταφορά</div>{% elif tx.reversal_of_id %}<div class="small">Αντιλογισμός #{{ tx.reversal_of_id }}</div>{% endif %}</td>
+        <td>{{ tx.get_transaction_type_display }}{% if tx.posting_kind == 'TRANSFER' %}<div class="small">Εσωτερική μεταφορά</div>{% elif tx.posting_kind == 'REFUND' %}<div class="small">Επιστροφή πίστωσης / προκαταβολής</div>{% elif tx.reversal_of_id %}<div class="small">Αντιλογισμός #{{ tx.reversal_of_id }}</div>{% endif %}</td>
         <td class="text-end text-nowrap {% if tx.transaction_type == 'INCOME' %}text-success{% else %}text-danger{% endif %}">{% if tx.transaction_type == 'INCOME' %}+{% else %}−{% endif %}{{ tx.amount|euro }}</td>
     </tr>
     {% empty %}<tr><td colspan="7">Δεν βρέθηκαν κινήσεις με αυτά τα φίλτρα.</td></tr>{% endfor %}

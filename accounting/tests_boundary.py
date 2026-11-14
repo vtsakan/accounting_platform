@@ -32,6 +32,7 @@ from .counterparty_services import archive_counterparty
 from .membership import create_accountant_profile, change_membership
 from .models import AccountantProfile, Agreement, CashAccount, Category, CounterpartyEvent, Entity, Office, Transaction
 from .settlement_models import SettlementCommand, CashAllocation, AllocationRelease
+from .correction_models import FinanceCorrection, CorrectionRelease, CashRefund, ChargeReversal, ChargeReplacement, AgreementChange, FinancePeriodClose
 from .office_models import OfficeAuditEvent, OwnershipHandover, StaffInvitation
 from .office_access import execution_record, records, save_for_user
 from .tests_auth_support import staff_client_login
@@ -40,7 +41,7 @@ A='00000000-0000-4000-8000-00000000000a'
 B='00000000-0000-4000-8000-00000000000b'
 C='00000000-0000-4000-8000-00000000000c'
 DAY=date(2026,1,15)
-BUSINESS=(Entity,CashAccount,Category,Agreement,Transaction,CounterpartyEvent,StaffInvitation,OwnershipHandover,OfficeAuditEvent,SettlementCommand,CashAllocation,AllocationRelease)
+BUSINESS=(Entity,CashAccount,Category,Agreement,Transaction,CounterpartyEvent,StaffInvitation,OwnershipHandover,OfficeAuditEvent,SettlementCommand,CashAllocation,AllocationRelease,FinanceCorrection,CorrectionRelease,CashRefund,ChargeReversal,ChargeReplacement,AgreementChange,FinancePeriodClose)
 
 
 def make_actor(name,office=A,role='accountant',**flags):
@@ -181,14 +182,14 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         suffix='b' if foreign else 'a'
         kwargs={}
         if name in {'entity-detail','edit-entity','archive-entity','restore-entity','entity-settlements'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
-        if name in {'agreement-detail','edit-agreement','agreement-charge-add'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
+        if name in {'agreement-detail','edit-agreement','agreement-charge-add','agreement-amend'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
         if name in {'cash-account-detail','cash-account-edit','cash-account-opening','cash-account-adjustment'}:kwargs={'pk':getattr(self,'cash_'+suffix).pk}
         if name in {'category-edit','category-retire'}:kwargs={'pk':getattr(self,'category_'+suffix).pk}
         if name=='office-invitation-action':kwargs={'key':getattr(self,'invite_'+suffix).pk,'action':'cancel'}
         if name=='office-member-action':kwargs={'user_id':(self.member_b if foreign else self.member).pk,'action':'deactivate'}
         if name=='office-handover-detail':kwargs={'key':getattr(self,'handover_'+suffix).pk}
-        if name=='cash-allocation-add':kwargs={'pk':getattr(self,'movement_'+suffix).pk}
-        if name=='allocation-release':kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
+        if name in {'cash-allocation-add','cash-correction','cash-refund'}:kwargs={'pk':getattr(self,'movement_'+suffix).pk}
+        if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):
@@ -219,7 +220,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
                 with self.subTest(persona=persona,route=name):
                     if persona in {'anonymous','inactive-user'}:expected=302
                     elif persona not in {'owner','accountant'}:expected=403
-                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release'}:expected=403
+                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release','finance.reverse','finance.refund','finance.amend','finance.close'}:expected=403
                     elif row['methods']==['POST']:expected=405
                     else:expected=200
                     response=client.get(self.url(name))

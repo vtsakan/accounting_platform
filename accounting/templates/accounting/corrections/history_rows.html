@@ -1,0 +1,9 @@
+{% load greek %}<ul class="list-group mb-3">{% for row in rows %}<li class="list-group-item">
+<strong>{{ row.get_operation_display }}</strong> · Ισχύς {{ row.effective_date|el_date }} · {{ row.actor.get_username }}
+<br>Καταχώριση {{ row.recorded_at|date:"d/m/Y H:i" }} · {{ row.reason }}
+<br><small class="text-break">Αναφορά {{ row.pk }}{% if row.source_cash_id %} · Αρχική κίνηση #{{ row.source_cash_id }}{% endif %}{% if row.source_charge_id %} · Αρχική χρέωση {{ row.source_charge_id }}{% endif %}</small>
+{% if row.cash_command_id %}<ul>{% for entry in row.cash_command.entries.all %}<li>Κίνηση #{{ entry.pk }} · {{ entry.amount|euro }} · {{ entry.get_posting_kind_display }}{% if entry.reversal_of_id %} · Αντιλογισμός #{{ entry.reversal_of_id }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+{% if row.expected_release_count %}<ul>{% for item in row.allocation_releases.all %}<li>Αποδέσμευση {{ item.release_id }} · Αρχική αντιστοίχιση {{ item.release.allocation_id }}</li>{% endfor %}</ul>{% endif %}
+{% if row.operation == 'CHARGE' and row.has_replacement %}<p class="mb-0 text-break">Νέα χρέωση {{ row.charge_replacement.replacement_id }} · {{ row.charge_replacement.replacement.amount|euro }}</p>{% endif %}
+{% if row.operation == 'TERMS' %}<p class="mb-0">Έκδοση {{ row.terms_change.version.revision }} · {{ row.terms_change.version.get_lifecycle_display }} · {{ row.terms_change.version.agreed_amount|euro }}</p>{% endif %}
+</li>{% empty %}<li class="list-group-item">Δεν υπάρχουν καταχωρισμένες οικονομικές διορθώσεις.</li>{% endfor %}</ul>

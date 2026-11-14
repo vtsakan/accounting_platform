@@ -11,7 +11,8 @@ class FinanceCommand(models.Model):
     office=models.ForeignKey('accounting.Office',on_delete=models.PROTECT,editable=False)
     actor=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,editable=False)
     operation=models.CharField(max_length=30,choices=[('cash.post','Καταχώρηση'),('cash.transfer','Μεταφορά'),
-        ('cash.reverse','Αντιλογισμός'),('cash.correct','Αντιλογισμός και αντικατάσταση')])
+        ('cash.reverse','Αντιλογισμός'),('cash.correct','Αντιλογισμός και αντικατάσταση'),('transfer.reverse','Αντιλογισμός μεταφοράς'),
+        ('transfer.correct','Αντικατάσταση μεταφοράς'),('cash.refund','Επιστροφή χρημάτων'),('refund.reverse','Αντιλογισμός επιστροφής')])
     key_digest=models.CharField(max_length=71,editable=False)
     payload_digest=models.CharField(max_length=71,editable=False)
     state=models.CharField(max_length=12,default='pending',choices=[('pending','Σε εξέλιξη'),('completed','Ολοκληρώθηκε')])

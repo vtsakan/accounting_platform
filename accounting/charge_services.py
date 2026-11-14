@@ -44,6 +44,14 @@ def save_terms(user, instance, *, billing_mode='UNREVIEWED', lifecycle='UNREVIEW
     latest = None
     if instance.pk:
         scoped_lock(Agreement, office, instance.pk)
+        # Original migration rehearsals do not contain S24 tables. The latest
+        # schema routes versioned changes through their owner-confirmed path.
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT to_regclass('accounting_agreementchange') IS NOT NULL"); amended_schema=cursor.fetchone()[0]
+        if amended_schema:
+            from .models import AgreementChange
+            if AgreementChange.objects.filter(office=office,agreement_id=instance.pk).exists():
+                raise ValidationError('Χρησιμοποιήστε τη μελλοντική αλλαγή όρων για αυτή τη συμφωνία.')
         latest = AgreementTermsVersion.objects.filter(office=office, agreement_id=instance.pk).first()
     revision = latest.revision if latest else 0
     # Historical clients can edit an unreviewed revision-0 record. Rendered
@@ -128,14 +136,16 @@ def post_charge(user, *, agreement_id, terms_revision, amount, effective_date, d
         if existing.payload_digest != payload:
             raise ValidationError('Η ταυτότητα καταχώρισης χρησιμοποιήθηκε με διαφορετικά στοιχεία.')
         return existing
+    from .correction_services import ensure_open
+    ensure_open(office, effective_date)
     agreement = scoped_lock(Agreement, office, agreement_id)
-    terms = AgreementTermsVersion.objects.filter(office=office, agreement=agreement).first()
+    from .correction_selectors import terms_on
+    terms = terms_on(agreement,effective_date)
     if terms is None or terms.revision != terms_revision:
         raise ValidationError(STALE)
     if terms.billing_mode == 'UNREVIEWED' or terms.lifecycle != 'ACTIVE' or agreement.status == 'CANCELLED':
         raise ValidationError('Απαιτούνται ελεγμένοι ενεργοί όροι και ρητή επιλογή τρόπου χρέωσης.')
-    if (terms.entity_id, terms.direction, terms.agreed_amount, terms.description, terms.start_date) != (
-            agreement.entity_id, agreement.agreement_type, agreement.total_amount, agreement.description, agreement.start_date):
+    if (terms.entity_id, terms.direction, terms.start_date) != (agreement.entity_id, agreement.agreement_type, agreement.start_date):
         raise ValidationError(STALE)
     entity = scoped_lock(Entity, office, terms.entity_id, active=True)
     if not (entity.is_customer if terms.direction == 'RECEIVABLE' else entity.is_supplier):

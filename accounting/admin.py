@@ -9,6 +9,8 @@ from .membership import require_office_profile
 from .office_access import records, save_for_user
 from .capabilities import require_capability, model_capability
 from django import forms
+from django.urls import reverse
+from django.utils.html import format_html
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
@@ -275,7 +277,11 @@ class TransactionAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
         return obj is None and super().has_change_permission(request,obj)
 
     def get_readonly_fields(self,request,obj=None):
-        return tuple(f.name for f in self.model._meta.fields) if obj is not None else super().get_readonly_fields(request,obj)
+        return tuple(f.name for f in self.model._meta.fields)+('correction_link',) if obj is not None else super().get_readonly_fields(request,obj)
+
+    @admin.display(description='Οικονομική διόρθωση')
+    def correction_link(self,obj):
+        return format_html('<a href="{}">Διόρθωση με κωδικό και πρόσφατη επαλήθευση υπευθύνου</a>',reverse('cash-correction',args=[obj.pk]))
 
 @admin.register(Agreement)
 class AgreementAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
@@ -287,3 +293,13 @@ class AgreementAdmin(OfficeAdminMixin, GreekAdminMixin, admin.ModelAdmin):
     search_fields = ('entity__name', 'description')
     # Make the date have a nice hierarchy filter
     date_hierarchy = 'start_date'
+
+
+    def get_readonly_fields(self,request,obj=None):
+        if obj is not None and (obj.charges.exists() or obj.amendments.exists()):
+            return tuple(field.name for field in self.model._meta.fields)+('amendment_link',)
+        return super().get_readonly_fields(request,obj)
+
+    @admin.display(description='Μελλοντική αλλαγή όρων')
+    def amendment_link(self,obj):
+        return format_html('<a href="{}">Μελλοντική αλλαγή ή ακύρωση από υπεύθυνο γραφείου</a>',reverse('agreement-amend',args=[obj.pk]))

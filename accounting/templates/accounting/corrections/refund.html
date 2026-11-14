@@ -1,0 +1,6 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Επιστροφή πίστωσης ή προκαταβολής{% endblock %}
+{% block content %}<h1>Επιστροφή πίστωσης ή προκαταβολής</h1><p>Αρχική κίνηση #{{ source.pk }} · {{ source.description }} · {{ source.amount|euro }}</p>
+{% if balance %}<p><strong>Διαθέσιμο ποσό: {{ balance.available_credit|euro }}</strong></p>{% else %}<p class="alert alert-warning">Η πηγή δεν είναι κανονική καταχώριση με συναλλασσόμενο διαθέσιμη για επιστροφή.</p>{% endif %}
+<p>Επιστροφή σε πελάτη: εξερχόμενη κίνηση και μείωση πίστωσης. Επιστροφή από προμηθευτή: εισερχόμενη κίνηση και μείωση προκαταβολής. Οι εξοφλημένες χρεώσεις διατηρούνται.</p><form method="post" class="card card-body">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}<button class="btn btn-primary" type="submit">Επιβεβαίωση επιστροφής</button></form>
+{% if source.entity_id %}<a href="{% url 'entity-settlements' source.entity_id %}">Επιστροφή στην καρτέλα εξοφλήσεων</a>{% else %}<a href="{% url 'transaction-list' %}">Επιστροφή στις κινήσεις</a>{% endif %}{% endblock %}

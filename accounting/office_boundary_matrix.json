@@ -464,6 +464,58 @@
       "methods": [
         "POST"
       ]
+    },
+    {
+      "route": "cash-correction",
+      "realm": "office-business",
+      "capability": "finance.reverse",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "cash-refund",
+      "realm": "office-business",
+      "capability": "finance.refund",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "charge-correction",
+      "realm": "office-business",
+      "capability": "finance.reverse",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "agreement-amend",
+      "realm": "office-business",
+      "capability": "finance.amend",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "finance-period-close",
+      "realm": "office-business",
+      "capability": "finance.close",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "finance-correction-history",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

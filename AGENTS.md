@@ -29,7 +29,32 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Current checkpoint — S23
+## Current checkpoint — S24
+
+Deliver source only. No agent-run tests/builds/Docker/migrations or local demo/VM/
+account/MFA/key actions. Read financial_corrections.md. Actual S23 operator proof
+on 2026-11-14: 605 passes, all 36 financial cases and 838 boundary cases, source
+9f10f4f9e6f3fe66eebb5590f6392bcf505df757; preserved source context
+sha256:ae4c2a7be2ef5f7213b8a213407e8878c484c96a88d45cfd521fd72b9562e182.
+Keep its receipt, original 18 migrations, all previous assertions, accepted D08
+policy and dependency locks. Add only 0019/0020, seven retained correction/event
+models, owner password/recent-MFA grouped corrections, explicit source-bound
+credit/advance refunds, both transfer legs, prospective agreement terms and
+cancellation, and forward-only closed-period cutoffs. Replacement cash requires
+separate explicit allocation; cancellation retains posted debt and never refunds
+automatically. Check every affected historical allocation/refund change point.
+New event models stay outside generic admin/records/workers. The narrow legacy
+no-charge/no-amendment status bridge remains for the original probes; modern
+settlement/lifecycle are separate. Preserve all 605 tests/36 finance assertions;
+extend every previous route case. Supplied 51 new methods target 656 passes and
+922 boundary cases, NOT observed results. Prepared until the optional operator
+runs tools/verify_s24.py --record. APPLY only merges Git/source/metadata; generated
+S23 receipt files may be committed only as an exact four-file set with no other
+outstanding edits. Greek browser/client acceptance, restricted-role DDL and all
+85 full acceptances remain Pending. Stop after S24; S25 import/reconciliation
+is separate and no deployment is authorised by this implementation step.
+
+## Historical S23 source checkpoint
 
 Deliver code only; no agent-run tests, builds, Docker or migrations. Start from
 actual pushed S22 head f8e9b92f470765c1411067c14e06f625c0b13d91: its operator

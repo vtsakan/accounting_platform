@@ -1,0 +1,13 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}{% if transfer %}Διόρθωση μεταφοράς{% elif refund %}Αντιλογισμός επιστροφής{% else %}Διόρθωση κίνησης{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if transfer %}Διόρθωση μεταφοράς{% elif refund %}Αντιλογισμός επιστροφής{% else %}Διόρθωση κίνησης{% endif %}</h1>
+<p>Κίνηση #{{ source.pk }} · {{ source.transaction_date|el_date }} · {{ source.amount|euro }} · {{ source.description }}</p>
+{% if transfer %}<p>Αντιλογίζονται μαζί και τα δύο σκέλη. Η προαιρετική αντικατάσταση δημιουργεί νέο ζεύγος μεταφοράς.</p>{% elif refund %}<p>Η επιστροφή αντιλογίζεται ολόκληρη. Η διαθέσιμη πίστωση ή προκαταβολή επανέρχεται στην αρχική πηγή.</p>{% else %}<p>Η αρχική κίνηση διατηρείται. Οι ενεργές αντιστοιχίσεις της αποδεσμεύονται μαζί με τον αντιλογισμό. Η νέα κίνηση αντικατάστασης χρειάζεται χωριστή επιβεβαίωση αντιστοιχίσεων.</p>{% endif %}
+{% if dependencies %}<div class="alert alert-warning"><p>Υπάρχουν συνδεδεμένες επιστροφές. Επιβεβαιώστε τις παρακάτω επιλογές ώστε να αντιλογιστούν στην ίδια ομάδα.</p><ul>{% for row in dependencies %}<li>Κίνηση #{{ row.entry_id }} · {{ row.amount|euro }} · {{ row.effective_date|el_date }}</li>{% endfor %}</ul></div>{% endif %}
+<form method="post" class="card card-body mb-3">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}
+{% if not refund %}<details open><summary>Στοιχεία προαιρετικής αντικατάστασης</summary><p>Χρησιμοποιούνται μόνο αν επιλέξετε την αντικατάσταση παραπάνω. Η ημερομηνία είναι ίδια με τη διόρθωση.</p>{% include 'accounting/settlements/fields.html' with form=replacement %}</details>{% endif %}
+<p class="small">Απαιτούνται κωδικός πρόσβασης και πρόσφατη επαλήθευση δύο παραγόντων υπευθύνου. Η ίδια επιβεβαίωση δεν δημιουργεί δεύτερη διόρθωση.</p><button class="btn btn-danger" type="submit">Επιβεβαίωση διόρθωσης</button></form>
+<a href="{% url 'transaction-list' %}">Επιστροφή στις κινήσεις</a>
+{% if history %}<h2 class="h4 mt-4">Συνδεδεμένο ιστορικό</h2>{% include 'accounting/corrections/history_rows.html' with rows=history %}{% endif %}
+{% endblock %}

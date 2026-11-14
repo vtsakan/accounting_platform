@@ -250,7 +250,7 @@ class Transaction(OfficeOwned):
 
     posting_kind = models.CharField(max_length=12,default='LEGACY',editable=False,verbose_name='Είδος καταχώρισης',choices=[
         ('LEGACY','Αρχική/διαχειριστική εγγραφή'),('ORDINARY','Κανονική κίνηση'),
-        ('TRANSFER','Εσωτερική μεταφορά'),('REVERSAL','Αντιλογισμός')])
+        ('TRANSFER','Εσωτερική μεταφορά'),('REVERSAL','Αντιλογισμός'),('REFUND','Επιστροφή χρημάτων')])
     command = models.ForeignKey('accounting.FinanceCommand',on_delete=models.PROTECT,null=True,editable=False,related_name='entries',verbose_name='Οικονομική ενέργεια')
     reversal_of = models.OneToOneField('self',on_delete=models.PROTECT,null=True,editable=False,related_name='reversal',verbose_name='Αρχική κίνηση αντιλογισμού')
 
@@ -279,7 +279,7 @@ class Transaction(OfficeOwned):
         verbose_name_plural = "Κινήσεις"
         constraints = [models.UniqueConstraint(fields=["id", "office"], name="transaction_id_office_key"),
             models.CheckConstraint(condition=models.Q(amount__gt=0,amount__lte=Decimal('9999999999.99'),amount=Round('amount',2)),name='s18_transaction_positive_cents',violation_error_message='Το ποσό πρέπει να είναι έγκυρο και να έχει έως δύο δεκαδικά ψηφία.'),
-            models.CheckConstraint(condition=(models.Q(posting_kind='REVERSAL',reversal_of__isnull=False)|models.Q(posting_kind__in=['LEGACY','ORDINARY','TRANSFER'],reversal_of__isnull=True)),name='s18_reversal_reference')]
+            models.CheckConstraint(condition=(models.Q(posting_kind='REVERSAL',reversal_of__isnull=False)|models.Q(posting_kind__in=['LEGACY','ORDINARY','TRANSFER','REFUND'],reversal_of__isnull=True)),name='s18_reversal_reference')]
 
 
 class Office(models.Model):
@@ -345,3 +345,5 @@ from .account_models import CashAdjustment, FinanceStructureLock
 from .charge_models import AgreementTermsVersion, Charge
 
 from .settlement_models import SettlementCommand, CashAllocation, AllocationRelease
+
+from .correction_models import FinanceCorrection, CorrectionRelease, CashRefund, ChargeReversal, ChargeReplacement, AgreementChange, FinancePeriodClose

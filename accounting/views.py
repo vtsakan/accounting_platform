@@ -89,9 +89,9 @@ def entity_detail_view(request, pk):
 def summary_report_view(request):
     validate_filter_ids(request)
     from .movement_forms import CashMovementFilterForm
-    from .movement_selectors import filtered_movements, operating_movements, movement_totals
+    from .movement_selectors import filtered_movements, operating_movements, operating_totals, operating_component
     filter_form = CashMovementFilterForm(request.GET, user=request.user)
-    transactions = operating_movements(filtered_movements(request.user, filter_form))
+    transactions = operating_movements(filtered_movements(request.user, filter_form,business_direction=True))
     start_date_str = request.GET.get('start_date', '')
     end_date_str = request.GET.get('end_date', '')
     transaction_type = request.GET.get('transaction_type', '')
@@ -100,11 +100,11 @@ def summary_report_view(request):
 
     # Operating cash totals exclude explicit transfers before every aggregate.
     # Cash balances/history continue to include both legs on their own dates.
-    totals = movement_totals(transactions)
+    totals = operating_totals(transactions)
     net_for_period = totals['net_for_period']
 
-    income_by_category = transactions.filter(transaction_type='INCOME').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
-    expense_by_category = transactions.filter(transaction_type='EXPENSE').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
+    income_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('INCOME'))).exclude(total_amount=0).order_by('-total_amount')
+    expense_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('EXPENSE'))).exclude(total_amount=0).order_by('-total_amount')
 
 
     # --- FINAL CORRECTED AGREEMENT ANALYTICS ---
@@ -168,6 +168,13 @@ def agreement_detail_view(request, pk):
     context['terms_history'] = agreement.terms_versions.filter(office_id=agreement.office_id)[:20]
     from .settlement_selectors import allocation_history
     context['allocation_page'] = Paginator(allocation_history(request.user, agreement=agreement), 20).get_page(request.GET.get('allocation_page'))
+    from .capabilities import require_capability
+    from .correction_forms import ChargeCorrectionForm
+    from .correction_selectors import correction_history
+    context['can_correct'] = require_capability(request.user,'finance.read').role=='owner'
+    for charge in context['charge_page']:
+        charge.correction_form = ChargeCorrectionForm(auto_id='id_charge_'+charge.pk.hex+'_%s') if context['can_correct'] and not charge.reversed_by_day else None
+    context['correction_history'] = correction_history(request.user,agreement=agreement)[:20]
     return render(request, 'accounting/agreement_detail.html', context)
 
 @login_required

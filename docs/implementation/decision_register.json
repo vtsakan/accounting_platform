@@ -392,6 +392,22 @@
         "release": "Owner-only finance.release; password, recent MFA, date/reason; one immutable full release",
         "correction": "Cash reversal requires prior explicit releases; grouped cash correction/refund UI remains S24",
         "evidence": "docs/implementation/settlements_credit.md"
+      },
+      "s24_implementation": {
+        "status": "Prepared; code-only, operator execution pending",
+        "approved_choices": [
+          "D08-03",
+          "D08-04",
+          "D08-07",
+          "D08-08",
+          "D08-09",
+          "D08-10"
+        ],
+        "correction": "Full linked originals, grouped allocation releases and dependent refund reversals; optional replacement with separate explicit reallocation",
+        "refund": "Explicit original-bound credit/advance only, never automatic netting",
+        "lifecycle": "Prospective retained versions; cancellation stops new charges while retaining debt",
+        "closed_period": "Explicit owner cutoff; forward only, subsequent corrections use an open date",
+        "evidence": "docs/implementation/financial_corrections.md"
       }
     },
     {

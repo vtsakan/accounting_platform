@@ -1,0 +1,4 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Ιστορικό οικονομικών διορθώσεων{% endblock %}
+{% block content %}<h1>Ιστορικό οικονομικών διορθώσεων</h1>{% if cutoff %}<p>Κλεισμένη περίοδος έως και {{ cutoff.closed_through|el_date }}.</p>{% endif %}{% if can_correct %}<p><a class="btn btn-outline-secondary" href="{% url 'finance-period-close' %}">Κλείσιμο οικονομικής περιόδου</a></p>{% endif %}{% include 'accounting/corrections/history_rows.html' with rows=page_obj %}
+{% if page_obj.has_other_pages %}<nav aria-label="Σελίδες οικονομικών διορθώσεων">{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }} {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Επόμενη</a>{% endif %}</nav>{% endif %}{% endblock %}

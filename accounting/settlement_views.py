@@ -43,13 +43,16 @@ def workspace(request, pk):
     owner = require_capability(request.user, 'finance.read').role == 'owner'
     for row in history_page:
         row.release_form = ReleaseForm(auto_id='id_release_' + row.pk.hex + '_%s') if owner and day == timezone.localdate() and not row.released_by_day else None
+    from .correction_selectors import refund_history
+    refunds=refund_history(request.user,entity=entity,as_of=day) if valid else None
     params = request.GET.copy()
     for field in ('history_page', 'charge_page', 'source_page'):
         params.pop(field, None)
     return render(request, 'accounting/settlements/workspace.html', {'entity': entity, 'date_form': form, 'as_of': day,
         'totals': totals, 'charge_page': Paginator(charges, 20).get_page(request.GET.get('charge_page')),
         'source_page': Paginator(sources, 20).get_page(request.GET.get('source_page')), 'history_page': history_page,
-        'page_query': params.urlencode(), 'can_allocate': valid and not entity.is_archived and day == timezone.localdate()})
+        'page_query': params.urlencode(), 'refund_page': Paginator(refunds,20).get_page(request.GET.get('refund_page')) if refunds is not None else None,
+        'can_refund': owner and valid and day==timezone.localdate(), 'can_allocate': valid and not entity.is_archived and day == timezone.localdate()})
 
 
 @office_view('finance.write')

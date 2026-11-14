@@ -74,12 +74,12 @@
                 <div class="col-md-6">
                     <h4>Εισπρακτέες χρεώσεις</h4><p><strong>Ανεξόφλητο: {{ receivable_remaining|default:0|euro }}</strong> · Αντιστοιχισμένο: {{ receivable_allocated|default:0|euro }}</p>
                     <p class="fs-5 text-success fw-bold">{{ posted_receivable_total|default:0|euro }}</p>
-                    <small class="text-muted">Μικτό ποσό καταχωρισμένων χρεώσεων πελατών. Οι εισπράξεις μειώνουν το ανεξόφλητο μόνο μέσω ενεργών αντιστοιχίσεων.</small>
+                    <small class="text-muted">Ποσό χρεώσεων πελατών μετά τους αντιλογισμούς. Οι εισπράξεις μειώνουν το ανεξόφλητο μόνο μέσω ενεργών αντιστοιχίσεων.</small>
                 </div>
                 <div class="col-md-6">
                     <h4>Πληρωτέες χρεώσεις</h4><p><strong>Ανεξόφλητο: {{ payable_remaining|default:0|euro }}</strong> · Αντιστοιχισμένο: {{ payable_allocated|default:0|euro }}</p>
                     <p class="fs-5 text-danger fw-bold">{{ posted_payable_total|default:0|euro }}</p>
-                    <small class="text-muted">Μικτό ποσό καταχωρισμένων υποχρεώσεων προς προμηθευτές. Οι όροι συμφωνιών δεν προστίθενται ως δεύτερη οφειλή.</small>
+                    <small class="text-muted">Ποσό υποχρεώσεων προς προμηθευτές μετά τους αντιλογισμούς. Οι όροι συμφωνιών δεν προστίθενται ως δεύτερη οφειλή.</small>
                 </div>
             </div>
         </div>

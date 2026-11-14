@@ -606,3 +606,19 @@ and full grouped correction screens remain S24; legacy interpretation remains
 S25. No new policy approval is inferred or requested. Code is Prepared; operator
 PostgreSQL verification, Greek browser review and release acceptance are Pending.
 See settlements_credit.md and evidence/S23-verification.json.
+
+
+## S24 implementation of the accepted D08 choices — Prepared
+
+S24 source adds owner-confirmed full cash/charge/transfer corrections with
+retained originals, grouped allocation releases and explicit dependent-refund
+confirmation. Replacement cash requires a separate allocation action. Source-
+bound credit/advance refunds never offset directions automatically. Prospective
+immutable terms/cancellation stop new obligations at the cutoff while retaining
+posted debt. Explicit forward-only closed-period protection enforces later open
+correction dates. No new accountant approval is inferred; the unchanged S17
+snapshot remains the policy reference. See financial_corrections.md. Code-only
+user preference: no agent tests/builds/database/VM/demo execution. Supplied 51
+new methods target 656 passes/36 finance/922 boundary cases; not observations.
+Historical S23 operator result is retained: 605/605, 36 finance, 838 boundary.
+All full/browser acceptances remain Pending; S25 is outside this selected step.

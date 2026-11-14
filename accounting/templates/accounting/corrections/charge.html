@@ -1,0 +1,3 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Διόρθωση χρέωσης{% endblock %}
+{% block content %}<h1>Διόρθωση χρέωσης</h1><p>Χρέωση {{ charge.pk }} · {{ charge.amount|euro }} · {{ charge.description }}</p><p>Οι αντιστοιχίσεις αποδεσμεύονται στην ίδια ημερομηνία. Ο αντιλογισμός χρέωσης δεν επιστρέφει χρήματα.</p><form method="post">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}<button class="btn btn-danger" type="submit">Επιβεβαίωση διόρθωσης χρέωσης</button></form><a href="{% url 'agreement-detail' charge.agreement_id %}">Επιστροφή στη συμφωνία</a>{% endblock %}

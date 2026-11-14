@@ -20,10 +20,11 @@ from .office_access import record
 @require_http_methods(['GET', 'POST'])
 def add(request, pk):
     agreement = record(Agreement, request.user, pk)
-    terms = AgreementTermsVersion.objects.filter(office_id=agreement.office_id, agreement=agreement).first()
+    from .correction_selectors import terms_on
+    terms = terms_on(agreement)
     day = timezone.localdate()
     form = ChargeForm(request.POST if request.method == 'POST' else None,
-                      initial={'amount': agreement.total_amount, 'effective_date': day, 'due_date': day,
+                      initial={'amount': terms.agreed_amount if terms else agreement.total_amount, 'effective_date': day, 'due_date': day,
                                'terms_revision': terms.revision if terms else 0,
                                'period': day.strftime('%Y-%m') if terms and terms.billing_mode == 'MONTHLY' else ''})
     if request.method == 'POST' and form.is_valid():

@@ -19,7 +19,8 @@ from .office_access import locked_office
 
 
 def legacy_settlement(prefix=''):
-    return Coalesce(Sum(Case(When(**{prefix+'posting_kind':'REVERSAL'},then=-F(prefix+'amount')),
+    return Coalesce(Sum(Case(When(**{prefix+'posting_kind':'REVERSAL',prefix+'reversal_of__posting_kind':'REFUND'},then=F(prefix+'amount')),
+        When(**{prefix+'posting_kind':'REFUND'},then=-F(prefix+'amount')),When(**{prefix+'posting_kind':'REVERSAL'},then=-F(prefix+'amount')),
         default=F(prefix+'amount'),output_field=DecimalField())),Value(Decimal('0.00')),output_field=DecimalField())
 
 
@@ -125,6 +126,18 @@ def project_agreement(key,office):
     if key:
         agreement=scoped_lock(Agreement,office,key)
         if agreement.status=='CANCELLED':return
+        # Modern lifecycle and settlement are derived separately. This narrow
+        # bridge remains only for agreements without posted charges or S24 changes.
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT to_regclass('accounting_agreementtermsversion') IS NOT NULL"); modern=cursor.fetchone()[0]
+        if modern:
+            from .models import Charge
+            if Charge.objects.filter(agreement=agreement).exists():return
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT to_regclass('accounting_agreementchange') IS NOT NULL"); amendment_schema=cursor.fetchone()[0]
+            if amendment_schema:
+                from .models import AgreementChange
+                if AgreementChange.objects.filter(agreement=agreement).exists():return
         settled=Transaction.objects.filter(office=office,agreement=agreement).aggregate(total=legacy_settlement())['total']
         status='COMPLETED' if settled>=agreement.total_amount else 'ACTIVE'
         if agreement.status!=status:
@@ -137,6 +150,8 @@ def post_cash(user,*,idempotency_key,reason='Καταχώρηση κίνησης
     reason=clean_reason(reason);payload['reason_digest']=fingerprint(reason)
     command,replay=command_for(user,office,'cash.post',idempotency_key,payload,reason)
     if replay:return command.entries.get()
+    from .correction_services import ensure_open
+    ensure_open(office,values['transaction_date'])
     validate_references(values,office)
     with audit_context(user,reason,command):
         entry=Transaction.objects.create(office=office,command=command,posting_kind='ORDINARY',**values)
@@ -160,6 +175,8 @@ def post_transfer(user,*,from_account,to_account,amount,transfer_date,descriptio
     command,replay=command_for(user,office,'cash.transfer',idempotency_key,
         {'from':source_key,'to':dest_key,'amount':str(amount),'date':transfer_date.isoformat(),'description_digest':fingerprint(description)},'Εσωτερική μεταφορά')
     if replay:return list(command.entries.filter(office=office).order_by('pk'))
+    from .correction_services import ensure_open
+    ensure_open(office,transfer_date)
     accounts={key:scoped_lock(CashAccount,office,key,active=True) for key in sorted((source_key,dest_key))}
     from .account_services import validate_account_date
     for account in accounts.values():validate_account_date(account,transfer_date)
@@ -195,6 +212,8 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
     command,replay=command_for(request.user,office,'cash.correct' if replacement else 'cash.reverse',idempotency_key,
         {'entry':entry_id,'date':effective_date.isoformat(),'reason_digest':fingerprint(reason),'replacement':replacement_payload},reason)
     if replay:return list(command.entries.order_by('pk'))
+    from .correction_services import ensure_open
+    ensure_open(office,effective_date)
     original=scoped_lock(Transaction,office,entry_id)
     from .account_services import validate_account_date
     validate_account_date(scoped_lock(CashAccount,office,original.cash_account_id),effective_date)
@@ -205,6 +224,8 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
         raise ValidationError('Ο αντιλογισμός μεταφοράς απαιτεί ενιαία διόρθωση και των δύο σκελών.')
     from .settlement_services import assert_reversible_cash
     assert_reversible_cash(original,effective_date)
+    from .correction_services import assert_refunds_reversed
+    assert_refunds_reversed(original,effective_date)
     if replacement_values:validate_references(replacement_values,office)
     with audit_context(request.user,reason,command):
         reversal=Transaction.objects.create(office=office,command=command,posting_kind='REVERSAL',reversal_of=original,
@@ -233,6 +254,12 @@ def save_master(instance,user,*,reason='Ενημέρωση οικονομικώ�
         if not (entity.is_customer if instance.agreement_type=='RECEIVABLE' else entity.is_supplier):raise ValidationError('Ο συναλλασσόμενος δεν έχει τον κατάλληλο ρόλο.')
         if instance.pk:
             old=scoped_lock(Agreement,office,instance.pk)
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT to_regclass('accounting_agreementchange') IS NOT NULL"); amendments_installed=cursor.fetchone()[0]
+            if amendments_installed:
+                from .models import AgreementChange
+                if AgreementChange.objects.filter(agreement=old).exists() and any(getattr(old,n)!=getattr(instance,n) for n in ('entity_id','agreement_type','total_amount','description','start_date','status')):
+                    raise ValidationError('Η συμφωνία έχει διατηρημένες εκδόσεις. Χρησιμοποιήστε τη μελλοντική αλλαγή όρων.')
             from .models import Charge
             if Charge.objects.filter(office=office,agreement=old).exists() and any(getattr(old,n)!=getattr(instance,n) for n in ('entity_id','agreement_type','total_amount','start_date','description')):
                 raise ValidationError('Η συμφωνία έχει καταχωρισμένες χρεώσεις. Οι αλλαγές όρων απαιτούν την ειδική διαδικασία ιστορικού.')

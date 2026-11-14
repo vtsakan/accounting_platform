@@ -13,13 +13,13 @@ class StyledForm(forms.Form):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             if not field.widget.is_hidden:
-                field.widget.attrs['class'] = 'form-select' if isinstance(field.widget, forms.Select) else 'form-control'
+                field.widget.attrs['class'] = 'form-check-input' if isinstance(field.widget, forms.CheckboxInput) else 'form-select' if isinstance(field.widget, forms.Select) else 'form-control'
 
     def clean(self):
         values = super().clean()
         if hasattr(self.data, 'getlist'):
             for name in self.fields:
-                if len(self.data.getlist(self.add_prefix(name))) > 1:
+                if not isinstance(self.fields[name], forms.MultipleChoiceField) and len(self.data.getlist(self.add_prefix(name))) > 1:
                     self.add_error(name, 'Υποβάλετε μία μόνο τιμή για αυτό το πεδίο.')
         return values
 
@@ -56,7 +56,7 @@ class ChargeChoice(forms.ModelChoiceField):
         # The UUID distinguishes equal-price/monthly obligations without trusting
         # a posted label. Exact amounts remain server-validated.
         amount = f'{obj.outstanding:.2f}'.replace('.', ',')
-        return f'{obj.agreement.description} · {obj.due_date:%d/%m/%Y} · Υπόλοιπο {amount} € · {obj.pk}'
+        return f'{obj.description} · {obj.due_date:%d/%m/%Y} · Υπόλοιπο {amount} € · {obj.pk}'
 
 
 class AllocationLineForm(StyledForm):

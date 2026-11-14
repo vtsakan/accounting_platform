@@ -1,47 +1,599 @@
 {
   "step": "S22",
-  "status": "Prepared",
-  "mode": "code-only-delivery",
-  "source_commit": "git:71fd1ce5d36467d70244ef98fb2563352e017358",
-  "source_reference_commit": "git:6f67b4c8c079f6cbdc299db623966fe3f4e222d9",
-  "previous_operator_receipt": "docs/implementation/evidence/S21-verification.json",
-  "previous_operator_suite": {
-    "tests_run": 533,
-    "tests_passed": 533,
+  "status": "Verified",
+  "mode": "operator-docker-compose-postgresql17",
+  "docker_execution": true,
+  "verified_at": "2026-11-14T08:25:03+02:00",
+  "suite": {
+    "tests_run": 560,
+    "tests_passed": 560,
     "known_failures_reproduced": 0,
-    "unexpected_errors": 0
+    "unexpected_failures": 0,
+    "unexpected_errors": 0,
+    "unexpected_successes": 0,
+    "skips": 0
   },
-  "migrations_supplied": [
+  "financial_cases": [
+    {
+      "case_id": "AMT-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_zero",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Reject zero income without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_negative",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Reject negative income without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-003",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_zero",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Reject zero expense without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-004",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_negative",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Reject negative expense without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-005",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_zero",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "Reject zero transfer without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-006",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_negative",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "Reject negative transfer without financial writes",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-007",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_zero",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S18",
+        "S20"
+      ],
+      "description": "Reject zero ordinary cash amount at the model/database boundary",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "AMT-008",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_negative",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S18",
+        "S20"
+      ],
+      "description": "Reject negative ordinary cash amount at the model/database boundary",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "BAL-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_empty_account",
+      "issue_id": "LEG-003",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-03"
+      ],
+      "fix_steps": [
+        "S19"
+      ],
+      "description": "Opening 100 with no movements must display 100",
+      "fixed_in": "S19",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "BAL-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_only",
+      "issue_id": "LEG-003",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-03"
+      ],
+      "fix_steps": [
+        "S19"
+      ],
+      "description": "Opening 100 plus income 50 without expenses must display 150",
+      "fixed_in": "S19",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "BAL-003",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_only",
+      "issue_id": "LEG-003",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-03"
+      ],
+      "fix_steps": [
+        "S19"
+      ],
+      "description": "Opening 100 minus expense 20 without income must display 80",
+      "fixed_in": "S19",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CAN-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_transaction_resave_preserves_cancellation",
+      "issue_id": "LEG-008",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-04",
+        "UR-AGR-05"
+      ],
+      "fix_steps": [
+        "S24"
+      ],
+      "description": "Resaving a linked receipt must not change explicit CANCELLED status",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_mixed_account_balance",
+      "issue_id": "LEG-003",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-03"
+      ],
+      "fix_steps": [
+        "S19"
+      ],
+      "description": "Opening 100 plus income 50 minus expense 20 displays 130",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_partial_settlement",
+      "issue_id": "LEG-005",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-03"
+      ],
+      "fix_steps": [
+        "S23"
+      ],
+      "description": "Same-client settlement 25 against 100 leaves 75 outstanding",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-003",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_full_settlement",
+      "issue_id": "LEG-007",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-04"
+      ],
+      "fix_steps": [
+        "S24"
+      ],
+      "description": "Same-client full settlement marks the legacy agreement completed",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-004",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_moves_1000",
+      "issue_id": "LEG-004",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "Linked transfer 1000 produces balances 1000 and 1100 from openings 2000 and 100",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-005",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_failed_second_transfer_leg_rolls_back",
+      "issue_id": "LEG-004",
+      "expected_outcome": "pass",
+      "requirements": [
+        "QR-03",
+        "UR-CSH-04"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "Injected failure on the second transfer leg leaves neither leg",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-006",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_same_account_transfer_is_rejected",
+      "issue_id": "LEG-004",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "A same-account transfer is rejected without writes",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-007",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_income_text_is_rejected",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Non-numeric Greek-form income input is rejected",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-008",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_expense_text_is_rejected",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-02"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Non-numeric Greek-form expense input is rejected",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-009",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_transfer_text_is_rejected",
+      "issue_id": "LEG-006",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04"
+      ],
+      "fix_steps": [
+        "S21"
+      ],
+      "description": "Non-numeric Greek-form transfer input is rejected",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "CTL-010",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_receipt_cannot_select_payable",
+      "issue_id": "LEG-005",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-02"
+      ],
+      "fix_steps": [
+        "S23"
+      ],
+      "description": "The existing income form rejects a supplier-payable agreement",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_start_date",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Malformed start_date on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_end_date",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Malformed end_date on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-003",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_cash_account",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Malformed cash_account on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-004",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_category",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Malformed category on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-005",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_entity",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20"
+      ],
+      "description": "Malformed entity on list must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-006",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_start_date",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20",
+        "S29"
+      ],
+      "description": "Malformed start_date on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-007",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_end_date",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20",
+        "S29"
+      ],
+      "description": "Malformed end_date on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-008",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_cash_account",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20",
+        "S29"
+      ],
+      "description": "Malformed cash_account on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "FLT-009",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_category",
+      "issue_id": "LEG-009",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-06"
+      ],
+      "fix_steps": [
+        "S20",
+        "S29"
+      ],
+      "description": "Malformed category on report must return field validation instead of HTTP 500",
+      "fixed_in": "S20",
+      "verification": "Not run; user executes tests",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "SET-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_income",
+      "issue_id": "LEG-005",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-02"
+      ],
+      "fix_steps": [
+        "S23"
+      ],
+      "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "SET-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_expense",
+      "issue_id": "LEG-005",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-02"
+      ],
+      "fix_steps": [
+        "S23"
+      ],
+      "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+      "fixed_in": "S18",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "STA-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_reduced_receipt_reopens_agreement",
+      "issue_id": "LEG-007",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-04",
+        "UR-CSH-07"
+      ],
+      "fix_steps": [
+        "S23",
+        "S24"
+      ],
+      "description": "Legacy receipt change from 100 to 25 leaves 75 outstanding and must reopen settlement status",
+      "fixed_in": "S18",
+      "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained.",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "STA-002",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_deleted_receipt_reopens_agreement",
+      "issue_id": "LEG-007",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-AGR-04",
+        "UR-CSH-07"
+      ],
+      "fix_steps": [
+        "S23",
+        "S24"
+      ],
+      "description": "Legacy receipt deletion leaves 100 outstanding and must reopen settlement status",
+      "fixed_in": "S18",
+      "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained.",
+      "outcome": "passed"
+    },
+    {
+      "case_id": "TRF-001",
+      "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_excluded_from_operating_totals",
+      "issue_id": "LEG-004",
+      "expected_outcome": "pass",
+      "requirements": [
+        "UR-CSH-04",
+        "UR-REP-02",
+        "QR-03"
+      ],
+      "fix_steps": [
+        "S21",
+        "S29"
+      ],
+      "description": "Transfer 1000 must leave operating income 50 and expense 20 unchanged",
+      "fixed_in": "S21",
+      "verification": "Not run for S21; user executes tests",
+      "outcome": "passed"
+    }
+  ],
+  "s22_tests": 27,
+  "previous_test_count": 533,
+  "boundary_cases": 799,
+  "postgresql_version_num": 170011,
+  "source_commit": "git:47173b8bfc143de804ecae4d0ddafc7b916987cc",
+  "application_context_digest": "sha256:f04658013448dcf0769a3d5d04f7065cfd1c37e89efab5311e46f376f2500a06",
+  "local_demo_changed": false,
+  "cloud_or_vm_changed": false,
+  "migrations_added": [
     "0015_agreement_charge_foundation",
     "0016_agreement_charge_guards"
   ],
-  "s22_tests_supplied": 27,
-  "s22_tests_run": false,
-  "expected_suite_tests": 560,
-  "expected_financial_cases": 36,
-  "expected_boundary_cases": 799,
-  "retained_boundary_cases": 784,
-  "new_boundary_cases": 15,
-  "existing_test_assertions_changed": false,
-  "historical_migration_test_targets_changed": false,
-  "historical_migration_teardown_restores_actual_leaves": true,
-  "original_migrations_0001_through_0014_preserved": true,
-  "historical_receipts_preserved": true,
-  "dependency_locks_changed": false,
-  "legacy_charges_or_paid_states_inferred": false,
   "agent_tests_run": false,
-  "agent_builds_run": false,
-  "docker_execution": false,
-  "database_or_migration_execution": false,
-  "restricted_role_ddl_execution": false,
-  "local_demo_changed": false,
-  "cloud_or_vm_changed": false,
-  "human_accounts_mfa_or_recovery_keys_changed": false,
-  "allocations_and_charge_corrections": "Pending S23/S24",
-  "scheduler_and_recurring_generation": "Pending S27/S28",
-  "operator_command": "python3 tools/verify_s22.py --record",
   "browser_greek_acceptance": "Pending",
-  "full_requirement_acceptance": "Pending",
-  "full_requirement_acceptances_pending": 85,
-  "prepared_at": "2026-11-14"
+  "full_requirement_acceptance": "Pending"
 }

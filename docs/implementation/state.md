@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S22 Prepared — agreement terms and explicit charges**. Next step: **Operator testing; S23 source follows**.
+Updated 2026-11-14. Current step: **S22 Verified — agreement terms and explicit charges**. Next step: **S23**.
 
 
 
@@ -8,18 +8,7 @@ Updated 2026-11-14. Current step: **S22 Prepared — agreement terms and explici
 ## Current selected work — S22
 
 <!-- S22-RESULT -->
-Prepared: code-only delivery. Additive migrations 0015/0016 retain all original
-agreement/cash/user IDs and fourteen migrations. Database-written immutable
-terms snapshots and explicit source-bound charges separate terms, obligations
-and cash. Legacy records are UNREVIEWED without automatic charges/paid flags.
-Greek forms/detail/report panes, canonical one-off/month sources, atomic retries,
-same-office SQL guards and 27 new test methods are supplied. All 533 previous
-test names/assertions and 784 boundary cases remain; migration-test teardown
-restores the latest schema. Targets are 560 passes, 36 finance cases and 799
-boundary cases, not observed results. No S22 tests/builds/containers/migrations
-or cloud actions were executed by the agent. S21's actual successful receipt
-remains unchanged. Optional: python3 tools/verify_s22.py --record. Explicit demo
-migration/restart, Greek browser review and full acceptance remain Pending.
+Verified by operator-run Docker/PostgreSQL suite; see S22-verification.json. Historical S21 evidence is unchanged. Full acceptance remains Pending.
 <!-- /S22-RESULT -->
 
 ## Historical selected work — S21

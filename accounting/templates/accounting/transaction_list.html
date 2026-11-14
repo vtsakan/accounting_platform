@@ -1,8 +1,8 @@
 {% extends 'accounting/base.html' %}{% load greek %}
 {% block title %}Κινήσεις ταμείων{% endblock %}
 {% block content %}
-<div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-3">
-    <h1>Κινήσεις ταμείων</h1><a href="{% url 'finance-correction-history' %}">Ιστορικό διορθώσεων</a>
+<div class="page-heading">
+    <div><span class="page-eyebrow">Η καθημερινή οικονομική εικόνα</span><h1>Κινήσεις ταμείων</h1><a href="{% url 'finance-correction-history' %}">Ιστορικό διορθώσεων</a></div>
     <div><a href="{% url 'add-income' %}" class="btn btn-success">Νέο έσοδο</a> <a href="{% url 'add-expense' %}" class="btn btn-danger">Νέο έξοδο</a> <a href="{% url 'add-transfer' %}" class="btn btn-primary">Εσωτερική μεταφορά</a></div>
 </div>
 <div class="card card-body bg-light mb-3">{% include 'accounting/movement_filters.html' %}</div>

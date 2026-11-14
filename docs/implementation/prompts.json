@@ -354,6 +354,20 @@
     "prompt": "Apply the project instructions. Implement S24 Implement reversals and agreement lifecycle changes.\nDependencies: S21, S23.\nRequirements: UR-CSH-07, UR-AGR-04, UR-AGR-05, QR-04.\nRequired inputs: Existing repository and the current project records.\n\nImplement corrections as linked reversals and, where required, replacement postings with actor, reason and date. Reverse allocations consistently when correcting receipts and reverse both legs when correcting a transfer. Make repeated reversal attempts safe and retain the original financial records.\n\nRecompute agreement settlement after allocations and corrections. A reversed settlement reopens an unpaid balance; explicit cancellation remains cancelled. Implement versioned agreement term changes and cancellation, stopping future charges while preserving existing obligations or explicitly reversing them under policy. Apply these paths to forms, admin and service entry points and remove legacy save logic that overwrites cancellation.\n\nExpected outputs: Reversal workflows, agreement change history and lifecycle regression fixes.\n\nCompletion check: All related legacy regressions pass. Corrections restore the expected cash and obligation balances, cancellation is preserved, and every original/reversal remains attributable.\n\nCR-001 effective-baseline addendum (2026-11-07): UR-LOC-01 is Must/Confirmed. All product-authored frontend content must be Greek, including staff/portal/authentication, errors, accessible labels, email and report headings. Read docs/implementation/frontend_language.md. Include Greek copy with each UI feature and keep AT-LOC-01 Pending until actual staged acceptance evidence. S02 records this policy only; S04 establishes locale configuration. The effective baseline is 71 UR plus 14 QR; original baseline documents remain unchanged."
   },
   {
+    "step_id": "S24A",
+    "stage": "P3",
+    "title": "Implement the Material-inspired Greek office workspace",
+    "dependencies": [
+      "S24"
+    ],
+    "requirements": [
+      "QR-07",
+      "QR-08",
+      "UR-LOC-01"
+    ],
+    "prompt": "Apply the project instructions and the source-only user execution preference. Implement S24A selected by the product owner before S25: a Material-inspired Greek office shell, adaptive navigation, local light/dark theme, original SVG icons, consistent forms/tables/auth/error styling and a real read-only overview composed from existing scoped selectors. Preserve every original financial assertion, all 20 migrations, services, dependency locks and prior S24 evidence. Keep unknown openings unapproved and business data separate. No new write action, route, external service, fake live metric, account/MFA/key change or S25 work. Provide code-only apply, labelled illustrative preview, five meaningful overview/search contracts and optional operator production-image verification. No agent tests/builds/containers/migrations/browser/VM execution. Record Prepared until actual operator results; responsive/keyboard/Greek/dark browser and S47 full accessibility acceptance remain Pending."
+  },
+  {
     "step_id": "S25",
     "stage": "P3",
     "title": "Rehearse legacy migration and reconcile financial totals",

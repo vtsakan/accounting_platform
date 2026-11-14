@@ -1,58 +1,66 @@
-{% extends 'accounting/base.html' %}
-{% load greek %}
-
+{% extends 'accounting/base.html' %}{% load greek workspace_ui %}
 {% block title %}Επισκόπηση{% endblock %}
-
 {% block content %}
-    <h1 class="mb-4">Επισκόπηση</h1>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Υπόλοιπα ταμείων</h4>
-                </div>
-                <ul class="list-group list-group-flush">
-                    {% for account in cash_accounts %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a href="{% url 'cash-account-detail' account.pk %}">{{ account.name }}</a>
-                            <span class="badge bg-primary rounded-pill fs-6">{% if account.current_balance == None %}Αναμονή αρχικού υπολοίπου{% else %}{{ account.current_balance|euro }}{% endif %}</span>
-                        </li>
-                    {% empty %}
-                        <li class="list-group-item text-center">
-                            Δεν βρέθηκαν ενεργά ταμεία. <a href="{% url 'cash-account-add' %}">Προσθήκη ταμείου</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Γρήγορες ενέργειες</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'add-income' %}" class="list-group-item list-group-item-action text-success"><strong>+ Νέο έσοδο</strong></a>
-                    <a href="{% url 'add-expense' %}" class="list-group-item list-group-item-action text-danger"><strong>+ Νέο έξοδο</strong></a>
-                    <a href="{% url 'add-transfer' %}" class="list-group-item list-group-item-action"><strong>⇄ Εσωτερική μεταφορά</strong></a>
-                    <a href="{% url 'add-entity' %}" class="list-group-item list-group-item-action"><strong>+ Νέος πελάτης ή προμηθευτής</strong></a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h5>Αναφορές και προβολές</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'summary-report' %}" class="list-group-item list-group-item-action">Συνοπτική αναφορά</a>
-                    <a href="{% url 'transaction-list' %}" class="list-group-item list-group-item-action">Όλες οι κινήσεις</a>
-                    <a href="{% url 'customer-list' %}" class="list-group-item list-group-item-action">Πελάτες</a>
-                    <a href="{% url 'supplier-list' %}" class="list-group-item list-group-item-action">Προμηθευτές</a>
-                </div>
-            </div>
-
-        </div>
+<div class="page-heading">
+    <div><span class="page-eyebrow">Ο χώρος εργασίας σας</span><h1>Επισκόπηση</h1><p>Μια καθαρή εικόνα, για να ξεκινά κάθε ημέρα οργανωμένα.</p></div>
+    <div class="page-date">{% ui_icon 'clock' %}<span>{% now "l, j F Y" %}</span></div>
+</div>
+<section class="dashboard-hero" aria-labelledby="workspace-welcome">
+    <div class="hero-copy"><span class="hero-eyebrow">{% ui_icon 'building' %} Το γραφείο σας, σε μία ματιά</span>
+        <h2 id="workspace-welcome">Λιγότερη αναζήτηση.<br><span>Περισσότερη ουσία.</span></h2>
+        <p>Οι κινήσεις, τα ταμεία και οι συνεργασίες σας σε έναν οργανωμένο χώρο.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="{% url 'add-income' %}">{% ui_icon 'plus' %} Νέο έσοδο</a><a class="btn btn-outline-secondary" href="{% url 'summary-report' %}">Συνοπτική αναφορά {% ui_icon 'arrow-right' %}</a></div>
     </div>
+    {% include 'accounting/includes/workspace_art.html' %}
+</section>
+
+{% if month_totals %}
+<section aria-label="Λειτουργικές κινήσεις τρέχοντος μήνα">
+    <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Λειτουργικές εισπράξεις</span><span class="stat-icon">{% ui_icon 'arrow-down' %}</span></div><strong class="stat-value">{{ month_totals.total_income|euro }}</strong><span class="stat-footnote">{{ overview_start|el_date }} — {{ overview_day|el_date }}</span></article>
+        <article class="stat-card stat-card--expense"><div class="stat-top"><span>Λειτουργικές πληρωμές</span><span class="stat-icon">{% ui_icon 'arrow-up' %}</span></div><strong class="stat-value">{{ month_totals.total_expense|euro }}</strong><span class="stat-footnote">{{ overview_start|el_date }} — {{ overview_day|el_date }}</span></article>
+        <article class="stat-card stat-card--net"><div class="stat-top"><span>Καθαρή λειτουργική ροή</span><span class="stat-icon">{% ui_icon 'activity' %}</span></div><strong class="stat-value">{{ month_totals.net_for_period|euro }}</strong><span class="stat-footnote">Εισπράξεις μείον πληρωμές · εξαιρούνται οι εσωτερικές μεταφορές</span></article>
+    </div>
+</section>
+{% endif %}
+
+<div class="dashboard-columns">
+    <div>
+        <section class="workspace-panel" aria-labelledby="accounts-heading">
+            <div class="panel-heading"><div><h2 id="accounts-heading">Υπόλοιπα ταμείων</h2><p>{{ cash_accounts|length }} ενεργά ταμεία · εικόνα έως σήμερα</p></div><a href="{% url 'cash-account-list' %}">Όλα τα ταμεία {% ui_icon 'arrow-right' %}</a></div>
+            <div class="account-stack">
+            {% for account in cash_accounts %}
+                <div class="account-tile"><span class="account-icon">{% ui_icon 'wallet' %}</span><div class="account-name"><a href="{% url 'cash-account-detail' account.pk %}">{{ account.name }}</a><small>{% if account.current_balance == None %}Χρειάζεται επιβεβαίωση έναρξης{% else %}Υπόλοιπο σήμερα{% endif %}</small></div>
+                    {% if account.current_balance == None %}<span class="status-chip">Αναμονή αρχικού υπολοίπου</span>{% else %}<span class="account-amount">{{ account.current_balance|euro }}</span>{% endif %}
+                </div>
+            {% empty %}
+                <div class="empty-state">{% ui_icon 'wallet' %}<strong>Τα ταμεία σας ξεκινούν από εδώ</strong>Δεν βρέθηκαν ενεργά ταμεία.<br><a class="btn btn-outline-primary" href="{% url 'cash-account-add' %}">Προσθήκη ταμείου</a></div>
+            {% endfor %}
+            </div>
+            <p class="panel-note">Τα υπόλοιπα εμφανίζονται όταν έχει οριστεί ημερομηνία αρχικού υπολοίπου. Η λειτουργική ροή μήνα εμφανίζεται χωριστά.</p>
+        </section>
+        <section class="workspace-panel" aria-labelledby="recent-heading">
+            <div class="panel-heading"><div><h2 id="recent-heading">Πρόσφατες κινήσεις</h2><p>Οι τελευταίες καταχωρίσεις του γραφείου σας</p></div><a href="{% url 'transaction-list' %}">Όλες οι κινήσεις {% ui_icon 'arrow-right' %}</a></div>
+            {% if recent_transactions %}
+            <div class="table-responsive"><table class="table recent-table"><caption>Έως έξι πρόσφατες κινήσεις, κατά ημερομηνία και αριθμό κίνησης</caption><thead><tr><th scope="col">Κίνηση</th><th scope="col">Ημερομηνία</th><th scope="col">Κατεύθυνση</th><th scope="col" class="text-end">Ποσό</th></tr></thead><tbody>
+                {% for tx in recent_transactions %}<tr><td class="recent-description"><strong>{{ tx.description }}</strong><small>{{ tx.cash_account.name }}{% if tx.entity %} · {{ tx.entity.name }}{% endif %}</small>{% if tx.posting_kind == 'TRANSFER' %}<div class="small">Εσωτερική μεταφορά</div>{% elif tx.posting_kind == 'REVERSAL' %}<div class="small">Αντιλογισμός</div>{% elif tx.posting_kind == 'REFUND' %}<div class="small">Επιστροφή πίστωσης / προκαταβολής</div>{% endif %}</td><td class="text-nowrap">{{ tx.transaction_date|el_date }}</td><td><span class="movement-direction {% if tx.transaction_type == 'INCOME' %}text-success{% else %}text-danger{% endif %}">{% if tx.transaction_type == 'INCOME' %}{% ui_icon 'arrow-down' %} Εισερχόμενα{% else %}{% ui_icon 'arrow-up' %} Εξερχόμενα{% endif %}</span></td><td class="text-end text-nowrap">{{ tx.amount|euro }}</td></tr>{% endfor %}
+            </tbody></table></div>
+            {% else %}<div class="empty-state">{% ui_icon 'activity' %}<strong>Χώρος για την πρώτη σας κίνηση</strong>Οι καταχωρισμένες εισπράξεις, πληρωμές και μεταφορές θα εμφανίζονται εδώ.</div>{% endif %}
+        </section>
+    </div>
+    <div>
+        <section class="workspace-panel" aria-labelledby="quick-heading"><div class="panel-heading"><div><h2 id="quick-heading">Γρήγορες ενέργειες</h2><p>Το επόμενο βήμα, ένα πάτημα μακριά</p></div></div>
+            <div class="quick-actions">
+                <a class="quick-action" href="{% url 'add-income' %}">{% ui_icon 'arrow-down' %}Νέο έσοδο</a>
+                <a class="quick-action quick-action--expense" href="{% url 'add-expense' %}">{% ui_icon 'arrow-up' %}Νέο έξοδο</a>
+                <a class="quick-action quick-action--transfer" href="{% url 'add-transfer' %}">{% ui_icon 'handover' %}Εσωτερική μεταφορά</a>
+                <a class="quick-action" href="{% url 'add-entity' %}">{% ui_icon 'people' %}Νέος πελάτης ή προμηθευτής</a>
+            </div>
+        </section>
+        <section class="workspace-panel" aria-labelledby="links-heading"><div class="panel-heading"><div><h2 id="links-heading">Αναφορές και προβολές</h2><p>Από τη σύνοψη στη λεπτομέρεια</p></div></div>
+            <div class="quick-actions"><a class="quick-action" href="{% url 'summary-report' %}">{% ui_icon 'chart' %}Συνοπτική αναφορά</a><a class="quick-action" href="{% url 'agreement-list' %}">{% ui_icon 'document' %}Συμφωνίες</a><a class="quick-action" href="{% url 'customer-list' %}">{% ui_icon 'person' %}Πελάτες</a><a class="quick-action" href="{% url 'supplier-list' %}">{% ui_icon 'briefcase' %}Προμηθευτές</a></div>
+        </section>
+        <aside class="workspace-note" aria-label="Ερμηνεία οικονομικών στοιχείων">{% ui_icon 'info' %}<div>{% if pending_openings %}<strong>{{ pending_openings }} ταμεία σε αναμονή επιβεβαίωσης</strong><p>Ελέγξτε την ημερομηνία και το αρχικό υπόλοιπο από την καρτέλα κάθε ταμείου.</p>{% else %}<strong>Κάθε ποσό έχει τη δική του θέση</strong><p>Η λειτουργική ροή, τα ταμειακά υπόλοιπα και οι ανεξόφλητες χρεώσεις παρακολουθούνται χωριστά. Η ροή δεν αποτελεί φορολογικό κέρδος.</p>{% endif %}</div></aside>
+    </div>
+</div>
 {% endblock %}

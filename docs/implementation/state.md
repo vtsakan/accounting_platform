@@ -1,13 +1,36 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S24 Verified — linked corrections, refunds and agreement lifecycle**. Next step: **S25 legacy migration and reconciliation**.
+Updated 2026-11-14. Current step: **S24A Prepared — Material-inspired workspace**. Next step: **Operator UI verification; S25 remains separate**.
 
 
 
 
 
 
-## Current selected work — S24
+
+## Current selected work — S24A
+
+<!-- S24A-RESULT -->
+Prepared: the owner requested an impressive Material-style office interface.
+Local light/dark tokens, original SVG icons, server-rendered navigation, Greek
+forms/tables/auth/error styling and a real read-only dashboard are supplied.
+The dashboard composes the existing scoped cash and operating selectors; no
+financial write or new calculation rule is introduced. All 20 migrations,
+old financial services, 656 assertions, locks and S24 receipt remain unchanged.
+Five focused contracts supplied: target 661 passes and all 36 finance cases,
+not observed results. No agent test/build/Docker/browser/migration/VM action.
+Optional operator gate: python3 tools/verify_s24a.py --record. Manual Greek
+responsive/keyboard/dark-mode review, S24A rollout and full S47 acceptance remain
+Pending. Read material_workspace.md. Stop after S24A; S25 remains separate.
+<!-- /S24A-RESULT -->
+
+The supplied latest VM log confirms the previous S24 upgrade is technically
+Verified: deployed_and_restored, 20 migrations, 24 old tables preserved,
+restricted-role clone migration, matching off-VM restore and HTTPS/CSRF checks.
+See evidence/S24-VM-deployment.json. Actual browser/MFA acceptance is still
+Pending. That deployment runs the prior S24 interface, independently of S24A.
+
+## Historical selected work — S24
 
 S24 VM operator follow-up: production delivery is operator-Verified (656/656,
 all 36 finance cases; zero unreviewed secret findings) and publication succeeded.

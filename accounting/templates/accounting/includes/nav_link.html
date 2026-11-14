@@ -1,0 +1,2 @@
+{% load workspace_ui %}{% ui_nav_active request.resolver_match.url_name destination as current %}
+<a class="workspace-nav-link{% if current %} is-active{% endif %}" href="{% url destination %}"{% if current %} aria-current="page"{% endif %}>{% ui_icon icon %}<span>{{ label }}</span>{% if current %}<span class="nav-current-dot" aria-hidden="true"></span>{% endif %}</a>

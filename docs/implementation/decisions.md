@@ -660,3 +660,21 @@ Reuse the published image only with its exact retained delivery receipt and
 unchanged current application context; pin operator source separately. A changed
 source snapshot needs a fresh plan. New tooling remains Prepared, not a verified
 deployment or S25 implementation. See evidence/S24-VM-retry.json.
+
+
+## S24A — product owner selected the Material workspace now
+
+The user explicitly accepted an intermediate S24A before S25 and requested an
+impressive Material-style design. Keep Django templates and Bootstrap CSS, use
+local tokens/SVG/native disclosure/theme behavior, and preserve security and
+financial semantics. Reuse existing scoped selectors for real month/recent/cash
+projections; unknown openings remain unapproved. No synthetic figures in the
+live app. LocalStorage contains only the color preference. New UI assets need
+a newly verified production image before any S24A VM rollout. Source delivery
+and five new contracts are Prepared until the operator executes the gate; full
+browser/S47 accessibility acceptance remains Pending. No S25 implementation.
+
+Separately, the latest operator log completes the prior S24 VM technical upgrade:
+20 migrations, retained original database/24 tables/people/MFA, restricted role,
+matching off-VM restore and public HTTPS/CSRF checks. Record that actual evidence
+in S24-VM-deployment.json while preserving the earlier failed-attempt receipts.

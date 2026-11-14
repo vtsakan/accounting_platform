@@ -194,3 +194,14 @@ record(s), then rerun `plan --current-tools` (not `retry` again). The unchanged
 migration still independently validates the frozen clone. A successful plan
 does not relax the existing backup, clone-preservation, restricted-role migration,
 independent restore or public-cutover requirements. S25 remains separate.
+
+
+## Operator completion recorded on 2026-11-14
+
+The supplied final status is deployed_and_restored. All twenty accounting
+migrations reached 0020, 24 original tables/people/MFA were preserved, the
+original S14 database remains unchanged, and the new exact backup passed the
+off-VM restore before public HTTPS/CSRF activation. The hold is cleared. See
+S24-VM-deployment.json. Actual browser/MFA login remains an operator check.
+This completes the previous S24 technical upgrade; the separate S24A theme
+changes application bytes and needs its own tested release pathway.

@@ -29,7 +29,31 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S24 VM follow-up — operator execution only
+## Selected S24A — Material-inspired office workspace
+
+The product owner explicitly selected S24A now, before S25, and requested an
+impressive Material-style interface. Read material_workspace.md. Keep Django
+templates/Bootstrap and all Greek frontend/security/financial conventions. Add
+only presentation assets, shell/auth/list styling and a read-only dashboard
+composition of the existing scoped cash/operating selectors. Preserve every
+old assertion, all 20 migrations, financial services, dependency locks, users,
+MFA and recovery setup. No chart/sample amounts in the live app; unknown openings
+remain unknown. The standalone design preview is explicitly illustrative.
+No agent tests/builds/Docker/browser verification/migrations/VM actions. Supply
+five focused overview/search contracts; target 661 passes and all 36 finance
+cases is NOT observed. Optional operator gate: tools/verify_s24a.py --record.
+Keep S24's Verified receipt unchanged; S24A is Prepared until operator execution.
+Manual responsive/keyboard/dark theme/client and full S47 acceptance remain
+Pending. New local preview command requires the existing S24/0020 schema and
+starts web without migrating or resetting accounts. Historical S14-to-S24 tools
+must not deploy S24A. No S25 implementation or cloud operation in this scope.
+
+The actual operator VM log is now deployed_and_restored: through 0020, 24 old
+tables preserved, restricted role, matching off-VM restore and HTTPS/CSRF checks.
+See evidence/S24-VM-deployment.json; actual browser/MFA acceptance stays Pending.
+The historical notes below describe earlier attempts, not the current VM state.
+
+## Historical S24 VM follow-up — operator execution only
 
 The user explicitly requests commands to update GitHub and the already selected
 VM before S25. This authorizes preparing this deployment pathway; the user will

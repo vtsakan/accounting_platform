@@ -18,16 +18,8 @@ import uuid
 
 @login_required
 def dashboard_view(request):
-    from .cash_selectors import cash_accounts
-    accounts_with_balances=cash_accounts(request.user)
-
-    # Prepare the data to be sent to the template
-    context = {
-        'cash_accounts': accounts_with_balances
-    }
-
-    # Render the HTML page and pass the data to it
-    return render(request, 'accounting/dashboard.html', context)
+    from .workspace_selectors import workspace_snapshot
+    return render(request, 'accounting/dashboard.html', workspace_snapshot(request.user))
 
 
 # accounting/views.py

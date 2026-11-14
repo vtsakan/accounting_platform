@@ -1,57 +1,75 @@
-<!DOCTYPE html>
+{% load static workspace_ui %}<!DOCTYPE html>
 <html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#122c3a">
     <title>{% block title %}Λογιστική πλατφόρμα{% endblock %}</title>
-
+    <link rel="icon" type="image/svg+xml" href="{% static 'accounting/workspace/mark.svg' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'accounting/workspace/workspace.css' %}">
+    <script src="{% static 'accounting/workspace/workspace.js' %}" defer></script>
 </head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}"><strong>Λογιστική πλατφόρμα</strong></a>
-
-        {% if user.is_authenticated %}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Εναλλαγή πλοήγησης">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{% url 'transaction-list' %}">Κινήσεις</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'cash-account-list' %}">Ταμεία</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'category-list' %}">Κατηγορίες</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'agreement-list' %}">Συμφωνίες</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'counterparty-list' %}">Συναλλασσόμενοι</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'customer-list' %}">Πελάτες</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'supplier-list' %}">Προμηθευτές</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'summary-report' %}">Αναφορά</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'security-settings' %}">Ασφάλεια</a></li>
+<body class="{% if user.is_authenticated %}workspace-body{% else %}guest-body{% endif %}">
+<a href="#main-content" class="skip-link">Μετάβαση στο κύριο περιεχόμενο</a>
+<div class="workspace-shell{% if not user.is_authenticated %} workspace-shell--guest{% endif %}">
+    {% if user.is_authenticated %}
+    <details class="workspace-navigation" id="workspace-navigation" open>
+        <summary class="mobile-navigation-toggle">{% ui_icon 'menu' %}<span>Λογιστική πλατφόρμα</span><span class="mobile-navigation-caption">Μενού</span></summary>
+        <aside class="workspace-sidebar" aria-label="Πλοήγηση εφαρμογής">
+            <a class="workspace-brand" href="{% url 'dashboard' %}">
+                <span class="brand-mark" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M8 8h16M8 16h11M8 24h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="16" r="2" fill="currentColor"/></svg></span>
+                <span><strong>Λογιστική</strong><small>πλατφόρμα γραφείου</small></span>
+            </a>
+            <div class="office-switcher">{% ui_icon 'building' %}<div><span>Χώρος εργασίας</span><strong>{{ request.accountant_profile.office.name|default:'Λογιστικό γραφείο' }}</strong></div></div>
+            <nav aria-label="Κύρια πλοήγηση" class="workspace-nav">
+                <p class="nav-group-label">Η καθημερινότητά σας</p>
+                {% include 'accounting/includes/nav_link.html' with destination='dashboard' label='Επισκόπηση' icon='grid' %}
+                {% include 'accounting/includes/nav_link.html' with destination='transaction-list' label='Κινήσεις' icon='activity' %}
+                {% include 'accounting/includes/nav_link.html' with destination='cash-account-list' label='Ταμεία' icon='wallet' %}
+                {% include 'accounting/includes/nav_link.html' with destination='agreement-list' label='Συμφωνίες' icon='document' %}
+                {% include 'accounting/includes/nav_link.html' with destination='summary-report' label='Αναφορά' icon='chart' %}
+                <p class="nav-group-label">Οι συνεργασίες σας</p>
+                {% include 'accounting/includes/nav_link.html' with destination='counterparty-list' label='Συναλλασσόμενοι' icon='people' %}
+                {% include 'accounting/includes/nav_link.html' with destination='customer-list' label='Πελάτες' icon='person' %}
+                {% include 'accounting/includes/nav_link.html' with destination='supplier-list' label='Προμηθευτές' icon='briefcase' %}
+                {% include 'accounting/includes/nav_link.html' with destination='category-list' label='Κατηγορίες' icon='tag' %}
+                <p class="nav-group-label">Οργάνωση &amp; ασφάλεια</p>
                 {% if request.accountant_profile.role == 'owner' %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'office-settings' %}">Γραφείο</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'office-members' %}">Συνεργάτες</a></li>
+                {% include 'accounting/includes/nav_link.html' with destination='office-settings' label='Γραφείο' icon='building' %}
+                {% include 'accounting/includes/nav_link.html' with destination='office-members' label='Συνεργάτες' icon='people' %}
+                {% include 'accounting/includes/nav_link.html' with destination='office-audit' label='Ιστορικό ενεργειών' icon='clock' %}
                 {% endif %}
-                {% if request.accountant_profile %}<li class="nav-item"><a class="nav-link" href="{% url 'office-ownership' %}">Παράδοση ευθύνης</a></li>{% endif %}
-            </ul>
-            <span class="navbar-text me-3">
-                Καλώς ήρθατε, {{ user.username }}
-            </span>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light btn-sm">Αποσύνδεση</button>
+                {% include 'accounting/includes/nav_link.html' with destination='security-settings' label='Ασφάλεια' icon='shield' %}
+                {% if request.accountant_profile %}{% include 'accounting/includes/nav_link.html' with destination='office-ownership' label='Παράδοση ευθύνης' icon='handover' %}{% endif %}
+            </nav>
+            <div class="sidebar-user"><span class="user-avatar" aria-hidden="true">{{ user.username|first|upper }}</span><div><strong>{{ user.username }}</strong><span>{% if request.accountant_profile.role == 'owner' %}Υπεύθυνος γραφείου{% elif request.accountant_profile %}Λογιστής{% else %}Λογαριασμός εφαρμογής{% endif %}</span></div>
+                <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="sidebar-logout" type="submit" aria-label="Αποσύνδεση" title="Αποσύνδεση">{% ui_icon 'logout' %}</button></form>
+            </div>
+        </aside>
+    </details>
+    {% endif %}
+
+    <div class="workspace-stage">
+        <header class="workspace-topbar">
+            {% if user.is_authenticated %}
+            <div class="topbar-greeting"><span class="topbar-eyebrow">Λογιστική πλατφόρμα</span><span>Καλώς ήρθατε, <strong>{{ user.username }}</strong></span></div>
+            <form class="workspace-search" action="{% url 'counterparty-list' %}" method="get" role="search" aria-label="Γρήγορη αναζήτηση συναλλασσομένων">
+                {% ui_icon 'search' %}<label class="visually-hidden" for="workspace-query">Αναζήτηση συναλλασσομένου</label><input id="workspace-query" name="q" type="search" maxlength="100" placeholder="Αναζήτηση συναλλασσομένου…"><button type="submit" aria-label="Αναζήτηση">{% ui_icon 'arrow-right' %}</button>
             </form>
-        </div>
-        {% endif %}
+            {% else %}
+            <a class="guest-brand" href="{% url 'dashboard' %}"><span class="brand-mark" aria-hidden="true">λ</span><span>Λογιστική πλατφόρμα</span></a>
+            {% endif %}
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Ενεργοποίηση σκούρου θέματος" aria-pressed="false" hidden><span class="theme-moon">{% ui_icon 'moon' %}</span><span class="theme-sun">{% ui_icon 'sun' %}</span><span class="visually-hidden">Αλλαγή θέματος</span></button>
+        </header>
+
+        <main id="main-content" class="workspace-main" tabindex="-1">
+            {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="workspace-footer"><span>Λογιστική πλατφόρμα</span><span>Το γραφείο σας. Σε τάξη.</span></footer>
     </div>
-</nav>
-
-    <main class="container mt-4">
-        {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</div>
 </body>
 </html>

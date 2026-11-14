@@ -1,6 +1,13 @@
-{% extends 'accounting/base.html' %}
+{% extends 'accounting/base.html' %}{% load workspace_ui %}
 {% block content %}
-<div class="row justify-content-center"><section class="col-md-8 col-lg-6" aria-label="Ασφάλεια λογαριασμού">
-<div class="card"><div class="card-body p-4">{% block auth_content %}{% endblock %}</div></div>
-</section></div>
+<div class="auth-layout">
+    <section class="auth-story" aria-labelledby="auth-story-title">
+        <span class="hero-eyebrow">{% ui_icon 'building' %} Λογιστική πλατφόρμα</span>
+        <h2 id="auth-story-title">Το γραφείο σας.<br><span>Σε πλήρη εικόνα.</span></h2>
+        <p>Οι άνθρωποι, οι συνεργασίες και οι καθημερινές κινήσεις σας, σε έναν χώρο που βάζει τάξη.</p>
+        <span class="auth-story-note">{% ui_icon 'shield' %} Προστασία λογαριασμού και γραφείου</span>
+        {% include 'accounting/includes/workspace_art.html' with auth_art=True %}
+    </section>
+    <section class="auth-card" aria-label="Ασφάλεια λογαριασμού"><span class="auth-symbol">{% ui_icon 'shield' %}</span>{% block auth_content %}{% endblock %}</section>
+</div>
 {% endblock %}

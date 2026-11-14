@@ -646,3 +646,17 @@ new backup routing and independent off-VM restore before public activation.
 Automatic rollback is permitted only before public writes may exist. No agent
 execution or new policy approval is claimed; deployment tooling remains Prepared.
 S24's supplied 656-test operator receipt remains Verified. See s24_vm_upgrade.md.
+
+## S24 VM retry — preserve the identity guard and failed attempt
+
+The supplied operator log records a successful production image/656-test delivery
+and publication, followed by a safe S14 rollback on entity 2 invalid_afm in
+migration 0009. Keep the original migration and all application assertions.
+Identity decisions belong to the operator in the existing S14 form, without
+exposing personal values in diagnostics. Archive only the completed unexposed
+rollback metadata, preserve its database and prepare a fresh clone. Check all
+source identities read-only during planning before another maintenance outage.
+Reuse the published image only with its exact retained delivery receipt and
+unchanged current application context; pin operator source separately. A changed
+source snapshot needs a fresh plan. New tooling remains Prepared, not a verified
+deployment or S25 implementation. See evidence/S24-VM-retry.json.

@@ -102,7 +102,9 @@ python3 tools/vm_upgrade.py status
 No live SMTP is enabled; all code/current policy checks still use synthetic
 scope. Do not rerun configure to replace an existing configuration. Do not
 change application source between production verification/publication/planning;
-a changed commit needs its own delivery image proof. Git/source-only package
+changed application bytes need their own delivery image proof. The retry below
+can separately bind new operator tooling to an unchanged verified image.
+Git/source-only package
 apply never runs any of the commands above.
 
 Private receipts are written under `private/vm-s24-*.json`; never commit them,
@@ -137,3 +139,58 @@ the reported phase before a separately prepared retry; the stored attempt is
 not reset or overwritten. Do not force the new source through the old S14 demo
 installer, edit membership maps, reverse migrations, remove volumes or bootstrap
 accounts. Public-source/future S25 implementation is outside this follow-up.
+
+## S15 identity review and retained-attempt retry
+
+The operator's production-image run passed all 656 tests, all 36 finance cases,
+static/Greek/health checks and the secret scan (zero unreviewed findings).
+Publication succeeded. The first clone migration stopped at S15 because entity
+`2` has `invalid_afm`. The reported final state is `rolled_back_to_original`,
+`original_database_unchanged: true`, `public_cutover_started: false` and
+`hold_active: false`. The S14 source site and its backup routing were restored;
+the failed clone and pre-change encrypted backup were retained. This is a data
+review stop, not permission to change or bypass migration 0009.
+
+First sign into the existing S14 application and review the record at
+https://totalaccounting.duckdns.org/entity/2/edit/ . A real record needs its
+correct actual AFM; a purely synthetic record with no AFM may leave that optional
+field blank. Save the reviewed identity through the application. Do not invent
+an identifier, clear a real identifier to make deployment pass, delete the
+record/history, or paste personal identity values into chat or Git. The frozen
+S15 rule accepts blank or a normalized nine-digit AFM and rejects duplicates in
+the same office; this syntax check does not validate a tax identity externally.
+
+Apply the retry source patch, commit/push it, then run on the laptop:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+python3 tools/vm_upgrade.py retry
+python3 tools/vm_upgrade.py plan --current-tools
+python3 tools/vm_upgrade.py deploy \
+  --identity "$HOME/.config/totalaccounting/recovered-backup-age.key"
+python3 tools/vm_upgrade.py status
+```
+
+Stop at an error. `retry` archives only a completed unexposed rollback journal
+under `/etc/accounting/s24-upgrade-history/<previous-clone>/` and the prior
+laptop configuration under ignored `private/vm-s24-attempts/`. It requires the
+original S14 web/proxy/backup binding and active timers, retains the failed
+database unchanged and chooses a fresh clone name. An active attempt, boot hold
+or possible new public writes blocks retry. The next plan takes a new snapshot
+of the source, including any identity review explicitly saved by the operator.
+
+`plan --current-tools` validates the exact retained production receipt against
+the published image and current application-context digest. It reuses the
+already published image while binding the separate operator release to the
+current Git commit. Do not rerun `configure`, `publish` or the 656-test delivery
+gate solely for this operator-only patch. Changed application bytes or a missing/
+altered delivery receipt stop reuse. No current-source runtime proof is claimed
+for these new operator helpers; their first operator execution remains Pending.
+
+Planning now reads all source identities using the frozen S15 normalizer before
+stopping any service. A failure prints record IDs/reason codes only, without
+names or AFM values; it leaves the original site running. Review the indicated
+record(s), then rerun `plan --current-tools` (not `retry` again). The unchanged
+migration still independently validates the frozen clone. A successful plan
+does not relax the existing backup, clone-preservation, restricted-role migration,
+independent restore or public-cutover requirements. S25 remains separate.

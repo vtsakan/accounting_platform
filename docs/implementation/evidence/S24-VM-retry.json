@@ -1,0 +1,45 @@
+{
+  "step": "S24-VM-retry",
+  "status": "Prepared",
+  "recorded_on": "2026-11-14",
+  "mode": "operator-only-retry-tooling",
+  "operator_observed_production_delivery": {
+    "status": "Verified",
+    "mode": "docker-production-image",
+    "tests_run": 656,
+    "tests_passed": 656,
+    "financial_cases_passed": 36,
+    "unexpected_failures": 0,
+    "unexpected_errors": 0,
+    "skips": 0,
+    "unreviewed_secret_findings": 0,
+    "publication_succeeded": true,
+    "laptop_receipt": "private/vm-s24-delivery.json"
+  },
+  "operator_observed_first_attempt": {
+    "phase": "rolled_back_to_original",
+    "migration_guard": "S15 frozen migration 0009 identity preflight",
+    "record_id": 2,
+    "reason": "invalid_afm",
+    "original_database_unchanged": true,
+    "public_cutover_started": false,
+    "hold_active": false,
+    "encrypted_prechange_backup_created": true,
+    "failed_clone_retained": true
+  },
+  "prepared_changes": [
+    "Explicit operator identity review through existing S14 form; no automatic repair",
+    "Archive only inactive unexposed rollback metadata and retain failed clone",
+    "Fresh clone name and fresh source snapshot",
+    "Read-only S15 identity preflight before maintenance; IDs/reasons only",
+    "Reuse exact verified image with separately committed operator tools"
+  ],
+  "application_migrations_locks_tests_unchanged": true,
+  "new_retry_runtime_execution": false,
+  "agent_tests_builds_docker_migrations_cloud_or_ssh": false,
+  "agent_identity_or_account_key_changes": false,
+  "clone_upgrade_independent_restore_and_public_activation": "Pending",
+  "browser_and_full_product_acceptance": "Pending",
+  "next_product_step": "S25 remains separate",
+  "runbook": "docs/implementation/s24_vm_upgrade.md"
+}

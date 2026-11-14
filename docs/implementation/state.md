@@ -9,6 +9,18 @@ Updated 2026-11-14. Current step: **S24 Verified — linked corrections, refunds
 
 ## Current selected work — S24
 
+S24 VM operator follow-up: production delivery is operator-Verified (656/656,
+all 36 finance cases; zero unreviewed secret findings) and publication succeeded.
+The first clone migration stopped on the S15 invalid-AFM guard for entity 2.
+The supplied status confirms S14 rollback, original database unchanged, no public
+cutover and no remaining hold. Retry tooling is Prepared: explicit UI identity
+review, archived inactive attempt, a fresh retained clone and a read-only source
+preflight before downtime. Reuse of the published image requires the same
+application context and exact production receipt; deployment tools get their
+own commit identity. See evidence/S24-VM-retry.json and s24_vm_upgrade.md.
+No agent tests/builds/VM/migrations or identity edits were executed. New clone
+migration, restore, public activation and browser acceptance remain Pending.
+
 <!-- S24-RESULT -->
 Verified by the operator's disposable Docker/PostgreSQL 17 execution; see
 S24-verification.json for actual suite, financial and boundary results. Prior

@@ -5,6 +5,7 @@ from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import shlex
 import subprocess
@@ -72,9 +73,59 @@ def publish(config):
     return result
 
 
-def plan(config):
+def published_proof(config, context):
+    published = common.validate(config['target'], published=True)['published']
+    require(published['context_digest'] == context['digest'], 'Application bytes differ from the published image; a new delivery check is required')
+    proof_path = common.ROOT / 'private/vm-s24-delivery.json'
+    require(common.file_sha(proof_path) == published['delivery_evidence'], 'Production delivery receipt differs from publication')
+    publisher.verified_delivery({'revision': 'git:' + published['commit'], 'image_id': published['image_id'], 'context': context},
+                               json.loads(proof_path.read_text()))
+
+
+def sync_host_helper(config, revision):
+    # Refresh operator tooling only. No application image/DB/key is changed.
+    with tempfile.TemporaryDirectory(prefix='accounting-s24-retry-helper-') as temporary:
+        file = Path(temporary) / 'vm_upgrade_host.py'
+        file.write_bytes(common.run(['git', 'show', revision + ':tools/vm_upgrade_host.py']))
+        gcp = config['source']['gcp']
+        publisher.gcloud(config['source'], 'compute', 'scp', file,
+                         gcp['ssh_user'] + '@' + gcp['vm_name'] + ':~/' + STAGE + '/tools/vm_upgrade_host.py',
+                         '--zone=' + gcp['zone'], '--tunnel-through-iap')
+
+
+def retry(config):
+    revision, context = gate(); published_proof(config, context)
+    previous = deepcopy(config)
+    attempt = config['target']['db_name']
+    require(re.fullmatch(r'accounting_s24_[0-9a-f]{12}', attempt), 'Unexpected previous attempt identifier')
+    directory = common.ROOT / 'private/vm-s24-attempts'; directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    local_archive = directory / (attempt + '.json')
+    if local_archive.exists():
+        require(json.loads(local_archive.read_text()) == previous, 'Previous local attempt archive differs; it was not overwritten')
+    else: common.private_json(local_archive, previous, exclusive=True)
+    sync_host_helper(config, revision)
+    archived = host_action(config, 'archive-attempt', '--attempt-id', attempt)
+    source = common.validate(ssh(config['source'], 'sudo -n cat /etc/accounting/preview.json'), published=True)
+    require(source == config['source'], 'Installed source changed after rollback; inspect before preparing a retry')
+    target = deepcopy(source); target['db_name'] = 'accounting_s24_' + secrets.token_hex(6)
+    target['published'] = deepcopy(config['target']['published']); target.pop('deployment_commit', None)
+    require(target['db_name'] != attempt, 'Retry identifier collision; no previous database will be overwritten')
+    updated = {'source': source, 'target': target,
+               'archived_attempts': config.get('archived_attempts', []) + [{'attempt': attempt, 'host_archive': archived['archive']} ]}
+    common.private_json(CONFIG, updated)
+    return {'status': 'Retry prepared', 'source_database': source['db_name'], 'previous_clone_retained': attempt,
+            'new_clone_database': target['db_name'], 'published_image_reused': target['published']['image'],
+            'application_data_changed': False, 'local_archive': str(local_archive), 'next_command': 'python3 tools/vm_upgrade.py plan --current-tools'}
+
+
+def plan(config, *, current_tools=False):
     revision, context = gate(); target = common.validate(config['target'], published=True)
-    require(target['published']['commit'] == revision and target['published']['context_digest'] == context['digest'], 'Publish this exact commit after its production image check')
+    if current_tools:
+        published_proof(config, context)
+        target['deployment_commit'] = revision
+    else:
+        require(target['published']['commit'] == revision and target['published']['context_digest'] == context['digest'], 'Publish this exact commit, or use --current-tools for unchanged verified application bytes')
+    config['target'] = target
     with tempfile.TemporaryDirectory(prefix='accounting-s24-stage-') as temporary:
         directory = Path(temporary) / STAGE; (directory / 'tools').mkdir(parents=True)
         (directory / 'docs/implementation').mkdir(parents=True)
@@ -111,7 +162,8 @@ def recovery_config(state):
 
 
 def deploy(config, identity):
-    gate(); require('plan' in config, 'Run plan first')
+    revision, _ = gate(); require('plan' in config, 'Run plan first')
+    require(common.deployment_commit(config['target']) == revision, 'Operator source changed after planning; run plan --current-tools again')
     # Validate the separate recovery copy BEFORE stopping any VM service.
     path = oc.identity_file(identity)
     old = ssh(config['source'], 'sudo -n cat /etc/accounting/operations.json')
@@ -155,15 +207,17 @@ def restore_and_activate(config, identity, state=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('configure', 'publish', 'plan', 'deploy', 'status', 'resume', 'abort'))
+    parser.add_argument('action', choices=('configure', 'publish', 'plan', 'deploy', 'status', 'resume', 'abort', 'retry'))
     parser.add_argument('--identity', type=Path)
+    parser.add_argument('--current-tools', action='store_true')
     args = parser.parse_args()
     try:
         if args.action == 'configure': result = configure()
         else:
             config = load()
             if args.action == 'publish': result = publish(config)
-            elif args.action == 'plan': result = plan(config)
+            elif args.action == 'plan': result = plan(config, current_tools=args.current_tools)
+            elif args.action == 'retry': result = retry(config)
             elif args.action == 'deploy':
                 require(args.identity is not None, 'Supply the separate recovered age identity path')
                 result = deploy(config, args.identity)

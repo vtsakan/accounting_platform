@@ -47,6 +47,19 @@ New tooling is Prepared until the operator executes it. Existing S24 application
 Verified receipt and all migrations/financial source/assertions/locks remain
 unchanged. No new resources/credentials/key rotation or S25 implementation.
 
+S24 VM retry follow-up: the operator production-image suite passed 656/656,
+all 36 finance cases and zero unreviewed secret findings; publication succeeded.
+Clone migration correctly stopped on entity 2 invalid_afm, restored S14 with
+original_database_unchanged true, public_cutover_started false and hold false.
+Read evidence/S24-VM-retry.json and the retry section of s24_vm_upgrade.md.
+Require the operator's explicit identity review in the existing S14 UI; never
+invent, clear or automatically repair an AFM or edit frozen migration guards.
+Archive only the completed unexposed rollback journal, retain its failed clone,
+choose a fresh clone and preflight source identities read-only before downtime.
+Operator-only tools may reuse the exact already verified image via a separately
+bound deployment_commit and unchanged production-context/receipt checks. No
+agent runtime execution; new retry tooling is Prepared. Stop before S25.
+
 ## Historical S24 source checkpoint
 
 Deliver source only. No agent-run tests/builds/Docker/migrations or local demo/VM/

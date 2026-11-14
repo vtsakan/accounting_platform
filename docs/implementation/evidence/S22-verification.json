@@ -2,11 +2,19 @@
   "step": "S22",
   "status": "Prepared",
   "mode": "code-only-delivery",
-  "source_commit": null,
+  "source_commit": "git:71fd1ce5d36467d70244ef98fb2563352e017358",
   "source_reference_commit": "git:6f67b4c8c079f6cbdc299db623966fe3f4e222d9",
   "previous_operator_receipt": "docs/implementation/evidence/S21-verification.json",
-  "previous_operator_suite": {"tests_run": 533, "tests_passed": 533, "known_failures_reproduced": 0, "unexpected_errors": 0},
-  "migrations_supplied": ["0015_agreement_charge_foundation", "0016_agreement_charge_guards"],
+  "previous_operator_suite": {
+    "tests_run": 533,
+    "tests_passed": 533,
+    "known_failures_reproduced": 0,
+    "unexpected_errors": 0
+  },
+  "migrations_supplied": [
+    "0015_agreement_charge_foundation",
+    "0016_agreement_charge_guards"
+  ],
   "s22_tests_supplied": 27,
   "s22_tests_run": false,
   "expected_suite_tests": 560,
@@ -34,5 +42,6 @@
   "operator_command": "python3 tools/verify_s22.py --record",
   "browser_greek_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
-  "full_requirement_acceptances_pending": 85
+  "full_requirement_acceptances_pending": 85,
+  "prepared_at": "2026-11-14"
 }

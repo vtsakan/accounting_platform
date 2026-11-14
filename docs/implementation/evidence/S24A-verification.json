@@ -21,8 +21,8 @@
   "full_requirement_acceptance": "Pending",
   "operator_command": "python3 tools/verify_s24a.py --record",
   "runbook": "docs/implementation/material_workspace.md",
-  "source_reference_commit": "git:4ece883fec0e83ab350204c77abd2f76699286a8",
-  "application_context_digest": "sha256:52db39d87b630b7c0421cd57857521c341393e406000db06b5a2e9f10bb2a917",
+  "source_reference_commit": "git:0b8fcfb755c8624d4465590f11a0cb64c13ba144",
+  "application_context_digest": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
   "static_source_checks": {
     "python_and_javascript_syntax": "Parsed",
     "previous_41_source_hashes_preserved": true,

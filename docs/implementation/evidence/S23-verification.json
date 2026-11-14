@@ -3,7 +3,7 @@
   "status": "Prepared",
   "mode": "code-only-delivery",
   "prepared_at": "2026-11-14",
-  "source_commit": null,
+  "source_commit": "git:7de1c61504752e2bfec42ca7cf53fe4a4c3046e0",
   "baseline_commit": "git:f8e9b92f470765c1411067c14e06f625c0b13d91",
   "previous_operator_proof": {
     "step": "S22",

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S23 Prepared — partial settlements and separate credit**. Next step: **Operator testing; S24 source follows**.
+Updated 2026-11-14. Current step: **S23 Verified — partial settlements and separate credit**. Next step: **S24**.
 
 
 
@@ -9,20 +9,7 @@ Updated 2026-11-14. Current step: **S23 Prepared — partial settlements and sep
 ## Current selected work — S23
 
 <!-- S23-RESULT -->
-Prepared: code-only delivery. S23 adds migrations 0017/0018, explicit atomic
-cash-to-charge batches, immutable dated allocations/releases, separate customer
-credit/supplier advances, complete request groups and owner password/recent-MFA
-release. SQL bounds source/charge use at every affected historical change point.
-Greek counterparty/agreement/report projections derive outstanding debt from
-effective allocations, independent of legacy flags and cash references. No
-automatic offset/refund, legacy allocation or account creation. Retain every
-previous migration/assertion/receipt and lock. Supplied: 45 new methods; targets
-605 passes, 36 financial cases and 838 boundary cases. These are not observed
-results. No agent tests/builds/Docker/migrations/demo/VM/account/MFA/key operations
-ran. Optional: python3 tools/verify_s23.py --record. S22's operator proof remains
-560 passes/36 finance/799 boundary cases. Greek browser, restricted-role DDL,
-explicit demo migration/restart and all 85 full acceptances remain Pending.
-Grouped corrections/refund screens remain S24, legacy review S25.
+Verified by operator-run Docker/PostgreSQL suite; see S23-verification.json. Historical S22 evidence is unchanged. Full acceptance remains Pending.
 <!-- /S23-RESULT -->
 
 ## Historical selected work — S22

@@ -473,9 +473,14 @@ class CorrectionTests(CorrectionSupport, TestCase):
 
     def test_csrf_foreign_records_and_missing_or_accountant_authority_are_denied(self):
         url = reverse('cash-correction', args=[self.source.pk])
-        csrf = Client(enforce_csrf_checks=True); staff_client_login(csrf, self.owner)
-        self.assertEqual(csrf.post(url, self.form_proof()).status_code, 403)
+        # Establish the ordinary synthetic session through the real MFA view,
+        # then exercise the protected request with CSRF enforcement enabled.
+        # The shared login helper does not supply a CSRF token for its MFA POST.
         client = self.owner_client()
+        csrf = Client(enforce_csrf_checks=True)
+        csrf.cookies.update(client.cookies)
+        self.assertContains(csrf.get(url), 'Επιβεβαίωση διόρθωσης')
+        self.assertEqual(csrf.post(url, self.form_proof()).status_code, 403)
         foreign = Transaction.objects.create(office=self.foreign, cash_account=self.foreign_account, amount='10.00', transaction_type='INCOME',
             transaction_date=DAY, description='ΞΕΝΗ ΚΙΝΗΣΗ S24')
         self.assertEqual(client.get(reverse('cash-correction', args=[foreign.pk])).status_code, 404)

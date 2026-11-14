@@ -103,7 +103,10 @@ def unreversed_refunds(source):
 
 
 def release_targets(request, action, *, source=None, charge=None):
-    rows = CashAllocation.objects.select_for_update().filter(office=action.office, release_record__isnull=True)
+    # The absent release is a LEFT OUTER JOIN. Lock only existing allocations;
+    # PostgreSQL cannot lock the nullable side of that join. The public entry
+    # points already hold the office/source locks while releases are appended.
+    rows = CashAllocation.objects.select_for_update(of=('self',)).filter(office=action.office, release_record__isnull=True)
     rows = rows.filter(source_cash=source) if source is not None else rows.filter(charge=charge)
     for row in rows.order_by('source_cash_id', 'charge_id', 'id'):
         # Public correction entry points already proved and locked the owner.

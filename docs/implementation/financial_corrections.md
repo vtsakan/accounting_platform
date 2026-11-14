@@ -152,3 +152,24 @@ cash, refund a surplus then reverse it, correct a transfer, schedule a terms
 change/cancellation, review before/after dates and test keyboard/validation/error
 states as owner and accountant. All 85 full acceptances remain Pending. **S25**
 legacy migration/import and reconciliation is next and is not implemented here.
+
+
+## Operator-failure follow-up: locking and CSRF fixture
+
+The operator's 2026-11-14 log reports 656 tests, 20 errors and one failure.
+Its supplied tail shows PostgreSQL refusing FOR UPDATE on the nullable release
+side of the allocation query. release_targets now explicitly locks only the
+CashAllocation rows with `of=('self',)`. Office/source serialization, release
+selection/order and database protections remain in place. The CSRF test now
+copies a real MFA-verified synthetic session into a CSRF-enforcing client,
+proves the protected GET succeeds, and still requires the tokenless correction
+POST to return 403. The shared authentication helper and runtime security
+checks remain unchanged. No test method or financial assertion is removed.
+
+The fix is Prepared, with unchanged targets of 656 passes/36 finance/922 boundary
+cases. No corrected run was executed by the agent. The provided log is a tail,
+so omitted errors are not claimed to be resolved until the operator runs the
+full verifier again. No migration, dependency, local demo/VM or account/MFA/key
+change. See evidence/S24-locking-csrf-fix.json. The package's apply helper runs
+only Git/source/metadata operations and commits the four generated S24 metadata
+files before the optional `python3 tools/verify_s24.py --record` command.

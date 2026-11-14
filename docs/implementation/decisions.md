@@ -622,3 +622,14 @@ user preference: no agent tests/builds/database/VM/demo execution. Supplied 51
 new methods target 656 passes/36 finance/922 boundary cases; not observations.
 Historical S23 operator result is retained: 605/605, 36 finance, 838 boundary.
 All full/browser acceptances remain Pending; S25 is outside this selected step.
+
+
+### S24 locking/CSRF follow-up — Prepared
+
+Operator failure: 656 tests, 20 errors, one failure (uploaded tail, 2026-11-14).
+Use PostgreSQL FOR UPDATE OF the existing allocation table only when filtering
+an absent release through a nullable join. The owner/office/source locks and
+immutable release guards remain. Prepare the CSRF fixture with its real verified
+MFA session, then enforce CSRF on the actual protected GET/POST. No policy change,
+security bypass or test waiver. Source fix is unexecuted; the full corrected
+operator PostgreSQL gate remains Pending. See S24-locking-csrf-fix.json.

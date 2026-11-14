@@ -54,6 +54,18 @@ outstanding edits. Greek browser/client acceptance, restricted-role DDL and all
 85 full acceptances remain Pending. Stop after S24; S25 import/reconciliation
 is separate and no deployment is authorised by this implementation step.
 
+### S24 operator-failure follow-up — Prepared
+
+The operator reported 656 tests, 20 errors and one failure. Read
+S24-locking-csrf-fix.json: the supplied tail identifies nullable outer-join row
+locking in release_targets and a CSRF test fixture failing before its protected
+request. Restrict allocation locks to self; retain office/source locking and
+all SQL safeguards. Use a real MFA-verified synthetic session in the strict
+CSRF client, assert its protected GET succeeds, then keep the tokenless POST
+403 assertion. No application CSRF/MFA bypass, weakened financial assertion or
+migration change. No agent-run tests/builds/migrations. Fresh operator S24 suite
+and full acceptance remain Pending; stop after this S24 follow-up.
+
 ## Historical S23 source checkpoint
 
 Deliver code only; no agent-run tests, builds, Docker or migrations. Start from

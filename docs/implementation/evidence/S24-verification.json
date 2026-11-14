@@ -2,7 +2,7 @@
   "step": "S24",
   "status": "Prepared",
   "mode": "code-only-delivery",
-  "source_commit": "git:06a9f9da152fb86aa5aaf92e2cea86f3a5f6407f",
+  "source_commit": "git:e8f9346804cfbca0e17b40c6989f16905549efe4",
   "prepared_at": "2026-11-14",
   "agent_tests_run": false,
   "docker_execution": false,
@@ -42,5 +42,20 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "next_step": "S25 legacy migration and reconciliation",
-  "optional_operator_command": "python3 tools/verify_s24.py --record"
+  "optional_operator_command": "python3 tools/verify_s24.py --record",
+  "source_fix": {
+    "name": "locking-and-csrf-fixture",
+    "status": "Prepared",
+    "operator_rerun": "Pending",
+    "evidence": "docs/implementation/evidence/S24-locking-csrf-fix.json"
+  },
+  "reported_failed_operator_attempt": {
+    "tests_run": 656,
+    "failures": 1,
+    "errors": 20,
+    "source_commit": null,
+    "date": "2026-11-14",
+    "elapsed_seconds": 163.919,
+    "scope": "Uploaded tail only; no full strict suite/financial/boundary receipt supplied"
+  }
 }

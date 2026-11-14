@@ -25,6 +25,18 @@ python3 tools/verify_s24.py --record. Historical S23 operator proof: 605 passes,
 36 financial cases, 838 boundary cases. Browser/client acceptance, restricted-role
 DDL, retained-demo migration and all 85 full acceptances remain Pending. S25
 legacy review/import/reconciliation remains separate; stop after S24.
+
+<!-- S24-LOCKING-FIX -->
+Operator reported 656 tests with 20 errors and one failure on 2026-11-14.
+The supplied tail identifies an unrestricted FOR UPDATE across a nullable
+release join and a CSRF-enforced client passed into the tokenless MFA fixture.
+Source fix restricts row locks to CashAllocation and reuses a real MFA-verified
+synthetic session for the CSRF request, including a successful GET assertion.
+No security check or financial assertion is removed. No migrations/locks change.
+Source remains Prepared: the corrected full PostgreSQL run is Pending. No agent
+test/build/database/VM/demo execution. See evidence/S24-locking-csrf-fix.json.
+<!-- /S24-LOCKING-FIX -->
+
 <!-- /S24-RESULT -->
 
 ## Historical selected work — S23

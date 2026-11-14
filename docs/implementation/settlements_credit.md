@@ -5,6 +5,14 @@ local demo or VM operations were executed by the agent. Optional operator gate:
 `python3 tools/verify_s23.py --record`. S22's existing receipt remains unchanged:
 560 passes, 36 finance cases, 799 office-boundary cases on PostgreSQL 17.
 
+Operator follow-up (14 November 2026): the supplied run reached 605 tests with
+one error in the fractional-cent negative test: `amount` was passed twice to
+the raw SQL fixture. The fixture now supplies one explicit amount per case.
+Every denial assertion and the 605/36/838 targets remain unchanged. No product
+code or migration changed; the agent has not rerun the suite. See
+`evidence/S23-test-fix.json`; S23 remains Prepared until the operator reruns
+`python3 tools/verify_s23.py --record` successfully.
+
 ## Behaviour and reviewed scope
 
 An ordinary receipt/payment is retained cash, not automatic settlement. A staff

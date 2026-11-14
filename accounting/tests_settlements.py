@@ -354,9 +354,13 @@ class SettlementTests(SettlementSupport, TestCase):
     def test_raw_sql_cannot_overallocate_or_forge_party_direction_or_command(self):
         allocate_cash(self.member, **self.allocation_values(self.source, self.charge, '90.00'))
         other = self.obligation(agreement=self.second_agreement(entity=self.supplier, direction='PAYABLE'))
-        for charge, changes in ((self.charge, {}), (other, {}), (self.charge, {'office_id': self.foreign.pk}), (self.charge, {'amount': Decimal('1.001')})):
+        for charge, amount, changes in (
+                (self.charge, '25.00', {}),
+                (other, '25.00', {}),
+                (self.charge, '25.00', {'office_id': self.foreign.pk}),
+                (self.charge, Decimal('1.001'), {})):
             with self.assertRaises(IntegrityError), transaction.atomic():
-                self.raw_allocation(self.source, charge, '25.00', **changes)
+                self.raw_allocation(self.source, charge, amount, **changes)
         with self.assertRaises(IntegrityError), transaction.atomic(), audit_context(self.member, WHY):
             self.raw_command(self.source, actor=self.owner)
         with self.assertRaises(IntegrityError), transaction.atomic(), audit_context(self.member, WHY):

@@ -166,6 +166,8 @@ def agreement_detail_view(request, pk):
     context = {'agreement': agreement, **agreement_projection(agreement)}
     context['charge_page'] = Paginator(context['charges'], 25).get_page(request.GET.get('page'))
     context['terms_history'] = agreement.terms_versions.filter(office_id=agreement.office_id)[:20]
+    from .settlement_selectors import allocation_history
+    context['allocation_page'] = Paginator(allocation_history(request.user, agreement=agreement), 20).get_page(request.GET.get('allocation_page'))
     return render(request, 'accounting/agreement_detail.html', context)
 
 @login_required

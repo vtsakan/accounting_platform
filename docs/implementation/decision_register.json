@@ -379,6 +379,19 @@
         "policy_sha256": "sha256:9390a211fc76e545ec40114abc6bdcc89b593931bb57da6a51de47b64a38f798",
         "examples_sha256": "sha256:290ab374c0e60aa6995ac129e8f9ae60935afcd15134ceb3681f9a019b82a0d8",
         "documents_sha256": "sha256:62a69ac614d631a535a07ac98ed7b072384db8c41b88d075a76ae766d122db11"
+      },
+      "s23_implementation": {
+        "status": "Prepared; code-only, operator execution pending",
+        "approved_choices": [
+          "D08-03",
+          "D08-04",
+          "D08-09",
+          "D08-10"
+        ],
+        "allocation": "Explicit positive exact-amount same-party/direction allocations; no implicit FIFO or offset",
+        "release": "Owner-only finance.release; password, recent MFA, date/reason; one immutable full release",
+        "correction": "Cash reversal requires prior explicit releases; grouped cash correction/refund UI remains S24",
+        "evidence": "docs/implementation/settlements_credit.md"
       }
     },
     {

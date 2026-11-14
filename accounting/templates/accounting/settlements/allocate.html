@@ -1,0 +1,15 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Αντιστοίχιση είσπραξης ή πληρωμής{% endblock %}
+{% block content %}
+<h1>Αντιστοίχιση είσπραξης ή πληρωμής</h1><p>Κίνηση #{{ source.pk }} · {{ source.description }} · {{ source.amount|euro }}</p>
+{% if source.entity %}<p>{{ source.entity.name }} · {% if source.transaction_type == 'INCOME' %}Είσπραξη πελάτη{% else %}Πληρωμή προμηθευτή{% endif %}</p>{% endif %}
+{% if balance %}<p><strong>Αδιάθετο ποσό: {{ balance.available_credit|euro }}</strong></p>{% endif %}
+<p>Επιλέξτε χρεώσεις και ακριβή ποσά. Μπορείτε να αφήσετε μέρος της κίνησης αδιάθετο. Η επιβεβαίωση δεν δημιουργεί νέα κίνηση ταμείου.</p>
+{% if warning %}<div class="alert alert-warning" role="status">{{ warning }}</div>{% endif %}
+<form method="post" class="card card-body">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}
+{{ lines.management_form }}{% if lines.non_form_errors %}<div class="alert alert-danger" role="alert">{{ lines.non_form_errors }}</div>{% endif %}
+{% for line in lines %}<fieldset class="border rounded p-3 mb-3"><legend class="float-none w-auto px-2 fs-6">Χρέωση {{ forloop.counter }}</legend>{% include 'accounting/settlements/fields.html' with form=line %}</fieldset>{% endfor %}
+<p class="small">Συμπληρώστε τουλάχιστον μία γραμμή και αφήστε τις υπόλοιπες κενές. Για περισσότερες χρεώσεις μπορείτε να κάνετε επόμενη επιβεβαίωση από το αδιάθετο ποσό.</p>
+{% if eligible %}<button class="btn btn-primary" type="submit">Επιβεβαίωση αντιστοιχίσεων</button>{% endif %}
+</form>{% if source.entity_id %}<a href="{% url 'entity-settlements' source.entity_id %}">Επιστροφή στις εξοφλήσεις</a>{% else %}<a href="{% url 'transaction-list' %}">Επιστροφή στις κινήσεις</a>{% endif %}
+{% endblock %}

@@ -343,3 +343,5 @@ from .finance_models import FinanceCommand, FinanceAuditEvent
 from .account_models import CashAdjustment, FinanceStructureLock
 
 from .charge_models import AgreementTermsVersion, Charge
+
+from .settlement_models import SettlementCommand, CashAllocation, AllocationRelease

@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from . import account_views  # Import views from the current app directory
-from . import charge_views
+from . import charge_views, settlement_views
 from django.contrib.auth import views as django_auth
 from . import auth_views
 from . import office_views, invite_views
@@ -9,6 +9,9 @@ from . import counterparty_views
 from .office_access import office_write_guard
 
 urlpatterns = [
+    path('entity/<int:pk>/settlements/', settlement_views.workspace, name='entity-settlements'),
+    path('cash-movement/<int:pk>/allocate/', settlement_views.allocate, name='cash-allocation-add'),
+    path('allocation/<uuid:key>/release/', settlement_views.release, name='allocation-release'),
     path('cash/', account_views.account_list, name='cash-account-list'),
     path('cash/add/', account_views.account_add, name='cash-account-add'),
     path('cash/<int:pk>/', account_views.account_detail, name='cash-account-detail'),

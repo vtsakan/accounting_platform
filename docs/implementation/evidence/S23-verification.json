@@ -1,0 +1,57 @@
+{
+  "step": "S23",
+  "status": "Prepared",
+  "mode": "code-only-delivery",
+  "prepared_at": "2026-11-14",
+  "source_commit": null,
+  "baseline_commit": "git:f8e9b92f470765c1411067c14e06f625c0b13d91",
+  "previous_operator_proof": {
+    "step": "S22",
+    "tests_run": 560,
+    "tests_passed": 560,
+    "financial_cases": 36,
+    "boundary_cases": 799
+  },
+  "new_test_methods_supplied": 45,
+  "verification_targets": {
+    "tests_run": 605,
+    "tests_passed": 605,
+    "known_failures": 0,
+    "unexpected_failures": 0,
+    "unexpected_errors": 0,
+    "skips": 0,
+    "financial_cases": 36,
+    "boundary_cases": 838
+  },
+  "features_supplied": [
+    "explicit atomic batch allocations",
+    "partial and multiple settlements",
+    "separate unallocated customer credit and supplier advances",
+    "dated owner releases with password and recent MFA",
+    "immutable same-office SQL history",
+    "source and charge capacity across historical change points",
+    "Greek workspace/forms/report projections",
+    "idempotent retry and authority after lock wait"
+  ],
+  "migrations_added": [
+    "0017_settlement_foundation",
+    "0018_settlement_guards"
+  ],
+  "original_migrations_changed": false,
+  "dependency_locks_changed": false,
+  "previous_receipts_changed": false,
+  "agent_tests_run": false,
+  "agent_builds_run": false,
+  "agent_database_or_migrations_run": false,
+  "docker_execution": false,
+  "local_demo_changed": false,
+  "cloud_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "refund_and_full_correction_ui": "S24",
+  "legacy_cash_review": "S25",
+  "restricted_role_ddl": "Pending",
+  "browser_greek_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "optional_operator_command": "python3 tools/verify_s23.py --record"
+}

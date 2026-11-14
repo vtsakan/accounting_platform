@@ -439,6 +439,31 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "entity-settlements",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "cash-allocation-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "allocation-release",
+      "realm": "office-business",
+      "capability": "finance.release",
+      "methods": [
+        "POST"
+      ]
     }
   ],
   "public_probes": [

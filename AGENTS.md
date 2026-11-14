@@ -26,30 +26,43 @@ verification during implementation. Provide source/patch and optional operator
 commands. Record unexecuted work as Prepared, never Verified. Do not block
 code delivery on a missing operator receipt for the previous source step. This
 explicit preference supersedes the historical agent-run verification workflow.
-Preserve existing accounts, MFA, volumes, fourteen migrations and historical
+Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Current checkpoint — S22
+## Current checkpoint — S23
 
-Deliver code only. No agent-run tests, builds, Docker or database operations.
-Start from actual pushed S21 head 6f67b4c8c079f6cbdc299db623966fe3f4e222d9:
-533/533 operator tests, all 36 finance assertions and 784 boundary cases passed.
-Read agreement_charges.md. S22 adds migrations 0015/0016 and separate immutable
-agreement snapshots / source-bound obligations. Preserve every original
-migration, ID, cash command, financial assertion and historical receipt. No
-legacy charge or paid state is inferred; baseline terms are UNREVIEWED. An
-explicit terms review and a separate confirmed charge are different actions.
-ONE_OFF uses one agreement source; MONTHLY uses its calendar-month source,
-independent of version/scheduler IDs. Full allocations/reversals/generation stay
-S23/S24/S27/S28. New Greek detail/report panes separate terms, charges and cash;
-legacy compatibility contexts are not the new settlement truth. Append-only
-snapshot/charge guards and composite office links apply to SQL too. New models
-are not exposed in admin/records/job adapters. Add the one new charge route to
-the matrix and retain all old cases/assertions; migration-test teardown restores
-the latest schema without changing any historical target or assertion. Supply
-27 new tests and optional tools/verify_s22.py; 560 passes / 799 boundary cases
-are targets, NOT observed results. Source is Prepared. APPLY only changes
-Git/source/metadata; no migration/demo/VM/account/key action. Stop after S22.
+Deliver code only; no agent-run tests, builds, Docker or migrations. Start from
+actual pushed S22 head f8e9b92f470765c1411067c14e06f625c0b13d91: its operator
+receipt records 560 passes, all 36 finance cases and 799 boundary cases. Preserve
+all sixteen existing migrations, every previous assertion and historical receipt,
+locks and accepted S17 policy. Read settlements_credit.md. S23 adds only
+0017/0018: immutable cash allocations, dated owner releases and completed
+idempotent settlement groups. Cash, charges, settlement and credit remain
+separate. Lock the office/user, fresh authority, source and ordered charge IDs;
+SQL also serializes capacity, same-office links and every affected historical
+change point. Customer credit and supplier advance never net automatically.
+Only explicit ORDINARY party cash is eligible; legacy review stays S25. An
+existing agreement reference never settles a charge by itself. Release needs
+finance.release (owner), password, recent MFA, reason and date. Existing cash
+reversal rejects effective allocations and predating their retained releases;
+full grouped correction/refund UI stays S24. New models are not added to generic
+admin/records/worker adapters. Extend the route matrix without removing old
+case IDs/assertions. Supply 45 new methods: targets are 605 passes, all 36
+finance cases and 838 boundary cases, NOT observed results. Prepared until the
+operator executes tools/verify_s23.py --record. APPLY performs Git/source/metadata
+only; no local demo, VM, account, MFA or key actions. Browser, restricted-role
+DDL and all 85 full acceptances remain Pending. Stop after S23.
+
+## Historical S22 checkpoint
+
+S22 is operator-Verified on PostgreSQL 17: 560/560 tests, zero known or unexpected
+failures, 36 passing financial cases and 799 boundary cases. Source receipt
+47173b8bfc143de804ecae4d0ddafc7b916987cc was recorded and pushed in f8e9b92.
+Keep S22-verification.json unchanged. Migrations 0015/0016 retain terms snapshots
+and separate source-bound ONE_OFF/calendar-month obligations. UNREVIEWED legacy
+terms create no automatic charges or paid state. Existing audit contexts retain
+the original SQL error across savepoint rollback. This is historical technical
+evidence, not full product/browser acceptance or a deployment instruction.
 
 ## Historical S21 checkpoint
 

@@ -118,7 +118,8 @@ def detail(request, key):
     agreement_page = Paginator(agreements, 10).get_page(request.GET.get('agreement_page'))
     movement_page = Paginator(movements, 10).get_page(request.GET.get('movement_page'))
     events = entity.workspace_events.filter(office_id=entity.office_id).select_related('actor').order_by('-occurred_at', '-pk')[:10]
-    return render(request, 'accounting/entity_detail.html', {'entity': entity, 'agreements': agreement_page,
+    from .settlement_selectors import settlement_totals
+    return render(request, 'accounting/entity_detail.html', {'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,
         'workspace_events': events})

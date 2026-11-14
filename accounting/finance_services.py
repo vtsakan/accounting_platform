@@ -203,6 +203,8 @@ def reverse_cash(request,*,entry_id,password,reason,effective_date,idempotency_k
     # Legacy UUIDs also exist on ordinary rows: only an actual peer/pair means transfer.
     if original.posting_kind=='TRANSFER' or Transaction.objects.filter(office=office,transfer_id=original.transfer_id).exclude(pk=original.pk).exists():
         raise ValidationError('Ο αντιλογισμός μεταφοράς απαιτεί ενιαία διόρθωση και των δύο σκελών.')
+    from .settlement_services import assert_reversible_cash
+    assert_reversible_cash(original,effective_date)
     if replacement_values:validate_references(replacement_values,office)
     with audit_context(request.user,reason,command):
         reversal=Transaction.objects.create(office=office,command=command,posting_kind='REVERSAL',reversal_of=original,

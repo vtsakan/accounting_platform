@@ -590,3 +590,19 @@ No posted edit/delete API or new migration/dependency is added. All nine FLT
 cases are switched to expected-pass targets, with execution explicitly Pending.
 TRF-001 and report/transfer semantics remain S21/S29. All full acceptances remain
 Pending. The apply helper does not run tests, builds, Docker or database actions.
+
+## S23 implementation of approved D08 choices — Prepared
+
+The accepted S17 snapshot remains unchanged. D08-03/D08-04 are implemented as
+explicit same-party/direction allocations, separate customer credit/supplier
+advance and no automatic cash/refund/offset. D08-09 settlement is derived from
+retained charges and effective allocations; cancellation is a separate state.
+D08-10 supplies named owner capability `finance.release` with password and recent
+MFA for full dated allocation release. Each action retains actor, reason,
+request/payload digests, source IDs and database recording time. SQL capacity is
+checked at every affected historical change point under a serialization root;
+a release on a later day does not authorize an earlier over-allocation. Refund
+and full grouped correction screens remain S24; legacy interpretation remains
+S25. No new policy approval is inferred or requested. Code is Prepared; operator
+PostgreSQL verification, Greek browser review and release acceptance are Pending.
+See settlements_credit.md and evidence/S23-verification.json.

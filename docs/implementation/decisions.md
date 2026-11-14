@@ -633,3 +633,16 @@ immutable release guards remain. Prepare the CSRF fixture with its real verified
 MFA session, then enforce CSRF on the actual protected GET/POST. No policy change,
 security bypass or test waiver. Source fix is unexecuted; the full corrected
 operator PostgreSQL gate remains Pending. See S24-locking-csrf-fix.json.
+
+
+## S24 VM follow-up — operator-requested deployment preparation
+
+The user supplied the existing VM inventory: S14 through 0008, retained office/
+account/MFA data and healthy scheduled backup/monitoring. Prepare operator-run
+commands using a separately named database clone; retain the original, immutable
+registry image and old backup routing. Require current production delivery proof,
+original-column/people/MFA preservation under the restricted migration role,
+new backup routing and independent off-VM restore before public activation.
+Automatic rollback is permitted only before public writes may exist. No agent
+execution or new policy approval is claimed; deployment tooling remains Prepared.
+S24's supplied 656-test operator receipt remains Verified. See s24_vm_upgrade.md.

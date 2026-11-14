@@ -29,7 +29,25 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Current checkpoint — S24
+## Selected S24 VM follow-up — operator execution only
+
+The user explicitly requests commands to update GitHub and the already selected
+VM before S25. This authorizes preparing this deployment pathway; the user will
+execute commands. No agent tests/builds/Docker/SSH/cloud/migrations. Read
+s24_vm_upgrade.md. The operator S24 proof is 656/656, all 36 finance cases and
+922 boundary cases; preserve it. Actual VM report: S14 image/schema through
+0008, existing people/MFA, healthy S10 backups and monitoring. Use vm_upgrade.py
+and its host/clone-only helper. Do not use S09/S14 installers or bootstrap people.
+Require production-image delivery proof, exact source/target/secret/disk/registry
+identity, pre-change encrypted backup, retained original database, restricted-
+role migrations of a clone with original-column/people/MFA checks, a newly bound
+backup and an independent off-VM restore before public activation. Preserve the
+old DB/image and refuse automatic rollback after new public writes may exist.
+New tooling is Prepared until the operator executes it. Existing S24 application
+Verified receipt and all migrations/financial source/assertions/locks remain
+unchanged. No new resources/credentials/key rotation or S25 implementation.
+
+## Historical S24 source checkpoint
 
 Deliver source only. No agent-run tests/builds/Docker/migrations or local demo/VM/
 account/MFA/key actions. Read financial_corrections.md. Actual S23 operator proof

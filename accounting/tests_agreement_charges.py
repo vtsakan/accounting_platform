@@ -13,7 +13,7 @@ from django.test import TestCase, TransactionTestCase, Client
 from django.urls import reverse
 from django.utils import timezone
 from .models import Agreement, AgreementTermsVersion, Charge, Entity, Transaction, FinanceCommand
-from .charge_services import save_terms, post_charge
+from .charge_services import save_terms, post_charge, terms_context
 from .finance_services import post_cash, audit_context
 from .forms import AgreementForm
 from .agreement_selectors import agreement_projection, obligation_totals
@@ -294,14 +294,29 @@ class AgreementChargeTests(ChargeSupport, TestCase):
         terms = self.review()
         charge = post_charge(self.member, **self.values())
         fields = {field.attname: getattr(charge, field.attname) for field in charge._meta.concrete_fields}
+        settings = ('accounting.s18_actor', 'accounting.s18_reason', 'accounting.s18_command',
+                    'accounting.s22_billing_mode', 'accounting.s22_lifecycle')
+        def context_values():
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT ' + ','.join('current_setting(%s,true)' for _ in settings), settings)
+                return tuple(value or '' for value in cursor.fetchone())
+        original_context = context_values()
         for changes in ({'source_key': 'scheduler:another-source'}, {'office_id': self.foreign.pk}, {'amount': Decimal('99.00')},
                         {'entity_id': self.supplier.pk}, {'terms_id': 999999999}):
             values = fields | {'id': uuid.uuid4(), 'key_digest': 'sha256:' + uuid.uuid4().hex * 2} | changes
             columns = list(values)
-            with self.assertRaises(IntegrityError), transaction.atomic(), audit_context(self.member, charge.reason):
+            with self.assertRaises(IntegrityError) as rejected, transaction.atomic(), terms_context('ONE_OFF', 'ACTIVE'), audit_context(self.member, charge.reason):
                 with connection.cursor() as cursor:
                     cursor.execute('INSERT INTO accounting_charge (' + ','.join(connection.ops.quote_name(name) for name in columns) +
                                    ') VALUES (' + ','.join(['%s'] * len(columns)) + ')', [values[name] for name in columns])
+            self.assertEqual(getattr(rejected.exception.__cause__, 'sqlstate', None), '23514')
+            self.assertFalse(connection.needs_rollback)
+            self.assertEqual(context_values(), original_context)
+        # Domain validation does not abort PostgreSQL: ordinary cleanup must
+        # still restore both nested contexts without leaking actor authority.
+        with self.assertRaises(ValidationError), terms_context('ONE_OFF', 'ACTIVE'), audit_context(self.member, charge.reason):
+            raise ValidationError('ΔΟΚΙΜΑΣΤΙΚΗ ΑΚΥΡΩΣΗ ΕΠΙΒΕΒΑΙΩΣΗΣ')
+        self.assertEqual(context_values(), original_context)
         self.assertEqual(Charge.objects.count(), 1)
 
     def test_charge_post_csrf_and_missing_membership_are_denied(self):
@@ -389,6 +404,7 @@ class ChargeMigrationTests(TransactionTestCase):
         super().tearDown()
 
     def test_upgrade_preserves_all_old_agreement_fields_and_generates_no_obligation(self):
+        self.agreement.refresh_from_db()
         before = {field.attname: getattr(self.agreement, field.attname) for field in self.agreement._meta.concrete_fields}
         self.migrate(self.current)
         agreement = Agreement.objects.get(pk=self.agreement.pk)

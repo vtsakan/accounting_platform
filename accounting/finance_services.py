@@ -8,7 +8,7 @@ from datetime import date
 from decimal import Decimal
 import hashlib,json,uuid
 from django.core.exceptions import PermissionDenied,ValidationError
-from django.db import connection,transaction
+from django.db import connection,transaction,DatabaseError
 from django.db.models import Case,When,F,Sum,Value,DecimalField
 from django.db.models.functions import Coalesce
 from django.utils import timezone
@@ -53,6 +53,13 @@ def audit_context(user,reason,command=None):
         for key,value in zip(names,(str(user.pk),clean_reason(reason),str(command.pk) if command else '')):
             cursor.execute('SELECT set_config(%s,%s,true)',[key,value])
     try:yield
+    except DatabaseError:
+        # Raw cursor failures can abort PostgreSQL before Django's atomic
+        # manager marks the block broken. Do not mask the original constraint
+        # error by issuing cleanup SQL in that aborted transaction. The outer
+        # savepoint rollback also restores the transaction-local settings.
+        if connection.in_atomic_block:connection.set_rollback(True)
+        raise
     finally:
         if not connection.needs_rollback:
             with connection.cursor() as cursor:

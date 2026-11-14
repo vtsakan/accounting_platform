@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from datetime import date
 import re
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.db import connection, transaction
+from django.db import connection, transaction, DatabaseError
 from django.utils import timezone
 from .models import Agreement, AgreementTermsVersion, Charge, Entity
 from .office_access import locked_office
@@ -23,6 +23,10 @@ def terms_context(mode, lifecycle):
             cursor.execute('SELECT set_config(%s,%s,true)', [name, value])
     try:
         yield
+    except DatabaseError:
+        if connection.in_atomic_block:
+            connection.set_rollback(True)
+        raise
     finally:
         if not connection.needs_rollback:
             with connection.cursor() as cursor:

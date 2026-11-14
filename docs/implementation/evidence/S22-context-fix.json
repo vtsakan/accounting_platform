@@ -1,0 +1,30 @@
+{
+  "step": "S22",
+  "status": "Prepared",
+  "scope": "Preserve PostgreSQL constraint errors through audit/terms cleanup and hydrate the migration comparison fixture",
+  "operator_result_before_fix": {
+    "tests_run": 560,
+    "failures": 1,
+    "errors": 1,
+    "source": "Operator-supplied 2026-11-14 S22 output",
+    "error_test": "accounting.tests_agreement_charges.AgreementChargeTests.test_sql_cannot_forge_source_or_cross_office_or_snapshot_price",
+    "failure_test": "accounting.tests_agreement_charges.ChargeMigrationTests.test_upgrade_preserves_all_old_agreement_fields_and_generates_no_obligation"
+  },
+  "transaction_cause": "A direct cursor CheckViolation leaves PostgreSQL aborted before atomic exit marks the Django connection for rollback. Cleanup attempted set_config and replaced the expected IntegrityError with InternalError 25P02.",
+  "transaction_change": "On a propagated DatabaseError, mark the active atomic block for rollback before context cleanup. Skip cleanup SQL until its enclosing atomic savepoint rolls back, preserving the original database error and restoring transaction-local settings through rollback. Apply the same handling to audit_context and terms_context.",
+  "fixture_cause": "The historical model instance retained the string 125.37 passed to objects.create, while a database-loaded row correctly returns Decimal 125.37.",
+  "fixture_change": "Reload the persisted historical agreement before capturing its complete pre-migration field dictionary. Preserve the exact all-field equality assertion.",
+  "regression_assertions": "Retain all original assertions and strengthen the SQL denial case with SQLSTATE 23514, usable connection after rollback, context restoration after each savepoint and normal restoration after a domain-validation exception.",
+  "test_count_unchanged": 560,
+  "financial_assertions_weakened": false,
+  "database_guards_changed": false,
+  "migrations_changed_or_added": false,
+  "dependency_locks_changed": false,
+  "historical_receipts_changed": false,
+  "agent_tests_run": false,
+  "agent_builds_run": false,
+  "agent_database_execution": false,
+  "local_demo_or_cloud_changed": false,
+  "operator_rerun": "python3 tools/verify_s22.py --record",
+  "full_requirement_acceptance": "Pending"
+}

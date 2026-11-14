@@ -66,6 +66,12 @@ def stage(value, bundle):
     require(target['db_name'].startswith('accounting_s24_') and target['db_name'] != source['db_name'], 'A distinct S24 clone database is required')
     require(not STATE.exists(), 'An upgrade attempt already exists; use status rather than overwrite its journal')
     host.mounted(source); ops.check(ops.load()); common.dns(source)
+    require(common.run(['docker', 'info', '--format', '{{.DockerRootDir}}']).decode().strip() == '/srv/accounting/docker', 'Unexpected Docker data root')
+    source_web = host.compose(source, 'ps', '--quiet', 'web').decode().strip()
+    require(source_web, 'The observed S14 web service is missing')
+    running_source = common.run(['docker', 'inspect', source_web], json_output=True)[0]
+    require(running_source['State']['Running'] and running_source['Config']['Image'] == source['published']['image'], 'Running source image differs from the installed release')
+    host.running_image_check(source, host.image_check(source), running_source)
     require(not any((common.HOST_DATA / 'media').iterdir()), 'Private media requires its own recovery plan before this database-only upgrade')
     require(not Path('/etc/accounting/demo-upgrade-in-progress').exists() and not HOLD.exists(), 'An unfinished host upgrade hold exists')
     require(all(common.run(['systemctl', 'is-active', unit]).decode().strip() == 'active' for unit in oc.UNITS), 'Expected active backup and monitoring timers')
@@ -246,9 +252,12 @@ def activate(restored_sha):
                 time.sleep(2)
         caddy_id = host.compose(target, 'ps', '--quiet', 'caddy').decode().strip()
         caddy = common.run(['docker', 'inspect', caddy_id], json_output=True)[0]
+        pins = json.loads((host.release_path(target) / 'docker/preview-pins.json').read_text())
+        require(caddy['Config']['Image'] == pins['caddy']['reference'], 'Running proxy image differs')
         require(set(caddy['HostConfig'].get('PortBindings') or {}) == {'80/tcp', '443/tcp'}, 'Proxy ports differ')
         db_id = host.compose(target, 'ps', '--quiet', 'db').decode().strip()
         db = common.run(['docker', 'inspect', db_id], json_output=True)[0]
+        require(db['Config']['Image'] == pins['postgresql']['reference'], 'Running database image differs')
         require(not db['HostConfig'].get('PortBindings'), 'Database port must remain private')
         common.run(['iptables', '-w', '-C', 'DOCKER-USER', '-d', '169.254.169.254/32', '-j', 'REJECT'])
         state['monitor'] = ops.monitor(state['target_operations'])

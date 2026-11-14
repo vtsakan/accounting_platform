@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="el">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Δεν επιτρέπεται η πρόσβαση</title></head>
+<body><main><h1>Δεν επιτρέπεται η πρόσβαση</h1>
+<p>Απαιτείται ενεργό προφίλ λογιστή σε ενεργό λογιστικό γραφείο.</p>
+<p>Επικοινωνήστε με τον υπεύθυνο του γραφείου σας.</p>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Αποσύνδεση</button></form>
+</main></body></html>

@@ -2,103 +2,447 @@
   "recorded_at": "2026-11-07",
   "step": "S02",
   "confirmed_constraints": [
-    {"id": "C01", "decision": "Each active accountant belongs to exactly one office.", "source": "User instruction; UR-OFF-01"},
-    {"id": "C02", "decision": "Deploy initially on a Google Cloud VM with a DuckDNS hostname.", "source": "User deployment instruction"},
-    {"id": "C03", "decision": "Use the public vtsakan/accounting_platform GitHub repository.", "source": "User-created repository and successful S01 push"},
-    {"id": "C04", "decision": "All product-authored frontend content must be Greek, including staff and client experiences.", "source": "User instruction 2026-11-07; CR-001; UR-LOC-01"}
+    {
+      "id": "C01",
+      "decision": "Each active accountant belongs to exactly one office.",
+      "source": "User instruction; UR-OFF-01"
+    },
+    {
+      "id": "C02",
+      "decision": "Deploy initially on a Google Cloud VM with a DuckDNS hostname.",
+      "source": "User deployment instruction"
+    },
+    {
+      "id": "C03",
+      "decision": "Use the public vtsakan/accounting_platform GitHub repository.",
+      "source": "User-created repository and successful S01 push"
+    },
+    {
+      "id": "C04",
+      "decision": "All product-authored frontend content must be Greek, including staff and client experiences.",
+      "source": "User instruction 2026-11-07; CR-001; UR-LOC-01"
+    }
   ],
   "decisions": [
     {
-      "id": "D01", "title": "Office membership and permissions", "owner": "Product owner (vtsakan)",
-      "status": "Partly confirmed; permission policy pending", "gate": "G0; before S11/S14/S16 acceptance",
-      "confirmed": ["One active office per accountant; UR-OFF-01 acceptance allows several accountants in the same office."],
-      "options": ["Office owner and accountant roles, with explicit capabilities for finances, exports, invitations and connections.", "Owner plus custom roles with a configurable capability editor."],
-      "recommendation": "Start with owner/accountant roles and explicit server-side capabilities; defer a custom role editor. Deny protected operations unless a capability is granted.",
-      "unresolved": ["May ordinary accountants view all office finances or only assigned clients?", "Who may post, reverse, export and manage connection secrets?", "Define ownership succession and the last-owner deactivation rule."],
-      "dependent_steps": ["S11", "S12", "S14", "S16", "S17", "S41", "S50"],
-      "evidence": ["UR-OFF-01", "UR-OFF-03", "UR-OFF-04", "QR-01"],
-      "approval_evidence": null
+      "id": "D01",
+      "title": "Office membership and permissions",
+      "owner": "Product owner (vtsakan)",
+      "status": "Current S14 operations confirmed; future capabilities pending",
+      "gate": "S14 technical gate; S16 integrated boundary acceptance",
+      "confirmed": [
+        "One active office per accountant; several accountants may share one office.",
+        "Accountants read and post all current clients/finance within their office; office/staff/role administration is owner-only.",
+        "Owner proposes with password/recent MFA; same-office colleague accepts with password/recent MFA; source becomes accountant.",
+        "An already-owned active office retains an active owner; unknown capabilities are denied."
+      ],
+      "options": [
+        "Owner/accountant with explicit server-side capabilities",
+        "Custom role editor deferred"
+      ],
+      "recommendation": "Implement the selected current-operation matrix; review capabilities separately as future modules arrive.",
+      "unresolved": [
+        "Future reversal/export/connector-secret/job capabilities",
+        "S16 integrated boundary and full release acceptance"
+      ],
+      "dependent_steps": [
+        "S11",
+        "S12",
+        "S14",
+        "S16",
+        "S17",
+        "S41",
+        "S50"
+      ],
+      "evidence": [
+        "UR-OFF-01",
+        "UR-OFF-03",
+        "UR-OFF-04",
+        "QR-01",
+        "office_role_policy.json",
+        "office_settings_staff.md"
+      ],
+      "approval_evidence": "Explicit S14 conversation selections on 2026-11-10: Read and post; Colleague accepts. Recorded in office_role_policy.json.",
+      "implementation_notes": "S13 Docker retry passed and s13-complete is pushed. S14 implements current-operation capabilities, office settings, single-use invitations/approval/deactivation, last-owner protection, mutual handover and scoped staff audit. Live mail/deployment, future module policies and full requirement acceptance remain Pending. Invitation/proposal durations are implementation defaults.",
+      "s17_financial_correction_policy": {
+        "selected_option": "owner-corrections-recent-mfa",
+        "approval_evidence": "docs/implementation/evidence/S17-verification.json",
+        "implementation_status": "Pending S18/S24; existing application capabilities unchanged",
+        "other_future_capabilities": "Exports/connectors/jobs remain separately pending"
+      }
     },
     {
-      "id": "D02", "title": "Client scope and portal grants", "owner": "Product owner and participating office owner",
-      "status": "Proposed; representative verification pending", "gate": "G0 before WP1; final grant policy before S43/S44",
+      "id": "D02",
+      "title": "Client scope and portal grants",
+      "owner": "Product owner and participating office owner",
+      "status": "Proposed; representative verification pending",
+      "gate": "G0 before WP1; final grant policy before S43/S44",
       "confirmed": [],
-      "options": ["Independent client records per office, separate portal identities and explicit representative-approved grants.", "A shared global client directory with office relationships and a separate ownership model."],
+      "options": [
+        "Independent client records per office, separate portal identities and explicit representative-approved grants.",
+        "A shared global client directory with office relationships and a separate ownership model."
+      ],
       "recommendation": "Keep client records office-scoped, allowing the same AFM in different offices. Separate staff membership, portal identity, representative verification and data grants. Revocation blocks the next protected action and queued job execution.",
-      "unresolved": ["Evidence and reviewer needed to verify a business representative.", "Who can grant access, to which files/services, and for how long?", "Treatment of multiple representatives, disputes and staff reassignment."],
-      "dependent_steps": ["S15", "S16", "S43", "S44", "S45", "S46", "S50", "S54"],
-      "evidence": ["UR-CRM-06", "UR-POR-02", "UR-POR-05"], "approval_evidence": null
-    },
-    {
-      "id": "D03", "title": "Authorised government-service access", "owner": "Service account owner with developer",
-      "status": "Documentary feasibility reviewed; access not demonstrated", "gate": "G0 before connector commitment; S49 contract gate",
-      "confirmed": ["Use current official contracts; unavailable or unapproved retrieval is never represented as success."],
-      "options": ["Use documented service-specific interfaces after proving eligibility and client authority.", "Keep a connector unavailable pending approved access; allow separately reviewed manual document upload where the document module permits it."],
-      "recommendation": "Prioritise AADE basic registry, myDATA ERP retrieval and VIES documentary routes. Keep full TAXISnet profiles, AADE debt retrieval and e-EFKA retrieval conditional. Do not infer private-SaaS eligibility from a public-sector endpoint or portal login.",
-      "unresolved": ["Service-specific account registrations, credentials and client delegation.", "Permitted production use and contract/schema versions at S49.", "Redacted response fixtures, negative cases, rate limits and document ownership checks."],
-      "dependent_steps": ["S49", "S50", "S51", "S52", "S53", "S54", "S60", "S61", "S62", "S63"],
-      "evidence": ["connector_feasibility.json", "UR-INT-01", "UR-INT-02", "UR-INT-03", "UR-INT-04", "UR-INT-05", "UR-INT-06", "UR-INT-07"],
+      "unresolved": [
+        "Evidence and reviewer needed to verify a business representative.",
+        "Who can grant access, to which files/services, and for how long?",
+        "Treatment of multiple representatives, disputes and staff reassignment."
+      ],
+      "dependent_steps": [
+        "S15",
+        "S16",
+        "S43",
+        "S44",
+        "S45",
+        "S46",
+        "S50",
+        "S54"
+      ],
+      "evidence": [
+        "UR-CRM-06",
+        "UR-POR-02",
+        "UR-POR-05"
+      ],
       "approval_evidence": null
     },
     {
-      "id": "D04", "title": "Tax forecast coverage and reference cases", "owner": "Accountant reviewer (person to be assigned)",
-      "status": "Pending accountant review", "gate": "G0 outline; G5/S55 final approval",
+      "id": "D03",
+      "title": "Authorised government-service access",
+      "owner": "Service account owner with developer",
+      "status": "Documentary feasibility reviewed; access not demonstrated",
+      "gate": "G0 before connector commitment; S49 contract gate",
+      "confirmed": [
+        "Use current official contracts; unavailable or unapproved retrieval is never represented as success."
+      ],
+      "options": [
+        "Use documented service-specific interfaces after proving eligibility and client authority.",
+        "Keep a connector unavailable pending approved access; allow separately reviewed manual document upload where the document module permits it."
+      ],
+      "recommendation": "Prioritise AADE basic registry, myDATA ERP retrieval and VIES documentary routes. Keep full TAXISnet profiles, AADE debt retrieval and e-EFKA retrieval conditional. Do not infer private-SaaS eligibility from a public-sector endpoint or portal login.",
+      "unresolved": [
+        "Service-specific account registrations, credentials and client delegation.",
+        "Permitted production use and contract/schema versions at S49.",
+        "Redacted response fixtures, negative cases, rate limits and document ownership checks."
+      ],
+      "dependent_steps": [
+        "S49",
+        "S50",
+        "S51",
+        "S52",
+        "S53",
+        "S54",
+        "S60",
+        "S61",
+        "S62",
+        "S63"
+      ],
+      "evidence": [
+        "connector_feasibility.json",
+        "UR-INT-01",
+        "UR-INT-02",
+        "UR-INT-03",
+        "UR-INT-04",
+        "UR-INT-05",
+        "UR-INT-06",
+        "UR-INT-07"
+      ],
+      "approval_evidence": null
+    },
+    {
+      "id": "D04",
+      "title": "Tax forecast coverage and reference cases",
+      "owner": "Accountant reviewer (person to be assigned)",
+      "status": "Pending accountant review",
+      "gate": "G0 outline; G5/S55 final approval",
       "confirmed": [],
-      "options": ["Release a named taxpayer/year subset backed by reviewed reference cases.", "Attempt all taxpayer types and years in the first forecast release."],
+      "options": [
+        "Release a named taxpayer/year subset backed by reviewed reference cases.",
+        "Attempt all taxpayer types and years in the first forecast release."
+      ],
       "recommendation": "Approve a narrow, explicit coverage matrix before coding calculation rules. Unsupported cases show a Greek explanation. Treat results as forecasts, retain rule/input snapshots and keep office fees separate from client tax sources.",
-      "unresolved": ["Supported tax years, taxpayer types, VAT regimes and form versions.", "Rounding, code 401 provenance, corrections and missing-data handling.", "Accountant-approved ordinary, zero, credit and boundary examples for VAT, income tax and presumptive expenses."],
-      "dependent_steps": ["S49", "S55", "S56", "S57", "S58", "S59", "S63"],
-      "evidence": ["UR-TAX-01", "UR-TAX-02", "UR-TAX-03", "UR-TAX-04", "UR-TAX-05", "QR-13"], "approval_evidence": null
+      "unresolved": [
+        "Supported tax years, taxpayer types, VAT regimes and form versions.",
+        "Rounding, code 401 provenance, corrections and missing-data handling.",
+        "Accountant-approved ordinary, zero, credit and boundary examples for VAT, income tax and presumptive expenses."
+      ],
+      "dependent_steps": [
+        "S49",
+        "S55",
+        "S56",
+        "S57",
+        "S58",
+        "S59",
+        "S63"
+      ],
+      "evidence": [
+        "UR-TAX-01",
+        "UR-TAX-02",
+        "UR-TAX-03",
+        "UR-TAX-04",
+        "UR-TAX-05",
+        "QR-13"
+      ],
+      "approval_evidence": null
     },
     {
-      "id": "D05", "title": "Legacy ownership and cutover", "owner": "Office owner with accountant reviewer",
-      "status": "Pending; synthetic rehearsal may proceed later", "gate": "G2/S25 before live migration",
-      "confirmed": ["Preserve existing migration identities; no live client data before release and restore gates."],
-      "options": ["Controlled migration with explicit ownership mappings, financial reconciliation and exception quarantine.", "Start a new office with approved opening balances and retain a restricted legacy archive."],
+      "id": "D05",
+      "title": "Legacy ownership and cutover",
+      "owner": "Office owner with accountant reviewer",
+      "status": "Pending; synthetic rehearsal may proceed later",
+      "gate": "G2/S25 before live migration",
+      "confirmed": [
+        "Preserve existing migration identities; no live client data before release and restore gates."
+      ],
+      "options": [
+        "Controlled migration with explicit ownership mappings, financial reconciliation and exception quarantine.",
+        "Start a new office with approved opening balances and retain a restricted legacy archive."
+      ],
       "recommendation": "Prepare a repeatable dry run with source snapshot identity, user-to-office mapping, dated opening balances, paired transfers and an exception report. Do not silently repair ambiguous records.",
-      "unresolved": ["Which legacy users and records belong to which office?", "Opening dates, reconciled cash totals, charges, allocations, credit and unmatched transfer pairs.", "Cutover freeze, reviewer sign-off and rollback owner."],
-      "dependent_steps": ["S11", "S17", "S25", "S31"],
-      "evidence": ["source_manifest.csv", "known_issues.csv", "QR-03", "QR-09"], "approval_evidence": null
+      "unresolved": [
+        "Which legacy users and records belong to which office?",
+        "Opening dates, reconciled cash totals, charges, allocations, credit and unmatched transfer pairs.",
+        "Cutover freeze, reviewer sign-off and rollback owner."
+      ],
+      "dependent_steps": [
+        "S11",
+        "S17",
+        "S25",
+        "S31"
+      ],
+      "evidence": [
+        "source_manifest.csv",
+        "known_issues.csv",
+        "QR-03",
+        "QR-09"
+      ],
+      "approval_evidence": null
     },
     {
-      "id": "D06", "title": "Workload, service targets and sizing", "owner": "Product owner and operator (operator to be assigned)",
-      "status": "Proposed targets; workload and budget pending", "gate": "G0 sizing; S08 parameters; S31/S63 load evidence",
-      "confirmed": ["Initial hosting is one Google Cloud VM."],
-      "options": ["A standard non-Spot VM sized for a measured pilot; resize after observing memory and load.", "A smaller shared-core VM with lower cost and reduced headroom, subject to measured acceptance."],
+      "id": "D06",
+      "title": "Workload, service targets and sizing",
+      "owner": "Product owner and operator (operator to be assigned)",
+      "status": "Proposed targets; workload and budget pending",
+      "gate": "G0 sizing; S08 parameters; S31/S63 load evidence",
+      "confirmed": [
+        "Initial hosting is one Google Cloud VM."
+      ],
+      "options": [
+        "A standard non-Spot VM sized for a measured pilot; resize after observing memory and load.",
+        "A smaller shared-core VM with lower cost and reduced headroom, subject to measured acceptance."
+      ],
       "recommendation": "Use e2-standard-2 (2 vCPU, 8 GB) as a provisional pilot candidate. Measure before accepting capacity; file scanning and S26 workers share resources. One VM is a single failure domain.",
-      "unresolved": ["Office/accountant/client counts, concurrent sessions and annual transaction volume.", "Upload size/type/count limits, storage growth, task volume and retention.", "Monthly budget and EU region; confirm proposed p95 2-second list/detail and 10-second annual report at 50 sessions, 99.5% availability, RPO 24h/RTO 8h and WCAG 2.2 AA."],
-      "dependent_steps": ["S07", "S08", "S10", "S26", "S31", "S38", "S39", "S47", "S63"],
-      "evidence": ["ACC-URS-001 section 5", "QR-05", "QR-08", "QR-09", "QR-12", "deployment_parameters.md"], "approval_evidence": null
+      "unresolved": [
+        "Office/accountant/client counts, concurrent sessions and annual transaction volume.",
+        "Upload size/type/count limits, storage growth, task volume and retention.",
+        "Monthly budget and EU region; confirm proposed p95 2-second list/detail and 10-second annual report at 50 sessions, 99.5% availability, RPO 24h/RTO 8h and WCAG 2.2 AA."
+      ],
+      "dependent_steps": [
+        "S07",
+        "S08",
+        "S10",
+        "S26",
+        "S31",
+        "S38",
+        "S39",
+        "S47",
+        "S63"
+      ],
+      "evidence": [
+        "ACC-URS-001 section 5",
+        "QR-05",
+        "QR-08",
+        "QR-09",
+        "QR-12",
+        "deployment_parameters.md"
+      ],
+      "approval_evidence": null
     },
     {
-      "id": "D07", "title": "Data retention, secrets and operational responsibility", "owner": "Office owner and operator (people to be assigned)",
-      "status": "Pending policy and named operators", "gate": "S08 hosting inputs; before R1 live use and R2 portal use",
-      "confirmed": ["Private documents and credentials must be protected; public repository contains no live secrets."],
-      "options": ["Versioned per-category retention and access policy, off-VM backups and recoverable separately controlled keys.", "A blanket retention period for all records (not recommended; conflicts and holds must first be resolved)."],
+      "id": "D07",
+      "title": "Data retention, secrets and operational responsibility",
+      "owner": "Office owner and operator (people to be assigned)",
+      "status": "Pending policy and named operators",
+      "gate": "S08 hosting inputs; before R1 live use and R2 portal use",
+      "confirmed": [
+        "Private documents and credentials must be protected; public repository contains no live secrets."
+      ],
+      "options": [
+        "Versioned per-category retention and access policy, off-VM backups and recoverable separately controlled keys.",
+        "A blanket retention period for all records (not recommended; conflicts and holds must first be resolved)."
+      ],
       "recommendation": "Use an EU hosting location, a dedicated VM identity, least-privilege access and secret-version references. Approve retention by category and assign incident, restore, key recovery and client-request owners before live use.",
-      "unresolved": ["Exact region and access administrators; key custodians and recovery rehearsal.", "Retention/archive/deletion/hold rules for financial records, files, messages, source data, audit logs and backups.", "Who handles incidents, restore tests, client exports/deletion requests and supplier account changes?"],
-      "dependent_steps": ["S08", "S10", "S13", "S31", "S38", "S41", "S43", "S46", "S48", "S50", "S64"],
-      "evidence": ["QR-02", "QR-09", "QR-11", "QR-12", "deployment_parameters.md"], "approval_evidence": null
+      "unresolved": [
+        "Exact region and access administrators; key custodians and recovery rehearsal.",
+        "Retention/archive/deletion/hold rules for financial records, files, messages, source data, audit logs and backups.",
+        "Who handles incidents, restore tests, client exports/deletion requests and supplier account changes?"
+      ],
+      "dependent_steps": [
+        "S08",
+        "S10",
+        "S13",
+        "S31",
+        "S38",
+        "S41",
+        "S43",
+        "S46",
+        "S48",
+        "S50",
+        "S64"
+      ],
+      "evidence": [
+        "QR-02",
+        "QR-09",
+        "QR-11",
+        "QR-12",
+        "deployment_parameters.md"
+      ],
+      "approval_evidence": null
     },
     {
-      "id": "D08", "title": "Office financial posting policy", "owner": "Accountant reviewer and office owner",
-      "status": "Pending accountant approval", "gate": "G2/S17 before financial posting acceptance",
-      "confirmed": [],
-      "options": ["Separate agreement terms, dated charges, cash, allocations, client credit and linked reversals.", "Treat agreement value as received/paid cash (rejected by the planned separation of obligations and settlement)."],
+      "id": "D08",
+      "title": "Office financial posting policy",
+      "owner": "Accountant reviewer and office owner",
+      "status": "Approved for reviewed ACC-FIN-001 v0.1 snapshot; implementation and release acceptance Pending",
+      "gate": "G2/S17 before financial posting acceptance",
+      "confirmed": [
+        "D08-01: start-of-day-opening",
+        "D08-02: calendar-month-reviewed-first-period",
+        "D08-03: explicit-allocation-confirmation",
+        "D08-04: separate-credit-and-advance",
+        "D08-05: gross-office-ledger-only",
+        "D08-06: eur-line-half-up",
+        "D08-07: prospective-terms-retain-posted-debt",
+        "D08-08: dated-full-reversal-and-replacement",
+        "D08-09: separate-lifecycle-and-settlement",
+        "D08-10: owner-corrections-recent-mfa"
+      ],
+      "options": [
+        "Separate agreement terms, dated charges, cash, allocations, client credit and linked reversals.",
+        "Treat agreement value as received/paid cash (rejected by the planned separation of obligations and settlement)."
+      ],
       "recommendation": "Implement the separate posting model in S17 onward with fixed decimal money, atomic transfer pairs and attributable reversals. Never infer paid status from agreement value alone.",
-      "unresolved": ["Fee due dates, proration, VAT treatment, recurrence and amount rounding.", "Allocation order, overpayments, refunds, client credit and payable settlement.", "Prospective agreement changes/cancellations, opening balances and report category treatment."],
-      "dependent_steps": ["S17", "S18", "S19", "S20", "S21", "S22", "S23", "S24", "S25", "S27", "S28", "S29", "S30", "S31", "S37"],
-      "evidence": ["UR-CSH-01", "UR-CSH-04", "UR-AGR-01", "UR-BIL-04", "QR-03", "QR-04"], "approval_evidence": null
+      "unresolved": [
+        "Unimplemented/excluded operations remain outside the reviewed first scope; later changes require review."
+      ],
+      "dependent_steps": [
+        "S17",
+        "S18",
+        "S19",
+        "S20",
+        "S21",
+        "S22",
+        "S23",
+        "S24",
+        "S25",
+        "S27",
+        "S28",
+        "S29",
+        "S30",
+        "S31",
+        "S37"
+      ],
+      "evidence": [
+        "UR-CSH-01",
+        "UR-CSH-04",
+        "UR-AGR-01",
+        "UR-BIL-04",
+        "QR-03",
+        "QR-04"
+      ],
+      "s17_preparation": {
+        "step": "S17",
+        "status": "Bound declared review approved; implementation/release acceptance Pending",
+        "document_id": "ACC-FIN-001",
+        "version": "0.1",
+        "policy": "docs/implementation/financial_policy.json",
+        "review_sheet": "docs/implementation/financial_policy_review_el.md",
+        "examples": "docs/implementation/examples/S17-financial-examples.json",
+        "decisions": [
+          "D08-01",
+          "D08-02",
+          "D08-03",
+          "D08-04",
+          "D08-05",
+          "D08-06",
+          "D08-07",
+          "D08-08",
+          "D08-09",
+          "D08-10"
+        ],
+        "approval_record": "Private bound review; no selections or named approvals invented",
+        "application_posting_changes": false,
+        "approval_receipt": "docs/implementation/evidence/S17-verification.json"
+      },
+      "approval_evidence": {
+        "path": "docs/implementation/evidence/S17-verification.json",
+        "review_sha256": "sha256:d5126b8b31483ab3178348e8c40cc818e4f7787bd610063907cdaa8803546562",
+        "policy_sha256": "sha256:9390a211fc76e545ec40114abc6bdcc89b593931bb57da6a51de47b64a38f798",
+        "examples_sha256": "sha256:290ab374c0e60aa6995ac129e8f9ae60935afcd15134ceb3681f9a019b82a0d8",
+        "documents_sha256": "sha256:62a69ac614d631a535a07ac98ed7b072384db8c41b88d075a76ae766d122db11"
+      },
+      "s23_implementation": {
+        "status": "Prepared; code-only, operator execution pending",
+        "approved_choices": [
+          "D08-03",
+          "D08-04",
+          "D08-09",
+          "D08-10"
+        ],
+        "allocation": "Explicit positive exact-amount same-party/direction allocations; no implicit FIFO or offset",
+        "release": "Owner-only finance.release; password, recent MFA, date/reason; one immutable full release",
+        "correction": "Cash reversal requires prior explicit releases; grouped cash correction/refund UI remains S24",
+        "evidence": "docs/implementation/settlements_credit.md"
+      },
+      "s24_implementation": {
+        "status": "Prepared; code-only, operator execution pending",
+        "approved_choices": [
+          "D08-03",
+          "D08-04",
+          "D08-07",
+          "D08-08",
+          "D08-09",
+          "D08-10"
+        ],
+        "correction": "Full linked originals, grouped allocation releases and dependent refund reversals; optional replacement with separate explicit reallocation",
+        "refund": "Explicit original-bound credit/advance only, never automatic netting",
+        "lifecycle": "Prospective retained versions; cancellation stops new charges while retaining debt",
+        "closed_period": "Explicit owner cutoff; forward only, subsequent corrections use an open date",
+        "evidence": "docs/implementation/financial_corrections.md"
+      }
     },
     {
-      "id": "D09", "title": "Release priorities and delivery capacity", "owner": "Product owner (vtsakan)",
-      "status": "Implementation sequence authorised; release approval pending", "gate": "G0 and each release gate",
-      "confirmed": ["Proceed step by step from S01; Greek frontend is required from the first release."],
-      "options": ["R1 office/finance, R2 collaboration/portal, R3 authorised connectors/forecasts with explicit conditional exclusions.", "Bring conditional connectors forward, accepting additional access and policy dependencies."],
+      "id": "D09",
+      "title": "Release priorities and delivery capacity",
+      "owner": "Product owner (vtsakan)",
+      "status": "Implementation sequence authorised; release approval pending",
+      "gate": "G0 and each release gate",
+      "confirmed": [
+        "Proceed step by step from S01; Greek frontend is required from the first release."
+      ],
+      "options": [
+        "R1 office/finance, R2 collaboration/portal, R3 authorised connectors/forecasts with explicit conditional exclusions.",
+        "Bring conditional connectors forward, accepting additional access and policy dependencies."
+      ],
       "recommendation": "Keep the 64-step sequence and deliver R1 first. Continue S03 locally while future policy inputs are collected. Keep unavailable connectors visible in release evidence; do not count them as delivered.",
-      "unresolved": ["Final Must/Should release commitments and named acceptance reviewers.", "Developer/accountant/operator availability, budget and contingency.", "Explicit release disposition if a conditional connector cannot be authorised."],
-      "dependent_steps": ["S03", "S31", "S48", "S49", "S63", "S64"],
-      "evidence": ["steps.csv", "CR-001", "ACC-IMP-001"], "approval_evidence": null
+      "unresolved": [
+        "Final Must/Should release commitments and named acceptance reviewers.",
+        "Developer/accountant/operator availability, budget and contingency.",
+        "Explicit release disposition if a conditional connector cannot be authorised."
+      ],
+      "dependent_steps": [
+        "S03",
+        "S31",
+        "S48",
+        "S49",
+        "S63",
+        "S64"
+      ],
+      "evidence": [
+        "steps.csv",
+        "CR-001",
+        "ACC-IMP-001"
+      ],
+      "approval_evidence": null
     }
   ]
 }

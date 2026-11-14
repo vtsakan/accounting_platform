@@ -1,10 +1,10 @@
 # Greek frontend implementation guide
 
-Required by [CR-001 / UR-LOC-01](../requirements/CR-001-Greek-frontend.md). This is the implementation contract for every user-facing feature. The current S01 application has not yet been translated.
+Required by [CR-001 / UR-LOC-01](../requirements/CR-001-Greek-frontend.md). This is the implementation contract for every user-facing feature. S04 implements the Greek locale, all 17 existing staff templates, form labels and project message catalog. Later modules and full release acceptance remain Pending; see [settings_and_locale.md](settings_and_locale.md).
 
 ## S04 foundation
 
-Use Django's `LANGUAGE_CODE = 'el'`, restrict `LANGUAGES` to Greek, enable `USE_I18N` and `USE_TZ`, and use `TIME_ZONE = 'Europe/Athens'`. Add `LocaleMiddleware` after session middleware and before common middleware. Set HTML `lang="el"`. Treat language selection as Greek even with `Accept-Language: en`; do not expose an English switcher. Use project gettext catalogs for reusable copy, lazy translations for model/form metadata and plural-aware messages for counts. Compile catalogs during the image build and verify Django's built-in auth/admin/validation translations as well as custom messages. [Official Django 5.2 translation guide](https://docs.djangoproject.com/en/5.2/topics/i18n/translation/).
+Use Django's `LANGUAGE_CODE = 'el'`, restrict `LANGUAGES` to Greek, enable `USE_I18N` and `USE_TZ`, and use `TIME_ZONE = 'Europe/Athens'`. Add `LocaleMiddleware` after session middleware and before common middleware. Set HTML `lang="el"`. Treat language selection as Greek even with `Accept-Language: en`; do not expose an English switcher. Use project gettext catalogs for reusable copy, lazy translations for model/form metadata and plural-aware messages for counts. Compile/check the project catalog with tools/compile_translations.py (pinned maintenance tools), carry the check into S07 and verify Django's built-in auth/admin/validation translations as well as custom messages. [Official Django 5.2 translation guide](https://docs.djangoproject.com/en/5.2/topics/i18n/translation/).
 
 Inventory all 17 templates listed in `source_inventory.json`, `accounting/forms.py`, model choice/field labels, view messages and authentication pages. Translate as the settings and feature steps touch them. Bootstrap alone does not translate labels, accessibility attributes or JavaScript widgets. Verify date-picker labels, table pagination, charts, confirmation prompts and background-job status text explicitly.
 

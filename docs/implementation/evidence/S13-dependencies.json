@@ -1,0 +1,33 @@
+{
+  "step": "S13",
+  "reviewed_at": "2026-11-10",
+  "status": "Prepared",
+  "python": "3.12.16",
+  "target": "CPython 3.12; Linux x86_64 with glibc",
+  "runtime_packages": 12,
+  "retained_runtime_versions": 7,
+  "tools_lock_unchanged": true,
+  "added_direct": {
+    "django-otp": "1.7.5",
+    "cryptography": "50.0.2",
+    "qrcode": "8.2"
+  },
+  "added_transitive": {
+    "cffi": "2.1.1",
+    "pycparser": "3.12"
+  },
+  "clean_hashed_binary_install": true,
+  "pip_check": "Passed",
+  "locks_reproduced": "Byte for byte",
+  "selection": "Django maintained auth and documented OTP custom Device; authenticated seed encryption; locally generated SVG QR.",
+  "sources": [
+    "https://pypi.org/pypi/django-otp/1.7.5/json",
+    "https://django-otp-official.readthedocs.io/en/stable/extend.html",
+    "https://pypi.org/pypi/cryptography/50.0.2/json",
+    "https://cryptography.io/en/latest/fernet/",
+    "https://pypi.org/pypi/qrcode/8.2/json"
+  ],
+  "production_image_built": false,
+  "live_mail_sent": false,
+  "full_requirement_acceptance": "Pending"
+}

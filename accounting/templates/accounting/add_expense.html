@@ -1,33 +1,38 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}Add Expense{% endblock %}
+{% block title %}Νέο έξοδο{% endblock %}
 
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Add New Expense (Καταχώρηση Εξόδων)</h2>
+                    <h2 class="mb-0">Καταχώρηση εξόδου</h2>
                 </div>
                 <div class="card-body">
+                    <p class="small text-muted">Η κατηγορία, ο συναλλασσόμενος και η σύνδεση με υφιστάμενη συμφωνία είναι προαιρετικά. Κάθε νέα φόρμα έχει δική της ταυτότητα καταχώρισης· η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.</p>
                     <form method="post">
                         {% csrf_token %}
-                        
+                        {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+
                         {% for field in form %}
+                            {% if field.is_hidden %}{{ field }}{% for error in field.errors %}<div class="alert alert-danger" role="alert">{{ error }}</div>{% endfor %}{% else %}
                             <div class="mb-3">
                                 {{ field.label_tag }}
                                 {{ field }}
+                                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
                                 {% if field.errors %}
                                     <div class="alert alert-danger mt-1 p-2">
                                         {{ field.errors|striptags }}
                                     </div>
                                 {% endif %}
                             </div>
-                        {% endfor %}
+                        {% endif %}{% endfor %}
 
                         <hr>
-                        <button type="submit" class="btn btn-danger">Save Expense</button>
-                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger">Αποθήκευση εξόδου</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ακύρωση</a>
                     </form>
                 </div>
             </div>

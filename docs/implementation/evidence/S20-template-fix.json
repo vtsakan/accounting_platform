@@ -1,0 +1,22 @@
+{
+  "step": "S20",
+  "status": "Prepared",
+  "scope": "Movement-history template links",
+  "operator_result_before_fix": {
+    "tests_run": 511,
+    "unexpected_errors": 1,
+    "expected_failures": 1,
+    "failing_test": "core.tests.test_s04.FrontendTests.test_all_staff_templates_render_greek_without_database",
+    "template": "transaction_list.html",
+    "exception": "NoReverseMatch for cash-account-detail with an empty foreign-key value"
+  },
+  "cause": "The database-free S04 presentation fixture exposes a cash-account label, not cash_account_id; its entity has pk but no entity_id on the movement DTO.",
+  "change": "Render cash-account labels without a link when the foreign-key ID is unavailable. Build counterparty links from the related object pk, with a plain-text fallback. Real ORM rows retain their scoped links.",
+  "existing_assertions_changed": false,
+  "migration_added": false,
+  "agent_tests_run": false,
+  "agent_builds_run": false,
+  "agent_database_execution": false,
+  "operator_rerun": "python3 tools/verify_s20.py --record",
+  "full_requirement_acceptance": "Pending"
+}

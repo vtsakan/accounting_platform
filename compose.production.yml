@@ -1,0 +1,133 @@
+# S09 synthetic preview. Use tools/preview_host.py; only Caddy publishes ports.
+name: accounting-preview
+services:
+  db:
+    image: postgres:17.11-bookworm@sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ${DB_NAME:?Configure preview first}
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_init
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C.UTF-8 --auth-local=peer --auth-host=scram-sha-256
+    command: [postgres, -c, shared_buffers=128MB, -c, max_connections=40, -c, log_statement=none, -c, log_min_error_statement=panic, -c, log_error_verbosity=terse, -c, log_parameter_max_length_on_error=0]
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+      - /var/run/postgresql:rw,nosuid,size=16m,mode=2775,uid=999,gid=999
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 768m
+    volumes:
+      - type: bind
+        source: /srv/accounting/postgres17
+        target: /var/lib/postgresql/data
+        bind: {create_host_path: false}
+      - type: bind
+        source: /run/accounting/pg-init
+        target: /run/secrets/pg_init
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [database]
+    healthcheck:
+      test: [CMD, gosu, postgres, pg_isready, -U, postgres, -d, "${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    stop_grace_period: 60s
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+  web:
+    image: ${APP_IMAGE:?Publish and pin the application image first}
+    platform: linux/amd64
+    pull_policy: never
+    user: "10001:10001"
+    restart: unless-stopped
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+      DJANGO_DEBUG: "false"
+      DJANGO_ALLOWED_HOSTS: ${SITE_DOMAIN:?Configure the exact DuckDNS hostname}
+      DJANGO_CSRF_TRUSTED_ORIGINS: https://${SITE_DOMAIN}
+      DJANGO_TRUST_PROXY_HEADERS: "true"
+      DJANGO_HSTS_SECONDS: "3600"
+      DJANGO_SECRET_KEY_FILE: /run/secrets/signing
+      DJANGO_MEDIA_ROOT: /app/media
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER:?Configure the restricted application database role}
+      DB_PASSWORD_FILE: /run/secrets/database
+      DB_HOST: db
+      DB_PORT: "5432"
+      GUNICORN_WORKERS: "2"
+      HEALTHCHECK_HOST: ${SITE_DOMAIN}
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 768m
+    volumes:
+      - type: bind
+        source: /run/accounting/signing
+        target: /run/secrets/signing
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: /run/accounting/database
+        target: /run/secrets/database
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: /srv/accounting/media
+        target: /app/media
+        bind: {create_host_path: false}
+    networks: [application, database]
+    depends_on: {db: {condition: service_healthy}}
+    stop_grace_period: 40s
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+  caddy:
+    image: caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?Configure a certificate contact email}
+      XDG_DATA_HOME: /data
+      XDG_CONFIG_HOME: /config
+    ports: ["0.0.0.0:80:80/tcp", "0.0.0.0:443:443/tcp"]
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 256m
+    volumes:
+      - type: bind
+        source: ./infrastructure/Caddyfile
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${STATIC_DIRECTORY:?Export static assets from the pulled image first}
+        target: /srv/static
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: /srv/accounting/caddy/data
+        target: /data
+        bind: {create_host_path: false}
+      - type: bind
+        source: /srv/accounting/caddy/config
+        target: /config
+        bind: {create_host_path: false}
+    networks: [application, egress]
+    depends_on: {web: {condition: service_healthy}}
+    stop_grace_period: 30s
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+networks:
+  application: {internal: true}
+  database: {internal: true}
+  egress: {}

@@ -1,12 +1,12 @@
 # Google Cloud / DuckDNS parameter sheet
 
-**Create or select the VM at S08, after S07 is verified. No VM is needed now.** Copy values into a private environment configuration at that step; this public repository keeps an empty [parameter template](deployment_parameters.example.json). Null means unknown, not a default to create. S08 depends on S02 and S07; S09 deploys HTTPS and S10 proves off-VM restore.
+**S08 is Verified from operator execution; the selected VM already exists.** Read the [actual inventory](cloud_inventory.json) and [S08 operator instructions](google_cloud.md). Copy operative references into Git-ignored private/gcp.json with tools/cloud.py init; the public [parameter template](deployment_parameters.example.json) remains blank. Null means unknown, not a default to create. S09 deploys HTTPS and S10 proves off-VM restore.
 
 ## Confirmed and proposed choices
 
 Google Cloud VM hosting and an initial DuckDNS hostname are user-confirmed. The planned application remains Django/PostgreSQL, Caddy/Gunicorn and Docker Compose. Greek frontend language is confirmed. Exact versions are checked at S03/S07.
 
-The proposed pilot machine is `e2-standard-2`, with 2 vCPU and 8 GB, a 30 GB boot disk and separate persistent data disk initially estimated at 50 GB. These are sizing candidates, not purchased resources or demonstrated capacity. Recheck workload, quota, OS image, regional availability and current cost at S08. Use a standard non-Spot VM for the persistent preview. A single VM has one failure domain; backups and a recovery rehearsal are required before live use.
+The initial e2-standard-2/Ubuntu24.04 candidates were superseded by the user's actual lower-cost e2-medium/Ubuntu26.04.1 selection in Belgium. The regular non-Spot VM has 4 GB RAM, a 30-GB boot disk and separate retained 50-GB balanced data disk. The external static IPv4 is Premium tier. Shared-core capacity is not measured workload acceptance. Read the S08 inventory/runbook for actual storage, identity, cost assumptions and pending budget/operational inputs. A single VM has one failure domain; backups and a recovery rehearsal are required before live use.
 
 ## Inputs and owners
 

@@ -1,0 +1,7 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Μελλοντική αλλαγή ή ακύρωση συμφωνίας{% endblock %}
+{% block content %}<h1>Μελλοντική αλλαγή ή ακύρωση συμφωνίας</h1><p>{{ agreement.entity.name }} · {{ agreement.description }}</p>
+{% if terms %}<p>Τρέχουσα έκδοση {{ terms.revision }} · {{ terms.get_billing_mode_display }} · {{ terms.get_lifecycle_display }} · {{ terms.agreed_amount|euro }}</p>{% endif %}
+{% if latest and latest.billing_mode == 'UNREVIEWED' %}<p class="alert alert-warning">Ελέγξτε πρώτα τους αρχικούς όρους και επιλέξτε τρόπο χρέωσης.</p>{% endif %}
+<p>Η νέα έκδοση χρησιμοποιείται μόνο για μη καταχωρισμένες μελλοντικές χρεώσεις. Η ακύρωση ή λήξη σταματά τη χρέωση από την επιλεγμένη ημερομηνία, διατηρώντας τις υπάρχουσες οφειλές, εξοφλήσεις και κινήσεις.</p><p>Ο συναλλασσόμενος, η κατεύθυνση και ο τρόπος χρέωσης παραμένουν συνδεδεμένα με τη συμφωνία. Για διαφορετική συνεργασία δημιουργήστε νέα συμφωνία.</p><form method="post" class="card card-body mb-3">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}<button class="btn btn-primary" type="submit">Επιβεβαίωση νέας έκδοσης</button></form><a href="{% url 'agreement-detail' agreement.pk %}">Επιστροφή στη συμφωνία</a>
+{% if history %}<h2 class="h4 mt-4">Ιστορικό αλλαγών</h2>{% include 'accounting/corrections/history_rows.html' with rows=history %}{% endif %}{% endblock %}

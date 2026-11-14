@@ -1,0 +1,9 @@
+{% extends 'accounting/office/base.html' %}
+{% block title %}Παράδοση ευθύνης γραφείου{% endblock %}
+{% block office_content %}<h1 class="h3">Παράδοση ευθύνης γραφείου</h1>
+<p>Ο συνάδελφος πρέπει να αποδεχτεί την ευθύνη με κωδικό πρόσβασης και πρόσφατη επαλήθευση συσκευής. Μετά την αποδοχή ο προηγούμενος υπεύθυνος γίνεται λογιστής. Το γραφείο διατηρεί πάντοτε ενεργό υπεύθυνο.</p>
+{% if profile.role == 'owner' %}<section class="col-lg-6">{% include 'accounting/office/proof_help.html' %}
+<h2 class="h4">Νέα πρόταση</h2><form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn btn-primary">Πρόταση παράδοσης</button></form></section>{% endif %}
+<h2 class="h4 mt-4">Οι προτάσεις σας</h2><ul class="list-group">
+{% for offer in offers %}<li class="list-group-item"><a href="{% url 'office-handover-detail' offer.pk %}">{{ offer.requested_by.username }} → {{ offer.recipient.username }}</a> — {{ offer.get_status_display }}</li>
+{% empty %}<li class="list-group-item">Δεν υπάρχουν προτάσεις παράδοσης.</li>{% endfor %}</ul>{% endblock %}

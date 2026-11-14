@@ -1,0 +1,74 @@
+{
+  "step": "S10",
+  "status": "Prepared",
+  "reviewed_on": "2026-11-10",
+  "source_reference_commit": "git:d3031b251a80f94c337b1943a3a78d27c868c5a1",
+  "observed_cloud_setup": {
+    "status": "Configured",
+    "retention_days": 7,
+    "notification_channels": 1,
+    "uptime_checks": 1,
+    "alert_policies": 9,
+    "notification_delivery_observed": false
+  },
+  "observed_vm_install": {
+    "status": "Installed",
+    "operations_commit": "git:d3031b251a80f94c337b1943a3a78d27c868c5a1",
+    "app_restarted": false,
+    "database_migrated_or_restored": false
+  },
+  "confirmed_status_failure": {
+    "property": "LastTriggerUSecMonotonic",
+    "value": "9h 5min 11.812969s",
+    "exception": "ValueError",
+    "cause": "Integer-only conversion of a formatted finite time span"
+  },
+  "correction": {
+    "integer_and_formatted_values_supported": true,
+    "zero_unset_values_remain_false": true,
+    "invalid_values_rejected": true,
+    "full_status_with_cloud_permission_denials_tested": true,
+    "backup_success_not_inferred_from_trigger": true,
+    "status_stage_checkpoint": true
+  },
+  "native_format_check": {
+    "tool": "systemd-analyze timespan",
+    "observed_value_microseconds": 32711812969,
+    "zero_and_compact_forms_checked": true
+  },
+  "application_context_unchanged": true,
+  "private_keys_policy_and_timer_units_changed": false,
+  "actual_vm_retry_of_fix": "Pending",
+  "actual_backup_restore_and_alert_gate": "Pending",
+  "workspace_cloud_execution": false,
+  "full_requirement_acceptance": "Pending",
+  "official_sources": [
+    "https://www.freedesktop.org/software/systemd/man/latest/systemd.time.html",
+    "https://github.com/systemd/systemd/blob/main/man/systemd.time.xml"
+  ],
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "safeguard_tests": 51,
+    "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "application_migrations_locks_unchanged": true,
+    "actual_cloud_execution": false,
+    "actual_docker_execution": false,
+    "full_acceptances_pending": 85
+  },
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 44,
+    "unique_history_blobs": 360,
+    "candidate_text_files": 193,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 85,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

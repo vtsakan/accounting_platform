@@ -1,3 +1,8 @@
+from .finance_services import legacy_settlement, submission_key, post_transfer
+from . import counterparty_views
+from django.core.exceptions import ValidationError
+from .office_access import records, record, save_for_user, validate_filter_ids
+from .membership import require_office_profile
 # accounting/views.py
 
 from django.shortcuts import render
@@ -13,32 +18,14 @@ import uuid
 
 @login_required
 def dashboard_view(request):
-    # This is an advanced but very efficient way to calculate balances for all accounts in one go.
-    # It gets the sum of all 'INCOME' transactions and subtracts the sum of all 'EXPENSE' transactions.
-    
-    accounts_with_balances = CashAccount.objects.filter(is_active=True).annotate(
-        # Calculate the total income for each account
-        total_income=Sum(
-            'transaction__amount',
-            filter=Q(transaction__transaction_type='INCOME'),
-            output_field=DecimalField()
-        ),
-        # Calculate the total expense for each account
-        total_expense=Sum(
-            'transaction__amount',
-            filter=Q(transaction__transaction_type='EXPENSE'),
-            output_field=DecimalField()
-        )
-    ).annotate(
-        # Calculate the final balance
-        current_balance=F('opening_balance') + F('total_income') - F('total_expense')
-    )
+    from .cash_selectors import cash_accounts
+    accounts_with_balances=cash_accounts(request.user)
 
     # Prepare the data to be sent to the template
     context = {
         'cash_accounts': accounts_with_balances
     }
-    
+
     # Render the HTML page and pass the data to it
     return render(request, 'accounting/dashboard.html', context)
 
@@ -51,61 +38,9 @@ from .models import CashAccount, Transaction
 
 @login_required
 def transaction_list_view(request):
-    # --- Get Filter Data from the URL ---
-    start_date_str = request.GET.get('start_date')
-    end_date_str = request.GET.get('end_date')
-    transaction_type = request.GET.get('transaction_type')
-    cash_account_id = request.GET.get('cash_account')
-    category_id = request.GET.get('category')
-    entity_id = request.GET.get('entity')
-    query = request.GET.get('query')
+    from .movement_views import movement_list
+    return movement_list(request)
 
-    # --- Start with a base queryset ---
-    transactions = Transaction.objects.select_related('cash_account', 'category', 'entity').all()
-
-    # --- Apply Filters if they exist (WITH CORRECTION) ---
-    if start_date_str:
-        # Convert the string to a date object before filtering
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-        transactions = transactions.filter(transaction_date__gte=start_date)
-    
-    if end_date_str:
-        # Convert the string to a date object before filtering
-        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-        transactions = transactions.filter(transaction_date__lte=end_date)
-    
-    if transaction_type:
-        transactions = transactions.filter(transaction_type=transaction_type)
-    
-    if cash_account_id:
-        transactions = transactions.filter(cash_account_id=cash_account_id)
-    
-    if category_id:
-        transactions = transactions.filter(category_id=category_id)
-    
-    if entity_id:
-        transactions = transactions.filter(entity_id=entity_id)
-    
-    if query:
-        transactions = transactions.filter(description__icontains=query)
-
-    context = {
-        'transactions': transactions,
-        # Data for populating the filter dropdowns
-        'all_cash_accounts': CashAccount.objects.all(),
-        'all_categories': Category.objects.all(),
-        'all_entities': Entity.objects.all(),
-        # Pass selected filter values back to the template
-        'selected_start_date': start_date_str,
-        'selected_end_date': end_date_str,
-        'selected_type': transaction_type,
-        'selected_cash_account_id': cash_account_id,
-        'selected_category_id': category_id,
-        'selected_entity_id': entity_id,
-        'query': query,
-    }
-    
-    return render(request, 'accounting/transaction_list.html', context)
 
 # accounting/views.py
 
@@ -115,25 +50,13 @@ from .models import CashAccount, Transaction, Entity # Make sure Entity is impor
 @login_required
 def customer_list_view(request):
     # Fetch only the entities where the entity_type is 'CUSTOMER'
-    customers = Entity.objects.filter(entity_type='CUSTOMER')
-    
-    context = {
-        'customers': customers
-    }
-    
-    return render(request, 'accounting/customer_list.html', context)
+    return counterparty_views.workspace(request, fixed_role='customer')
 
 
 @login_required
 def supplier_list_view(request):
     # Fetch only the entities where the entity_type is 'SUPPLIER'
-    suppliers = Entity.objects.filter(entity_type='SUPPLIER')
-    
-    context = {
-        'suppliers': suppliers
-    }
-    
-    return render(request, 'accounting/supplier_list.html', context)
+    return counterparty_views.workspace(request, fixed_role='supplier')
 
 
 from django.shortcuts import render, redirect # Add redirect
@@ -143,183 +66,65 @@ from .forms import ExpenseForm # Import our new form
 
 @login_required
 def add_expense_view(request):
-    # Pre-calculate balances with the explicit output_field
-    payable_agreements = Agreement.objects.filter(agreement_type='PAYABLE', status='ACTIVE').annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    if request.method == 'POST':
-        form = ExpenseForm(request.POST, agreements_queryset=payable_agreements)
-        if form.is_valid():
-            new_transaction = Transaction(
-                transaction_date=form.cleaned_data['transaction_date'],
-                description=form.cleaned_data['description'],
-                amount=form.cleaned_data['amount'],
-                cash_account=form.cleaned_data['cash_account'],
-                category=form.cleaned_data['category'],
-                entity=form.cleaned_data['entity'],
-                agreement=form.cleaned_data['agreement'],
-                transaction_type='EXPENSE'
-            )
-            new_transaction.save()
-            return redirect('transaction-list')
-    else:
-        initial_data = {}
-        entity_id = request.GET.get('entity_id')
-        if entity_id:
-            initial_data['entity'] = entity_id
-        
-        form = ExpenseForm(initial=initial_data, agreements_queryset=payable_agreements)
-
-    return render(request, 'accounting/add_expense.html', {'form': form})
+    from .movement_views import expense
+    return expense(request)
 
 
 @login_required
 def add_income_view(request):
-    # Pre-calculate balances with the explicit output_field
-    receivable_agreements = Agreement.objects.filter(agreement_type='RECEIVABLE', status='ACTIVE').annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-    
-    if request.method == 'POST':
-        form = IncomeForm(request.POST, agreements_queryset=receivable_agreements)
-        if form.is_valid():
-            new_transaction = Transaction(
-                transaction_date=form.cleaned_data['transaction_date'],
-                description=form.cleaned_data['description'],
-                amount=form.cleaned_data['amount'],
-                cash_account=form.cleaned_data['cash_account'],
-                category=form.cleaned_data['category'],
-                entity=form.cleaned_data['entity'],
-                agreement=form.cleaned_data['agreement'],
-                transaction_type='INCOME'
-            )
-            new_transaction.save()
-            return redirect('transaction-list')
-    else:
-        initial_data = {}
-        entity_id = request.GET.get('entity_id')
-        if entity_id:
-            initial_data['entity'] = entity_id
-        
-        form = IncomeForm(initial=initial_data, agreements_queryset=receivable_agreements)
+    from .movement_views import income
+    return income(request)
 
-    return render(request, 'accounting/add_income.html', {'form': form})
 
 @login_required
 def add_entity_view(request):
-    if request.method == 'POST':
-        form = EntityForm(request.POST)
-        if form.is_valid():
-            # Save the form and get the new entity object
-            entity = form.save()
-            
-            # Check the type of the entity that was just created
-            if entity.entity_type == 'CUSTOMER':
-                # Redirect to the customer list
-                return redirect('customer-list')
-            else:
-                # Redirect to the supplier list
-                return redirect('supplier-list')
-    else:
-        form = EntityForm()
-
-    return render(request, 'accounting/add_entity.html', {'form': form})
+    return counterparty_views.edit(request)
 
 @login_required
 def entity_detail_view(request, pk):
     # Get the specific Entity object
-    entity = get_object_or_404(Entity, pk=pk)
-
-    # 1. Get all agreements for this entity and calculate their balances
-    agreements = entity.agreements.all().annotate(
-        # For each agreement, calculate the sum of its associated transactions
-        total_payments=Coalesce(
-            Sum('transactions__amount'),
-            Value(0),
-            output_field=DecimalField()
-        )
-    ).annotate(
-        # For each agreement, calculate the remaining balance
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    # 2. Get all transactions for this entity that are NOT linked to any agreement
-    standalone_transactions = entity.entity_transactions.filter(agreement__isnull=True).order_by('-transaction_date')
-
-    # 3. (Optional) Calculate a simple cash balance just for the standalone transactions
-    standalone_balance_data = standalone_transactions.aggregate(
-        total_income=Sum('amount', filter=Q(transaction_type='INCOME'), default=0),
-        total_expense=Sum('amount', filter=Q(transaction_type='EXPENSE'), default=0)
-    )
-    if entity.entity_type == 'CUSTOMER':
-        standalone_balance = standalone_balance_data['total_income'] - standalone_balance_data['total_expense']
-    else:
-        standalone_balance = standalone_balance_data['total_expense'] - standalone_balance_data['total_income']
-
-
-    context = {
-        'entity': entity,
-        'agreements': agreements,
-        'standalone_transactions': standalone_transactions,
-        'standalone_balance': standalone_balance
-    }
-
-    return render(request, 'accounting/entity_detail.html', context)
+    return counterparty_views.detail(request, key=pk)
 
 @login_required
 def summary_report_view(request):
-    # --- Transaction Filtering (unchanged) ---
-    start_date_str = request.GET.get('start_date')
-    end_date_str = request.GET.get('end_date')
-    transaction_type = request.GET.get('transaction_type')
-    cash_account_id = request.GET.get('cash_account')
-    category_id = request.GET.get('category')
+    validate_filter_ids(request)
+    from .movement_forms import CashMovementFilterForm
+    from .movement_selectors import filtered_movements, operating_movements, operating_totals, operating_component
+    filter_form = CashMovementFilterForm(request.GET, user=request.user)
+    transactions = operating_movements(filtered_movements(request.user, filter_form,business_direction=True))
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+    transaction_type = request.GET.get('transaction_type', '')
+    cash_account_id = request.GET.get('cash_account', '')
+    category_id = request.GET.get('category', '')
 
-    transactions = Transaction.objects.all()
-    if start_date_str:
-        transactions = transactions.filter(transaction_date__gte=start_date_str)
-    if end_date_str:
-        transactions = transactions.filter(transaction_date__lte=end_date_str)
-    if transaction_type:
-        transactions = transactions.filter(transaction_type=transaction_type)
-    if cash_account_id:
-        transactions = transactions.filter(cash_account_id=cash_account_id)
-    if category_id:
-        transactions = transactions.filter(category_id=category_id)
+    # Operating cash totals exclude explicit transfers before every aggregate.
+    # Cash balances/history continue to include both legs on their own dates.
+    totals = operating_totals(transactions)
+    net_for_period = totals['net_for_period']
 
-    # --- Transaction Calculations (unchanged) ---
-    totals = transactions.aggregate(
-        total_income=Sum('amount', filter=Q(transaction_type='INCOME'), default=0),
-        total_expense=Sum('amount', filter=Q(transaction_type='EXPENSE'), default=0)
-    )
-    net_for_period = totals['total_income'] - totals['total_expense']
-
-    income_by_category = transactions.filter(transaction_type='INCOME').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
-    expense_by_category = transactions.filter(transaction_type='EXPENSE').values('category__name').annotate(total_amount=Sum('amount')).order_by('-total_amount')
+    income_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('INCOME'))).exclude(total_amount=0).order_by('-total_amount')
+    expense_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('EXPENSE'))).exclude(total_amount=0).order_by('-total_amount')
 
 
     # --- FINAL CORRECTED AGREEMENT ANALYTICS ---
-    receivable_agreements = Agreement.objects.filter(agreement_type='RECEIVABLE', status='ACTIVE')
+    receivable_agreements = records(Agreement, request.user).filter(agreement_type='RECEIVABLE', status='ACTIVE')
     total_receivable = receivable_agreements.annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).aggregate(
         total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
     )['total']
 
-    payable_agreements = Agreement.objects.filter(agreement_type='PAYABLE', status='ACTIVE')
+    payable_agreements = records(Agreement, request.user).filter(agreement_type='PAYABLE', status='ACTIVE')
     total_payable = payable_agreements.annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
+        total_payments=legacy_settlement('transactions__')
     ).aggregate(
         total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
     )['total']
     # --- END OF CORRECTION ---
 
     context = {
+        'filter_form': filter_form,
         'total_income': totals['total_income'],
         'total_expense': totals['total_expense'],
         'net_for_period': net_for_period,
@@ -327,8 +132,8 @@ def summary_report_view(request):
         'expense_by_category': expense_by_category,
         'accounts_receivable': total_receivable,
         'accounts_payable': total_payable,
-        'all_cash_accounts': CashAccount.objects.all(),
-        'all_categories': Category.objects.all(),
+        'all_cash_accounts': records(CashAccount, request.user).all(),
+        'all_categories': records(Category, request.user).all(),
         'start_date_str': start_date_str,
         'end_date_str': end_date_str,
         'selected_type': transaction_type,
@@ -336,73 +141,54 @@ def summary_report_view(request):
         'selected_category_id': category_id,
     }
 
+    from .agreement_selectors import obligation_totals
+    context.update(obligation_totals(request.user))
     return render(request, 'accounting/summary_report.html', context)
 
 @login_required
 def edit_entity_view(request, pk):
     # Fetch the existing entity object we want to edit
-    entity_to_edit = get_object_or_404(Entity, pk=pk)
-
-    if request.method == 'POST':
-        # If the form is submitted, pass the submitted data AND the instance to the form
-        form = EntityForm(request.POST, instance=entity_to_edit)
-        if form.is_valid():
-            form.save() # Save the changes to the existing entity
-            # Redirect back to the detail page for that entity
-            return redirect('entity-detail', pk=entity_to_edit.pk)
-    else:
-        # If it's a GET request, create the form and pre-populate it with the existing entity's data
-        form = EntityForm(instance=entity_to_edit)
-    
-    context = {
-        'form': form,
-        'entity': entity_to_edit
-    }
-    return render(request, 'accounting/edit_entity.html', context)
+    return counterparty_views.edit(request, key=pk)
 
 @login_required
 def agreement_list_view(request):
-    # This query now calculates the remaining balance for every agreement
-    agreements = Agreement.objects.annotate(
-        total_payments=Coalesce(Sum('transactions__amount'), Value(0), output_field=DecimalField())
-    ).annotate(
-        remaining_balance=F('total_amount') - F('total_payments')
-    )
-
-    context = {
-        'agreements': agreements
-    }
+    from django.core.paginator import Paginator
+    from .agreement_selectors import agreement_rows
+    page = Paginator(agreement_rows(records(Agreement, request.user)), 25).get_page(request.GET.get('page'))
+    context = {'agreements': page.object_list, 'page_obj': page}
     return render(request, 'accounting/agreement_list.html', context)
 
 @login_required
 def agreement_detail_view(request, pk):
-    # Get the specific Agreement object from the database
-    agreement = get_object_or_404(Agreement, pk=pk)
-
-    # Get all transactions that are linked to this specific agreement
-    transactions = agreement.transactions.all().order_by('-transaction_date')
-
-    # Calculate the sum of all payments made against this agreement
-    total_payments = transactions.aggregate(total=Sum('amount'))['total'] or 0
-    
-    # Calculate the remaining balance
-    remaining_balance = agreement.total_amount - total_payments
-
-    context = {
-        'agreement': agreement,
-        'transactions': transactions,
-        'total_payments': total_payments,
-        'remaining_balance': remaining_balance
-    }
+    agreement = record(Agreement, request.user, pk)
+    from .agreement_selectors import agreement_projection
+    from django.core.paginator import Paginator
+    context = {'agreement': agreement, **agreement_projection(agreement)}
+    context['charge_page'] = Paginator(context['charges'], 25).get_page(request.GET.get('page'))
+    context['terms_history'] = agreement.terms_versions.filter(office_id=agreement.office_id)[:20]
+    from .settlement_selectors import allocation_history
+    context['allocation_page'] = Paginator(allocation_history(request.user, agreement=agreement), 20).get_page(request.GET.get('allocation_page'))
+    from .capabilities import require_capability
+    from .correction_forms import ChargeCorrectionForm
+    from .correction_selectors import correction_history
+    context['can_correct'] = require_capability(request.user,'finance.read').role=='owner'
+    for charge in context['charge_page']:
+        charge.correction_form = ChargeCorrectionForm(auto_id='id_charge_'+charge.pk.hex+'_%s') if context['can_correct'] and not charge.reversed_by_day else None
+    context['correction_history'] = correction_history(request.user,agreement=agreement)[:20]
     return render(request, 'accounting/agreement_detail.html', context)
 
 @login_required
 def add_agreement_view(request):
+    validate_filter_ids(request)
     if request.method == 'POST':
-        form = AgreementForm(request.POST)
+        form = AgreementForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
-            return redirect('agreement-list')
+            try:
+                form.save()
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('agreement-list')
     else:
         # --- THIS IS THE 'GET' REQUEST PART - START OF CHANGES ---
         initial_data = {}
@@ -414,42 +200,31 @@ def add_agreement_view(request):
             initial_data['entity'] = entity_id
         if agreement_type:
             initial_data['agreement_type'] = agreement_type
-        
+
         # Pass the initial_data to the form
-        form = AgreementForm(initial=initial_data)
+        form = AgreementForm(user=request.user, initial=initial_data)
         # --- END OF CHANGES ---
 
     return render(request, 'accounting/add_agreement.html', {'form': form})
 
 @login_required
 def edit_agreement_view(request, pk):
-    agreement_to_edit = get_object_or_404(Agreement, pk=pk)
+    agreement_to_edit = record(Agreement, request.user, pk)
 
     if request.method == 'POST':
-        form = AgreementForm(request.POST, instance=agreement_to_edit)
+        form = AgreementForm(request.POST, user=request.user, instance=agreement_to_edit)
         if form.is_valid():
             updated_agreement = form.save(commit=False)
 
-            # We must specify the output_field in this calculation
-            total_payments = updated_agreement.transactions.aggregate(
-                total=Coalesce(Sum('amount'), Value(0), output_field=DecimalField())
-            )['total']
-            # --- END OF FIX ---
-
-            remaining_balance = updated_agreement.total_amount - total_payments
-            
-            if updated_agreement.status != 'CANCELLED':
-                if remaining_balance <= 0:
-                    updated_agreement.status = Agreement.AgreementStatus.COMPLETED
-                else:
-                    updated_agreement.status = Agreement.AgreementStatus.ACTIVE
-            
-            updated_agreement.save()
-            
-            return redirect('agreement-detail', pk=updated_agreement.pk)
+            try:
+                updated_agreement = form.save()
+            except ValidationError as error:
+                form.add_error(None, error)
+            else:
+                return redirect('agreement-detail', pk=updated_agreement.pk)
     else:
-        form = AgreementForm(instance=agreement_to_edit)
-    
+        form = AgreementForm(user=request.user, instance=agreement_to_edit)
+
     context = {
         'form': form,
         'agreement': agreement_to_edit
@@ -466,36 +241,6 @@ from .forms import TransferForm # <-- Add TransferForm to your form imports
 
 # ADD THIS NEW VIEW
 @login_required
-@transaction.atomic # This is a decorator that ensures the two transactions are created together or not at all
 def add_transfer_view(request):
-    if request.method == 'POST':
-        form = TransferForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            transfer_uuid = uuid.uuid4() # A unique ID for this transfer
-
-            # Create the EXPENSE transaction from the source account
-            Transaction.objects.create(
-                transaction_date=data['transfer_date'],
-                description=f"Transfer to {data['to_account'].name}: {data['description']}",
-                amount=data['amount'],
-                cash_account=data['from_account'],
-                transaction_type=Transaction.TransactionType.EXPENSE,
-                transfer_id=transfer_uuid
-            )
-
-            # Create the INCOME transaction to the destination account
-            Transaction.objects.create(
-                transaction_date=data['transfer_date'],
-                description=f"Transfer from {data['from_account'].name}: {data['description']}",
-                amount=data['amount'],
-                cash_account=data['to_account'],
-                transaction_type=Transaction.TransactionType.INCOME,
-                transfer_id=transfer_uuid
-            )
-            
-            return redirect('transaction-list')
-    else:
-        form = TransferForm()
-
-    return render(request, 'accounting/add_transfer.html', {'form': form})
+    from .transfer_views import transfer
+    return transfer(request)

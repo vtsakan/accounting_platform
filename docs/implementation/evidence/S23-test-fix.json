@@ -1,0 +1,34 @@
+{
+  "step": "S23",
+  "status": "Prepared",
+  "mode": "test-fixture-correction-only",
+  "prepared_at": "2026-11-14",
+  "operator_report": {
+    "tests_run": 605,
+    "failures": 0,
+    "errors": 1,
+    "test": "accounting.tests_settlements.SettlementTests.test_raw_sql_cannot_overallocate_or_forge_party_direction_or_command",
+    "error": "TypeError: SettlementSupport.raw_allocation() got multiple values for argument 'amount'"
+  },
+  "cause": "The fractional-cent case passed amount both positionally and in changes, before reaching the database assertion.",
+  "correction": "Each negative case now carries charge, amount and other overrides separately; amount is supplied exactly once.",
+  "retained_denied_cases": [
+    "over-allocation",
+    "wrong party or direction",
+    "cross-office link",
+    "fractional-cent raw SQL amount",
+    "forged actor",
+    "append to completed command"
+  ],
+  "existing_assertions_removed_or_relaxed": false,
+  "test_methods_added_or_removed": 0,
+  "operator_targets_not_observed_after_fix": {
+    "tests_passed": 605,
+    "financial_cases": 36,
+    "boundary_cases": 838
+  },
+  "agent_tests_builds_docker_migrations_executed": false,
+  "application_or_migration_code_changed": false,
+  "local_demo_vm_accounts_mfa_keys_changed": false,
+  "next_command": "python3 tools/verify_s23.py --record"
+}

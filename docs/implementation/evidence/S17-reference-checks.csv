@@ -1,0 +1,66 @@
+example,check,formula,expected,observed,result,business_approval,application_execution
+EX-001,cash,opening + receipts - payments,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-001,operating_income,ordinary_receipts,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-002,cash,opening + receipts - payments,150.00,150.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-003,cash,opening + receipt,25.00,25.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-003,outstanding,charge - allocated,75.00,75.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-003,unallocated_credit,receipt - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-004,cash,receipt,120.00,120.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-004,billed,charge_one + charge_two,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-004,outstanding,charge_one + charge_two - allocated_one - allocated_two,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-004,credit,receipt - allocated_one - allocated_two,20.00,20.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,cash_a_after,opening_a + ordinary_in - ordinary_out - transfer,1030.00,1030.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,cash_b_after,opening_b + transfer,1100.00,1100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,cash_total_before,opening_a + opening_b + ordinary_in - ordinary_out,2130.00,2130.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,cash_total_after,cash_a + cash_b,2130.00,2130.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,operating_in,ordinary_in,50.00,50.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-005,operating_out,ordinary_out,20.00,20.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-006,cash_asof_15,receipt,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-006,outstanding_asof_15,charge - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-006,cash_asof_16,receipt - reversed_receipt,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-006,outstanding_asof_16,charge - allocated + released,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-006,credit_asof_16,receipt - allocated + released - reversed_receipt,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_cancellation_cash,receipt,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_cancellation_outstanding,charge - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_charge_reversal_cash,receipt,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_charge_reversal_net_charge,charge - reversed_charge,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_charge_reversal_credit,receipt - allocated + released,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_refund_cash,receipt - refund,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-007,after_refund_credit,available_credit - refund,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-008,cash,opening - payment,175.00,175.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-008,payable_outstanding,payable - allocated,75.00,75.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-008,supplier_advance,payment - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-009,supplier_advance,payment - allocated,25.00,25.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-009,receivable_credit_unchanged,receivable_credit,20.00,20.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-009,payable_outstanding,payable - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-010,cash,receipt - refund,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-010,credit,receipt - allocated - refund,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-010,outstanding,charges - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-011,cash_unchanged,receipt,25.00,25.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-011,outstanding,charge - allocated + released,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-011,credit,receipt - allocated + released,25.00,25.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-012,january_retained,january_charge,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-012,february_new_charge,february_charge,120.00,120.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-012,outstanding_after_february,january_charge + february_charge - allocated,220.00,220.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-012,cash,receipts,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-013,rounded_line_one,raw_unit * quantity,0.34,0.34,Arithmetic matched,Approved in bound review,Not run by S17
+EX-013,rounded_line_two,raw_unit * quantity,0.34,0.34,Arithmetic matched,Approved in bound review,Not run by S17
+EX-013,rounded_line_three,raw_unit * quantity,0.34,0.34,Arithmetic matched,Approved in bound review,Not run by S17
+EX-013,sum_rounded_lines,line_one + line_two + line_three,1.02,1.02,Arithmetic matched,Approved in bound review,Not run by S17
+EX-013,contrasting_round_total,raw_unit * quantity,1.01,1.01,Arithmetic matched,Approved in bound review,Not run by S17
+EX-014,cash,signed_opening + receipt,-30.00,-30.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-015,cash_at_end_of_opening_date,opening + receipt_same_day,125.00,125.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-016,source_after_rollback,source_before,2030.00,2030.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-016,destination_after_rollback,destination_before,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-016,new_effective_legs,committed_legs,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-017,cash,amount * effective_postings,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-017,new_effect_on_replay,replay_effect,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-018,cash,receipt - reversal,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-018,outstanding,charge - allocated + released,100.00,100.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-018,credit,credit_before + released - reversed_receipt,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-019,cash,cash_before + reversed_refund,120.00,120.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-019,credit,credit_before + reversed_refund,20.00,20.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-019,outstanding,charge - allocated,0.00,0.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-020,cash_asof_15,opening + receipt,125.00,125.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-020,cash_asof_16,opening + receipt + opening_adjustment,145.00,145.00,Arithmetic matched,Approved in bound review,Not run by S17
+EX-020,operating_in_unchanged,receipt,25.00,25.00,Arithmetic matched,Approved in bound review,Not run by S17

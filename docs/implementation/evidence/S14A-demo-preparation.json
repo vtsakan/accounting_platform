@@ -1,0 +1,103 @@
+{
+  "step": "S14A",
+  "status": "Prepared",
+  "mode": "native-postgresql17-database-clone",
+  "postgresql": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+  "source_commit": "git:cfb59ef1cb645a2cf9a73b4421ecaf752820f5ef",
+  "source_dirty": false,
+  "unit_tests": 12,
+  "two_marker_clone_and_reviewed_backfill": true,
+  "all_eight_migrations_applied": true,
+  "restricted_migration_role": true,
+  "legacy_record_values_and_ids_preserved": true,
+  "original_database_unchanged": true,
+  "original_database_migration_denied": true,
+  "captured_invitation_password_otp_and_pending_approval": true,
+  "human_accounts_created": false,
+  "docker_execution": false,
+  "cloud_execution": false,
+  "application_context_digest": "sha256:080ad8020d06cea2f52632a31101cb6305a1f83b3805f33dca5b92743baa88bf",
+  "clone_mapping_sha256": "sha256:6759d9469c6e2b8954393fe6ba3bfc311f00c853dcfc561da749f86c2adfcb3b",
+  "native_production_smoke": {
+    "status": "Prepared",
+    "mode": "native-postgresql17-gunicorn",
+    "postgresql_version_num": 170011,
+    "gunicorn_http_verified": true,
+    "readiness_outage_recovery_verified": true,
+    "greek_login_verified": true,
+    "admin_manifest_references_verified": true,
+    "query_string_excluded_from_access_log": true,
+    "deployment_checks": {
+      "errors": 0,
+      "warning_ids": [
+        "security.W005",
+        "security.W021"
+      ],
+      "warning_disposition": "Host-only one-hour HSTS is intentionally retained; includeSubDomains and preload remain disabled. The selected S09 public TLS gate was already operator-Verified."
+    },
+    "static_assets": {
+      "file_count": 257,
+      "manifest_entries": 128,
+      "manifest_digest": "sha256:7a0c06d7a1f239657a22465431f55829d64f95ff986565f418b3bf833d0d1b7b"
+    },
+    "suite": {
+      "tests_run": 287,
+      "tests_passed": 261,
+      "known_failures_reproduced": 26,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    }
+  },
+  "verified_at": "2026-11-12T09:50:15+00:00",
+  "source_reference_commit": "git:5e012e1549781010489697ccb672656ed27181d5",
+  "requirements": [
+    "UR-OFF-02",
+    "UR-OFF-03",
+    "UR-OFF-04",
+    "UR-LOC-01"
+  ],
+  "full_requirement_acceptances_pending": 85,
+  "real_client_data_imported": false,
+  "live_mail_sent": false,
+  "vm_deployment": "Pending operator execution",
+  "new_image_docker_delivery": "Pending operator execution",
+  "new_image_off_vm_restore": "Pending operator execution",
+  "browser_mfa_acceptance": "Pending operator execution",
+  "operator_reported_s14_gate": {
+    "source_commit": "git:5e012e1549781010489697ccb672656ed27181d5",
+    "verified_at": "2026-11-12T11:05:39+02:00",
+    "status": "Verified",
+    "docker_execution": true,
+    "s14_tests": 60,
+    "referrer_regression_tests": 9,
+    "suite": {
+      "tests_run": 287,
+      "tests_passed": 261,
+      "known_failures_reproduced": 26,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    },
+    "scope": "User-supplied result; canonical S14 generated evidence is committed on the operator laptop, not overwritten by this patch"
+  },
+  "local_demo_observation": "Operator confirmed existing regular owner login; local credentials and MFA downloads are excluded",
+  "preservation_scope": "Original eight migration files, dependency locks, financial models/assertions and canonical S10-S14 evidence remain byte-for-byte unchanged",
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 88,
+    "unique_history_blobs": 609,
+    "candidate_text_files": 288,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 106,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

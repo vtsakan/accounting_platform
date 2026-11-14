@@ -1,0 +1,37 @@
+case_id,issue_id,test,expected_outcome,outcome,required,observed,requirements,fix_steps
+AMT-001,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_income_zero,known_failure,known_failure_reproduced,"[0, true]","[1, false]",UR-CSH-02 QR-03,S20
+AMT-002,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_income_negative,known_failure,known_failure_reproduced,"[0, true]","[1, false]",UR-CSH-02 QR-03,S20
+AMT-003,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_expense_zero,known_failure,known_failure_reproduced,"[0, true]","[1, false]",UR-CSH-02 QR-03,S20
+AMT-004,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_expense_negative,known_failure,known_failure_reproduced,"[0, true]","[1, false]",UR-CSH-02 QR-03,S20
+AMT-005,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_transfer_zero,known_failure,known_failure_reproduced,"[0, true]","[2, false]",UR-CSH-04 QR-03,S21
+AMT-006,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_transfer_negative,known_failure,known_failure_reproduced,"[0, true]","[2, false]",UR-CSH-04 QR-03,S21
+AMT-007,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_model_zero,known_failure,known_failure_reproduced,0,1,UR-CSH-02 QR-03,S18 S20
+AMT-008,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_model_negative,known_failure,known_failure_reproduced,0,1,UR-CSH-02 QR-03,S18 S20
+BAL-001,LEG-003,accounting.tests_regressions.FinancialRegressionTests.test_empty_account,known_failure,known_failure_reproduced,"""100.00""",null,UR-CSH-03,S19
+BAL-002,LEG-003,accounting.tests_regressions.FinancialRegressionTests.test_income_only,known_failure,known_failure_reproduced,"""150.00""",null,UR-CSH-03,S19
+BAL-003,LEG-003,accounting.tests_regressions.FinancialRegressionTests.test_expense_only,known_failure,known_failure_reproduced,"""80.00""",null,UR-CSH-03,S19
+CAN-001,LEG-008,accounting.tests_regressions.FinancialRegressionTests.test_transaction_resave_preserves_cancellation,known_failure,known_failure_reproduced,"""CANCELLED""","""COMPLETED""",UR-AGR-04 UR-AGR-05,S24
+CTL-001,LEG-003,accounting.tests_regressions.FinancialRegressionTests.test_mixed_account_balance,pass,passed,,,UR-CSH-03,S19
+CTL-002,LEG-005,accounting.tests_regressions.FinancialRegressionTests.test_partial_settlement,pass,passed,,,UR-AGR-03,S23
+CTL-003,LEG-007,accounting.tests_regressions.FinancialRegressionTests.test_full_settlement,pass,passed,,,UR-AGR-04,S24
+CTL-004,LEG-004,accounting.tests_regressions.FinancialRegressionTests.test_transfer_moves_1000,pass,passed,,,UR-CSH-04 QR-03,S21
+CTL-005,LEG-004,accounting.tests_regressions.FinancialRegressionTests.test_failed_second_transfer_leg_rolls_back,pass,passed,,,QR-03 UR-CSH-04,S21
+CTL-006,LEG-004,accounting.tests_regressions.FinancialRegressionTests.test_same_account_transfer_is_rejected,pass,passed,,,UR-CSH-04,S21
+CTL-007,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_invalid_income_text_is_rejected,pass,passed,,,UR-CSH-02,S20
+CTL-008,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_invalid_expense_text_is_rejected,pass,passed,,,UR-CSH-02,S20
+CTL-009,LEG-006,accounting.tests_regressions.FinancialRegressionTests.test_invalid_transfer_text_is_rejected,pass,passed,,,UR-CSH-04,S21
+CTL-010,LEG-005,accounting.tests_regressions.FinancialRegressionTests.test_receipt_cannot_select_payable,pass,passed,,,UR-AGR-02,S23
+FLT-001,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_start_date,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20
+FLT-002,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_end_date,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20
+FLT-003,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_cash_account,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20
+FLT-004,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_category,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20
+FLT-005,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_entity,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20
+FLT-006,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_start_date,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20 S29
+FLT-007,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_end_date,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20 S29
+FLT-008,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_cash_account,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20 S29
+FLT-009,LEG-009,accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_category,known_failure,known_failure_reproduced,"""field_validation""","""server_error""",UR-CSH-06,S20 S29
+SET-001,LEG-005,accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_income,known_failure,known_failure_reproduced,"[0, ""100.00""]","[1, ""75.00""]",UR-AGR-02,S23
+SET-002,LEG-005,accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_expense,known_failure,known_failure_reproduced,"[0, ""100.00""]","[1, ""75.00""]",UR-AGR-02,S23
+STA-001,LEG-007,accounting.tests_regressions.FinancialRegressionTests.test_reduced_receipt_reopens_agreement,known_failure,known_failure_reproduced,"[""75.00"", ""ACTIVE""]","[""75.00"", ""COMPLETED""]",UR-AGR-04 UR-CSH-07,S23 S24
+STA-002,LEG-007,accounting.tests_regressions.FinancialRegressionTests.test_deleted_receipt_reopens_agreement,known_failure,known_failure_reproduced,"[""100.00"", ""ACTIVE""]","[""100.00"", ""COMPLETED""]",UR-AGR-04 UR-CSH-07,S23 S24
+TRF-001,LEG-004,accounting.tests_regressions.FinancialRegressionTests.test_transfer_excluded_from_operating_totals,known_failure,known_failure_reproduced,"[""50.00"", ""20.00"", ""30.00""]","[""1050.00"", ""1020.00"", ""30.00""]",UR-CSH-04 UR-REP-02 QR-03,S21 S29

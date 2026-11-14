@@ -1,89 +1,55 @@
 {% extends 'accounting/base.html' %}
-
-{% block title %}History for {{ entity.name }}{% endblock %}
-
+{% load greek %}
+{% block title %}Καρτέλα {{ entity.name }}{% endblock %}
 {% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>History for {{ entity.name }}</h1>
-        <a href="{% url 'edit-entity' pk=entity.pk %}" class="btn btn-secondary">Edit {{ entity.name }}</a>
-    </div>
-    <hr>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Agreements</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Description</th>
-                        <th class="text-end">Total Amount</th>
-                        <th class="text-end">Remaining Balance</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for agreement in agreements %}
-                    <tr>
-                        <td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td>
-                        <td class="text-end">{{ agreement.total_amount|floatformat:2 }} €</td>
-                        <td class="text-end fw-bold">{{ agreement.remaining_balance|floatformat:2 }} €</td>
-                        <td>
-                            {% if agreement.status == 'ACTIVE' %}
-                                <span class="badge bg-info">{{ agreement.get_status_display }}</span>
-                            {% elif agreement.status == 'COMPLETED' %}
-                                <span class="badge bg-success">{{ agreement.get_status_display }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">{{ agreement.get_status_display }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center p-3">No agreements found for this entity.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h3>Standalone Transactions</h3>
-        </div>
-        <div class="card-body">
-            <p>These are transactions not linked to a specific agreement. 
-            <strong>Current Cash Balance: {{ standalone_balance|floatformat:2 }} €</strong></p>
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th class="text-end">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tx in standalone_transactions %}
-                    <tr>
-                        <td>{{ tx.transaction_date|date:"d M, Y" }}</td>
-                        <td>{{ tx.description }}</td>
-                        {% if tx.transaction_type == 'INCOME' %}
-                            <td class="text-end text-success fw-bold">+{{ tx.amount|floatformat:2 }} €</td>
-                        {% elif tx.transaction_type == 'EXPENSE' %}
-                            <td class="text-end text-danger fw-bold">-{{ tx.amount|floatformat:2 }} €</td>
-                        {% else %}
-                             <td class="text-end">{{ tx.amount|floatformat:2 }} €</td>
-                        {% endif %}
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3" class="text-center p-3">No standalone transactions found for this entity.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+  <h1>{{ entity.name }}</h1>
+  <div>{% if entity.is_archived %}<a class="btn btn-primary" href="{% url 'restore-entity' pk=entity.pk %}">Επαναφορά εγγραφής</a>
+    {% else %}<a class="btn btn-secondary" href="{% url 'edit-entity' pk=entity.pk %}">Επεξεργασία</a> <a class="btn btn-outline-secondary" href="{% url 'archive-entity' pk=entity.pk %}">Αρχειοθέτηση</a>{% endif %}</div>
+</div>
+{% if entity.is_archived %}<div class="alert alert-secondary" role="status">Αρχειοθετημένη εγγραφή από {{ entity.archived_at|el_date }}. Το ιστορικό παραμένει διαθέσιμο. Επαναφέρετε την εγγραφή πριν από νέα εργασία.</div>{% endif %}
+{% if entity.legal_kind == 'UNREVIEWED' %}<div class="alert alert-warning" role="status">Επιβεβαιώστε αν η εγγραφή αφορά φυσικό πρόσωπο ή επιχείρηση κατά την επόμενη επεξεργασία.</div>{% endif %}
+<section class="card card-body mb-4" aria-labelledby="identity-heading">
+  <h2 id="identity-heading">Στοιχεία και επικοινωνία</h2>
+  <dl class="row">
+    <dt class="col-sm-3">Ρόλοι</dt><dd class="col-sm-9">{% if entity.is_customer %}Πελάτης{% endif %}{% if entity.is_customer and entity.is_supplier %} · {% endif %}{% if entity.is_supplier %}Προμηθευτής{% endif %}</dd>
+    <dt class="col-sm-3">Κατηγορία προσώπου</dt><dd class="col-sm-9">{{ entity.get_legal_kind_display }}</dd>
+    <dt class="col-sm-3">Α.Φ.Μ.</dt><dd class="col-sm-9">{{ entity.vat_number|default:'—' }}</dd>
+    <dt class="col-sm-3">Δ.Ο.Υ.</dt><dd class="col-sm-9">{{ entity.tax_office|default:'—' }}</dd>
+    <dt class="col-sm-3">Διεύθυνση</dt><dd class="col-sm-9">{{ entity.address|default:'—' }}</dd>
+    <dt class="col-sm-3">Πόλη και ταχυδρομικός κώδικας</dt><dd class="col-sm-9">{{ entity.city|default:'—' }} {{ entity.postal_code }}</dd>
+    <dt class="col-sm-3">Τηλέφωνο</dt><dd class="col-sm-9">{{ entity.phone_number|default:'—' }}</dd>
+    <dt class="col-sm-3">Ηλεκτρονική διεύθυνση</dt><dd class="col-sm-9">{{ entity.email|default:'—' }}</dd>
+    <dt class="col-sm-3">Δημιουργήθηκε</dt><dd class="col-sm-9">{{ entity.created_at|el_date }}</dd>
+  </dl>
+  <nav aria-label="Εργασίες συναλλασσομένου" class="d-flex flex-wrap gap-2">
+    <a class="btn btn-primary" href="{% url 'entity-settlements' entity.pk %}">Εξοφλήσεις και αδιάθετα ποσά</a>
+    <a class="btn btn-outline-primary" href="{% url 'transaction-list' %}?entity={{ entity.pk }}">Όλες οι κινήσεις</a>
+    {% if not entity.is_archived %}
+      {% if entity.is_customer %}<a class="btn btn-outline-success" href="{% url 'add-income' %}?entity_id={{ entity.pk }}">Νέα είσπραξη</a> <a class="btn btn-outline-primary" href="{% url 'add-agreement' %}?entity_id={{ entity.pk }}&amp;type=RECEIVABLE">Νέα συμφωνία είσπραξης</a>{% endif %}
+      {% if entity.is_supplier %}<a class="btn btn-outline-secondary" href="{% url 'add-expense' %}?entity_id={{ entity.pk }}">Νέα πληρωμή</a> <a class="btn btn-outline-primary" href="{% url 'add-agreement' %}?entity_id={{ entity.pk }}&amp;type=PAYABLE">Νέα συμφωνία πληρωμής</a>{% endif %}
+    {% endif %}
+  </nav>
+</section>
+{% if settlements %}{% include 'accounting/settlements/totals.html' with totals=settlements %}{% endif %}
+<section class="card card-body mb-4" aria-labelledby="agreements-heading">
+  <h2 id="agreements-heading">Συμφωνίες</h2>
+  <div class="table-responsive"><table class="table table-hover">
+    <thead><tr><th scope="col">Περιγραφή</th><th scope="col">Συνολικό ποσό</th><th scope="col">Καταχωρισμένες χρεώσεις</th><th scope="col">Αντιστοιχισμένο</th><th scope="col">Ανεξόφλητο</th><th scope="col">Τρόπος χρέωσης</th></tr></thead>
+    <tbody>{% for agreement in agreements %}<tr><td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.effective_agreed_amount|default:agreement.total_amount|euro }}</td><td>{{ agreement.charge_total|default:0|euro }}</td><td>{{ agreement.allocated_total|default:0|euro }}</td><td>{{ agreement.remaining_obligation|default:0|euro }}</td><td>{% if agreement.billing_mode == 'ONE_OFF' %}Εφάπαξ{% elif agreement.billing_mode == 'MONTHLY' %}Μηνιαία{% else %}Σε αναμονή επιλογής{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="6">Δεν βρέθηκαν συμφωνίες για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if agreement_page.has_other_pages %}<nav aria-label="Σελίδες συμφωνιών">{% if agreement_page.has_previous %}<a href="?agreement_page={{ agreement_page.previous_page_number }}&amp;movement_page={{ movement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ agreement_page.number }} από {{ agreement_page.paginator.num_pages }} {% if agreement_page.has_next %}<a href="?agreement_page={{ agreement_page.next_page_number }}&amp;movement_page={{ movement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>
+<section class="card card-body mb-4" aria-labelledby="movements-heading">
+  <h2 id="movements-heading">Οικονομικές κινήσεις</h2>
+  <div class="table-responsive"><table class="table table-striped">
+    <thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Περιγραφή</th><th scope="col">Ταμείο</th><th scope="col">Συμφωνία</th><th scope="col">Ποσό</th></tr></thead>
+    <tbody>{% for tx in transactions %}<tr><td>{{ tx.transaction_date|el_date }}</td><td>{{ tx.description }}</td><td>{{ tx.cash_account }}</td><td>{% if tx.agreement %}<a href="{% url 'agreement-detail' pk=tx.agreement.pk %}">{{ tx.agreement.description }}</a>{% else %}Αυτοτελής κίνηση{% endif %}</td><td>{% if tx.transaction_type == 'INCOME' %}+{% elif tx.transaction_type == 'EXPENSE' %}−{% endif %}{{ tx.amount|euro }}</td></tr>
+    {% empty %}<tr><td colspan="5">Δεν βρέθηκαν κινήσεις για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if movement_page.has_other_pages %}<nav aria-label="Σελίδες κινήσεων">{% if movement_page.has_previous %}<a href="?movement_page={{ movement_page.previous_page_number }}&amp;agreement_page={{ agreement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ movement_page.number }} από {{ movement_page.paginator.num_pages }} {% if movement_page.has_next %}<a href="?movement_page={{ movement_page.next_page_number }}&amp;agreement_page={{ agreement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>
+{% if workspace_events %}<section class="card card-body mb-4" aria-labelledby="changes-heading"><h2 id="changes-heading">Πρόσφατες ενέργειες καρτέλας</h2><ul>{% for event in workspace_events %}<li>{{ event.occurred_at|el_date }} — {{ event.get_action_display }} — {{ event.actor.get_username }}</li>{% endfor %}</ul></section>{% endif %}
+<a href="{% url 'counterparty-list' %}">Επιστροφή στους συναλλασσομένους</a>
 {% endblock %}

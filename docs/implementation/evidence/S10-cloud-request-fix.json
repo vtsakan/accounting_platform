@@ -1,0 +1,66 @@
+{
+  "step": "S10",
+  "status": "Prepared",
+  "reviewed_on": "2026-11-10",
+  "source_reference_commit": "git:40fad8974aed810811a10f27e351701c124a7f86",
+  "operator_observation": {
+    "configure": "Succeeded",
+    "retention_days": 7,
+    "independent_key_copy_confirmed": true,
+    "cloud_error_http": 400,
+    "failed_cloud_operation": "Not established from the original output"
+  },
+  "request_correction": {
+    "metric_descriptor_get_template": "v3/{+name}",
+    "reserved_slash_separators_preserved": true,
+    "unknown_metric_or_query_injection_rejected": true
+  },
+  "diagnostics": {
+    "operation_only_no_resource_identifiers": true,
+    "rpc_status_allowlisted": true,
+    "field_names_limited_to_known_request_schema": true,
+    "provider_messages_values_contacts_tokens_urls_omitted": true,
+    "read_only_partial_setup_summary": true
+  },
+  "official_api_contract_review": {
+    "monitoring_discovery_revision": "20261106",
+    "monitoring_discovery_sha256": "sha256:143f123725a97dccbbada447cd0fa88c630e298423ef14dad01b81b0be17cb51",
+    "source": "https://monitoring.googleapis.com/$discovery/rest?version=v3",
+    "descriptor_get_path": "v3/{+name}",
+    "template_property_and_enum_check": "Passed for eight metric descriptors, one uptime check and nine alert policies"
+  },
+  "application_context_unchanged": true,
+  "keys_or_private_configuration_recreated": false,
+  "workspace_cloud_execution": false,
+  "operator_retry": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "official_sources": [
+    "https://docs.cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.metricDescriptors/get",
+    "https://docs.cloud.google.com/monitoring/api/troubleshooting"
+  ],
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "safeguard_tests": 44,
+    "application_context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "application_migrations_locks_unchanged": true,
+    "actual_cloud_execution": false,
+    "actual_docker_execution": false,
+    "full_acceptances_pending": 85
+  },
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 42,
+    "unique_history_blobs": 350,
+    "candidate_text_files": 192,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 84,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

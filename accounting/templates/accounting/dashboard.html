@@ -1,25 +1,26 @@
 {% extends 'accounting/base.html' %}
+{% load greek %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Επισκόπηση{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Dashboard</h1>
+    <h1 class="mb-4">Επισκόπηση</h1>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h4>Account Balances (Ταμεία)</h4>
+                    <h4>Υπόλοιπα ταμείων</h4>
                 </div>
                 <ul class="list-group list-group-flush">
                     {% for account in cash_accounts %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>{{ account.name }}</span>
-                            <span class="badge bg-primary rounded-pill fs-6">{{ account.current_balance|floatformat:2 }} €</span>
+                            <a href="{% url 'cash-account-detail' account.pk %}">{{ account.name }}</a>
+                            <span class="badge bg-primary rounded-pill fs-6">{% if account.current_balance == None %}Αναμονή αρχικού υπολοίπου{% else %}{{ account.current_balance|euro }}{% endif %}</span>
                         </li>
                     {% empty %}
                         <li class="list-group-item text-center">
-                            No cash accounts found. Please add one in the admin panel.
+                            Δεν βρέθηκαν ενεργά ταμεία. <a href="{% url 'cash-account-add' %}">Προσθήκη ταμείου</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -27,28 +28,28 @@
         </div>
 
         <div class="col-md-4">
-            
+
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Quick Actions</h5>
+                    <h5>Γρήγορες ενέργειες</h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="{% url 'add-income' %}" class="list-group-item list-group-item-action text-success"><strong>+ Add New Income</strong></a>
-                    <a href="{% url 'add-expense' %}" class="list-group-item list-group-item-action text-danger"><strong>+ Add New Expense</strong></a>
-                    <a href="{% url 'add-transfer' %}" class="list-group-item list-group-item-action"><strong>⇄ Add Transfer</strong></a>
-                    <a href="{% url 'add-entity' %}" class="list-group-item list-group-item-action"><strong>+ Add Customer/Supplier</strong></a>
+                    <a href="{% url 'add-income' %}" class="list-group-item list-group-item-action text-success"><strong>+ Νέο έσοδο</strong></a>
+                    <a href="{% url 'add-expense' %}" class="list-group-item list-group-item-action text-danger"><strong>+ Νέο έξοδο</strong></a>
+                    <a href="{% url 'add-transfer' %}" class="list-group-item list-group-item-action"><strong>⇄ Εσωτερική μεταφορά</strong></a>
+                    <a href="{% url 'add-entity' %}" class="list-group-item list-group-item-action"><strong>+ Νέος πελάτης ή προμηθευτής</strong></a>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <h5>Reports & Views</h5>
+                    <h5>Αναφορές και προβολές</h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="{% url 'summary-report' %}" class="list-group-item list-group-item-action">View Summary Report</a>
-                    <a href="{% url 'transaction-list' %}" class="list-group-item list-group-item-action">View All Transactions</a>
-                    <a href="{% url 'customer-list' %}" class="list-group-item list-group-item-action">View Customers</a>
-                    <a href="{% url 'supplier-list' %}" class="list-group-item list-group-item-action">View Suppliers</a>
+                    <a href="{% url 'summary-report' %}" class="list-group-item list-group-item-action">Συνοπτική αναφορά</a>
+                    <a href="{% url 'transaction-list' %}" class="list-group-item list-group-item-action">Όλες οι κινήσεις</a>
+                    <a href="{% url 'customer-list' %}" class="list-group-item list-group-item-action">Πελάτες</a>
+                    <a href="{% url 'supplier-list' %}" class="list-group-item list-group-item-action">Προμηθευτές</a>
                 </div>
             </div>
 

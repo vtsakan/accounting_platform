@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "document_id": "ACC-FIN-001",
+  "policy_sha256": null,
+  "examples_sha256": null,
+  "status": "Pending",
+  "accountant_reviewer": null,
+  "office_owner": null,
+  "reviewed_at": null,
+  "evidence_reference": null,
+  "decisions": [
+    {
+      "id": "D08-01",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-02",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-03",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-04",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-05",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-06",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-07",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-08",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-09",
+      "selected_option": null,
+      "comment": ""
+    },
+    {
+      "id": "D08-10",
+      "selected_option": null,
+      "comment": ""
+    }
+  ],
+  "examples_reviewed": false,
+  "conditions": [],
+  "instructions_el": "Συμπληρώστε μετά την πραγματική εξέταση από τον λογιστή και τον υπεύθυνο γραφείου. Μην καταχωρίσετε έγκριση μόνο επειδή ελέγχθηκαν οι αριθμητικές πράξεις. Διατηρήστε το συμπληρωμένο αρχείο στο private/ εκτός Git."
+}

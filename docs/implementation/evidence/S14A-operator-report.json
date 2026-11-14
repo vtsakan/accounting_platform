@@ -1,0 +1,17 @@
+{
+  "step": "S14A",
+  "reported_on": "2026-11-12",
+  "status": "Operator-reported working",
+  "operator_statement": "done. everything works. lets move to the next step",
+  "context": "Statement follows reviewed-plan apply, new-backup off-VM restore, regular VM owner bootstrap and browser login/MFA instructions.",
+  "last_detailed_output": {
+    "source_commit": "git:ab9602592cb699684450bc4ee70438f80d30351f",
+    "production_docker_delivery": "Verified",
+    "suite": {"tests_run": 287, "tests_passed": 261, "known_failures_reproduced": 26, "unexpected_failures": 0, "unexpected_errors": 0, "unexpected_successes": 0, "skips": 0},
+    "publication": "Published",
+    "plan": "Two known synthetic assignments, zero source users, separate demo database, unchanged original and no recovery-key upload"
+  },
+  "evidence_limit": "Individual apply/restore receipts, timing and browser recording were not supplied in this confirmation; they are not invented or substituted for historical artifacts.",
+  "scope": "Working synthetic demonstration reported by its operator; no full release acceptance or live-data approval",
+  "full_requirement_acceptance": "Pending"
+}

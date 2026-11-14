@@ -1,0 +1,86 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Accounting platform S04\n"
+"Language: el\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Active"
+msgstr "Ενεργή"
+
+msgid "Agreement"
+msgstr "Συμφωνία"
+
+msgid "Agreement (Payable)"
+msgstr "Πληρωτέα συμφωνία"
+
+msgid "Agreement (Receivable)"
+msgstr "Εισπρακτέα συμφωνία"
+
+msgid "Agreement type"
+msgstr "Τύπος συμφωνίας"
+
+msgid "Agreements"
+msgstr "Συμφωνίες"
+
+msgid "Amount"
+msgstr "Ποσό"
+
+msgid "Cancelled"
+msgstr "Ακυρωμένη"
+
+msgid "Completed"
+msgstr "Ολοκληρωμένη"
+
+msgid "Created at"
+msgstr "Ημερομηνία δημιουργίας"
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Description of Services/Goods"
+msgstr "Περιγραφή υπηρεσιών ή αγαθών"
+
+msgid "Email"
+msgstr "Ηλεκτρονικό ταχυδρομείο"
+
+msgid "Entity"
+msgstr "Συναλλασσόμενος"
+
+msgid "From Account"
+msgstr "Από ταμείο"
+
+msgid "Payable (to Supplier)"
+msgstr "Πληρωτέα προς προμηθευτή"
+
+msgid "Receivable (from Customer)"
+msgstr "Εισπρακτέα από πελάτη"
+
+msgid "Start Date"
+msgstr "Ημερομηνία έναρξης"
+
+msgid "Start date"
+msgstr "Ημερομηνία έναρξης"
+
+msgid "Status"
+msgstr "Κατάσταση"
+
+msgid "The source and destination cash accounts must differ."
+msgstr "Τα ταμεία προέλευσης και προορισμού πρέπει να διαφέρουν."
+
+msgid "To Account"
+msgstr "Προς ταμείο"
+
+msgid "Total Agreed Amount"
+msgstr "Συνολικό συμφωνημένο ποσό"
+
+msgid "Transfer Date"
+msgstr "Ημερομηνία μεταφοράς"
+
+msgid "Updated at"
+msgstr "Ημερομηνία ενημέρωσης"
+
+msgid "Used to link two transactions for internal transfers"
+msgstr "Σύνδεση των δύο κινήσεων μιας εσωτερικής μεταφοράς"

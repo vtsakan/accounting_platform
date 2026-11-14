@@ -1,0 +1,11 @@
+{% extends 'accounting/base.html' %}
+{% block title %}{% if restore %}Επαναφορά εγγραφής{% else %}Αρχειοθέτηση εγγραφής{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if restore %}Επαναφορά{% else %}Αρχειοθέτηση{% endif %}: {{ entity.name }}</h1>
+{% if restore %}<p>Η εγγραφή θα είναι ξανά διαθέσιμη για νέες συμφωνίες και κινήσεις.</p>
+{% else %}<p>Το οικονομικό ιστορικό και οι υπάρχουσες συνδέσεις διατηρούνται. Η εγγραφή δεν θα είναι διαθέσιμη για νέα εργασία μέχρι να την επαναφέρετε.</p>{% endif %}
+<form method="post">{% csrf_token %}{{ form }}
+  <button type="submit" class="btn btn-primary">{% if restore %}Επιβεβαίωση επαναφοράς{% else %}Επιβεβαίωση αρχειοθέτησης{% endif %}</button>
+  <a class="btn btn-secondary" href="{% url 'entity-detail' pk=entity.pk %}">Ακύρωση</a>
+</form>
+{% endblock %}

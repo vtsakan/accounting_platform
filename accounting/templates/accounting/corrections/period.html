@@ -1,0 +1,4 @@
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Κλείσιμο οικονομικής περιόδου{% endblock %}
+{% block content %}<h1>Κλείσιμο οικονομικής περιόδου</h1>{% if cutoff %}<p>Οι οικονομικές εγγραφές έχουν κλείσει έως και {{ cutoff.closed_through|el_date }}.</p>{% else %}<p>Δεν έχει δηλωθεί κλεισμένη περίοδος.</p>{% endif %}
+<p>Μετά το κλείσιμο, οι νέες κινήσεις, χρεώσεις, αντιστοιχίσεις, επιστροφές και διορθώσεις χρησιμοποιούν μεταγενέστερη ανοικτή ημερομηνία. Το προηγούμενο ιστορικό και τα ημερήσια υπόλοιπα διατηρούνται. Το όριο μπορεί να μετακινηθεί μόνο προς τα εμπρός.</p><form method="post" class="card card-body mb-3">{% csrf_token %}{% include 'accounting/settlements/fields.html' %}<button class="btn btn-danger" type="submit">Επιβεβαίωση κλεισίματος περιόδου</button></form><a href="{% url 'finance-correction-history' %}">Ιστορικό οικονομικών ενεργειών</a>{% endblock %}

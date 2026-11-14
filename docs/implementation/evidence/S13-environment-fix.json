@@ -1,0 +1,49 @@
+{
+  "step": "S13",
+  "recorded_at": "2026-11-10",
+  "status": "Prepared",
+  "reported_operator_docker_result": {
+    "tests_run": 216,
+    "unexpected_configuration_failures": 6,
+    "known_financial_failures": 26,
+    "verification_completed": false
+  },
+  "reproduced_before_fix": {
+    "mode": "native-settings-subprocesses-without-database",
+    "inherited_AUTH_PUBLIC_ORIGIN": "http://localhost:0",
+    "selected_tests": 6,
+    "observed_failures": 6
+  },
+  "cause": "Development AUTH_PUBLIC_ORIGIN inherited by production settings probes whose helper isolated only DJANGO_/DB_ variables.",
+  "correction": "Strip inherited AUTH_/EMAIL_/DEFAULT_FROM_EMAIL before applying explicit profile-test values.",
+  "production_https_and_origin_validation_unchanged": true,
+  "original_configuration_assertions_preserved_by_ast_guard": true,
+  "authentication_services_migrations_dependency_locks_unchanged": true,
+  "new_regression_cases": 2,
+  "full_suite_tests": 218,
+  "s13_tests": 61,
+  "current_native_gate": "docs/implementation/evidence/S13-verification.json",
+  "actual_docker_retry": "Pending",
+  "cloud_or_vm_changed": false,
+  "live_mail_sent": false,
+  "human_application_account_created": false,
+  "full_requirement_acceptance": "Pending",
+  "native_retry": {
+    "mode": "native-postgresql17",
+    "verified_at": "2026-11-10T17:11:28+02:00",
+    "source_commit": "git:225b15ce26ac0acd45f5a2c714030e4607c0a221",
+    "source_dirty": false,
+    "s13_tests": 61,
+    "suite": {
+      "tests_run": 218,
+      "tests_passed": 192,
+      "known_failures_reproduced": 26,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    },
+    "application_context_digest": "sha256:6702f8dda0f5668cfc1cecd5f7d737417777d969d03eb40828fa2da900e43140",
+    "inherited_AUTH_PUBLIC_ORIGIN": "http://localhost:0"
+  }
+}

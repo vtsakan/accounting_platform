@@ -1,0 +1,6 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Νέος κωδικός πρόσβασης{% endblock %}
+{% block auth_content %}<h1 class="h3">Νέος κωδικός πρόσβασης</h1>
+{% if validlink %}<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Αποθήκευση κωδικού</button></form>
+{% else %}<p role="alert">Ο σύνδεσμος δεν είναι έγκυρος ή έχει λήξει.</p><a href="{% url 'password-reset' %}">Νέο αίτημα ανάκτησης</a>{% endif %}
+{% endblock %}

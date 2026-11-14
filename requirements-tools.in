@@ -1,0 +1,5 @@
+# Maintenance tools, isolated from the application environment/image.
+uv==0.13.7
+detect-secrets==1.5.0
+# S04: compile the Greek message catalog without a system gettext dependency.
+polib==1.2.0

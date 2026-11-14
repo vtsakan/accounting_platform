@@ -1,0 +1,10 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Ασφάλεια λογαριασμού{% endblock %}
+{% block auth_content %}<h1 class="h3">Ασφάλεια λογαριασμού</h1>
+{% if enrolled %}<p>Η επαλήθευση δύο παραγόντων είναι ενεργή.</p><p>Διαθέσιμοι κωδικοί ανάκτησης: {{ codes_remaining }}.</p>
+<p><a href="{% url 'mfa-setup' %}">Αλλαγή συσκευής επαλήθευσης</a></p>
+<h2 class="h5">Νέοι κωδικοί ανάκτησης</h2><p>Οι παλιοί κωδικοί θα ακυρωθούν. Απαιτείται κωδικός πρόσβασης και επαλήθευση συσκευής στα τελευταία πέντε λεπτά.</p>
+{% if not recent %}<p><a href="{% url 'mfa-verify' %}">Νέα επαλήθευση συσκευής</a></p>{% endif %}
+<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Έκδοση νέων κωδικών</button></form>
+{% else %}<p>Δεν έχει ρυθμιστεί εφαρμογή επαλήθευσης.</p><a class="btn btn-primary" href="{% url 'mfa-setup' %}">Ρύθμιση επαλήθευσης</a>{% endif %}
+{% endblock %}

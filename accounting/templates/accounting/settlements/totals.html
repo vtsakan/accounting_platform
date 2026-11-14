@@ -1,0 +1,5 @@
+{% load greek %}
+<div class="row g-3 mb-3">
+<section class="col-md-6"><div class="card card-body h-100"><h2 class="h5">Πελάτης — εισπρακτέες χρεώσεις</h2><p>Χρεώσεις: {{ totals.receivable_charged|default:0|euro }} · Αντιστοιχισμένο: {{ totals.receivable_allocated|default:0|euro }}</p><p><strong>Ανεξόφλητο: {{ totals.receivable_remaining|default:0|euro }}</strong></p><p class="mb-0">Αδιάθετη πίστωση πελάτη: <strong>{{ totals.customer_credit|default:0|euro }}</strong></p></div></section>
+<section class="col-md-6"><div class="card card-body h-100"><h2 class="h5">Προμηθευτής — πληρωτέες χρεώσεις</h2><p>Χρεώσεις: {{ totals.payable_charged|default:0|euro }} · Αντιστοιχισμένο: {{ totals.payable_allocated|default:0|euro }}</p><p><strong>Ανεξόφλητο: {{ totals.payable_remaining|default:0|euro }}</strong></p><p class="mb-0">Αδιάθετη προκαταβολή προμηθευτή: <strong>{{ totals.supplier_advance|default:0|euro }}</strong></p></div></section>
+</div><p class="small">Οι δύο κατευθύνσεις παρακολουθούνται χωριστά. Κάθε αντιστοίχιση απαιτεί επιβεβαίωση.</p>

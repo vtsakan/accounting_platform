@@ -1,0 +1,36 @@
+{
+  "step": "S03",
+  "reviewed_at": "2026-11-07",
+  "python": "3.12.16",
+  "target": "CPython 3.12; Linux x86_64 with glibc",
+  "runtime_input": "requirements.in",
+  "runtime_lock": "requirements.txt",
+  "tools_input": "requirements-tools.in",
+  "tools_lock": "requirements-tools.txt",
+  "lock_tool": {"name": "uv", "version": "0.13.7"},
+  "runtime_direct": [
+    {"name": "django", "version": "5.2.19", "purpose": "Existing application framework; retain the 5.2 LTS series"},
+    {"name": "gunicorn", "version": "26.2.0", "purpose": "Production WSGI server; configuration and image arrive in S07"},
+    {"name": "psycopg", "version": "3.3.8", "extra": "binary", "purpose": "Django PostgreSQL adapter; no direct psycopg2 imports exist in the legacy application"}
+  ],
+  "runtime_package_count": 7,
+  "legacy_dependency_entries": 364,
+  "postgresql_server": {"planned_major": 17, "patch_or_image_locked": false, "lock_step": "S05/S07", "execution_step": "S05"},
+  "secrets_tool": {"name": "detect-secrets", "version": "1.5.0", "verification": "Offline heuristic scan with reviewed public-hash exceptions"},
+  "optional_features_deferred": ["Celery/Redis to S26", "Private cloud storage client to S38", "Mail, portal authentication additions and MFA to their feature steps", "PDF/export libraries to S30", "Government connector libraries to S49/S50"],
+  "sources": [
+    {"url": "https://www.python.org/downloads/release/python-31216/", "evidence": "Python 3.12.16 security release dated 25 October 2026"},
+    {"url": "https://www.djangoproject.com/download/", "evidence": "5.2.19 is the current 5.2 LTS patch; extended support ends April 2028"},
+    {"url": "https://docs.djangoproject.com/en/5.2/faq/install/", "evidence": "The 5.2 series supports Python 3.12"},
+    {"url": "https://docs.djangoproject.com/en/5.2/ref/databases/", "evidence": "Django 5.2 supports PostgreSQL 14+ and recommends Psycopg 3.1.8+"},
+    {"url": "https://www.psycopg.org/psycopg3/docs/basic/install.html", "evidence": "Binary distribution bundles the driver and client libraries; Python 3.12 and PostgreSQL 17 are within the documented supported systems"},
+    {"url": "https://pypi.org/pypi/Django/5.2.19/json", "evidence": "Published package version and Python dependency metadata inspected"},
+    {"url": "https://pypi.org/pypi/gunicorn/26.2.0/json", "evidence": "Published version and Python >=3.10 metadata inspected"},
+    {"url": "https://pypi.org/pypi/psycopg/3.3.8/json", "evidence": "Published driver version and binary-extra dependency inspected"},
+    {"url": "https://docs.astral.sh/uv/pip/compile/", "evidence": "Compile and synchronise dependency requirements"},
+    {"url": "https://github.com/Yelp/detect-secrets", "evidence": "Offline scan, heuristic detectors and review of non-secret findings"},
+    {"url": "https://docs.docker.com/build/concepts/context/", "evidence": "Dockerignore exclusions, exceptions and build context rules"}
+  ],
+  "domain_policy_approval_changed": false,
+  "greek_frontend_requirement_retained": true
+}

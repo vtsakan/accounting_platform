@@ -1,0 +1,27 @@
+{
+  "step": "S15",
+  "from": "accounting.0008_office_workflow_guards",
+  "to": "accounting.0010_counterparty_database_guards",
+  "identity": {"table": "accounting_entity", "primary_key": "unchanged", "office_id": "unchanged; never defaulted", "legacy_foreign_keys": "unchanged"},
+  "roles": {
+    "CUSTOMER": {"is_customer": true, "is_supplier": false},
+    "SUPPLIER": {"is_customer": false, "is_supplier": true},
+    "unknown": "Stop for review; no guess",
+    "after_migration": "Independent flags; at least one role; a dual-role identity has one original ID"
+  },
+  "classification": {"legacy": "UNREVIEWED", "workspace_create_or_edit": ["INDIVIDUAL", "BUSINESS"], "inference_from_role": false},
+  "afm": {
+    "original_value_during_migration": "Preserved exactly, including NULL/empty and formatting",
+    "canonical_key": "vat_key, nine ASCII digits or empty; leading zeroes preserved",
+    "normalization": "Full-width digits map to ASCII; frozen whitespace and hyphens removed; optional case-insensitive EL prefix",
+    "unique_scope": ["office_id", "nonempty vat_key, including archived identities"],
+    "checksum_or_registry_verification": false,
+    "invalid_or_duplicate_legacy_input": "Stop before changes; no automatic merge or deletion"
+  },
+  "archive": {"legacy": false, "metadata": ["archived_at", "archived_by"], "history": "Retain contacts, agreements and transactions", "new_work": "Denied until restore", "physical_delete": "Denied"},
+  "version": "record_version; zero initially; database advances on update",
+  "events": "Append-only office/actor/entity-bound attribution; field names only, no contact/secret values",
+  "authentication": "Existing users/password hashes, memberships and encrypted MFA data untouched",
+  "downgrade": "Legacy-only reverse tested; new semantics require a reviewed preservation plan",
+  "full_requirement_acceptance": "Pending"
+}

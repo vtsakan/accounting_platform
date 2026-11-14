@@ -1,0 +1,158 @@
+{
+  "step": "S08",
+  "reviewed_on": "2026-11-09",
+  "environment": "synthetic-preview",
+  "project_id": "accounting-514109",
+  "project_number": "38893724936",
+  "region": "europe-west1",
+  "zone": "europe-west1-b",
+  "vm": {
+    "name": "accounting-preview",
+    "instance_id": "7685681393231055686",
+    "machine_type": "e2-medium",
+    "memory_gb": 4,
+    "cpu_class": "shared core; two visible vCPUs, approximately one sustained vCPU aggregate",
+    "provisioning_model": "STANDARD",
+    "status": "RUNNING",
+    "host_os": "Ubuntu 26.04.1 LTS amd64",
+    "boot_image": "ubuntu-2604-resolute-amd64-v20261107",
+    "boot_disk_gb": 30,
+    "boot_disk_auto_delete": true
+  },
+  "data_disk": {
+    "name": "accounting-data",
+    "size_gib": 50,
+    "type": "pd-balanced",
+    "auto_delete": false,
+    "device": "/dev/disk/by-id/google-accounting-data",
+    "filesystem": "ext4",
+    "uuid": "22415b2c-1e1b-4e39-9ce5-5fb0c19dd663",
+    "mount": "/srv/accounting",
+    "fstab_options": "defaults,discard,nofail",
+    "fstab_pass": 2
+  },
+  "network": {
+    "vpc": "accounting-network",
+    "subnet": "accounting-eu",
+    "cidr": "10.80.0.0/24",
+    "internal_ipv4": "10.80.0.2",
+    "stack": "IPV4_ONLY",
+    "address_name": "accounting-preview-ip",
+    "external_ipv4": "207.175.136.231",
+    "address_type": "regional reserved static",
+    "network_tier": "PREMIUM",
+    "public_ingress_tcp": [
+      80,
+      443
+    ],
+    "ssh_source": "35.235.240.0/20",
+    "ssh_tcp_port": 22,
+    "firewall_rules": [
+      "accounting-network-allow-http",
+      "accounting-network-allow-https",
+      "accounting-allow-iap-ssh"
+    ],
+    "vm_tags": [
+      "accounting-preview",
+      "http-server",
+      "https-server"
+    ],
+    "additional_effective_firewall_policies_observed": false
+  },
+  "administration": {
+    "access": "IAP SSH from Cloud Shell and laptop",
+    "linux_user": "vasilistsakanikas",
+    "ssh_keys": "metadata keys observed",
+    "os_login_verified": false,
+    "google_administrator_identity": "captured locally by cloud.py init; not copied into this public record"
+  },
+  "runtime_identity": {
+    "service_account": "accounting-vm@accounting-514109.iam.gserviceaccount.com",
+    "scope": "https://www.googleapis.com/auth/cloud-platform",
+    "project_role_bindings_observed": [],
+    "authentication_verified": "VM metadata token used for successful API calls",
+    "service_account_key_exported_by_workflow": false,
+    "user_managed_key_inventory_query": "Not run in the manual evidence; available in the new inspector"
+  },
+  "storage": {
+    "document_bucket": "accounting-514109-documents",
+    "backup_bucket": "accounting-514109-backups",
+    "bucket_location": "EUROPE-WEST1",
+    "storage_class": "STANDARD",
+    "uniform_bucket_level_access": true,
+    "public_access_prevention": "enforced",
+    "soft_delete_seconds": 604800,
+    "retention_lock_configured": false
+  },
+  "registry": {
+    "repository": "accounting-platform",
+    "location": "europe-west1",
+    "format": "DOCKER",
+    "immutable_tags": true,
+    "image_listing_verified": true,
+    "actual_docker_pull_verified": false
+  },
+  "secrets": {
+    "django": {
+      "name": "accounting-django-secret-key",
+      "enabled_version": 1
+    },
+    "postgres": {
+      "name": "accounting-postgres-password",
+      "enabled_version": 1
+    },
+    "replication": "user-managed payload storage in europe-west1; global Secret Manager API",
+    "values_or_payload_hashes_recorded": false,
+    "duckdns_token": "Deferred to S09 selected DNS method",
+    "credential_encryption_key": "Deferred to actual encryption consumer/format and recovery plan"
+  },
+  "vm_resource_roles": {
+    "documents": "roles/storage.objectUser",
+    "backups": "roles/storage.objectCreator",
+    "registry": "roles/artifactregistry.reader",
+    "runtime_material_access": "roles/secretmanager.secretAccessor"
+  },
+  "host_runtime": {
+    "docker_engine": "29.9.3",
+    "docker_compose": "5.7.0",
+    "containerd": "2.4.2",
+    "docker_root": "/srv/accounting/docker",
+    "containerd_root": "/srv/accounting/containerd",
+    "docker_log_driver": "local",
+    "log_max_size": "10m",
+    "log_max_file": 3,
+    "mount_dependencies": [
+      "docker.service",
+      "containerd.service"
+    ],
+    "startup_guard": "/usr/local/sbin/accounting-data-ready",
+    "guard_matches": "expected mounted filesystem UUID",
+    "reboot_persistence_verified": true,
+    "cached_network_disabled_smoke_verified": true,
+    "missing_disk_boot_test_run": false
+  },
+  "application": {
+    "image_runtime": "CPython 3.12.16 / Django 5.2.19 / PostgreSQL 17.11 from S07",
+    "deployed": false,
+    "https_verified": false,
+    "off_vm_restore_verified": false,
+    "real_client_data_imported": false,
+    "greek_frontend_requirement": "Confirmed; release acceptance Pending"
+  },
+  "open_inputs": [
+    "Monthly budget and alert recipients",
+    "Incident/restore/key custodians and business retention",
+    "DuckDNS hostname/control and ACME contact for S09",
+    "Encrypted backup automation and recovery rehearsal at S10"
+  ],
+  "cost_assumptions": {
+    "currency": "USD",
+    "month_hours": 730,
+    "vm_creation_quote": 26.91,
+    "boot_balanced_disk": 3.0,
+    "additional_balanced_data_disk": 5.0,
+    "in_use_ipv4": 3.65,
+    "indicative_fixed_monthly_total": 38.56,
+    "status": "Estimate only; variable charges, tax, currency/SKUs and snapshots additional; no budget cap configured"
+  }
+}

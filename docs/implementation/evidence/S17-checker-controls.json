@@ -1,0 +1,27 @@
+{
+  "ordinary_unapproved_run": "Prepared",
+  "strict_unapproved_gate_exit": 2,
+  "private_template_permissions": "0600",
+  "existing_template_not_overwritten": true,
+  "pending_template_remains_prepared": true,
+  "stale_review_rejected": true,
+  "tracked_review_path_rejected": true,
+  "reference_calculations": 65,
+  "negative_controls": [
+    "wrong-total",
+    "missing-example",
+    "duplicate-example",
+    "float-input",
+    "unsafe-expression",
+    "stale-review",
+    "unnamed-accountant",
+    "duplicate-review-decision",
+    "unreviewed-examples",
+    "conditional-review",
+    "changed-policy-choice"
+  ],
+  "changed_lock_rejected": true,
+  "synthetic_approved_recorder_in_temporary_directory": "Passed; not an actual human approval",
+  "all_real_policy_choices_remain_pending": true,
+  "scope": "Documentation/reference checker controls only; no application/database/Docker/cloud execution and no actual human approval"
+}

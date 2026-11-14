@@ -1,0 +1,8 @@
+{% extends 'accounting/base.html' %}
+{% block content %}
+<nav aria-label="Ενότητες γραφείου" class="mb-3 d-flex flex-wrap gap-3">
+{% if request.accountant_profile.role == 'owner' %}
+<a href="{% url 'office-settings' %}">Στοιχεία γραφείου</a><a href="{% url 'office-members' %}">Λογιστές και προσκλήσεις</a><a href="{% url 'office-audit' %}">Ιστορικό ενεργειών</a>
+{% endif %}<a href="{% url 'office-ownership' %}">Παράδοση ευθύνης</a></nav>
+{% block office_content %}{% endblock %}
+{% endblock %}

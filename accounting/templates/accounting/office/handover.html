@@ -1,0 +1,9 @@
+{% extends 'accounting/office/base.html' %}
+{% block title %}Πρόταση παράδοσης ευθύνης{% endblock %}
+{% block office_content %}<section class="col-lg-7"><h1 class="h3">Πρόταση παράδοσης ευθύνης</h1>
+<p>{{ offer.requested_by.username }} → {{ offer.recipient.username }}</p><p>Κατάσταση: {{ offer.get_status_display }}.</p>
+{% if offer.status != 'pending' %}{{ form.non_field_errors }}{% endif %}
+{% if offer.status == 'pending' %}{% include 'accounting/office/proof_help.html' %}
+<p>Η πρόταση ισχύει για επτά ημέρες. Η αποδοχή ακυρώνει τις υφιστάμενες συνεδρίες και των δύο λογαριασμών.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}{% if recipient %}<button type="submit" name="action" value="accept" class="btn btn-primary">Αποδέχομαι την ευθύνη</button>{% endif %}
+<button type="submit" name="action" value="cancel" class="btn btn-outline-secondary">Ακύρωση πρότασης</button></form>{% endif %}</section>{% endblock %}

@@ -1,0 +1,173 @@
+{
+  "step": "S09",
+  "verified_at": "2026-11-10T01:42:54+02:00",
+  "status": "Verified",
+  "hostname": "totalaccounting.duckdns.org",
+  "image": {
+    "commit": "git:70cf0d3dbc601163f33ae9c6f927605be50841aa",
+    "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+    "image_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+    "context_digest": "sha256:39cd15ce38900dc644d21c32b17a484844d9f98582cefb998b2f3b503a735726",
+    "delivery_evidence": "sha256:b5d08c622b4bb41bbbb3969d04bee97a2d0fb208dfdbea55fb5669deb6da2ec5"
+  },
+  "dns": {
+    "A": [
+      "207.175.136.231"
+    ],
+    "AAAA": []
+  },
+  "certificate": {
+    "fingerprint": "sha256:6feeae12f4a5029ec3dd27b8d8f347c199a5bc45960707646976a0e9a921e266",
+    "not_after": "Feb  7 22:36:50 2027 GMT",
+    "chain_trusted_and_hostname_verified": true
+  },
+  "deployment_source_commit": "git:1968cd67424a368359c44cbddc055868ecf74d0a",
+  "public_http": {
+    "http_redirect": true,
+    "certificate_trust": true,
+    "greek_login_admin": true,
+    "proxy_spoofing_and_no_redirect_loop": true,
+    "valid_login_post": true,
+    "foreign_origin_denied": true,
+    "missing_csrf_denied": true,
+    "secure_session_and_csrf_cookies": true,
+    "one_hour_host_only_hsts": true,
+    "static_image_bytes_match": true,
+    "private_media_denied": true,
+    "https_readiness": true
+  },
+  "private_ports": {
+    "5432": "closed_or_filtered",
+    "8000": "closed_or_filtered"
+  },
+  "vm_runtime": {
+    "status": "Passed",
+    "boot_id": "1890d21b-371a-49cc-8b8b-f2f59ee70998",
+    "ports": {
+      "db": {},
+      "web": {},
+      "caddy": {
+        "443/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "443"
+          }
+        ],
+        "80/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "80"
+          }
+        ]
+      }
+    },
+    "image_identity": {
+      "published_build_id": "sha256:3fdd063ee4e6ecefc3e5e9dfe8755e8f67513221641863a3e38ee3d3db663e61",
+      "daemon_image_id": "sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+      "pinned_registry_image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb",
+      "running_image_id": "sha256:9a8a2910370affb88ea64e56a3015906df06b8d126da815698e3a012073c36fb"
+    },
+    "settings": {
+      "debug": false,
+      "hosts": [
+        "totalaccounting.duckdns.org"
+      ],
+      "origins": [
+        "https://totalaccounting.duckdns.org"
+      ],
+      "secure_cookies": true,
+      "proxy": [
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+      ],
+      "media": "/app/media",
+      "uid": 10001
+    },
+    "database": {
+      "version": 170011,
+      "elevated": false
+    },
+    "container_metadata_blocked": true,
+    "static_path": "/static/admin/css/base.96c479cedf7a.css",
+    "static_digest": "sha256:307ad38123087a64aef09908c06f5b3ef19f06745f8d00723dd535f13e7479d7",
+    "persistence": {
+      "entity": 1,
+      "account": 1,
+      "vat": "000000000",
+      "opening": "0.00"
+    }
+  },
+  "reboot_persistence_verified": true,
+  "temporary_login_user_removed": true,
+  "certificate_auto_renewal_configured": true,
+  "actual_renewal_observed": false,
+  "off_vm_restore_verified": false,
+  "real_client_data_imported": false,
+  "full_requirement_acceptance": "Pending",
+  "repository_checks": {
+    "mode": "offline",
+    "status": "Prepared",
+    "tests": 38,
+    "business_migrations_dependency_locks_unchanged": true,
+    "full_acceptances_pending": 85,
+    "compose_config_validated_without_engine": true,
+    "caddy_native_validated": true,
+    "docker_containers_executed": false,
+    "live_cloud_execution": false
+  },
+  "native_proxy_checks": {
+    "step": "S09",
+    "status": "Prepared",
+    "verified_at": "2026-11-09T16:59:48+02:00",
+    "mode": "native-caddy-internal-ca-gunicorn-postgresql17",
+    "postgresql": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)",
+    "suite": {
+      "tests_run": 90,
+      "tests_passed": 64,
+      "known_failures_reproduced": 26,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    },
+    "proxy_checks": {
+      "http_redirect": true,
+      "certificate_trust": true,
+      "greek_login_admin": true,
+      "proxy_spoofing_and_no_redirect_loop": true,
+      "valid_login_post": true,
+      "foreign_origin_denied": true,
+      "missing_csrf_denied": true,
+      "secure_session_and_csrf_cookies": true,
+      "one_hour_host_only_hsts": true,
+      "static_image_bytes_match": true,
+      "private_media_denied": true,
+      "https_readiness": true
+    },
+    "greek_proxy_failure": true,
+    "request_canary_excluded_from_logs": true,
+    "restricted_application_role_migrations": true,
+    "synthetic_process_restart_persistence": true,
+    "missing_marker_denied_without_recreation": true,
+    "docker_execution": false,
+    "public_acme_issuance_tested": false,
+    "vm_reboot_tested": false,
+    "off_vm_restore_tested": false
+  },
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 30,
+    "unique_history_blobs": 295,
+    "candidate_text_files": 170,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 78,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "source_reference_commit": "git:e64861e0673e7c051d8aeb2c8ae79ef5fccf8aac"
+}

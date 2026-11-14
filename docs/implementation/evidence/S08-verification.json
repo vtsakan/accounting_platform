@@ -1,0 +1,116 @@
+{
+  "step": "S08",
+  "status": "Verified",
+  "reviewed_on": "2026-11-09",
+  "source_reference_commit": "a215beb91e2e49a5ffd1fa9ce8c751b8f3572234",
+  "provenance": {
+    "execution_owner": "user",
+    "execution_locations": [
+      "Cloud Shell",
+      "accounting-preview VM",
+      "administrator laptop (IAP)"
+    ],
+    "review_method": "Assistant inspected operator-supplied command output and attachments; no direct GCP execution by implementation workspace",
+    "host_install_attachment_sha256": "fc4e94ded6707682a7ae1161fb45aee508a3af6844ceeeb80d89c247c6525f97",
+    "final_inventory_attachment_sha256": "9222736566e558a90cd602f1830945f2b68c1d478b48cf8665b437411fb753e6",
+    "raw_attachments_committed": false
+  },
+  "inventory": "docs/implementation/cloud_inventory.json",
+  "host_checks": {
+    "data_disk_mounted_by_uuid": true,
+    "data_disk_auto_delete_false": true,
+    "root_sudo_available": true,
+    "docker_and_containerd_active_after_reboot": true,
+    "docker_root_on_data_disk": true,
+    "cached_hello_world_without_network_after_reboot": true,
+    "missing_disk_boot_test_run": false
+  },
+  "identity_checks": {
+    "metadata_email_and_cloud_platform_scope_verified": true,
+    "django_version_1_access_passed": true,
+    "postgres_version_1_access_passed": true,
+    "project_wide_secret_listing_denied": true,
+    "denied_http_status": 403,
+    "project_role_filter_returned_no_rows": true,
+    "no_exported_sa_key_used": true,
+    "user_managed_key_inventory_query_run": false,
+    "os_login_verified": false
+  },
+  "firewall_checks": {
+    "effective_ingress_reviewed": true,
+    "public_tcp": [
+      80,
+      443
+    ],
+    "iap_only_tcp_22_source": "35.235.240.0/20",
+    "other_effective_ingress_observed": false,
+    "database_redis_and_gunicorn_public_firewall_grants_observed": false
+  },
+  "registry_checks": {
+    "docker_repository_created": true,
+    "immutable_tags": true,
+    "image_listing_passed": true,
+    "permission_query_reported_download_without_upload_delete_or_iam_write": true,
+    "actual_docker_pull_run": false
+  },
+  "storage_probe": {
+    "document_create_read_list_overwrite_updated_read_delete": "Passed",
+    "document_delete_http_status": 204,
+    "backup_create_http_status": 200,
+    "anonymous_document_read_status": 401,
+    "anonymous_backup_read_status": 401,
+    "anonymous_denial_statuses_allowed": [
+      401,
+      403
+    ],
+    "backup_vm_read_list_overwrite_delete": "Denied as expected",
+    "authenticated_denial_status": 403,
+    "generation_preconditions_used": true,
+    "only_synthetic_probe_content_used": true,
+    "backup_probe_cleanup_verified": true,
+    "cleanup_scope": "One exact probe object removed by administrator; no recursive bucket removal",
+    "initial_checker_issue": "Anonymous 401 was incorrectly rejected by a 403-only expectation; corrected replay passed, authenticated denials remain 403-only"
+  },
+  "repository_checks": {
+    "verified_at": "2026-11-09T16:07:51+02:00",
+    "status": "Passed",
+    "safeguard_tests": 22,
+    "shell_syntax_checks": 2,
+    "python_source_checks": 4,
+    "application_context_unchanged": true,
+    "application_context_digest": "sha256:cd042534103c73c7c93e9d8a5e91cdf764caa29b94edfdf6fd9cc1630a6d249f",
+    "acceptance_statuses_pending": 85,
+    "cloud_calls_run_by_this_verifier": false,
+    "host_scripts_run_by_this_verifier": false,
+    "application_or_database_tests_run": false,
+    "code_commit": "git:74421fc639b2d8d877b440e8303fea054e73d252"
+  },
+  "new_replay_tools_executed_against_gcp": false,
+  "new_host_replay_scripts_executed_on_vm": false,
+  "application_tests_run_for_s08": false,
+  "database_or_migrations_executed_for_s08": false,
+  "application_image_context_changed": false,
+  "application_deployed": false,
+  "https_deployment_verified": false,
+  "automated_backup_or_off_vm_restore_verified": false,
+  "real_data_imported": false,
+  "live_client_messages_sent": false,
+  "domain_policy_approvals_recorded": false,
+  "full_requirement_acceptance": "Pending",
+  "next_step": "S09 with actual DuckDNS hostname/control",
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 22,
+    "unique_history_blobs": 274,
+    "candidate_text_files": 158,
+    "binary_files_or_blobs_skipped": 6,
+    "reviewed_non_secret_matches": 70,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  }
+}

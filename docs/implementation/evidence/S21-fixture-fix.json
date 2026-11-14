@@ -1,0 +1,29 @@
+{
+  "step": "S21",
+  "status": "Prepared",
+  "scope": "Refresh database-written opening metadata before two retirement test actions",
+  "operator_result_before_fix": {
+    "tests_run": 533,
+    "errors": 2,
+    "failures": 0,
+    "failing_tests": [
+      "accounting.tests_internal_transfers.TransferWorkspaceTests.test_exact_retry_after_retirement_succeeds_but_new_or_changed_work_does_not",
+      "accounting.tests_internal_transfers.TransferWorkspaceTests.test_unreviewed_or_retired_accounts_are_not_new_transfer_choices"
+    ],
+    "exception": "ValidationError while save_reference checks immutable approved opening metadata"
+  },
+  "cause": "The fixtures create an account with an opening date. The existing S19 PostgreSQL BEFORE INSERT trigger fills opening_approved_at, but the newly created Python instance still has its pre-trigger value. save_reference normalizes money then compares all protected opening fields against a fresh locked database row, so the stale approval timestamp correctly prevents the test's retirement action.",
+  "change": "Refresh the persisted destination account immediately before setting is_active=False in each affected test. Preserve all financial assertions and the complete retirement/retry checks.",
+  "test_count_unchanged": 533,
+  "assertions_changed": false,
+  "application_code_changed": false,
+  "database_guards_changed": false,
+  "migration_added": false,
+  "previous_verification_receipts_changed": false,
+  "agent_tests_run": false,
+  "agent_builds_run": false,
+  "agent_database_execution": false,
+  "cloud_or_vm_changed": false,
+  "operator_rerun": "python3 tools/verify_s21.py --record",
+  "full_requirement_acceptance": "Pending"
+}

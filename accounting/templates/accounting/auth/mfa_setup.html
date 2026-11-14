@@ -1,0 +1,13 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Ρύθμιση επαλήθευσης{% endblock %}
+{% block auth_content %}<h1 class="h3">Επαλήθευση δύο παραγόντων</h1>
+<p>Η επαλήθευση είναι υποχρεωτική για ιδιοκτήτες γραφείου και διαχειριστές πλατφόρμας.</p>
+<p>Μετά τη ρύθμιση θα ζητείται κωδικός επαλήθευσης σε κάθε σύνδεση.</p>
+{% if can_manage %}
+{% if pending %}<p>Σαρώστε τον κωδικό με την εφαρμογή επαλήθευσης στο τηλέφωνό σας και συμπληρώστε τον εξαψήφιο κωδικό. Η ρύθμιση λήγει σε δέκα λεπτά.</p>
+<img src="{% url 'mfa-qr' %}" alt="Κωδικός ρύθμισης εφαρμογής επαλήθευσης" width="280" height="280" class="img-fluid">
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ token_form.as_p }}<button class="btn btn-primary" type="submit">Επιβεβαίωση συσκευής</button></form>
+{% else %}<p>Για να ξεκινήσετε, επιβεβαιώστε τον κωδικό πρόσβασής σας. Φυλάξτε τους κωδικούς ανάκτησης που θα εμφανιστούν μετά τη ρύθμιση.</p>{% endif %}
+<form class="mt-3" method="post">{% csrf_token %}<input type="hidden" name="action" value="start">{{ proof_form.as_p }}<button class="btn btn-outline-primary" type="submit">{% if pending %}Νέα ρύθμιση{% else %}Έναρξη ρύθμισης{% endif %}</button></form>
+{% else %}<p>Για αλλαγή συσκευής απαιτείται πρόσφατη επαλήθευση ή κωδικός ανάκτησης.</p><a href="{% url 'mfa-verify' %}">Επαλήθευση συσκευής</a> · <a href="{% url 'mfa-recover' %}">Χρήση κωδικού ανάκτησης</a>{% endif %}
+{% endblock %}

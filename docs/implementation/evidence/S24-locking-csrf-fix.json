@@ -1,0 +1,30 @@
+{
+  "step": "S24",
+  "fix": "locking-and-csrf-fixture",
+  "status": "Prepared",
+  "operator_failure_reported_at": "2026-11-14",
+  "reported_source_commit": null,
+  "reported_suite": {
+    "tests_run": 656,
+    "failures": 1,
+    "errors": 20,
+    "elapsed_seconds": 163.919
+  },
+  "source_fixes": [
+    "release_targets locks only CashAllocation rows with SELECT FOR UPDATE OF self, retaining its same-office unreleased filter and ordered locks",
+    "CSRF test reuses a real MFA-verified synthetic session, verifies the protected GET succeeds, and still rejects the tokenless correction POST"
+  ],
+  "prior_migrations_unchanged": true,
+  "dependency_locks_unchanged": true,
+  "prior_tests_and_financial_assertions_preserved": true,
+  "csrf_mfa_or_owner_checks_disabled": false,
+  "agent_tests_builds_or_migrations_run": false,
+  "local_demo_or_vm_changed": false,
+  "corrected_operator_verification": "Pending",
+  "targets_not_observed_results": {
+    "tests_passed": 656,
+    "financial_cases": 36,
+    "boundary_cases": 922
+  },
+  "limitations": "The supplied log is a truncated failure tail; the omitted errors and financial/boundary outcomes are not independently claimed. A fresh full run is required."
+}

@@ -1,0 +1,88 @@
+{
+  "step": "S07",
+  "recorded_at": "2026-11-08",
+  "status": "Prepared",
+  "patch_base": "git:43ce10966f74f872bba756f1c838b90c9c576eb9",
+  "reported_failure": {
+    "source": "User-supplied terminal output; two repeated runs",
+    "image_id": "sha256:68e1e362af3d7d22e59f57ed7b0c3014093737ab621009044964fcb3c9b9af2f",
+    "image_build_completed": true,
+    "stage": "tools/image.py export_static: docker cp /app/staticfiles/. to a temporary host directory",
+    "exit_code": 1,
+    "stderr_shown": false,
+    "underlying_docker_cause": "Unconfirmed: the old helper suppressed captured stderr",
+    "complete_delivery_gate_passed": false
+  },
+  "change": {
+    "export": "Network-disabled, read-only, non-root temporary image process streams binary tar to host Python",
+    "host_directory_mode": "0755",
+    "host_file_mode": "0644",
+    "image_uid_gid_and_modes_restored": false,
+    "host_output_path_passed_to_docker": false,
+    "atomic_staging_publish": true,
+    "existing_output_refused": true,
+    "archive_links_traversal_duplicates_and_special_files_rejected": true,
+    "archive_byte_limit": 268435456,
+    "archive_entry_limit": 20000,
+    "stream_timeout_seconds": 120,
+    "redacted_export_and_docker_diagnostics": true,
+    "existing_image_reuse": "Optional --image, only for identical committed context with matching source/revision labels, architecture and user",
+    "identity_record": "Original image revision and current verification_revision remain separate; immutable image ID used throughout",
+    "default_per_commit_build_and_ci_policy_changed": false,
+    "production_context_changed": false,
+    "production_context_digest": "sha256:cd042534103c73c7c93e9d8a5e91cdf764caa29b94edfdf6fd9cc1630a6d249f",
+    "production_context_file_count": 75,
+    "runtime_or_maintenance_locks_changed": false,
+    "application_or_migration_code_changed": false
+  },
+  "validation": {
+    "command": "python3 -m unittest discover -s tools -p test_image_export.py -v",
+    "host_tests_run": 17,
+    "host_tests_passed": 17,
+    "failures": 0,
+    "errors": 0,
+    "tested_python_versions": [
+      "3.12.14",
+      "3.12.16"
+    ],
+    "host_uid": 1000,
+    "actual_binary_child_process_stream_tested": true,
+    "read_only_image_modes_reproduced_in_tar_fixture": true,
+    "docker_lifecycle_calls_mocked": true,
+    "complete_docker_execution_here": false,
+    "fixed_real_docker_export_verified_here": false,
+    "cli_rejects_native_plus_image": true,
+    "cli_rejects_native_record": true,
+    "cli_rejects_noncanonical_record_path": true,
+    "source_context_byte_equality_to_patch_base": true,
+    "host_tools_excluded_from_production_context": true,
+    "syntax_checked_files": [
+      "tools/image.py",
+      "tools/static_export.py",
+      "tools/test_image_export.py",
+      "tools/verify_s07.py"
+    ],
+    "application_database_tests_rerun_for_host_only_change": false,
+    "prior_native_snapshot": "S07-verification.json is retained; 90 application tests, 64 passes and 26 known failures are historical native proof, not proof of the fixed Docker export.",
+    "secret_scan": {
+      "scanner": "detect-secrets",
+      "version": "1.5.0",
+      "network_verification": false,
+      "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+      "unreviewed_findings": 0
+    },
+    "requirements_csv_json_parity": true,
+    "all_85_acceptance_statuses_pending": true,
+    "documentation_links_checked": true,
+    "git_diff_check_passed": true
+  },
+  "pending": "Apply this patch after the timeout fix and complete tools/verify_s07.py --record on the local Docker Engine; the reported --image may be reused if its source context matches.",
+  "requirement_acceptance": {
+    "user": 71,
+    "quality": 14,
+    "pending": 85
+  },
+  "google_cloud_resources_created": false,
+  "real_data_imported": false,
+  "next_eligible_step": "S08 only after complete S07 Docker verification"
+}

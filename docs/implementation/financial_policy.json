@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "document_id": "ACC-FIN-001",
+  "version": "0.1",
+  "step": "S17",
+  "status": "Draft for accountant review",
+  "source_reference_commit": "git:e6fde507f634a0ccd2de80b197bfd883d0ab7ac9",
+  "scope": "Proposed office operational finance contract; no production posting implementation, statutory tax determination or legal accounting compliance claim.",
+  "approval": {
+    "status": "Pending",
+    "accountant": null,
+    "office_owner": null,
+    "evidence": null
+  },
+  "constraints": [
+    {
+      "id": "FIN-001",
+      "rule": "Agreement terms, posted charges, cash, allocations and reversals are distinct records; no agreement/charge creation implies cash.",
+      "sources": [
+        "UR-AGR-01",
+        "UR-BIL-03"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-002",
+      "rule": "All business references, idempotency identities and correction groups are office-scoped; fresh membership and explicit action authority are required.",
+      "sources": [
+        "UR-OFF-01",
+        "UR-OFF-04",
+        "UR-OFF-05",
+        "QR-01"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-003",
+      "rule": "Ordinary posted amounts are strictly positive exact decimals; reject zero/negative/non-finite values and binary float input. Internal signed effects are service-derived.",
+      "sources": [
+        "UR-CSH-02",
+        "QR-03"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-004",
+      "rule": "Transfer source and destination are distinct same-office accounts; both legs commit or neither; operating totals exclude them.",
+      "sources": [
+        "UR-CSH-04",
+        "QR-03"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-005",
+      "rule": "Allocation office, counterparty, direction and currency match both source cash and target obligation; neither side can be over-allocated.",
+      "sources": [
+        "UR-AGR-02",
+        "UR-BIL-04",
+        "QR-03"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-006",
+      "rule": "Client receipt 120 against charges 100 retains 20 credit; partial settlement 25 against 100 retains 75 outstanding.",
+      "sources": [
+        "UR-AGR-03",
+        "UR-BIL-04"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-007",
+      "rule": "Posted originals are immutable. Corrections retain original IDs, actor, reason, effective date and linked reversals; no silent admin edit/delete.",
+      "sources": [
+        "UR-CSH-07",
+        "UR-AGR-05",
+        "QR-04"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-008",
+      "rule": "Cancellation is explicit and is never overwritten by settlement recomputation.",
+      "sources": [
+        "UR-AGR-04",
+        "UR-AGR-05"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-009",
+      "rule": "A unique reviewed source identity prevents duplicated recurring/task charges; generation is after commit and safely retried.",
+      "sources": [
+        "UR-BIL-03",
+        "UR-BIL-05",
+        "QR-06"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-010",
+      "rule": "Office fee/cash amounts are never a proxy for the client's imported myDATA turnover or statutory tax liability.",
+      "sources": [
+        "UR-BIL-01",
+        "QR-03"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-011",
+      "rule": "A reversal or allocation release is visible at its own effective date; historical as-of calculations never remove the original solely because it is now reversed.",
+      "sources": [
+        "UR-CSH-07",
+        "UR-AGR-04",
+        "QR-04"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    },
+    {
+      "id": "FIN-012",
+      "rule": "A failed operation, insufficient credit, stale balance or repeated mismatched idempotency key leaves no partial money, allocation or audit effect.",
+      "sources": [
+        "QR-03",
+        "QR-04"
+      ],
+      "basis": "Existing requirements; technical/business acceptance still Pending"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D08-01",
+      "title_el": "Ημερομηνία και διόρθωση αρχικού υπολοίπου",
+      "status": "Pending accountant approval",
+      "proposed_option": "start-of-day-opening",
+      "proposed_rule": "An approved signed account opening is the balance at the start of its effective date. Include movements on that date; reject earlier postings and show no established balance before it. Existing debt/credit is a separately reviewed opening obligation/credit, never a second cash opening. After use, correct an opening through an attributable adjustment, not by overwriting history.",
+      "alternatives_for_review": [
+        "Choose another precise opening convention and revise the dated examples.",
+        "Confirm whether negative openings and overdrafts are permitted."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S19",
+        "S25",
+        "S29"
+      ]
+    },
+    {
+      "id": "D08-02",
+      "title_el": "Περίοδοι χρέωσης, προθεσμίες και αναλογία μήνα",
+      "status": "Pending accountant approval",
+      "proposed_option": "calendar-month-reviewed-first-period",
+      "proposed_rule": "Monthly schedules use calendar-month source keys and an explicit due-date rule (day 1–28 for the first implementation). Starts/ends during a month require an explicitly reviewed first/last-period amount; no automatic proration is assumed. A confirmed agreement/period has one charge source, regardless of retry or scheduler. One-off charges require explicit effective and due dates.",
+      "alternatives_for_review": [
+        "Approve an exact daily proration/day-count and month-end rule before implementing it.",
+        "Choose another billing anchor and due-date convention."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S22",
+        "S27",
+        "S28",
+        "S37"
+      ]
+    },
+    {
+      "id": "D08-03",
+      "title_el": "Επιλογή κατανομής εισπράξεων και πληρωμών",
+      "status": "Pending accountant approval",
+      "proposed_option": "explicit-allocation-confirmation",
+      "proposed_rule": "The accountant explicitly confirms charge/amount allocations. An optional oldest-due-first preview requires confirmation; no hidden allocation on saving cash. Enforce same office, counterparty, currency and receivable/payable direction. A deterministic preview sorts by due date, posting date, then immutable ID.",
+      "alternatives_for_review": [
+        "Approve automatic oldest-due-first allocation with an exact cancellation/retry rule."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S23",
+        "S28"
+      ]
+    },
+    {
+      "id": "D08-04",
+      "title_el": "Πιστωτικό πελάτη, προκαταβολή προμηθευτή και επιστροφές",
+      "status": "Pending accountant approval",
+      "proposed_option": "separate-credit-and-advance",
+      "proposed_rule": "A client overpayment stays as unallocated receipt credit. Mirror this for supplier payments as an unallocated supplier advance. Refund only available unallocated credit/advance through a separately confirmed cash event and link it to its source. Do not offset customer credit against supplier debt automatically even when one identity has both roles.",
+      "alternatives_for_review": [
+        "Keep supplier advances unavailable initially until a reviewed supplier workflow is agreed.",
+        "Any automatic customer/supplier offset requires a separate explicit policy."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "D08-05",
+      "title_el": "Ποσά χρεώσεων και χειρισμός ΦΠΑ",
+      "status": "Pending accountant approval",
+      "proposed_option": "gross-office-ledger-only",
+      "proposed_rule": "The proposed first finance scope records the gross EUR amount to be settled. Any net/VAT breakdown is an accountant-supplied immutable snapshot; the application does not infer a VAT rate, exemption, withholding or tax liability. No tax invoice issuance or automatic VAT calculation is supplied by this decision. Office fees/cash are separate from client myDATA turnover and tax forecasts.",
+      "alternatives_for_review": [
+        "If automatic net/VAT calculation is required, approve supported regimes, rates, effective dates, invoice/credit-note rules and reference examples first."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S22",
+        "S23",
+        "S27",
+        "S29",
+        "S30",
+        "S31"
+      ]
+    },
+    {
+      "id": "D08-06",
+      "title_el": "Δεκαδικά ψηφία και στρογγυλοποίηση",
+      "status": "Pending accountant approval",
+      "proposed_option": "eur-line-half-up",
+      "proposed_rule": "EUR postings/allocations/refunds use exact finite Decimal values in cents. Reject ordinary user-entered amounts with more than two fractional digits rather than silently round them. Derived line prices use ROUND_HALF_UP once at the posted line boundary; total the rounded lines. Show any allocation/proration residual for explicit resolution; never silently lose a cent. This is a proposed software convention, not an assertion of a statutory tax rule.",
+      "alternatives_for_review": [
+        "Choose ROUND_HALF_EVEN or another accountant-approved line/total convention and replace the rounding examples."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S20",
+        "S21",
+        "S22",
+        "S23",
+        "S27",
+        "S28",
+        "S29",
+        "S30"
+      ]
+    },
+    {
+      "id": "D08-07",
+      "title_el": "Μελλοντικές αλλαγές και ακύρωση συμφωνίας",
+      "status": "Pending accountant approval",
+      "proposed_option": "prospective-terms-retain-posted-debt",
+      "proposed_rule": "Version terms prospectively with effective date, actor and reason. Cancellation stops future charge occurrences from its approved cutoff but retains posted charges, allocations and cash. Reversing an existing charge is a separate explicit operation that releases its allocations into credit/advance. Cancellation alone never refunds money or erases a settled history.",
+      "alternatives_for_review": [
+        "Define a different explicit treatment for already posted obligations; no automatic deletion or implicit refund is acceptable."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S22",
+        "S24",
+        "S25",
+        "S27",
+        "S28",
+        "S29"
+      ]
+    },
+    {
+      "id": "D08-08",
+      "title_el": "Ημερομηνίες διορθώσεων και διατήρηση ιστορικού",
+      "status": "Pending accountant approval",
+      "proposed_option": "dated-full-reversal-and-replacement",
+      "proposed_rule": "Correct a posted item by a linked full reversal and an optional replacement in one transaction when requested together. Store business effective date separately from UTC recorded_at. The original remains effective in earlier as-of reports; its reversal takes effect on the reversal date. Backdating requires a reason and cannot precede the opening or enter a declared closed period. Future-dated cash and partial cash reversals are unavailable initially; a partial return uses the explicit refund workflow.",
+      "alternatives_for_review": [
+        "Approve a different permitted correction-date/closed-period policy and update all as-of examples."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S19",
+        "S20",
+        "S21",
+        "S23",
+        "S24",
+        "S25",
+        "S29"
+      ]
+    },
+    {
+      "id": "D08-09",
+      "title_el": "Κατάσταση συμφωνίας και κατάσταση εξόφλησης",
+      "status": "Pending accountant approval",
+      "proposed_option": "separate-lifecycle-and-settlement",
+      "proposed_rule": "Keep contractual lifecycle separate from derived settlement. No charges means NO_OBLIGATIONS, not paid. A fully billed one-off agreement with zero outstanding is displayed as completed; reversing settlement reopens its balance. A recurring contract may be settled to date while remaining active for future occurrences. CANCELLED lifecycle always remains cancelled, even if its posted debt is settled.",
+      "alternatives_for_review": [
+        "Specify a different one-off/recurring completion rule without conflating the contract value, billed obligation and received cash."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S22",
+        "S23",
+        "S24",
+        "S27",
+        "S28",
+        "S29"
+      ]
+    },
+    {
+      "id": "D08-10",
+      "title_el": "Δικαιώματα οικονομικών διορθώσεων",
+      "status": "Pending accountant approval",
+      "proposed_option": "owner-corrections-recent-mfa",
+      "proposed_rule": "Retain current owner/accountant read-and-post access. Propose owner-only opening adjustments, release of posted allocations, refunds and linked reversals, with password/recent MFA, reason and audit. Recheck active office/user after lock waits. Add explicit capabilities in S18/S24 after this review; do not silently extend current finance.write. D01 must be updated for these new operations only after approval.",
+      "alternatives_for_review": [
+        "Permit accountants as well as owners to perform named correction actions with the same proof/audit safeguards."
+      ],
+      "selected_option": null,
+      "blocks_steps": [
+        "S18",
+        "S19",
+        "S23",
+        "S24",
+        "S31"
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "id": "OP-OPEN",
+      "title": "Opening balance",
+      "inputs": [
+        "account_id",
+        "signed_amount",
+        "effective_date",
+        "review_reference"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007"
+      ],
+      "decisions": [
+        "D08-01",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S19",
+        "S25"
+      ],
+      "balance_effect": "Establish account cash at the start of effective_date; no operating income/expense or client settlement.",
+      "preconditions": "One reviewed opening per account; no earlier movement; signed/negative opening needs D08-01 approval.",
+      "correction": "Before use correct the draft; after use post a linked opening adjustment with reason. Never import both a closing total and the same historic movements twice."
+    },
+    {
+      "id": "OP-ADJUST_OPENING",
+      "title": "Correct an established opening without rewriting it",
+      "inputs": [
+        "account_id",
+        "original_opening_id",
+        "signed_delta",
+        "effective_date",
+        "evidence_reference",
+        "reason",
+        "proof",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007",
+        "FIN-011",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-01",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S19",
+        "S25"
+      ],
+      "balance_effect": "Cash changes by the approved signed delta on the adjustment date; operating income/expense, client charges and credit are unchanged.",
+      "preconditions": "Nonzero exact-cent delta backed by reviewed opening evidence; owner correction authority/proof; no closed/pre-opening date and no silent earlier as-of restatement.",
+      "correction": "Linked opposite adjustment and an explicit replacement when needed; retain the original opening and every adjustment. It is not an unexplained reconciliation shortcut."
+    },
+    {
+      "id": "OP-AGREEMENT",
+      "title": "Create/activate agreement",
+      "inputs": [
+        "direction",
+        "counterparty",
+        "terms_amount",
+        "start_date",
+        "terms_version"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-002"
+      ],
+      "decisions": [
+        "D08-02",
+        "D08-05",
+        "D08-07",
+        "D08-09"
+      ],
+      "implementation_steps": [
+        "S22"
+      ],
+      "balance_effect": "Terms only: cash, charges, credit and outstanding are unchanged until a separate charge is posted.",
+      "preconditions": "Receivable requires customer role; payable requires supplier role; counterparty is active and same office.",
+      "correction": "Amend terms prospectively with a new version or cancel future generation; retain every prior version."
+    },
+    {
+      "id": "OP-CHARGE",
+      "title": "Post receivable/payable obligation",
+      "inputs": [
+        "counterparty",
+        "direction",
+        "amount",
+        "effective_date",
+        "due_date",
+        "source_key",
+        "terms_price_snapshot"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-003",
+        "FIN-005",
+        "FIN-009"
+      ],
+      "decisions": [
+        "D08-02",
+        "D08-05",
+        "D08-06",
+        "D08-07",
+        "D08-09"
+      ],
+      "implementation_steps": [
+        "S22",
+        "S27",
+        "S28",
+        "S37"
+      ],
+      "balance_effect": "Receivable or payable outstanding increases by amount; cash and credit do not change.",
+      "preconditions": "One source occurrence; active eligible counterparty; fixed currency/price and due/effective date; agreement terms never also count as a second charge.",
+      "correction": "Link a charge reversal/adjustment. Release its effective allocations atomically; retained cash becomes unallocated credit/advance."
+    },
+    {
+      "id": "OP-RECEIPT",
+      "title": "Record ordinary income",
+      "inputs": [
+        "account_id",
+        "counterparty_optional",
+        "amount",
+        "business_date",
+        "category_optional",
+        "description",
+        "remarks",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-003",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-03",
+        "D08-04",
+        "D08-05",
+        "D08-06",
+        "D08-08"
+      ],
+      "implementation_steps": [
+        "S20",
+        "S23"
+      ],
+      "balance_effect": "Account cash increases by amount. If client-linked it initially becomes unallocated receipt credit; charge outstanding changes only through a separate allocation.",
+      "preconditions": "Positive cents; same office and active account/counterparty for new work; no future cash date; allocation confirmation is separate.",
+      "correction": "A full linked reversal releases allocations and restores the signed cash effect after explicitly reversing dependent refunds; use those dependency rules, not a negative ordinary receipt."
+    },
+    {
+      "id": "OP-PAYMENT",
+      "title": "Record ordinary expense",
+      "inputs": [
+        "account_id",
+        "counterparty_optional",
+        "amount",
+        "business_date",
+        "category_optional",
+        "description",
+        "remarks",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-003",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-01",
+        "D08-03",
+        "D08-04",
+        "D08-05",
+        "D08-06",
+        "D08-08"
+      ],
+      "implementation_steps": [
+        "S20",
+        "S23"
+      ],
+      "balance_effect": "Account cash decreases by amount. Supplier-linked cash initially becomes an unallocated supplier advance; payable outstanding changes only through allocation.",
+      "preconditions": "Same constraints as receipt, with payable direction. Overdraft behaviour follows the approved opening/account policy.",
+      "correction": "A full linked reversal releases its allocations and restores cash; supplier refund is a distinct incoming cash event."
+    },
+    {
+      "id": "OP-ALLOCATE",
+      "title": "Allocate receipt/payment",
+      "inputs": [
+        "cash_source_id",
+        "charge_id",
+        "amount",
+        "effective_date",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-003",
+        "FIN-005",
+        "FIN-006",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-03",
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S23"
+      ],
+      "balance_effect": "Outstanding and source unallocated credit/advance decrease by amount; cash does not change.",
+      "preconditions": "Lock cash sources and charges in stable ID order after office/user. Enforce amount <= source available and amount <= target outstanding, including concurrent requests.",
+      "correction": "Release a posted allocation through a linked dated event with actor/reason; do not edit/delete its original."
+    },
+    {
+      "id": "OP-RELEASE",
+      "title": "Release allocation",
+      "inputs": [
+        "allocation_id",
+        "effective_date",
+        "reason",
+        "proof",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007",
+        "FIN-011"
+      ],
+      "decisions": [
+        "D08-04",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S23",
+        "S24"
+      ],
+      "balance_effect": "Outstanding and source unallocated credit/advance increase by the released amount; cash is unchanged.",
+      "preconditions": "Full release of an effective allocation; one release per original; recompute effective state under locks.",
+      "correction": "Reallocate through a new confirmed allocation. A receipt/charge reversal releases the relevant allocations in the same transaction."
+    },
+    {
+      "id": "OP-REFUND",
+      "title": "Refund client credit / receive supplier refund",
+      "inputs": [
+        "cash_source_ids",
+        "account_id",
+        "amount",
+        "effective_date",
+        "reason",
+        "proof",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-003",
+        "FIN-005",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-04",
+        "D08-05",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S23",
+        "S24"
+      ],
+      "balance_effect": "Client refund: cash and available receipt credit decrease. Supplier refund: cash increases and supplier advance decreases. Existing charges/settled allocations stay unchanged.",
+      "preconditions": "Bound by unallocated source credit/advance; same office/counterparty/currency/direction. A refund references specific source amounts, not a free balance total.",
+      "correction": "Linked refund reversal restores the consumed credit/advance and opposite cash effect. Reverse dependent refunds before reversing the original receipt/payment."
+    },
+    {
+      "id": "OP-TRANSFER",
+      "title": "Transfer between accounts",
+      "inputs": [
+        "from_account",
+        "to_account",
+        "amount",
+        "effective_date",
+        "description",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-003",
+        "FIN-004",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-06",
+        "D08-08"
+      ],
+      "implementation_steps": [
+        "S21"
+      ],
+      "balance_effect": "Source cash decreases and destination cash increases equally; total office cash, operating income/expense, client charges and credit are unchanged.",
+      "preconditions": "Distinct active same-office EUR accounts; atomic paired source identity; no client/charge allocation on a transfer leg.",
+      "correction": "Reverse both legs together as a linked pair; correcting amount/accounts uses a new paired replacement, never editing one leg."
+    },
+    {
+      "id": "OP-REVERSE_REFUND",
+      "title": "Reverse a source-linked client/supplier refund",
+      "inputs": [
+        "original_refund_id",
+        "effective_date",
+        "reason",
+        "proof",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007",
+        "FIN-011",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S24"
+      ],
+      "balance_effect": "Opposite signed cash effect of that refund; restore the consumed availability to its exact original receipt/payment sources; charge allocations/outstanding are unchanged.",
+      "preconditions": "One full reversal of the same-office original refund. Check source links and correction authority after lock waits; no unlinked income/expense shortcut.",
+      "correction": "If money is subsequently refunded again, create a new explicit source-linked refund; do not erase the original or recursively toggle its state."
+    },
+    {
+      "id": "OP-REVERSE_CASH",
+      "title": "Reverse posted receipt/payment",
+      "inputs": [
+        "original_cash_id",
+        "effective_date",
+        "reason",
+        "proof",
+        "replacement_optional",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007",
+        "FIN-011",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S24"
+      ],
+      "balance_effect": "Reverse the original signed cash amount on reversal date; release its allocations and remove its own unallocated source credit/advance. Unrelated source balances remain unchanged.",
+      "preconditions": "Full reversal once, with same-office original. Dependent effective refunds must first be reversed in the same explicit correction group; no hidden negative credit. A second reversal is denied.",
+      "correction": "A replacement is a new immutable record. Correct a mistaken correction by a new explicit chain; no recursive arbitrary un-reversal in the first release."
+    },
+    {
+      "id": "OP-REVERSE_CHARGE",
+      "title": "Reverse posted obligation",
+      "inputs": [
+        "original_charge_id",
+        "effective_date",
+        "reason",
+        "proof",
+        "idempotency_key"
+      ],
+      "invariants": [
+        "FIN-002",
+        "FIN-007",
+        "FIN-011",
+        "FIN-012"
+      ],
+      "decisions": [
+        "D08-04",
+        "D08-05",
+        "D08-07",
+        "D08-08",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S24"
+      ],
+      "balance_effect": "Net obligation decreases by original amount. Release its allocations to the original receipt/payment sources. Cash is unchanged; money is refunded only by REFUND.",
+      "preconditions": "Full charge reversal once; do not manufacture cash or infer a statutory credit note. Preserve source link so generation does not silently recreate the charge.",
+      "correction": "New corrected charge with an explicit replacement relation; automatic recurrence/task retry cannot reuse the cancelled source occurrence."
+    },
+    {
+      "id": "OP-AMEND",
+      "title": "Change agreement terms",
+      "inputs": [
+        "agreement_id",
+        "expected_version",
+        "new_terms",
+        "effective_date",
+        "reason"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-007",
+        "FIN-009"
+      ],
+      "decisions": [
+        "D08-02",
+        "D08-05",
+        "D08-07",
+        "D08-09",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S22",
+        "S24",
+        "S27",
+        "S28"
+      ],
+      "balance_effect": "Only future unposted occurrences use the new version; existing charges, cash, allocations and prices remain unchanged.",
+      "preconditions": "Explicit effective period and optimistic version. The old/new schedule cannot both produce the same office/agreement/period source key.",
+      "correction": "Another dated version, or an explicit posted-charge correction for an earlier error."
+    },
+    {
+      "id": "OP-CANCEL",
+      "title": "Cancel/end future contract obligations",
+      "inputs": [
+        "agreement_id",
+        "expected_version",
+        "cutoff_date",
+        "reason",
+        "proof"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-007",
+        "FIN-008",
+        "FIN-009"
+      ],
+      "decisions": [
+        "D08-02",
+        "D08-07",
+        "D08-08",
+        "D08-09",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S24",
+        "S28"
+      ],
+      "balance_effect": "Stop future generation from cutoff. Retain posted obligations, cash and allocations. CANCELLED stays cancelled whatever the settlement balance.",
+      "preconditions": "Respect the reviewed service-period cutoff. A full settled agreement cancellation alone leaves cash and outstanding unchanged.",
+      "correction": "No silent reactivation. A replacement agreement/version or explicit charge/cash reversal needs reviewed history and source identity."
+    },
+    {
+      "id": "OP-RECURRING",
+      "title": "Generate due monthly charge",
+      "inputs": [
+        "schedule_id",
+        "calendar_period",
+        "terms_version",
+        "price_snapshot",
+        "due_rule",
+        "source_key"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-003",
+        "FIN-009"
+      ],
+      "decisions": [
+        "D08-02",
+        "D08-05",
+        "D08-06",
+        "D08-07",
+        "D08-09"
+      ],
+      "implementation_steps": [
+        "S27",
+        "S28"
+      ],
+      "balance_effect": "One posted charge per due source occurrence; no receipt/payment. A scheduled agreement amount is not another obligation.",
+      "preconditions": "Check active schedule, cancellation cutoff, reviewed first/last amount, office/client authority at execution, and unique period independent of schedule version.",
+      "correction": "Correct by a linked reversal and explicit replacement/waiver; retry must observe the existing source outcome."
+    },
+    {
+      "id": "OP-TASK_CHARGE",
+      "title": "Confirm billable task charge",
+      "inputs": [
+        "task_id",
+        "confirmed_service_price",
+        "counterparty",
+        "effective_date",
+        "source_key"
+      ],
+      "invariants": [
+        "FIN-001",
+        "FIN-003",
+        "FIN-009"
+      ],
+      "decisions": [
+        "D08-05",
+        "D08-06",
+        "D08-10"
+      ],
+      "implementation_steps": [
+        "S37"
+      ],
+      "balance_effect": "Create one charge after explicit price confirmation; task completion alone does not create cash or an unreviewed fee.",
+      "preconditions": "Same office/counterparty and active task; immutable description/price snapshot and one task/source charge.",
+      "correction": "Linked charge reversal retaining the task and source identity; repeat completion/confirmation does not duplicate billing."
+    }
+  ],
+  "state_machines": {
+    "terms": {
+      "states": [
+        "DRAFT",
+        "ACTIVE",
+        "ENDED",
+        "CANCELLED"
+      ],
+      "transitions": [
+        [
+          "DRAFT",
+          "ACTIVE"
+        ],
+        [
+          "DRAFT",
+          "CANCELLED"
+        ],
+        [
+          "ACTIVE",
+          "ENDED"
+        ],
+        [
+          "ACTIVE",
+          "CANCELLED"
+        ]
+      ],
+      "notes": "Amendment is a new terms version while ACTIVE. ENDED/CANCELLED do not auto-reactivate; financial settlement is an independent projection."
+    },
+    "charge": {
+      "states": [
+        "DRAFT",
+        "POSTED",
+        "REVERSED"
+      ],
+      "transitions": [
+        [
+          "DRAFT",
+          "POSTED"
+        ],
+        [
+          "POSTED",
+          "REVERSED"
+        ]
+      ],
+      "notes": "Settlement OPEN/PARTIAL/SETTLED is derived from dated allocations and releases, not an editable charge amount."
+    },
+    "cash": {
+      "states": [
+        "DRAFT",
+        "POSTED",
+        "REVERSED"
+      ],
+      "transitions": [
+        [
+          "DRAFT",
+          "POSTED"
+        ],
+        [
+          "POSTED",
+          "REVERSED"
+        ]
+      ],
+      "notes": "Transfer/refund is an explicit kind. REVERSED is current metadata; historical reports retain original and reversal effects by date."
+    },
+    "allocation": {
+      "states": [
+        "POSTED",
+        "RELEASED"
+      ],
+      "transitions": [
+        [
+          "POSTED",
+          "RELEASED"
+        ]
+      ],
+      "notes": "Release is a linked dated event; no deletion. New allocation after release has a new ID."
+    },
+    "settlement_projection": {
+      "states": [
+        "NO_OBLIGATIONS",
+        "OPEN",
+        "PARTIAL",
+        "SETTLED"
+      ],
+      "rules": [
+        "No effective positive charges => NO_OBLIGATIONS.",
+        "Outstanding > 0 and effective allocation == 0 => OPEN.",
+        "Outstanding > 0 and effective allocation > 0 => PARTIAL.",
+        "Posted positive obligation exists and outstanding == 0 => SETTLED.",
+        "CANCELLED lifecycle is never overwritten by any settlement projection.",
+        "A recurring agreement settled to date remains eligible for future due occurrences while ACTIVE."
+      ]
+    }
+  },
+  "unsupported_until_reviewed": [
+    "Multi-currency, FX, bank reconciliation/feeds, statutory general ledger and tax invoice/credit-note issuance.",
+    "Automatic VAT/withholding/tax calculation or use of office fee receipts as client myDATA turnover.",
+    "Automatic proration, due days 29–31 or non-calendar billing anchors until their exact rules are approved.",
+    "Automatic cross-direction customer/supplier offset, cash overdraft limits and supplier advances if D08-04 is changed.",
+    "Partial cash reversals, future-dated cash, recursive un-reversal and silent reopening of cancelled agreements.",
+    "Live legacy migration, closed-period administration and accountant-approved reconciliation (S25/S31); a declared closed period is a required future guard, not an implemented feature.",
+    "Actual job execution, recurring charge generation and exports: their later steps must implement and test this contract."
+  ],
+  "application_changes": false,
+  "full_requirement_acceptance": "Pending"
+}

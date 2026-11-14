@@ -1,0 +1,6 @@
+{% extends 'accounting/auth/base.html' %}
+{% block title %}Πρόσκληση λογιστή{% endblock %}
+{% block auth_content %}<h1 class="h3">Πρόσκληση στο γραφείο {{ invite.office.name }}</h1><p>Ηλεκτρονική διεύθυνση: {{ invite.recipient_email }}</p>
+{% if existing %}<p>Επιβεβαιώστε τον κωδικό του υφιστάμενου λογαριασμού σας.</p>{% else %}<p>Επιλέξτε όνομα χρήστη και κωδικό πρόσβασης για τον λογαριασμό της εφαρμογής.</p>{% endif %}
+<p>Με την αποδοχή θα δημιουργηθεί ανενεργό προφίλ λογιστή. Ο υπεύθυνος του γραφείου θα εγκρίνει την πρόσβαση.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn btn-primary">Αποδοχή πρόσκλησης</button></form>{% endblock %}

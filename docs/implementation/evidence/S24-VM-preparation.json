@@ -1,0 +1,22 @@
+{
+  "step": "S24-VM",
+  "status": "Prepared",
+  "mode": "operator-only-release-tooling",
+  "operator_reported_source": {
+    "deployment_commit": "git:ab9602592cb699684450bc4ee70438f80d30351f",
+    "accounting_migration_leaf": "0008_office_workflow_guards",
+    "backup_and_monitor_timers": "active",
+    "last_backup_attempt_ok": true
+  },
+  "application_operator_receipt": "docs/implementation/evidence/S24-verification.json",
+  "application_tests_passed": 656,
+  "financial_cases_passed": 36,
+  "boundary_cases_passed": 922,
+  "agent_tests_builds_migrations_or_vm_operations": false,
+  "actual_deployment_execution": false,
+  "actual_clone_preservation_proof": false,
+  "actual_new_backup_restore": false,
+  "existing_accounts_mfa_and_keys_changed": false,
+  "all_product_acceptances": "Pending",
+  "runbook": "docs/implementation/s24_vm_upgrade.md"
+}

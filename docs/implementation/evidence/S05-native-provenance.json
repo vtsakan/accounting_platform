@@ -1,0 +1,24 @@
+{
+  "reviewed_at": "2026-11-07",
+  "purpose": "Supplementary native PostgreSQL verification only; Docker execution gate remains separate.",
+  "repository_index": "https://apt.postgresql.org/pub/repos/apt/dists/trixie-pgdg/main/binary-amd64/Packages.bz2",
+  "checksum_validation": "Downloaded payload SHA256 matched the official HTTPS repository index. Packages extracted into scratch; no system installation or production database used.",
+  "packages": [
+    {
+      "package": "postgresql-17",
+      "version": "17.11-1.pgdg13+2",
+      "architecture": "amd64",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-17/postgresql-17_17.11-1.pgdg13+2_amd64.deb",
+      "sha256": "4f8b42bd3202d24953996743afbc90b609d3337c90bb740568b52d06ebfdcb15"
+    },
+    {
+      "package": "postgresql-client-17",
+      "version": "17.11-1.pgdg13+2",
+      "architecture": "amd64",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-17/postgresql-client-17_17.11-1.pgdg13+2_amd64.deb",
+      "sha256": "c36408bb62178bc9193c113da65e30fc6a5237648de5e9db1ea594214df9ae4b"
+    }
+  ],
+  "postgresql_version": "17.11",
+  "connection": "Authenticated loopback TCP; no published Docker database port or remote database selected."
+}

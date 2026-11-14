@@ -1,0 +1,1181 @@
+{
+  "schema_version": 1,
+  "document_id": "ACC-FIN-EX-001",
+  "policy_document_id": "ACC-FIN-001",
+  "scope": "Synthetic candidate expectations. Formula validation is not application/database/concurrency execution or accountant acceptance.",
+  "examples": [
+    {
+      "id": "EX-001",
+      "title_el": "Αρχικό υπόλοιπο χωρίς κινήσεις",
+      "scenario_el": "Αρχικό 100,00 € στην αρχή της 15/01/2026, χωρίς κινήσεις.",
+      "decision_ids": [
+        "D08-01",
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "opening + receipts - payments",
+          "inputs": {
+            "opening": "100.00",
+            "receipts": "0.00",
+            "payments": "0.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "operating_income",
+          "formula": "ordinary_receipts",
+          "inputs": {
+            "ordinary_receipts": "0.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "",
+      "implementation_steps": [
+        "S19",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-002",
+      "title_el": "Είσπραξη χωρίς έξοδα",
+      "scenario_el": "Αρχικό 100,00 € και είσπραξη 50,00 € χωρίς έξοδα.",
+      "decision_ids": [
+        "D08-01",
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "opening + receipts - payments",
+          "inputs": {
+            "opening": "100.00",
+            "receipts": "50.00",
+            "payments": "0.00"
+          },
+          "expected": "150.00"
+        }
+      ],
+      "notes_el": "",
+      "implementation_steps": [
+        "S19",
+        "S20",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-003",
+      "title_el": "Χρέωση 100 και μερική εξόφληση 25",
+      "scenario_el": "Χρέωση 100,00 €, είσπραξη 25,00 € και επιβεβαιωμένη κατανομή 25,00 €.",
+      "decision_ids": [
+        "D08-03",
+        "D08-05",
+        "D08-06",
+        "D08-09"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "opening + receipt",
+          "inputs": {
+            "opening": "0.00",
+            "receipt": "25.00"
+          },
+          "expected": "25.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charge - allocated",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "25.00"
+          },
+          "expected": "75.00"
+        },
+        {
+          "label": "unallocated_credit",
+          "formula": "receipt - allocated",
+          "inputs": {
+            "receipt": "25.00",
+            "allocated": "25.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Κατάσταση εξόφλησης: Μερικώς εξοφλημένη. Η χρέωση δεν αποτελεί είσπραξη.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-004",
+      "title_el": "Είσπραξη 120 έναντι χρεώσεων 100",
+      "scenario_el": "Δύο χρεώσεις 60,00 € και 40,00 €, είσπραξη 120,00 € και κατανομές 60,00 € και 40,00 €.",
+      "decision_ids": [
+        "D08-03",
+        "D08-04",
+        "D08-05",
+        "D08-06",
+        "D08-09"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "120.00"
+          },
+          "expected": "120.00"
+        },
+        {
+          "label": "billed",
+          "formula": "charge_one + charge_two",
+          "inputs": {
+            "charge_one": "60.00",
+            "charge_two": "40.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charge_one + charge_two - allocated_one - allocated_two",
+          "inputs": {
+            "charge_one": "60.00",
+            "charge_two": "40.00",
+            "allocated_one": "60.00",
+            "allocated_two": "40.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "credit",
+          "formula": "receipt - allocated_one - allocated_two",
+          "inputs": {
+            "receipt": "120.00",
+            "allocated_one": "60.00",
+            "allocated_two": "40.00"
+          },
+          "expected": "20.00"
+        }
+      ],
+      "notes_el": "Χρεώσεις 100,00 €, εισπράξεις 120,00 €, πιστωτικό 20,00 €. Δεν εμφανίζονται ως ένα ενιαίο μέγεθος εσόδου ή κέρδους.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-005",
+      "title_el": "Εσωτερική μεταφορά μεταξύ δύο ταμείων",
+      "scenario_el": "Αρχικά Α=2.000,00 €, Β=100,00 €. Στο Α υπάρχουν κανονικές εισπράξεις 50,00 € και πληρωμές 20,00 €. Μεταφορά 1.000,00 € από Α σε Β.",
+      "decision_ids": [
+        "D08-01",
+        "D08-06",
+        "D08-08"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash_a_after",
+          "formula": "opening_a + ordinary_in - ordinary_out - transfer",
+          "inputs": {
+            "opening_a": "2000.00",
+            "ordinary_in": "50.00",
+            "ordinary_out": "20.00",
+            "transfer": "1000.00"
+          },
+          "expected": "1030.00"
+        },
+        {
+          "label": "cash_b_after",
+          "formula": "opening_b + transfer",
+          "inputs": {
+            "opening_b": "100.00",
+            "transfer": "1000.00"
+          },
+          "expected": "1100.00"
+        },
+        {
+          "label": "cash_total_before",
+          "formula": "opening_a + opening_b + ordinary_in - ordinary_out",
+          "inputs": {
+            "opening_a": "2000.00",
+            "opening_b": "100.00",
+            "ordinary_in": "50.00",
+            "ordinary_out": "20.00"
+          },
+          "expected": "2130.00"
+        },
+        {
+          "label": "cash_total_after",
+          "formula": "cash_a + cash_b",
+          "inputs": {
+            "cash_a": "1030.00",
+            "cash_b": "1100.00"
+          },
+          "expected": "2130.00"
+        },
+        {
+          "label": "operating_in",
+          "formula": "ordinary_in",
+          "inputs": {
+            "ordinary_in": "50.00"
+          },
+          "expected": "50.00"
+        },
+        {
+          "label": "operating_out",
+          "formula": "ordinary_out",
+          "inputs": {
+            "ordinary_out": "20.00"
+          },
+          "expected": "20.00"
+        }
+      ],
+      "notes_el": "Η μεταφορά δεν είναι κανονικό έσοδο ή έξοδο.",
+      "implementation_steps": [
+        "S21",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-006",
+      "title_el": "Αντιλογισμός εξόφλησης ολοκληρωμένης συμφωνίας",
+      "scenario_el": "Στις 15/01 χρέωση 100,00 € έχει εξοφληθεί πλήρως. Στις 16/01 αντιλογίζεται ολόκληρη η είσπραξη και αποδεσμεύεται η κατανομή.",
+      "decision_ids": [
+        "D08-03",
+        "D08-06",
+        "D08-08",
+        "D08-09",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash_asof_15",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "outstanding_asof_15",
+          "formula": "charge - allocated",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "100.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "cash_asof_16",
+          "formula": "receipt - reversed_receipt",
+          "inputs": {
+            "receipt": "100.00",
+            "reversed_receipt": "100.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "outstanding_asof_16",
+          "formula": "charge - allocated + released",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "100.00",
+            "released": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "credit_asof_16",
+          "formula": "receipt - allocated + released - reversed_receipt",
+          "inputs": {
+            "receipt": "100.00",
+            "allocated": "100.00",
+            "released": "100.00",
+            "reversed_receipt": "100.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Η προηγούμενη εικόνα της 15/01 διατηρείται. Στις 16/01 η εξόφληση γίνεται ξανά Ανεξόφλητη. Δεν ακυρώνεται αυτόματα η ίδια η συμφωνία.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-007",
+      "title_el": "Ακύρωση συμφωνίας, αντιλογισμός χρέωσης και επιστροφή είναι διαφορετικές ενέργειες",
+      "scenario_el": "Πλήρως χρεωμένη και εξοφλημένη συμφωνία 100,00 €. Πρώτα ακυρώνεται η μελλοντική ισχύς της. Έπειτα, μόνο με χωριστή επιβεβαίωση, αντιλογίζεται η χρέωση και επιστρέφεται το πιστωτικό.",
+      "decision_ids": [
+        "D08-04",
+        "D08-05",
+        "D08-07",
+        "D08-08",
+        "D08-09",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "after_cancellation_cash",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "after_cancellation_outstanding",
+          "formula": "charge - allocated",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "100.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "after_charge_reversal_cash",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "after_charge_reversal_net_charge",
+          "formula": "charge - reversed_charge",
+          "inputs": {
+            "charge": "100.00",
+            "reversed_charge": "100.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "after_charge_reversal_credit",
+          "formula": "receipt - allocated + released",
+          "inputs": {
+            "receipt": "100.00",
+            "allocated": "100.00",
+            "released": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "after_refund_cash",
+          "formula": "receipt - refund",
+          "inputs": {
+            "receipt": "100.00",
+            "refund": "100.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "after_refund_credit",
+          "formula": "available_credit - refund",
+          "inputs": {
+            "available_credit": "100.00",
+            "refund": "100.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Η κατάσταση της συμφωνίας παραμένει Ακυρωμένη σε κάθε στάδιο. Η ακύρωση μόνη της δεν διαγράφει χρεώσεις και δεν επιστρέφει χρήματα.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-008",
+      "title_el": "Μερική πληρωμή προμηθευτή",
+      "scenario_el": "Αρχικό ταμείου 200,00 €, πληρωτέα χρέωση 100,00 €, πληρωμή και κατανομή 25,00 €.",
+      "decision_ids": [
+        "D08-03",
+        "D08-04",
+        "D08-06",
+        "D08-09"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "opening - payment",
+          "inputs": {
+            "opening": "200.00",
+            "payment": "25.00"
+          },
+          "expected": "175.00"
+        },
+        {
+          "label": "payable_outstanding",
+          "formula": "payable - allocated",
+          "inputs": {
+            "payable": "100.00",
+            "allocated": "25.00"
+          },
+          "expected": "75.00"
+        },
+        {
+          "label": "supplier_advance",
+          "formula": "payment - allocated",
+          "inputs": {
+            "payment": "25.00",
+            "allocated": "25.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-009",
+      "title_el": "Προκαταβολή προμηθευτή χωρίς συμψηφισμό πελάτη",
+      "scenario_el": "Πληρωτέα χρέωση 75,00 €, πληρωμή 100,00 €, κατανομή 75,00 €. Το ίδιο πρόσωπο έχει ανεξάρτητο πιστωτικό πελάτη 20,00 €.",
+      "decision_ids": [
+        "D08-03",
+        "D08-04",
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "supplier_advance",
+          "formula": "payment - allocated",
+          "inputs": {
+            "payment": "100.00",
+            "allocated": "75.00"
+          },
+          "expected": "25.00"
+        },
+        {
+          "label": "receivable_credit_unchanged",
+          "formula": "receivable_credit",
+          "inputs": {
+            "receivable_credit": "20.00"
+          },
+          "expected": "20.00"
+        },
+        {
+          "label": "payable_outstanding",
+          "formula": "payable - allocated",
+          "inputs": {
+            "payable": "75.00",
+            "allocated": "75.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Δεν εμφανίζεται ενιαίο καθαρό ποσό 5,00 €. Οι δύο κατευθύνσεις και οι πηγές διατηρούνται χωριστά.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-010",
+      "title_el": "Επιστροφή υπερπληρωμής",
+      "scenario_el": "Μετά την είσπραξη 120,00 € και εξόφληση χρεώσεων 100,00 €, επιστρέφονται τα διαθέσιμα 20,00 €.",
+      "decision_ids": [
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "receipt - refund",
+          "inputs": {
+            "receipt": "120.00",
+            "refund": "20.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "credit",
+          "formula": "receipt - allocated - refund",
+          "inputs": {
+            "receipt": "120.00",
+            "allocated": "100.00",
+            "refund": "20.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charges - allocated",
+          "inputs": {
+            "charges": "100.00",
+            "allocated": "100.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Η επιστροφή είναι ρητή εκροή επιστροφής πελάτη, όχι νέα δαπάνη ή αρνητική κανονική είσπραξη.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-011",
+      "title_el": "Αποδέσμευση κατανομής χωρίς επιστροφή μετρητών",
+      "scenario_el": "Χρέωση 100,00 €, είσπραξη 25,00 € και κατανομή 25,00 €. Στη συνέχεια αποδεσμεύεται η κατανομή.",
+      "decision_ids": [
+        "D08-03",
+        "D08-04",
+        "D08-08",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash_unchanged",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "25.00"
+          },
+          "expected": "25.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charge - allocated + released",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "25.00",
+            "released": "25.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "credit",
+          "formula": "receipt - allocated + released",
+          "inputs": {
+            "receipt": "25.00",
+            "allocated": "25.00",
+            "released": "25.00"
+          },
+          "expected": "25.00"
+        }
+      ],
+      "notes_el": "",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-012",
+      "title_el": "Αλλαγή τιμής μόνο από την επόμενη περίοδο",
+      "scenario_el": "Ιανουάριος ήδη χρεωμένος 100,00 €. Νέα τιμή 120,00 € από 01/02. Δεν έχουν γίνει εισπράξεις.",
+      "decision_ids": [
+        "D08-02",
+        "D08-05",
+        "D08-06",
+        "D08-07",
+        "D08-09"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "january_retained",
+          "formula": "january_charge",
+          "inputs": {
+            "january_charge": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "february_new_charge",
+          "formula": "february_charge",
+          "inputs": {
+            "february_charge": "120.00"
+          },
+          "expected": "120.00"
+        },
+        {
+          "label": "outstanding_after_february",
+          "formula": "january_charge + february_charge - allocated",
+          "inputs": {
+            "january_charge": "100.00",
+            "february_charge": "120.00",
+            "allocated": "0.00"
+          },
+          "expected": "220.00"
+        },
+        {
+          "label": "cash",
+          "formula": "receipts",
+          "inputs": {
+            "receipts": "0.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Η παλιά χρέωση δεν γίνεται 120,00 €. Η επανεκτέλεση της ίδιας περιόδου δεν δημιουργεί δεύτερη χρέωση.",
+      "implementation_steps": [
+        "S22",
+        "S24",
+        "S27",
+        "S28"
+      ]
+    },
+    {
+      "id": "EX-013",
+      "title_el": "Η στρογγυλοποίηση ανά γραμμή διαφέρει από τη στρογγυλοποίηση συνόλου",
+      "scenario_el": "Τρεις παράγωγες γραμμές 0,335 €: προτεινόμενη HALF_UP ανά γραμμή.",
+      "decision_ids": [
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "rounded_line_one",
+          "formula": "raw_unit * quantity",
+          "inputs": {
+            "raw_unit": "0.335",
+            "quantity": "1"
+          },
+          "expected": "0.34",
+          "rounding": "ROUND_HALF_UP"
+        },
+        {
+          "label": "rounded_line_two",
+          "formula": "raw_unit * quantity",
+          "inputs": {
+            "raw_unit": "0.335",
+            "quantity": "1"
+          },
+          "expected": "0.34",
+          "rounding": "ROUND_HALF_UP"
+        },
+        {
+          "label": "rounded_line_three",
+          "formula": "raw_unit * quantity",
+          "inputs": {
+            "raw_unit": "0.335",
+            "quantity": "1"
+          },
+          "expected": "0.34",
+          "rounding": "ROUND_HALF_UP"
+        },
+        {
+          "label": "sum_rounded_lines",
+          "formula": "line_one + line_two + line_three",
+          "inputs": {
+            "line_one": "0.34",
+            "line_two": "0.34",
+            "line_three": "0.34"
+          },
+          "expected": "1.02"
+        },
+        {
+          "label": "contrasting_round_total",
+          "formula": "raw_unit * quantity",
+          "inputs": {
+            "raw_unit": "0.335",
+            "quantity": "3"
+          },
+          "expected": "1.01",
+          "rounding": "ROUND_HALF_UP"
+        }
+      ],
+      "notes_el": "Πρόταση: 0,34 + 0,34 + 0,34 = 1,02 €. Στρογγυλοποίηση του αθροίσματος δίνει 1,01 €. Ο λογιστής πρέπει να επιλέξει τον κανόνα πριν την υλοποίηση. Δεν αποτελεί φορολογική γνωμάτευση.",
+      "implementation_steps": [
+        "S18",
+        "S22",
+        "S27",
+        "S28"
+      ]
+    },
+    {
+      "id": "EX-014",
+      "title_el": "Αρνητικό αρχικό υπόλοιπο υπό έγκριση",
+      "scenario_el": "Εφόσον εγκριθεί αρνητικό αρχικό -50,00 € και επιτρεπόμενη υπερανάληψη, είσπραξη 20,00 € δίνει -30,00 €.",
+      "decision_ids": [
+        "D08-01",
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "signed_opening + receipt",
+          "inputs": {
+            "signed_opening": "-50.00",
+            "receipt": "20.00"
+          },
+          "expected": "-30.00"
+        }
+      ],
+      "notes_el": "Το προσημασμένο αρχικό είναι ξεχωριστός τύπος. Δεν επιτρέπεται αρνητικό ποσό σε κανονική είσπραξη/πληρωμή.",
+      "implementation_steps": [
+        "S19"
+      ]
+    },
+    {
+      "id": "EX-015",
+      "title_el": "Κίνηση την ίδια ημέρα με το αρχικό",
+      "scenario_el": "Αρχικό 100,00 € στην αρχή της 15/01 και είσπραξη 25,00 € αργότερα την ίδια ημερομηνία.",
+      "decision_ids": [
+        "D08-01",
+        "D08-08"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash_at_end_of_opening_date",
+          "formula": "opening + receipt_same_day",
+          "inputs": {
+            "opening": "100.00",
+            "receipt_same_day": "25.00"
+          },
+          "expected": "125.00"
+        }
+      ],
+      "notes_el": "Πριν από την 15/01 το υπόλοιπο δεν θεωρείται μηδέν· δεν έχει καθοριστεί. Κίνηση πριν από την ημερομηνία αρχικού απορρίπτεται.",
+      "implementation_steps": [
+        "S19",
+        "S20",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-016",
+      "title_el": "Αποτυχία δεύτερου σκέλους μεταφοράς",
+      "scenario_el": "Πριν από τη μεταφορά Α=2.030,00 € και Β=100,00 €. Αποτυγχάνει το δεύτερο σκέλος.",
+      "decision_ids": [
+        "D08-06",
+        "D08-08"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "source_after_rollback",
+          "formula": "source_before",
+          "inputs": {
+            "source_before": "2030.00"
+          },
+          "expected": "2030.00"
+        },
+        {
+          "label": "destination_after_rollback",
+          "formula": "destination_before",
+          "inputs": {
+            "destination_before": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "new_effective_legs",
+          "formula": "committed_legs",
+          "inputs": {
+            "committed_legs": "0.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Αναμενόμενο αποτέλεσμα μελλοντικού τεστ S21. Ο αριθμητικός έλεγχος S17 δεν εκτελεί βάση δεδομένων.",
+      "implementation_steps": [
+        "S18",
+        "S21"
+      ]
+    },
+    {
+      "id": "EX-017",
+      "title_el": "Επανάληψη ίδιας επιβεβαιωμένης είσπραξης",
+      "scenario_el": "Η ίδια ταυτότητα αιτήματος και το ίδιο περιεχόμενο αποστέλλονται δύο φορές για είσπραξη 100,00 €.",
+      "decision_ids": [
+        "D08-03",
+        "D08-06"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "amount * effective_postings",
+          "inputs": {
+            "amount": "100.00",
+            "effective_postings": "1"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "new_effect_on_replay",
+          "formula": "replay_effect",
+          "inputs": {
+            "replay_effect": "0.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Επιστρέφεται η αρχική εγγραφή. Ίδια ταυτότητα με διαφορετικό περιεχόμενο απορρίπτεται.",
+      "implementation_steps": [
+        "S18",
+        "S20",
+        "S23"
+      ]
+    },
+    {
+      "id": "EX-018",
+      "title_el": "Αντιλογισμός είσπραξης με υπόλοιπο πιστωτικού",
+      "scenario_el": "Είσπραξη 120,00 €, κατανομή 100,00 €, πιστωτικό 20,00 €. Αντιλογίζεται ολόκληρη η είσπραξη, χωρίς προηγούμενες επιστροφές.",
+      "decision_ids": [
+        "D08-03",
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "receipt - reversal",
+          "inputs": {
+            "receipt": "120.00",
+            "reversal": "120.00"
+          },
+          "expected": "0.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charge - allocated + released",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "100.00",
+            "released": "100.00"
+          },
+          "expected": "100.00"
+        },
+        {
+          "label": "credit",
+          "formula": "credit_before + released - reversed_receipt",
+          "inputs": {
+            "credit_before": "20.00",
+            "released": "100.00",
+            "reversed_receipt": "120.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "Η αποδέσμευση δεν αφήνει πλασματικό πιστωτικό 120,00 € όταν έχει αντιλογιστεί η ίδια πηγή χρημάτων.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-019",
+      "title_el": "Αντιλογισμός επιστροφής επαναφέρει το ίδιο πιστωτικό",
+      "scenario_el": "Μετά από επιστροφή 20,00 € από είσπραξη 120,00 €, το ταμείο είναι 100,00 € και το πιστωτικό μηδέν. Αντιλογίζεται η επιστροφή.",
+      "decision_ids": [
+        "D08-04",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash",
+          "formula": "cash_before + reversed_refund",
+          "inputs": {
+            "cash_before": "100.00",
+            "reversed_refund": "20.00"
+          },
+          "expected": "120.00"
+        },
+        {
+          "label": "credit",
+          "formula": "credit_before + reversed_refund",
+          "inputs": {
+            "credit_before": "0.00",
+            "reversed_refund": "20.00"
+          },
+          "expected": "20.00"
+        },
+        {
+          "label": "outstanding",
+          "formula": "charge - allocated",
+          "inputs": {
+            "charge": "100.00",
+            "allocated": "100.00"
+          },
+          "expected": "0.00"
+        }
+      ],
+      "notes_el": "",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24",
+        "S29"
+      ]
+    },
+    {
+      "id": "EX-020",
+      "title_el": "Διόρθωση αρχικού υπολοίπου χωρίς επανεγγραφή παλιών ημερομηνιών",
+      "scenario_el": "Αρχικό 100,00 € και είσπραξη 25,00 € στις 15/01. Στις 16/01 επιβεβαιώνεται ότι χρειάζεται προσαρμογή αρχικού +20,00 €.",
+      "decision_ids": [
+        "D08-01",
+        "D08-06",
+        "D08-08",
+        "D08-10"
+      ],
+      "status": "Proposed business expectation; arithmetic check only",
+      "checks": [
+        {
+          "label": "cash_asof_15",
+          "formula": "opening + receipt",
+          "inputs": {
+            "opening": "100.00",
+            "receipt": "25.00"
+          },
+          "expected": "125.00"
+        },
+        {
+          "label": "cash_asof_16",
+          "formula": "opening + receipt + opening_adjustment",
+          "inputs": {
+            "opening": "100.00",
+            "receipt": "25.00",
+            "opening_adjustment": "20.00"
+          },
+          "expected": "145.00"
+        },
+        {
+          "label": "operating_in_unchanged",
+          "formula": "receipt",
+          "inputs": {
+            "receipt": "25.00"
+          },
+          "expected": "25.00"
+        }
+      ],
+      "notes_el": "Το αρχικό και η εικόνα της 15/01 δεν αλλάζουν. Η προσαρμογή τεκμηριώνεται χωριστά και δεν εμφανίζεται ως κανονικό έσοδο.",
+      "implementation_steps": [
+        "S19",
+        "S25",
+        "S29"
+      ]
+    }
+  ],
+  "denied_cases": [
+    {
+      "id": "DEN-01",
+      "title_el": "Μηδενικό/αρνητικό κανονικό ποσό",
+      "condition": "Zero/negative ordinary receipt, payment, transfer, allocation or refund.",
+      "implementation_steps": [
+        "S18",
+        "S20",
+        "S21",
+        "S23"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-02",
+      "title_el": "Μη έγκυρος αριθμός",
+      "condition": "Float, NaN, Infinity, malformed text or ordinary amount with more than two decimals.",
+      "implementation_steps": [
+        "S18",
+        "S20"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-03",
+      "title_el": "Ξένο γραφείο",
+      "condition": "Any foreign-office account, charge, cash source, counterparty or correction target.",
+      "implementation_steps": [
+        "S18",
+        "S21",
+        "S23",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-04",
+      "title_el": "Διαφορετικός συναλλασσόμενος",
+      "condition": "A receipt for B cannot settle a charge for A even inside the same office.",
+      "implementation_steps": [
+        "S23"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-05",
+      "title_el": "Λάθος κατεύθυνση",
+      "condition": "A customer receipt cannot settle a supplier payable; no implicit netting.",
+      "implementation_steps": [
+        "S23"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-06",
+      "title_el": "Υπέρβαση χρέωσης",
+      "condition": "Allocation exceeds remaining charge by even one cent.",
+      "implementation_steps": [
+        "S23"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-07",
+      "title_el": "Υπέρβαση διαθέσιμης πηγής",
+      "condition": "Allocation plus effective refunds exceeds its receipt/payment source.",
+      "implementation_steps": [
+        "S23",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-08",
+      "title_el": "Μη διαθέσιμο πιστωτικό για επιστροφή",
+      "condition": "Refund 20.01 when available unallocated source credit is 20.00.",
+      "implementation_steps": [
+        "S23",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-09",
+      "title_el": "Ίδια ταυτότητα, διαφορετικό αίτημα",
+      "condition": "Existing idempotency key reused with a changed amount, source or counterparty.",
+      "implementation_steps": [
+        "S18",
+        "S20",
+        "S21",
+        "S23"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-10",
+      "title_el": "Μη επιτρεπόμενη ημερομηνία",
+      "condition": "Cash before opening, future cash or correction inside a declared closed period.",
+      "implementation_steps": [
+        "S19",
+        "S20",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-11",
+      "title_el": "Μη διαθέσιμος συναλλασσόμενος",
+      "condition": "New work for an archived identity; retained-history corrections require explicit correction authority.",
+      "implementation_steps": [
+        "S22",
+        "S23",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-12",
+      "title_el": "Δεύτερος αντιλογισμός",
+      "condition": "Second effective reversal of the same original; dependent refunds not explicitly reversed first.",
+      "implementation_steps": [
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-13",
+      "title_el": "Ίδιο ή ξένο ταμείο μεταφοράς",
+      "condition": "Same source/destination or an account in another office.",
+      "implementation_steps": [
+        "S21"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-14",
+      "title_el": "Ανεπαρκής εξουσιοδότηση",
+      "condition": "Revoked profile/office, missing correction capability or missing required recent MFA.",
+      "implementation_steps": [
+        "S18",
+        "S23",
+        "S24"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-15",
+      "title_el": "Μη υποστηριζόμενη μετατροπή",
+      "condition": "Cross-currency or unsupported automatic VAT/proration policy cannot silently fall back.",
+      "implementation_steps": [
+        "S18",
+        "S22",
+        "S23",
+        "S28"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    },
+    {
+      "id": "DEN-16",
+      "title_el": "Διπλή χρέωση πηγής",
+      "condition": "The same office/agreement/period or task cannot be charged twice via another schedule version/retry.",
+      "implementation_steps": [
+        "S28",
+        "S37"
+      ],
+      "expected": "Reject without new money/allocation/audit effects relative to the pre-operation state.",
+      "status": "Proposed acceptance case; not executed against the application by S17"
+    }
+  ]
+}

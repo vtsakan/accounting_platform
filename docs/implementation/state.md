@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S24 Prepared — linked corrections, refunds and agreement lifecycle**. Next step: **Operator testing; S25 source follows**.
+Updated 2026-11-14. Current step: **S24 Verified — linked corrections, refunds and agreement lifecycle**. Next step: **S25 legacy migration and reconciliation**.
 
 
 
@@ -10,33 +10,10 @@ Updated 2026-11-14. Current step: **S24 Prepared — linked corrections, refunds
 ## Current selected work — S24
 
 <!-- S24-RESULT -->
-Prepared: code-only delivery. Migrations 0019/0020 add retained correction
-links, source-bound credit/advance refunds, owner/password/recent-MFA atomic
-cash/charge corrections, both transfer legs, prospective agreement amendments
-and cancellation, and a forward-only declared closed-period cutoff. Originals
-and allocations remain; replacement cash needs separate allocation confirmation.
-Separate cash balances and signed operating totals retain dated refund/reversal
-effects. New source/command/audit/event counts must commit as a complete group.
-No old receipt, assertion, migration or dependency lock is replaced. Supplied:
-51 new test methods; targets 656 passes, all 36 financial cases, 922 boundary
-cases. Targets are NOT observed results. No agent test/build/Docker/database/
-local demo/VM/account/MFA/key operation ran. Optional operator command:
-python3 tools/verify_s24.py --record. Historical S23 operator proof: 605 passes,
-36 financial cases, 838 boundary cases. Browser/client acceptance, restricted-role
-DDL, retained-demo migration and all 85 full acceptances remain Pending. S25
-legacy review/import/reconciliation remains separate; stop after S24.
-
-<!-- S24-LOCKING-FIX -->
-Operator reported 656 tests with 20 errors and one failure on 2026-11-14.
-The supplied tail identifies an unrestricted FOR UPDATE across a nullable
-release join and a CSRF-enforced client passed into the tokenless MFA fixture.
-Source fix restricts row locks to CashAllocation and reuses a real MFA-verified
-synthetic session for the CSRF request, including a successful GET assertion.
-No security check or financial assertion is removed. No migrations/locks change.
-Source remains Prepared: the corrected full PostgreSQL run is Pending. No agent
-test/build/database/VM/demo execution. See evidence/S24-locking-csrf-fix.json.
-<!-- /S24-LOCKING-FIX -->
-
+Verified by the operator's disposable Docker/PostgreSQL 17 execution; see
+S24-verification.json for actual suite, financial and boundary results. Prior
+S23 operator evidence is unchanged. This does not deploy or migrate the retained
+local demo/VM, accept the Greek browser flow or satisfy all 85 acceptances.
 <!-- /S24-RESULT -->
 
 ## Historical selected work — S23

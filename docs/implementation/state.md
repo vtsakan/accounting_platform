@@ -1,12 +1,33 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S23 Verified — partial settlements and separate credit**. Next step: **S24**.
+Updated 2026-11-14. Current step: **S24 Prepared — linked corrections, refunds and agreement lifecycle**. Next step: **Operator testing; S25 source follows**.
 
 
 
 
 
-## Current selected work — S23
+
+## Current selected work — S24
+
+<!-- S24-RESULT -->
+Prepared: code-only delivery. Migrations 0019/0020 add retained correction
+links, source-bound credit/advance refunds, owner/password/recent-MFA atomic
+cash/charge corrections, both transfer legs, prospective agreement amendments
+and cancellation, and a forward-only declared closed-period cutoff. Originals
+and allocations remain; replacement cash needs separate allocation confirmation.
+Separate cash balances and signed operating totals retain dated refund/reversal
+effects. New source/command/audit/event counts must commit as a complete group.
+No old receipt, assertion, migration or dependency lock is replaced. Supplied:
+51 new test methods; targets 656 passes, all 36 financial cases, 922 boundary
+cases. Targets are NOT observed results. No agent test/build/Docker/database/
+local demo/VM/account/MFA/key operation ran. Optional operator command:
+python3 tools/verify_s24.py --record. Historical S23 operator proof: 605 passes,
+36 financial cases, 838 boundary cases. Browser/client acceptance, restricted-role
+DDL, retained-demo migration and all 85 full acceptances remain Pending. S25
+legacy review/import/reconciliation remains separate; stop after S24.
+<!-- /S24-RESULT -->
+
+## Historical selected work — S23
 
 <!-- S23-RESULT -->
 Verified by operator-run Docker/PostgreSQL suite; see S23-verification.json. Historical S22 evidence is unchanged. Full acceptance remains Pending.

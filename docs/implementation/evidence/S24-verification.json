@@ -2,7 +2,7 @@
   "step": "S24",
   "status": "Prepared",
   "mode": "code-only-delivery",
-  "source_commit": null,
+  "source_commit": "git:06a9f9da152fb86aa5aaf92e2cea86f3a5f6407f",
   "prepared_at": "2026-11-14",
   "agent_tests_run": false,
   "docker_execution": false,

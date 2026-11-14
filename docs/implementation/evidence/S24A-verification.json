@@ -20,5 +20,13 @@
   "full_s47_accessibility_conformance": "Pending",
   "full_requirement_acceptance": "Pending",
   "operator_command": "python3 tools/verify_s24a.py --record",
-  "runbook": "docs/implementation/material_workspace.md"
+  "runbook": "docs/implementation/material_workspace.md",
+  "source_reference_commit": "git:4ece883fec0e83ab350204c77abd2f76699286a8",
+  "application_context_digest": "sha256:52db39d87b630b7c0421cd57857521c341393e406000db06b5a2e9f10bb2a917",
+  "static_source_checks": {
+    "python_and_javascript_syntax": "Parsed",
+    "previous_41_source_hashes_preserved": true,
+    "old_views_outside_dashboard_unchanged": true,
+    "runtime_execution": false
+  }
 }

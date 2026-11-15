@@ -25,5 +25,12 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "secret_scan_this_step": "Not executed; historical S24A evidence retained",
-  "next_step": "Operator synthetic gate and D05/G2 review; S26 when selected"
+  "next_step": "Operator synthetic gate and D05/G2 review; S26 when selected",
+  "source_commit": "git:bd635be61e256c90fd037d45e0a0dffb8dbdbac9",
+  "static_checks": {
+    "python_ast_parse": true,
+    "production_context_unchanged": true,
+    "s24a_receipts_byte_preserved": true,
+    "tests_executed": false
+  }
 }

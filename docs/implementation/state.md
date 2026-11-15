@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-14. Current step: **S24A Prepared — Material-inspired workspace**. Next step: **Operator UI verification; S25 remains separate**.
+Updated 2026-11-15. Current step: **S24A Verified — Material-inspired workspace**. Next step: **Browser review; S25 remains separate**.
 
 
 
@@ -11,17 +11,10 @@ Updated 2026-11-14. Current step: **S24A Prepared — Material-inspired workspac
 ## Current selected work — S24A
 
 <!-- S24A-RESULT -->
-Prepared: the owner requested an impressive Material-style office interface.
-Local light/dark tokens, original SVG icons, server-rendered navigation, Greek
-forms/tables/auth/error styling and a real read-only dashboard are supplied.
-The dashboard composes the existing scoped cash and operating selectors; no
-financial write or new calculation rule is introduced. All 20 migrations,
-old financial services, 656 assertions, locks and S24 receipt remain unchanged.
-Five focused contracts supplied: target 661 passes and all 36 finance cases,
-not observed results. No agent test/build/Docker/browser/migration/VM action.
-Optional operator gate: python3 tools/verify_s24a.py --record. Manual Greek
-responsive/keyboard/dark-mode review, S24A rollout and full S47 acceptance remain
-Pending. Read material_workspace.md. Stop after S24A; S25 remains separate.
+Operator production-image gate Verified: 661 passes, all 36 finance assertions,
+Greek catalog, dependency locks, secret scan and manifest static assets.
+Historical S24 receipt remains unchanged. Browser/keyboard/responsive/dark
+theme acceptance and S24A local/VM deployment remain Pending. S25 is separate.
 <!-- /S24A-RESULT -->
 
 The supplied latest VM log confirms the previous S24 upgrade is technically

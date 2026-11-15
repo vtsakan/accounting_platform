@@ -11,11 +11,13 @@ Updated 2026-11-15. Current step: **S25 Prepared — legacy rehearsal source**. 
 ## Current selected work — S25
 
 <!-- S25-RESULT -->
-S25 source is Prepared: strict snapshot-bound legacy planner and private Greek
-reports, an idempotent normal-service importer into new marked PostgreSQL 17
-resources, per-record exact reconciliation and encrypted native PG15 / target
-starting-point restore proofs. Supplied 34 planner tests and all new runtime
-checks are unexecuted. The user executes tools/verify_s25.py --record.
+S25 remains Prepared after the operator reached logical-15-to-17 and received
+docker exit 1. The original wrapper hid pg_restore stderr; its root cause is
+unconfirmed. Reaching the stage implies that the original 34-method planner
+gate completed, not that the restore/reconciliation/recovery succeeded.
+The restore input/metadata/diagnostic source fix and twelve additional guard
+methods are supplied but unexecuted (46 total methods). Operator retry:
+python3 tools/verify_s25.py --record. See evidence/S25-restore-fix.json.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

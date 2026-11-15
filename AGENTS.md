@@ -49,6 +49,17 @@ tests/builds/Docker/migrations/SSH/cloud/push; user executes supplied commands.
 All new tests/runtime are Prepared, and all 85 full acceptances remain Pending.
 Stop after S25; S26 queue/scheduler is a separately selected step.
 
+S25 operator follow-up: the supplied log reaches logical-15-to-17 and stops on
+docker exit 1. The old wrapper discarded pg_restore stderr, so the underlying
+SQL/archive/connection cause is unconfirmed. Read S25-restore-fix.json. Supply
+safe first-failure diagnostics, exact client/archive/empty-writable-server
+metadata and a private seekable tmpfs restore file with an explicit loopback
+connection. Keep atomic/exit-on-error and every source/financial/restore check.
+No DB privilege promotion, SQL filtering, trigger suppression, dependency change
+or existing demo/VM action. The source fix and twelve additional guard contracts
+are Prepared and unexecuted. Preserve the 34 original planner assertions and
+the actual S24A receipts; only operator retry can establish completion.
+
 ## Historical S24A — Material-inspired office workspace
 
 The product owner explicitly selected S24A now, before S25, and requested an

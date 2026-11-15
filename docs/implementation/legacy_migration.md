@@ -222,3 +222,41 @@ full requirement acceptances remain Pending. G2 additionally needs approved
 D05 decisions against the real snapshot, reviewed exception/account/obligation/
 allocation/transfer totals and a named freeze, cutover and rollback plan.
 S26 is selected separately; no Redis/worker/scheduler is introduced by S25.
+
+## Operator restore failure follow-up — Prepared
+
+The reported attempt stops at `logical-15-to-17: docker exit 1`. The original
+wrapper discarded pg_restore's stderr, so its archive/SQL/connection cause is
+**unconfirmed**. Reaching this stage implies that the original planner gate,
+source seeding/read-only export and dump commands returned successfully; it
+does not prove the forward restore or financial/recovery acceptance.
+
+The follow-up keeps the original 34 planner methods and supplies twelve new
+restore/diagnostic contracts. The optional operator command remains
+`python3 tools/verify_s25.py --record`; it starts fresh owned resources.
+No new application image, dependency update or rebuild is required.
+
+Before restoration it now checks the custom archive header, the exact owned
+database name/role, server major/port/read-write mode and empty target, then
+checks the destination pg_restore version and archive TOC source/dumper
+versions. It copies only this run's bounded private dump to a **regular file
+in an additional container tmpfs**, reads its TOC, and restores using explicit
+loopback/5432 credentials. This removes stream/implicit-connection ambiguity;
+it is not a claim that either was the original root cause. The original
+`--single-transaction`, `--exit-on-error`, no-owner/no-privileges and every
+row/financial/restore assertion remain in effect. No SQL is edited or skipped.
+
+A command failure prints `S25-DIAG` with phase, operation, exit code, classified
+error headers and version metadata, and retains the first failure across
+cleanup. `private/s25/<run>/failure-summary.json` is the small redacted report
+to share. `failure-private.json` retains bounded, credential-redacted stderr
+for local inspection; do not paste that larger private file. No command input,
+SQL dump, credentials or recovery identity contents are logged. If a disk-full
+condition prevents writing the files, the safe console diagnostic is retained.
+The temporary container restore file is removed after the attempt and the
+original run-owned resource cleanup still applies.
+
+Agent validation is static syntax/source preservation only. New tests, actual
+restore and the full S25 operator gate remain Pending. Primary references:
+[pg_restore](https://www.postgresql.org/docs/17/app-pgrestore.html) and
+[pg_dump](https://www.postgresql.org/docs/17/app-pgdump.html).

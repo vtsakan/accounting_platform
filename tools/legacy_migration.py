@@ -16,10 +16,12 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import threading
 import time
 
 from dev import ROOT, require_local_docker
 from legacy_plan import build_plan, digest, read_json, require
+from legacy_restore import archive_versions, client_major, failure_category, redact, safe_error_lines, validate_server
 
 DOCS = ROOT / 'docs/implementation'
 FIXTURES = DOCS / 'fixtures'
@@ -111,6 +113,33 @@ class Runner:
         self.values = {'S25_NONCE':self.nonce, 'S25_SYNTHETIC':'1', 'S25_SIGNING_KEY':secrets.token_urlsafe(64),
             'S25_OWNER_PASSWORD':secrets.token_urlsafe(36), 'DB_PASSWORD':secrets.token_urlsafe(36)}
         self.admin_password = secrets.token_urlsafe(36)
+        self.report_dir = ROOT / 'private/s25' / self.nonce
+        self.failure_summary = None
+        self.restore_context = None
+        self.failure_lock = threading.Lock()
+
+    def save_failure(self, operation, code, stderr):
+        with self.failure_lock:
+            return self._save_failure(operation,code,stderr)
+
+    def _save_failure(self, operation, code, stderr):
+        # Keep the first failure; cleanup errors must not erase its evidence.
+        if self.failure_summary is not None:
+            return self.failure_summary
+        text = stderr.decode(errors='replace') if isinstance(stderr, bytes) else str(stderr)
+        secrets_to_hide = [self.admin_password, *[v for k,v in self.values.items() if k.endswith(('_PASSWORD','_KEY'))]]
+        summary = {'step':'S25','status':'Failed','stage':self.stage,'operation':operation,
+            'exit_code':code,'category':failure_category(text),'error_headers':safe_error_lines(text,secrets_to_hide),
+            'restore_metadata':self.restore_context,'root_cause_confirmed':False}
+        try:
+            private_json(self.report_dir/'failure-private.json', {**summary, 'stderr_redacted':redact(text,secrets_to_hide)[-32768:]})
+            private_json(self.report_dir/'failure-summary.json',summary)
+            self.failure_summary = self.report_dir/'failure-summary.json'
+        except OSError:
+            summary['diagnostic_file_written'] = False
+            self.failure_summary = 'S25-DIAG console output; diagnostic file unavailable'
+        print('S25-DIAG '+json.dumps(summary,ensure_ascii=False,sort_keys=True),file=sys.stderr,flush=True)
+        return self.failure_summary
 
     def run(self, command, *, data=None, file=None, allowed=(0,), timeout=300):
         # Never attach to caller stdin; operator scripts are often pasted as heredocs.
@@ -126,10 +155,13 @@ class Runner:
                     require(stdout.tell() <= 64 * 1024 * 1024, 'Η έξοδος υπερβαίνει το όριο δοκιμής.')
                     stdout.seek(0); output = stdout.read()
         except subprocess.TimeoutExpired:
+            self.save_failure(Path(str(command[0])).name,None,'Command timeout')
             raise RuntimeError('Έληξε ο χρόνος της λειτουργίας ' + self.stage) from None
         if result.returncode not in allowed:
+            details = self.save_failure('pg_restore' if 'pg_restore' in command else Path(str(command[0])).name,
+                result.returncode,result.stderr)
             diagnostic = next((line for line in result.stderr.decode(errors='replace').splitlines() if line.startswith('S25-WORKER ')), '')
-            raise RuntimeError(f'{self.stage}: {Path(str(command[0])).name} exit {result.returncode}' + ('; ' + diagnostic if diagnostic else ''))
+            raise RuntimeError(f'{self.stage}: {Path(str(command[0])).name} exit {result.returncode}; diagnostic: {details}' + ('; ' + diagnostic if diagnostic else ''))
         return output, result.returncode, result.stderr
 
     def docker(self, *args, **kwargs):
@@ -211,9 +243,51 @@ class Runner:
             '--format','custom','--quote-all-identifiers','--no-owner','--no-privileges',file=path, timeout=300)
 
     def restore(self, container, database, path, *, user='postgres'):
-        require(Path(path).stat().st_size <= MAX_DUMP, 'Υπερβολικό στιγμιότυπο.')
-        self.docker('exec','--interactive',container,'pg_restore','--username',user,'--dbname',database,
-            '--single-transaction','--exit-on-error','--no-owner','--no-privileges', data=Path(path).read_bytes())
+        phase = self.stage
+        self.own('container',container)
+        major = 15 if container == self.pg15 else 17
+        allowed = ({'s25_source_restore_'+self.nonce} if container == self.pg15 else
+            {'s25_raw_'+self.nonce,'s25_target_'+self.nonce} if container == self.pg17 else set())
+        require(database in allowed and user == ('s25_runner' if database == 's25_target_'+self.nonce else 'postgres'),
+            'Μη επιτρεπόμενος στόχος ή ρόλος ανάκτησης S25.')
+        path = Path(path)
+        require(not path.is_symlink() and path.resolve(strict=True).is_relative_to(self.work.resolve())
+            and 5 < path.stat().st_size <= MAX_DUMP,'Μη έγκυρο ιδιωτικό στιγμιότυπο S25.')
+        with path.open('rb') as stream:
+            require(stream.read(5) == b'PGDMP','Το στιγμιότυπο δεν είναι αρχείο PostgreSQL custom format.')
+        self.stage = phase+'/target-preflight'
+        info = json.loads(self.psql(container,database,"""SELECT json_build_object(
+            'database',current_database(),'user',current_user,
+            'version',current_setting('server_version_num')::integer,
+            'port',current_setting('port')::integer,
+            'read_only',current_setting('transaction_read_only'),
+            'user_tables',(SELECT count(*) FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')))::text;""",user=user))
+        self.restore_context = {'server_major':info.get('version',0)//10000,'expected_major':major,
+            'role_matches':info.get('user')==user,'database_matches':info.get('database')==database,
+            'read_only':info.get('read_only'),'user_tables':info.get('user_tables')}
+        validate_server(info,database=database,user=user,major=major)
+        version = self.docker('exec','--user','0:0',container,'pg_restore','--version')[0].decode()
+        require(client_major(version) == major,'Το pg_restore δεν συμφωνεί με τη δοκιμαστική έκδοση στόχου.')
+        remote = '/s25-recovery/restore-'+secrets.token_hex(8)+'.dump'
+        try:
+            self.stage = phase+'/archive-copy'
+            self.docker('cp',str(path),container+':'+remote)
+            self.docker('exec','--user','0:0',container,'chmod','0600',remote)
+            self.stage = phase+'/archive-preflight'
+            toc = self.docker('exec','--user','0:0',container,'pg_restore','--list',remote)[0].decode()
+            metadata = archive_versions(toc); self.restore_context.update(metadata)
+            require(metadata['dumped_by_major'] == major and metadata['source_major'] <= major,
+                'Η έκδοση αρχείου δεν συμφωνεί με την αναμενόμενη πηγή/στόχο· δεν γίνεται παράκαμψη SQL.')
+            self.stage = phase+'/restore-execute'
+            password = self.values['DB_PASSWORD'] if user == 's25_runner' else self.admin_password
+            self.docker('exec','--user','0:0','--env','PGPASSWORD='+password,container,'pg_restore',
+                '--host','127.0.0.1','--port','5432','--username',user,'--dbname',database,
+                '--single-transaction','--exit-on-error','--no-owner','--no-privileges',remote)
+        finally:
+            _, cleanup_code, _ = self.docker('exec','--user','0:0',container,'rm','-f','--',remote,allowed=(0,1,125,126,127))
+            if cleanup_code:
+                private_json(self.report_dir/'restore-file-cleanup.json',{'container':container,'failed':True})
+        self.stage = phase
 
     def start(self, application, source_image=PG15_DISCOVERY):
         self.stage = 'image-identity'
@@ -247,7 +321,8 @@ class Runner:
                 (self.pg17,self.image17,['--mount','type=volume,src='+self.volume+',dst=/var/lib/postgresql/data'])]:
             self.stage = 'database-start'
             self.docker('run','--detach','--name',name,'--platform','linux/amd64','--network',self.network,
-                '--label',LABEL+'='+self.nonce,'--env-file',admin_env,*mount,image)
+                '--label',LABEL+'='+self.nonce,'--env-file',admin_env,
+                '--tmpfs','/s25-recovery:rw,noexec,nosuid,size=256m,mode=0700',*mount,image)
             self.resources.append(('container',name))
             deadline = time.monotonic() + 120
             while True:
@@ -340,7 +415,7 @@ def rehearse(args):
     require(unit.returncode == 0, 'Απέτυχαν οι έλεγχοι σχεδιασμού S25. Εκτελέστε: python3 -m unittest discover -s tools -p test_s25.py -v')
     counts = re.findall(r'Ran ([0-9]+) tests?',unit.stderr)
     require(len(counts) == 1 and int(counts[0]) > 0 and 'skipped=' not in unit.stderr, 'Μη πλήρης εκτέλεση ελέγχων σχεδιασμού.')
-    tool_manifest = {name:sha(ROOT/'tools'/name) for name in (*S25_FILES,'legacy_migration.py','verify_s25.py','test_s25.py')}
+    tool_manifest = {name:sha(ROOT/'tools'/name) for name in (*S25_FILES,'legacy_migration.py','legacy_restore.py','verify_s25.py','test_s25.py')}
     require_local_docker(); check_age(); identity_file(args.identity)
     require_tmpfs('/dev/shm')
     source = read_json(FIXTURES/'s25-source.json'); review = read_json(FIXTURES/'s25-review.json')
@@ -364,6 +439,7 @@ def rehearse(args):
             runner.dump(runner.pg15,runner.pg15,source_db,native)
             runner.dump(runner.pg17,runner.pg15,source_db,forward)
             runner.stage = 'logical-15-to-17'
+            print('[S25] Έλεγχος αρχείου και επαναφορά στον νέο στόχο PostgreSQL 17.',flush=True)
             runner.restore(runner.pg17,raw_db,forward)
             require(source_fingerprint == runner.fingerprints(runner.pg17,raw_db), 'Το λογικό αντίγραφο 15→17 διαφέρει.')
             require(digest(runner.worker('export-raw',source,review)) == digest(source), 'Η κανονική εξαγωγή 17 διαφέρει.')
@@ -436,6 +512,10 @@ def rehearse(args):
                 'full_requirement_acceptance':'Pending','full_requirement_acceptances_pending':85,
                 'source_tables_compared':len(source_fingerprint),'target_tables_compared':len(baseline_fingerprint)}
             private_json(report_dir/'backup-receipt.json',backup)
+        except (Exception,KeyboardInterrupt) as error:
+            if runner.failure_summary is None:
+                runner.save_failure(type(error).__name__,None,str(error))
+            raise
         finally:
             failures = runner.cleanup()
             private_json(report_dir/'resource-cleanup.json',{'leftover_owned_resources':failures})

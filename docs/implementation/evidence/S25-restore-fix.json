@@ -1,0 +1,34 @@
+{
+  "step": "S25",
+  "status": "Prepared",
+  "recorded_at": "2026-11-15",
+  "operator_observed_failure": {
+    "stage": "logical-15-to-17",
+    "command": "docker",
+    "exit_code": 1,
+    "underlying_stderr": "Discarded by the original wrapper; unavailable",
+    "underlying_cause_confirmed": false,
+    "planner_gate_success_inferred_from_reached_stage": true,
+    "original_planner_methods_in_delivered_source": 34,
+    "forward_restore_financial_reconciliation_recovery_completed": false
+  },
+  "changes": [
+    "Preserve first safe failure summary and private credential-redacted stderr",
+    "Check exact owned empty writable database role and server/client/archive majors",
+    "Use a seekable private regular file inside container tmpfs with explicit loopback connection",
+    "Keep atomic exit-on-error and all source/financial/recovery assertions",
+    "Retain original 34 planner methods and supply 12 additional restore/diagnostic methods"
+  ],
+  "new_test_methods_supplied": 12,
+  "total_s25_test_methods_supplied": 46,
+  "new_tests_executed_by_agent": false,
+  "docker_builds_or_containers_executed_by_agent": false,
+  "database_or_migration_execution_by_agent": false,
+  "application_source_migrations_or_dependency_locks_changed": false,
+  "cloud_vm_local_demo_accounts_mfa_or_keys_changed": false,
+  "production_tests_previously_passed": 661,
+  "preserved_application_context": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
+  "operator_retry": "python3 tools/verify_s25.py --record",
+  "actual_restore_result": "Pending",
+  "d05_g2_and_full_requirement_acceptance": "Pending"
+}

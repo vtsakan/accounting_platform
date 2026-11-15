@@ -6,6 +6,7 @@ import tempfile
 import unittest
 
 from legacy_plan import afm, build_plan, cents, day, digest, positive_id, read_json
+from legacy_restore import archive_versions, client_major, failure_category, redact, safe_error_lines, validate_server
 
 FIXTURES = Path(__file__).resolve().parents[1]/'docs/implementation/fixtures'
 
@@ -226,6 +227,117 @@ class PlannerTests(unittest.TestCase):
         self.review['records']['transactions:3'].pop('allocations')
         plan=self.plan()
         self.assertEqual(self.state(plan,'agreements:1')['action'],'quarantine')
+
+
+class RestoreContractTests(unittest.TestCase):
+    def server(self):
+        return {'database':'s25_raw_'+'a'*20,'user':'postgres','version':170011,
+            'port':5432,'read_only':'off','user_tables':0}
+
+    def test_client_and_archive_versions_parsed_independently(self):
+        self.assertEqual(client_major('pg_restore (PostgreSQL) 17.11 (Debian)'),17)
+        toc='; Dumped from database version: 15.20\n; Dumped by pg_dump version: 17.11\n'
+        self.assertEqual(archive_versions(toc),{'source_major':15,'dumped_by_major':17})
+
+    def test_missing_archive_version_is_not_assumed(self):
+        with self.assertRaises(ValueError):
+            archive_versions('; Dumped from database version: 15.20')
+        with self.assertRaises(ValueError):
+            client_major('unrelated output')
+
+    def test_empty_writable_expected_target_accepted(self):
+        info=self.server()
+        validate_server(info,database=info['database'],user='postgres',major=17)
+
+    def test_wrong_server_role_database_or_nonempty_target_denied(self):
+        original=self.server()
+        for field,value in [('database','accounting_platform'),('user','another_role'),('version',150020),
+                ('version',True),('port',5433),('read_only','on'),('user_tables',1)]:
+            info={**original,field:value}
+            with self.subTest(field=field,value=value),self.assertRaises(ValueError):
+                validate_server(info,database=original['database'],user='postgres',major=17)
+
+    def test_restore_failure_categories_do_not_suppress_errors(self):
+        for text,expected in [('pg_restore: error: could not seek in input file','archive-seek-or-block'),
+                ('ERROR: unrecognized configuration parameter','unsupported-server-setting'),
+                ('ERROR: duplicate key value violates unique constraint','constraint'),
+                ('No space left on device','disk-capacity'),('unrecognised new error','unclassified')]:
+            with self.subTest(expected=expected):
+                self.assertEqual(failure_category(text),expected)
+
+    def test_secrets_redacted_before_private_or_public_output(self):
+        secret='example-'+'a'*40
+        raw='pg_restore: error: authentication failed '+secret
+        self.assertNotIn(secret,redact(raw,[secret]))
+        self.assertNotIn(secret,'\n'.join(safe_error_lines(raw,[secret])))
+
+    def test_public_headers_exclude_sql_and_detail_values(self):
+        text='pg_restore: error: could not execute query: ERROR: relation "private_name" already exists\nDETAIL: synthetic-value\nCommand was: INSERT INTO x VALUES (\'private-value\');'
+        headers='\n'.join(safe_error_lines(text,[]))
+        self.assertIn('already exists',headers)
+        for private in ('private_name','synthetic-value','private-value','INSERT INTO'):
+            self.assertNotIn(private,headers)
+
+    def test_headers_are_bounded(self):
+        self.assertEqual(len(safe_error_lines('\n'.join('pg_restore: error: '+'x'*2000 for _ in range(8)),[])),3)
+        self.assertTrue(all(len(line)<=500 for line in safe_error_lines('pg_restore: error: '+'x'*2000,[])))
+
+    def restore_runner(self, directory, *, fail=False):
+        from legacy_migration import Runner
+        class Fake(Runner):
+            def __init__(self):
+                self.work=Path(directory);self.nonce='a'*20;self.pg15='owned-15';self.pg17='owned-17'
+                self.stage='logical-15-to-17';self.admin_password='synthetic-admin'
+                self.values={'DB_PASSWORD':'synthetic-app'};self.report_dir=self.work
+                self.calls=[];self.restore_context=None
+            def own(self,*args):
+                return {}
+            def psql(self,*args,**kwargs):
+                return json.dumps({'database':'s25_raw_'+self.nonce,'user':'postgres','version':170011,
+                    'port':5432,'read_only':'off','user_tables':0})
+            def docker(self,*args,**kwargs):
+                self.calls.append((args,kwargs))
+                if '--version' in args:
+                    return b'pg_restore (PostgreSQL) 17.11',0,b''
+                if '--list' in args:
+                    return b'; Dumped from database version: 15.20\n; Dumped by pg_dump version: 17.11\n',0,b''
+                if '--single-transaction' in args and fail:
+                    raise RuntimeError('synthetic restore failure')
+                return b'',0,b''
+        return Fake()
+
+    def test_restore_uses_seekable_tmpfs_file_explicit_target_and_atomic_flags(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory);path=Path(directory)/'forward.dump';path.write_bytes(b'PGDMPsynthetic')
+            runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            calls=[args for args,_ in runner.calls]
+            restore=next(args for args in calls if '--single-transaction' in args)
+            self.assertIn('--exit-on-error',restore);self.assertIn('--host',restore)
+            self.assertIn('127.0.0.1',restore);self.assertNotIn('--interactive',restore)
+            self.assertTrue(restore[-1].startswith('/s25-recovery/'))
+            self.assertEqual(calls[-1][4:7],('rm','-f','--'))
+            self.assertEqual(runner.stage,'logical-15-to-17')
+
+    def test_failure_keeps_restore_exception_and_removes_private_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory,fail=True);path=Path(directory)/'forward.dump';path.write_bytes(b'PGDMPsynthetic')
+            with self.assertRaisesRegex(RuntimeError,'synthetic restore failure'):
+                runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            self.assertEqual(runner.calls[-1][0][4:7],('rm','-f','--'))
+
+    def test_non_owned_database_name_is_rejected_before_restore(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory)
+            with self.assertRaises(ValueError):
+                runner.restore(runner.pg17,'accounting_demo_retained',Path(directory)/'missing.dump')
+            self.assertEqual(runner.calls,[])
+
+    def test_invalid_archive_header_is_rejected_before_db_commands(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory);path=Path(directory)/'wrong.dump';path.write_bytes(b'not-a-custom-archive')
+            with self.assertRaises(ValueError):
+                runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            self.assertEqual(runner.calls,[])
 
 
 if __name__ == '__main__':

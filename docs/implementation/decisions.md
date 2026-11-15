@@ -694,3 +694,20 @@ a separately selected upgrade. Operator-only files do not change the verified
 production context or require a repeat production suite. The helper correction
 is Prepared until operator execution; browser/local deployment acceptance and
 S24A VM rollout remain Pending. No S25, account/MFA reset or migration action.
+
+### S24A retained local database upgrade pathway — Prepared
+
+The operator has applied the preview-authentication fix and now reaches its
+database-schema guard: the retained accounting-client-demo has twelve migrations,
+not twenty. The production verification used a disposable database and did not
+upgrade that retained demo. Supply a separate explicit operator command for its
+forward S18-to-S24 migration. Use the existing recovery recipient/identity and
+an encrypted database/environment backup outside Git, check its decryption and
+the frozen source snapshot before migration. Retain the original-column/row
+comparison across every old public table, including credentials/MFA/sessions;
+only Django migrations/content types/permissions may append their normal rows.
+Preserve unknown legacy opening dates and forbid inferred new financial work.
+Start the Material preview only after the preservation checks pass. Failures
+retain backups and the database volume without automatic downgrade, reset or
+restore. This does not change production-context inputs, the operator's 661/661
+receipt, the existing VM, or S25. New helper execution remains Pending.

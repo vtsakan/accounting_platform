@@ -54,6 +54,16 @@ The preview --inspect option reads only migration/version metadata and may start
 the already existing demo database; it never builds/replaces web. An old local
 schema is separate from the disposable production-test database and upgraded VM.
 
+The operator retry now reaches the schema guard successfully and reports twelve
+applied local migrations. Prepare the explicit local-only S18/0012 -> S24/0020
+path in tools/upgrade_local_s24a.py; read local_s24a_upgrade.md. It backs up the
+retained database and .env with the existing age recipient outside Git, checks
+decryption, applies only versioned forward migrations and compares all original
+columns/rows including account/password/MFA/session tables before starting the
+Material preview. No bootstrap/reset, volume removal, .env/key rewrite, cloud
+or VM operation. Preserve the successful 661-test receipt. This operator helper
+is Prepared; no agent runtime/test/build/migration execution is authorised.
+
 The actual operator VM log is now deployed_and_restored: through 0020, 24 old
 tables preserved, restricted role, matching off-VM restore and HTTPS/CSRF checks.
 See evidence/S24-VM-deployment.json; actual browser/MFA acceptance stays Pending.

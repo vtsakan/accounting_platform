@@ -79,6 +79,13 @@ def main():
         require(matches, 'Local demo is not at S24/0020: found ' + str(len(actual['migrations'])) +
                 ' applied migrations; expected exactly 20 on PostgreSQL 17. '
                 'No migration or web replacement was performed. Use PREVIEW_S24A.html until the separate local upgrade is reviewed')
+        stage = 'local-upgrade-receipt'
+        journal = ROOT / 'private/s24a-local-upgrade.json'
+        if journal.exists():
+            upgrade = json.loads(journal.read_text())
+            require(not upgrade.get('migration_attempted')
+                    or upgrade.get('migration', {}).get('original_columns_and_rows_preserved') is True,
+                    'A local upgrade lacks its preservation receipt; keep web stopped and retain its backup for review')
         stage = 'preview-config'
         override = ROOT / 'private/s24a-compose.override.yml'
         override.parent.mkdir(parents=True, exist_ok=True, mode=0o700)

@@ -1,0 +1,31 @@
+{
+  "step": "S25",
+  "status": "Prepared",
+  "recorded_at": "2026-11-16",
+  "operator_observed_failure": {
+    "stage": "logical-15-to-17/archive-copy",
+    "operation": "docker",
+    "exit_code": 1,
+    "category": "unclassified",
+    "error_headers": [],
+    "server_major": 17,
+    "expected_major": 17,
+    "database_matches": true,
+    "role_matches": true,
+    "read_only": "off",
+    "user_tables": 0,
+    "restore_execution_reached": false,
+    "raw_docker_error_not_supplied": true
+  },
+  "design_issue_identified": "docker cp targeted a user-created tmpfs mount; Docker documents cp limitations for such mounts",
+  "change": "Write bounded binary input through docker exec inside tmpfs and verify SHA-256 before restoring the regular file",
+  "source_reference": "https://docs.docker.com/reference/cli/docker/container/cp/#corner-cases",
+  "original_test_methods_preserved": 46,
+  "additional_test_methods_supplied": 4,
+  "total_s25_test_methods_supplied": 50,
+  "agent_runtime_or_test_execution": false,
+  "application_schema_locks_demo_vm_accounts_mfa_keys_changed": false,
+  "atomic_restore_source_financial_and_recovery_assertions_waived": false,
+  "actual_operator_retry_result": "Pending",
+  "full_requirement_acceptance": "Pending"
+}

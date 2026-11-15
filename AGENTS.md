@@ -60,6 +60,14 @@ or existing demo/VM action. The source fix and twelve additional guard contracts
 are Prepared and unexecuted. Preserve the 34 original planner assertions and
 the actual S24A receipts; only operator retry can establish completion.
 
+Latest operator retry on 2026-11-16 reaches logical-15-to-17/archive-copy.
+Server 17, expected role/database, writable mode and empty target all pass;
+docker cp fails before pg_restore. Docker documents cp limitations for tmpfs
+and user-created mounts. Replace that transfer with a fixed-script, positional-
+path docker exec writer, verify exact SHA-256 inside tmpfs, and keep the seekable
+file restore and every existing assertion. Preserve all 46 prior test methods;
+four additional contracts are source-only. S25 remains Prepared until retry.
+
 ## Historical S24A — Material-inspired office workspace
 
 The product owner explicitly selected S24A now, before S25, and requested an

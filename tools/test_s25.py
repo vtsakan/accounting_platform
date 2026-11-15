@@ -1,5 +1,6 @@
 """Operator-run planner contracts. No Django, database, Docker or network use."""
 import copy
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -301,6 +302,9 @@ class RestoreContractTests(unittest.TestCase):
                     return b'pg_restore (PostgreSQL) 17.11',0,b''
                 if '--list' in args:
                     return b'; Dumped from database version: 15.20\n; Dumped by pg_dump version: 17.11\n',0,b''
+                if 'sha256sum' in args:
+                    data=next(kwargs['data'] for cmd,kwargs in self.calls if 's25-archive-copy' in cmd)
+                    return (hashlib.sha256(data).hexdigest()+'  '+args[-1]+'\n').encode(),0,b''
                 if '--single-transaction' in args and fail:
                     raise RuntimeError('synthetic restore failure')
                 return b'',0,b''
@@ -338,6 +342,56 @@ class RestoreContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
             self.assertEqual(runner.calls,[])
+
+    def test_tmpfs_transfer_preserves_binary_bytes_without_docker_cp_or_tty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory);path=Path(directory)/'forward.dump'
+            payload=b'PGDMP\x00\xff\x80\r\n\x00synthetic';path.write_bytes(payload)
+            runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            writes=[(args,kwargs) for args,kwargs in runner.calls if 's25-archive-copy' in args]
+            self.assertEqual(len(writes),1)
+            args,kwargs=writes[0]
+            self.assertEqual(kwargs['data'],payload)
+            self.assertIn('--interactive',args);self.assertNotIn('--tty',args)
+            self.assertIn('sh',args);self.assertIn('set -C; umask 077; exec cat > "$1"',args)
+            self.assertTrue(args[-1].startswith('/s25-recovery/'))
+            self.assertFalse(any(args[0]=='cp' for args,_ in runner.calls))
+            self.assertTrue(runner.restore_context['archive_bytes_match'])
+
+    def test_failed_tmpfs_write_does_not_start_restore_and_still_cleans_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory);path=Path(directory)/'forward.dump';path.write_bytes(b'PGDMPsynthetic')
+            original=runner.docker
+            def failed(*args,**kwargs):
+                if 's25-archive-copy' in args:
+                    raise RuntimeError('synthetic tmpfs write failure')
+                return original(*args,**kwargs)
+            runner.docker=failed
+            with self.assertRaisesRegex(RuntimeError,'synthetic tmpfs write failure'):
+                runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            self.assertFalse(any('--single-transaction' in args for args,_ in runner.calls))
+            self.assertEqual(runner.calls[-1][0][4:7],('rm','-f','--'))
+
+    def test_changed_transferred_bytes_stop_before_sql_restore(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.restore_runner(directory);path=Path(directory)/'forward.dump';path.write_bytes(b'PGDMPsynthetic')
+            original=runner.docker
+            def changed(*args,**kwargs):
+                if 'sha256sum' in args:return b'wrong-checksum',0,b''
+                return original(*args,**kwargs)
+            runner.docker=changed
+            with self.assertRaises(ValueError):
+                runner.restore(runner.pg17,'s25_raw_'+runner.nonce,path)
+            self.assertFalse(any('--single-transaction' in args for args,_ in runner.calls))
+            self.assertFalse(runner.restore_context['archive_bytes_match'])
+            self.assertEqual(runner.calls[-1][0][4:7],('rm','-f','--'))
+
+    def test_docker_and_shell_error_headers_remain_visible_and_redacted(self):
+        text='Error response from daemon: cannot write "private-path"\nsh: 1: cannot create "private-path": Read-only file system\nDETAIL: excluded-value'
+        headers='\n'.join(safe_error_lines(text,[]))
+        self.assertIn('Error response from daemon:',headers);self.assertIn('Read-only file system',headers)
+        self.assertNotIn('private-path',headers);self.assertNotIn('excluded-value',headers)
+        self.assertEqual(failure_category(text),'private-mount-write')
 
 
 if __name__ == '__main__':

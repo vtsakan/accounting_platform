@@ -260,3 +260,34 @@ Agent validation is static syntax/source preservation only. New tests, actual
 restore and the full S25 operator gate remain Pending. Primary references:
 [pg_restore](https://www.postgresql.org/docs/17/app-pgrestore.html) and
 [pg_dump](https://www.postgresql.org/docs/17/app-pgdump.html).
+
+## Tmpfs transfer follow-up — Prepared, 2026-11-16
+
+The latest operator diagnostic specifically reports `logical-15-to-17/archive-copy`:
+PostgreSQL 17, expected database/role, writable mode and zero user tables all
+passed; the failing command is the Docker archive copy, before pg_restore.
+The previous adapter incorrectly used `docker cp` to a user-created tmpfs mount,
+a documented Docker cp corner case. The exact raw Docker error text was not
+shared, so the full operator retry is still required.
+
+The transfer now runs a fixed `sh`/`cat` writer through `docker exec -i` inside
+the owned container mount namespace. A positional argument supplies only the
+generated private path; binary dump bytes are stdin data, never shell text.
+Noclobber, umask 077 and mode 0600 retain a private regular file in tmpfs.
+An in-container SHA-256 must match the original dump before TOC/SQL processing.
+pg_restore still reads that seekable file, with the existing atomic/exit-on-error
+flags and all ownership, version, reconciliation and recovery assertions.
+
+All 46 previous test method bodies remain unchanged; four extra contracts cover
+binary transport/no-tty/no-docker-cp, write failure cleanup, hash mismatch denial,
+and safe Docker/shell error headers. They are supplied but not agent-executed.
+Safe diagnostics now retain Docker/shell headers as well as PostgreSQL headers.
+The same optional command starts fresh owned resources:
+
+```bash
+python3 tools/verify_s25.py --record
+```
+
+See [Docker cp corner cases](https://docs.docker.com/reference/cli/docker/container/cp/#corner-cases)
+and [Docker exec](https://docs.docker.com/reference/cli/docker/container/exec/).
+No application source, dependency, schema, retained demo or VM change is included.

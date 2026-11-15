@@ -271,8 +271,18 @@ class Runner:
         remote = '/s25-recovery/restore-'+secrets.token_hex(8)+'.dump'
         try:
             self.stage = phase+'/archive-copy'
-            self.docker('cp',str(path),container+':'+remote)
+            # docker cp cannot reliably access user-mounted tmpfs paths.
+            # Run the writer in the container mount namespace; pg_restore still
+            # receives a seekable regular file, never this stdin stream.
+            self.restore_context['archive_bytes_match'] = False
+            self.docker('exec','--interactive','--user','0:0',container,'sh','-c',
+                'set -C; umask 077; exec cat > "$1"','s25-archive-copy',remote,data=path.read_bytes())
             self.docker('exec','--user','0:0',container,'chmod','0600',remote)
+            self.stage = phase+'/archive-copy-verify'
+            checksum = self.docker('exec','--user','0:0',container,'sha256sum',remote)[0].decode().split()
+            require(bool(checksum) and checksum[0] == sha(path).removeprefix('sha256:'),
+                'Το αρχείο μέσα στο tmpfs διαφέρει από το αρχικό στιγμιότυπο· η ανάκτηση σταμάτησε πριν από SQL.')
+            self.restore_context['archive_bytes_match'] = True
             self.stage = phase+'/archive-preflight'
             toc = self.docker('exec','--user','0:0',container,'pg_restore','--list',remote)[0].decode()
             metadata = archive_versions(toc); self.restore_context.update(metadata)

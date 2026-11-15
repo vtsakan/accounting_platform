@@ -8,7 +8,7 @@
   "preserved_application_context": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
   "production_tests_previously_passed": 661,
   "financial_cases_previously_passed": 36,
-  "new_planner_test_methods_supplied": 46,
+  "new_planner_test_methods_supplied": 50,
   "new_tests_executed": false,
   "application_tests_rerun": false,
   "docker_builds_or_containers_executed": false,
@@ -34,9 +34,11 @@
     "tests_executed": false
   },
   "operator_latest_attempt": {
-    "stage": "logical-15-to-17",
+    "stage": "logical-15-to-17/archive-copy",
     "status": "Failed",
-    "underlying_cause": "Pending: original pg_restore stderr omitted"
+    "postgres17_target_preflight": "Passed",
+    "pg_restore_executed": false
   },
-  "restore_followup": "docs/implementation/evidence/S25-restore-fix.json"
+  "restore_followup": "docs/implementation/evidence/S25-restore-fix.json",
+  "tmpfs_transfer_followup": "docs/implementation/evidence/S25-tmpfs-fix.json"
 }

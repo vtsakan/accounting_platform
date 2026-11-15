@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-15. Current step: **S25 Prepared — legacy rehearsal source**. Next: **Operator synthetic gate; D05/G2 review remains Pending**.
+Updated 2026-11-16. Current step: **S25 Prepared — tmpfs transfer source fix**. Next: **Operator retry; D05/G2 remain Pending**.
 
 
 
@@ -11,13 +11,13 @@ Updated 2026-11-15. Current step: **S25 Prepared — legacy rehearsal source**. 
 ## Current selected work — S25
 
 <!-- S25-RESULT -->
-S25 remains Prepared after the operator reached logical-15-to-17 and received
-docker exit 1. The original wrapper hid pg_restore stderr; its root cause is
-unconfirmed. Reaching the stage implies that the original 34-method planner
-gate completed, not that the restore/reconciliation/recovery succeeded.
-The restore input/metadata/diagnostic source fix and twelve additional guard
-methods are supplied but unexecuted (46 total methods). Operator retry:
-python3 tools/verify_s25.py --record. See evidence/S25-restore-fix.json.
+The latest operator retry passes PostgreSQL 17, role/database, writable and empty-
+target checks, then fails at logical-15-to-17/archive-copy before pg_restore.
+The adapter used docker cp into a user-created tmpfs mount, a documented Docker
+limitation. A fixed docker exec binary writer and exact SHA-256 verification
+replace that transfer. All 46 prior test method bodies are retained and four
+new contracts are supplied (50 total). Agent checks are static only. S25 remains
+Prepared; retry tools/verify_s25.py --record. See evidence/S25-tmpfs-fix.json.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

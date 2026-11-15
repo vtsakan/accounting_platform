@@ -37,6 +37,7 @@ def failure_category(text):
         (('end of file', 'unexpected eof'), 'truncated-archive'),
         (('password authentication failed', 'no password supplied'), 'authentication'),
         (('read-only transaction',), 'read-only-target'),
+        (('read-only file system', 'device or resource busy'), 'private-mount-write'),
         (('permission denied', 'must be owner'), 'permission'),
         (('already exists',), 'nonempty-target'),
         (('out of shared memory',), 'lock-budget'),
@@ -60,7 +61,7 @@ def safe_error_lines(text, secrets):
     """Share error headers only, never SQL commands, COPY rows or DETAIL values."""
     result = []
     for line in redact(text, secrets).splitlines():
-        if not re.match(r'^(?:pg_restore:\s*(?:error|fatal):|ERROR:|FATAL:|S25-WORKER )', line):
+        if not re.match(r'^(?:pg_restore:\s*(?:error|fatal):|ERROR:|FATAL:|S25-WORKER |Error response from daemon:|Error:|docker:|sh:|cat:|chmod:|sha256sum:)', line):
             continue
         if line.startswith('S25-WORKER '):
             # The worker emits only its separately controlled safe metadata.

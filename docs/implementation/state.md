@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-15. Current step: **S24A Verified — local and VM Material workspace**. Next step: **Browser/client review; S25 remains separate**.
+Updated 2026-11-15. Current step: **S25 Prepared — legacy rehearsal source**. Next: **Operator synthetic gate; D05/G2 review remains Pending**.
 
 
 
@@ -8,7 +8,25 @@ Updated 2026-11-15. Current step: **S24A Verified — local and VM Material work
 
 
 
-## Current selected work — S24A
+## Current selected work — S25
+
+<!-- S25-RESULT -->
+S25 source is Prepared: strict snapshot-bound legacy planner and private Greek
+reports, an idempotent normal-service importer into new marked PostgreSQL 17
+resources, per-record exact reconciliation and encrypted native PG15 / target
+starting-point restore proofs. Supplied 34 planner tests and all new runtime
+checks are unexecuted. The user executes tools/verify_s25.py --record.
+<!-- /S25-RESULT -->
+
+Read [legacy migration](legacy_migration.md) and the
+[Greek migration review](legacy_review_el.md). No application/migration/lock,
+retained demo, VM, human account, MFA or recovery configuration changed.
+Actual S24A 661/661 and VM/off-VM restore evidence is preserved. No authorised
+real dataset/D05 migration-exception approval is inferred from S17. D05/G2,
+accepted workload recovery targets, browser review and all 85 full acceptances
+remain Pending. S26 is selected separately.
+
+## Previous verified work — S24A
 
 <!-- S24A-VM-RESULT -->
 Operator S24A VM image-only deployment Verified: same 20-migration database,

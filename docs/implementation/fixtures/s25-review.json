@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "lineage": "synthetic-s25-v1",
+  "mode": "synthetic",
+  "authorisation_reference": "S25-SYNTHETIC-FIXTURE-NO-HUMAN-APPROVAL",
+  "as_of": "2026-11-15",
+  "offices": {
+    "alpha": {
+      "name": "Συνθετικό γραφείο Α"
+    },
+    "beta": {
+      "name": "Συνθετικό γραφείο Β"
+    }
+  },
+  "records": {
+    "users:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "archive",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "users:2": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "archive",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "users:3": {
+      "office": null,
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "cash_accounts:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "opening": {
+        "date": "2026-01-01",
+        "amount": "120.00",
+        "reference": "S25-SYNTHETIC-OPENING"
+      }
+    },
+    "cash_accounts:2": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "opening": {
+        "date": "2026-01-01",
+        "amount": "0.00",
+        "reference": "S25-SYNTHETIC-OPENING"
+      }
+    },
+    "cash_accounts:3": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "opening": {
+        "date": "2026-01-01",
+        "amount": "10.00",
+        "reference": "S25-SYNTHETIC-OPENING"
+      }
+    },
+    "cash_accounts:4": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "opening": {
+        "date": "2026-01-01",
+        "amount": "0.00",
+        "reference": "S25-SYNTHETIC-OPENING"
+      }
+    },
+    "entities:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "legal_kind": "BUSINESS",
+      "is_customer": true,
+      "is_supplier": false
+    },
+    "entities:2": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "legal_kind": "BUSINESS",
+      "is_customer": false,
+      "is_supplier": true
+    },
+    "entities:3": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "legal_kind": "BUSINESS",
+      "is_customer": true,
+      "is_supplier": false
+    },
+    "categories:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "categories:2": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "agreements:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "billing_mode": "ONE_OFF",
+      "lifecycle": "ACTIVE",
+      "charges": [
+        {
+          "amount": "300.00",
+          "date": "2026-01-01",
+          "due": "2026-01-31",
+          "period": null
+        }
+      ]
+    },
+    "agreements:2": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "billing_mode": "ONE_OFF",
+      "lifecycle": "ACTIVE",
+      "charges": [
+        {
+          "amount": "120.00",
+          "date": "2026-01-01",
+          "due": "2026-01-31",
+          "period": null
+        }
+      ]
+    },
+    "agreements:3": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "billing_mode": "ONE_OFF",
+      "lifecycle": "ACTIVE",
+      "charges": [
+        {
+          "amount": "80.00",
+          "date": "2026-01-01",
+          "due": "2026-01-31",
+          "period": null
+        }
+      ]
+    },
+    "transactions:1": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:2": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "allocations": [
+        {
+          "agreement": 1,
+          "charge": 0,
+          "amount": "200.00",
+          "date": "2026-01-02",
+          "reference": "S25-SYNTHETIC-ALLOCATION"
+        }
+      ]
+    },
+    "transactions:3": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "allocations": [
+        {
+          "agreement": 1,
+          "charge": 0,
+          "amount": "100.00",
+          "date": "2026-01-03",
+          "reference": "S25-SYNTHETIC-ALLOCATION"
+        }
+      ]
+    },
+    "transactions:4": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "allocations": [
+        {
+          "agreement": 2,
+          "charge": 0,
+          "amount": "30.00",
+          "date": "2026-01-04",
+          "reference": "S25-SYNTHETIC-ALLOCATION"
+        }
+      ]
+    },
+    "transactions:5": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "allocations": [
+        {
+          "agreement": 2,
+          "charge": 0,
+          "amount": "70.00",
+          "date": "2026-01-05",
+          "reference": "S25-SYNTHETIC-ALLOCATION"
+        }
+      ]
+    },
+    "transactions:6": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:7": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:8": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:9": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:10": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "hold-unallocated",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:11": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:12": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:13": {
+      "office": "alpha",
+      "responsible_user": 1,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:14": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:15": {
+      "office": "alpha",
+      "responsible_user": 3,
+      "action": "quarantine",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    },
+    "transactions:16": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης",
+      "allocations": [
+        {
+          "agreement": 3,
+          "charge": 0,
+          "amount": "80.00",
+          "date": "2026-01-02",
+          "reference": "S25-SYNTHETIC-ALLOCATION"
+        }
+      ]
+    },
+    "transactions:17": {
+      "office": "beta",
+      "responsible_user": 2,
+      "action": "import",
+      "reference": "S25-SYNTHETIC-REVIEW",
+      "reason": "Συνθετική ανασκόπηση· καμία έγκριση πραγματικής μετάπτωσης"
+    }
+  },
+  "transfers": {
+    "00000000-0000-0000-0000-000000000258": {
+      "legs": [
+        6,
+        7
+      ],
+      "reference": "S25-SYNTHETIC-SUPPORTING-PAIR-6-7"
+    }
+  },
+  "source_sha256": "sha256:05db5e158ce44fe6af3d2c638395b1280e5a6886e9be3e4c4087585c1de25540"
+}

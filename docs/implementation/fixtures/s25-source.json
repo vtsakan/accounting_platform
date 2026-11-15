@@ -1,0 +1,395 @@
+{
+  "schema": 1,
+  "lineage": "synthetic-s25-v1",
+  "users": [
+    {
+      "id": 1,
+      "username": "legacy_alpha",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "username": "legacy_beta",
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "username": "legacy_unmapped",
+      "is_active": false
+    }
+  ],
+  "cash_accounts": [
+    {
+      "id": 1,
+      "name": "Παλαιό ταμείο Α",
+      "opening_balance": "100.00",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "Παλαιά τράπεζα Α",
+      "opening_balance": "0.00",
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "name": "Παλαιό ταμείο Β",
+      "opening_balance": "10.00",
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "name": "Παλαιό ανενεργό ταμείο Β",
+      "opening_balance": "0.00",
+      "is_active": false
+    }
+  ],
+  "entities": [
+    {
+      "id": 1,
+      "entity_type": "CUSTOMER",
+      "name": "Συνθετικός πελάτης Α",
+      "vat_number": null,
+      "tax_office": "",
+      "address": "",
+      "city": "",
+      "postal_code": "",
+      "phone_number": "",
+      "email": "",
+      "created_at": "2025-12-01T00:00:00+00:00",
+      "updated_at": "2025-12-01T00:00:00+00:00"
+    },
+    {
+      "id": 2,
+      "entity_type": "SUPPLIER",
+      "name": "Συνθετικός προμηθευτής Α",
+      "vat_number": null,
+      "tax_office": "",
+      "address": "",
+      "city": "",
+      "postal_code": "",
+      "phone_number": "",
+      "email": "",
+      "created_at": "2025-12-01T00:00:00+00:00",
+      "updated_at": "2025-12-01T00:00:00+00:00"
+    },
+    {
+      "id": 3,
+      "entity_type": "CUSTOMER",
+      "name": "Συνθετικός πελάτης Β",
+      "vat_number": null,
+      "tax_office": "",
+      "address": "",
+      "city": "",
+      "postal_code": "",
+      "phone_number": "",
+      "email": "",
+      "created_at": "2025-12-01T00:00:00+00:00",
+      "updated_at": "2025-12-01T00:00:00+00:00"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Δοκιμαστική αμοιβή",
+      "parent_id": null
+    },
+    {
+      "id": 2,
+      "name": "Δοκιμαστική υποκατηγορία",
+      "parent_id": 1
+    }
+  ],
+  "agreements": [
+    {
+      "id": 1,
+      "entity_id": 1,
+      "agreement_type": "RECEIVABLE",
+      "description": "Ελεγμένη εφάπαξ αμοιβή Α",
+      "total_amount": "300.00",
+      "start_date": "2026-01-01",
+      "status": "ACTIVE",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "updated_at": "2026-01-02T00:00:00+00:00"
+    },
+    {
+      "id": 2,
+      "entity_id": 2,
+      "agreement_type": "PAYABLE",
+      "description": "Ελεγμένη υποχρέωση Α",
+      "total_amount": "120.00",
+      "start_date": "2026-01-01",
+      "status": "COMPLETED",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "updated_at": "2026-01-02T00:00:00+00:00"
+    },
+    {
+      "id": 3,
+      "entity_id": 3,
+      "agreement_type": "RECEIVABLE",
+      "description": "Ελεγμένη αμοιβή Β",
+      "total_amount": "80.00",
+      "start_date": "2026-01-01",
+      "status": "ACTIVE",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "updated_at": "2026-01-02T00:00:00+00:00"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "20.00",
+      "description": "Συνθετική παλιά κίνηση 1",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002711",
+      "transaction_date": "2025-12-31",
+      "created_at": "2025-12-31T12:00:00+00:00",
+      "updated_at": "2025-12-31T12:00:00+00:00"
+    },
+    {
+      "id": 2,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "200.00",
+      "description": "Συνθετική παλιά κίνηση 2",
+      "remarks": "",
+      "entity_id": 1,
+      "agreement_id": 1,
+      "category_id": 1,
+      "transfer_id": "00000000-0000-0000-0000-000000002712",
+      "transaction_date": "2026-01-02",
+      "created_at": "2026-01-02T12:00:00+00:00",
+      "updated_at": "2026-01-02T12:00:00+00:00"
+    },
+    {
+      "id": 3,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "150.00",
+      "description": "Συνθετική παλιά κίνηση 3",
+      "remarks": "",
+      "entity_id": 1,
+      "agreement_id": 1,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002713",
+      "transaction_date": "2026-01-03",
+      "created_at": "2026-01-03T12:00:00+00:00",
+      "updated_at": "2026-01-03T12:00:00+00:00"
+    },
+    {
+      "id": 4,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "30.00",
+      "description": "Συνθετική παλιά κίνηση 4",
+      "remarks": "",
+      "entity_id": 2,
+      "agreement_id": 2,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002714",
+      "transaction_date": "2026-01-04",
+      "created_at": "2026-01-04T12:00:00+00:00",
+      "updated_at": "2026-01-04T12:00:00+00:00"
+    },
+    {
+      "id": 5,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "90.00",
+      "description": "Συνθετική παλιά κίνηση 5",
+      "remarks": "",
+      "entity_id": 2,
+      "agreement_id": 2,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002715",
+      "transaction_date": "2026-01-05",
+      "created_at": "2026-01-05T12:00:00+00:00",
+      "updated_at": "2026-01-05T12:00:00+00:00"
+    },
+    {
+      "id": 6,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "40.00",
+      "description": "Συνθετική παλιά κίνηση 6",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000000258",
+      "transaction_date": "2026-01-06",
+      "created_at": "2026-01-06T12:00:00+00:00",
+      "updated_at": "2026-01-06T12:00:00+00:00"
+    },
+    {
+      "id": 7,
+      "cash_account_id": 2,
+      "transaction_type": "INCOME",
+      "amount": "40.00",
+      "description": "Συνθετική παλιά κίνηση 7",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000000258",
+      "transaction_date": "2026-01-06",
+      "created_at": "2026-01-06T12:00:00+00:00",
+      "updated_at": "2026-01-06T12:00:00+00:00"
+    },
+    {
+      "id": 8,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "0.00",
+      "description": "Συνθετική παλιά κίνηση 8",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002718",
+      "transaction_date": "2026-01-07",
+      "created_at": "2026-01-07T12:00:00+00:00",
+      "updated_at": "2026-01-07T12:00:00+00:00"
+    },
+    {
+      "id": 9,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "-5.00",
+      "description": "Συνθετική παλιά κίνηση 9",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002719",
+      "transaction_date": "2026-01-07",
+      "created_at": "2026-01-07T12:00:00+00:00",
+      "updated_at": "2026-01-07T12:00:00+00:00"
+    },
+    {
+      "id": 10,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "25.00",
+      "description": "Συνθετική παλιά κίνηση 10",
+      "remarks": "",
+      "entity_id": 1,
+      "agreement_id": 2,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000271a",
+      "transaction_date": "2026-01-08",
+      "created_at": "2026-01-08T12:00:00+00:00",
+      "updated_at": "2026-01-08T12:00:00+00:00"
+    },
+    {
+      "id": 11,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "10.00",
+      "description": "Συνθετική παλιά κίνηση 11",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000044c",
+      "transaction_date": "2026-01-09",
+      "created_at": "2026-01-09T12:00:00+00:00",
+      "updated_at": "2026-01-09T12:00:00+00:00"
+    },
+    {
+      "id": 12,
+      "cash_account_id": 1,
+      "transaction_type": "EXPENSE",
+      "amount": "10.00",
+      "description": "Συνθετική παλιά κίνηση 12",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000044c",
+      "transaction_date": "2026-01-09",
+      "created_at": "2026-01-09T12:00:00+00:00",
+      "updated_at": "2026-01-09T12:00:00+00:00"
+    },
+    {
+      "id": 13,
+      "cash_account_id": 2,
+      "transaction_type": "INCOME",
+      "amount": "10.00",
+      "description": "Συνθετική παλιά κίνηση 13",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000044c",
+      "transaction_date": "2026-01-09",
+      "created_at": "2026-01-09T12:00:00+00:00",
+      "updated_at": "2026-01-09T12:00:00+00:00"
+    },
+    {
+      "id": 14,
+      "cash_account_id": 3,
+      "transaction_type": "INCOME",
+      "amount": "15.00",
+      "description": "Συνθετική παλιά κίνηση 14",
+      "remarks": "",
+      "entity_id": 1,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000271e",
+      "transaction_date": "2026-01-10",
+      "created_at": "2026-01-10T12:00:00+00:00",
+      "updated_at": "2026-01-10T12:00:00+00:00"
+    },
+    {
+      "id": 15,
+      "cash_account_id": 1,
+      "transaction_type": "INCOME",
+      "amount": "12.00",
+      "description": "Συνθετική παλιά κίνηση 15",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-00000000271f",
+      "transaction_date": "2026-01-10",
+      "created_at": "2026-01-10T12:00:00+00:00",
+      "updated_at": "2026-01-10T12:00:00+00:00"
+    },
+    {
+      "id": 16,
+      "cash_account_id": 3,
+      "transaction_type": "INCOME",
+      "amount": "80.00",
+      "description": "Συνθετική παλιά κίνηση 16",
+      "remarks": "",
+      "entity_id": 3,
+      "agreement_id": 3,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002720",
+      "transaction_date": "2026-01-02",
+      "created_at": "2026-01-02T12:00:00+00:00",
+      "updated_at": "2026-01-02T12:00:00+00:00"
+    },
+    {
+      "id": 17,
+      "cash_account_id": 3,
+      "transaction_type": "INCOME",
+      "amount": "5.00",
+      "description": "Συνθετική παλιά κίνηση 17",
+      "remarks": "",
+      "entity_id": null,
+      "agreement_id": null,
+      "category_id": null,
+      "transfer_id": "00000000-0000-0000-0000-000000002721",
+      "transaction_date": "2026-01-03",
+      "created_at": "2026-01-03T12:00:00+00:00",
+      "updated_at": "2026-01-03T12:00:00+00:00"
+    }
+  ]
+}

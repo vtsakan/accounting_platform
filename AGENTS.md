@@ -29,7 +29,27 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S24A — Material-inspired office workspace
+## Selected S25 — legacy rehearsal, source only
+
+The user now selects S25. Read legacy_migration.md and legacy_review_el.md.
+Keep the actual operator S24A 661-test/36-case receipt and successful local/VM
+deployment evidence. Supply a strict exact-decimal read-only planner, private
+reports, snapshot/office/decision binding, source-ID ledger and an idempotent
+isolated PG15→17 import/reconciliation/recovery pathway. Only operator tooling,
+synthetic fixtures and documentation change; all application source, twenty
+migrations, dependencies, human accounts/MFA and local demo/VM stay intact.
+Use the already verified S24A image in fresh labelled local resources. Native
+PG15 source rollback and PG17 forward/target backups are separate. The required
+synthetic signing/MFA material belongs in the encrypted archive; the age
+private identity remains external. No live DB URL, arbitrary SQL dump or VM
+target is accepted by the synthetic execution command. Real authorised JSON
+analysis is read-only; D05 mapping/exception/cutover and G2 acceptance stay
+Pending. Existing S17 approval does not approve real migration. Do not execute
+tests/builds/Docker/migrations/SSH/cloud/push; user executes supplied commands.
+All new tests/runtime are Prepared, and all 85 full acceptances remain Pending.
+Stop after S25; S26 queue/scheduler is a separately selected step.
+
+## Historical S24A — Material-inspired office workspace
 
 The product owner explicitly selected S24A now, before S25, and requested an
 impressive Material-style interface. Read material_workspace.md. Keep Django
@@ -67,7 +87,7 @@ has now been operator-executed successfully: twenty migrations, 27 old tables,
 all retained rows/accounts/MFA/sessions and checked encrypted backup. See
 evidence/S24A-local-deployment.json. No agent execution is authorised.
 
-## Selected follow-up — S24A VM and GitHub, operator commands only
+## Historical follow-up — S24A VM and GitHub, operator commands only
 
 The user explicitly requests the existing VM upgrade and a GitHub update in
 parallel. Supply the Git-only patch and operator commands on step/s24a-material-ui.

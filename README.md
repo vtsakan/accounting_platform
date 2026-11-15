@@ -2,7 +2,7 @@
 
 A Django/PostgreSQL accounting-office platform combining the existing application with office management, collaboration, a client portal and authorised tax-data services. **All frontend content must be Greek**, including authentication, errors, emails and human-facing report headings.
 
-S01–S11 are Verified, including the HTTPS preview, encrypted recovery/alerts and Docker office/profile checks. **S12 prepares office ownership and isolation:** staged reviewed backfill, scoped views/forms/admin and same-office database links. Native PostgreSQL verification runs 157 tests: 131 pass and 26 known financial failures remain reproduced. Local Docker reproduction completes S12; authentication and office settings follow at S13/S14.
+The Greek Material workspace is implemented through **S24A**, with the operator's successful 661-test production gate, 36 financial cases and VM image/static release recorded. **S25 is Prepared:** private legacy analysis plus an isolated PostgreSQL 15→17 import, exact reconciliation and encrypted recovery rehearsal. See [current implementation state](docs/implementation/state.md) and [S25 operator commands](docs/implementation/legacy_migration.md). Tests and runtime commands for newly delivered source are executed by the operator; real migration and full release acceptance remain Pending.
 
 ## Start here
 
@@ -13,7 +13,7 @@ S01–S11 are Verified, including the HTTPS preview, encrypted recovery/alerts a
 
 ## Local development and verification
 
-Use a full Git checkout, Linux x86_64/glibc, Python 3.10+ with `venv`, a running local Docker Engine/Compose plugin and package-download access. Run the isolated S12 verifier first. Before starting an existing S11 database, follow the reviewed ownership migration in [office_ownership.md](docs/implementation/office_ownership.md). An empty database can apply the full schema automatically. Then start the development stack:
+Use a full Git checkout, Linux x86_64/glibc, Python 3.10+ with `venv`, a running local Docker Engine/Compose plugin and package-download access. Follow the selected step's operator guide. For an existing demo/VM, use its reviewed retained-data upgrade pathway; verification databases and the retained demo have separate lifecycles. The following commands start the development stack:
 
 ```bash
 python3 tools/dev.py up

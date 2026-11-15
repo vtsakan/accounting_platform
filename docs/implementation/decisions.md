@@ -730,3 +730,22 @@ rows must match before public traffic resumes. Rollback changes only image and
 config on the same database, retaining later public writes. Push code on the
 S24A branch before publication and generated public evidence after success.
 New release-tool execution, browser acceptance and S25 remain separate/Pending.
+
+
+## S25 implementation checkpoint — source Prepared, D05/G2 Pending
+
+The user selected S25 after the successful S24A local/VM release. The delivered
+operator planner binds every source row to an explicit office/user, disposition
+and reference. The isolated synthetic import uses existing financial services,
+real synthetic-owner MFA opening proof and an append-only source/target ledger.
+It supplies per-account/charge/cash/allocation/transfer reconciliation, concurrent
+idempotency, atomic failure and encrypted source-native15/target-start recovery
+proofs. No new production model/migration, auth relaxation or financial-policy
+choice is introduced. S24A source, locks and all actual receipts are retained.
+
+No real authorised dump/mapping, named migration reviewer, exception decisions
+or cutover owner was supplied here. D05 therefore remains Pending, and the bound
+S17 policy approval does not close it. A passing synthetic technical S25 receipt
+must retain Pending real-data/G2, accepted workload RPO/RTO and all 85 full
+acceptances. New tests/runtime are unexecuted by the agent under the established
+source-only preference. See legacy_migration.md and legacy_review_el.md.

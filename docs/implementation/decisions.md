@@ -711,3 +711,22 @@ Start the Material preview only after the preservation checks pass. Failures
 retain backups and the database volume without automatic downgrade, reset or
 restore. This does not change production-context inputs, the operator's 661/661
 receipt, the existing VM, or S25. New helper execution remains Pending.
+
+### S24A local execution and VM/GitHub follow-up
+
+The operator has now upgraded the local demo from twelve to twenty migrations
+and started the Material preview: checked encrypted backup and preservation of
+all 27 old tables/accounts/passwords/MFA/sessions; no VM change or new posting.
+
+The user now explicitly requests the existing VM and GitHub update. Prepare an
+image/static-only release for its already-S24 schema, reusing the exact image
+from the successful 661-test proof. Keep application and operator-deployment
+commits separate. Do not rebuild merely for operator/document changes. Keep the
+same database, secrets, PG container, certificates and IAM. Capture the source
+snapshot only after quiescing web, avoiding the former stale-plan problem.
+Require encrypted backups and exact independent-key off-VM restore before public
+activation. Keep existing S10 code/units; rebind preview metadata only. All old
+rows must match before public traffic resumes. Rollback changes only image and
+config on the same database, retaining later public writes. Push code on the
+S24A branch before publication and generated public evidence after success.
+New release-tool execution, browser acceptance and S25 remain separate/Pending.

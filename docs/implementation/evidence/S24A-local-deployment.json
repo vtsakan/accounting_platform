@@ -1,0 +1,22 @@
+{
+  "step": "S24A-local",
+  "status": "Verified",
+  "verification_origin": "Operator-supplied successful command output",
+  "completed_at": "2026-11-15T06:51:19+00:00",
+  "project": "accounting-client-demo",
+  "source_migrations": 12,
+  "target_migrations": 20,
+  "original_tables_checked": 27,
+  "original_columns_and_rows_preserved": true,
+  "accounts_passwords_mfa_and_sessions_preserved": true,
+  "encrypted_database_and_environment_backup_created": true,
+  "backup_decryption_checked": true,
+  "plaintext_removed": true,
+  "full_database_restore_rehearsal": false,
+  "automatic_financial_posting": false,
+  "local_preview_started": true,
+  "url": "http://localhost:8003/",
+  "cloud_or_vm_changed": false,
+  "browser_mfa_and_visual_acceptance": "Pending",
+  "agent_runtime_execution": false
+}

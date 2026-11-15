@@ -1,0 +1,22 @@
+{
+  "step": "S24A-VM",
+  "status": "Prepared",
+  "prepared_on": "2026-11-15",
+  "operator_requested": ["Upgrade the existing VM", "Update GitHub in parallel"],
+  "source_vm_schema": "Existing S24 through 0020; do not migrate",
+  "release": "Image/static-only; same database and credentials",
+  "production_tests_already_operator_verified": 661,
+  "financial_cases_already_operator_verified": 36,
+  "production_image_rebuilt_for_operator_changes": false,
+  "release_guard_tests_supplied_not_run": 15,
+  "prechange_and_new_binding_encrypted_backups": "Required operator execution",
+  "all_table_equality_before_public_activation": "Required operator execution",
+  "exact_off_vm_restore_with_independent_copy": "Required operator execution",
+  "public_material_login_static_https_csrf_checks": "Required operator execution",
+  "github_update": "Push code first; push public deployment proof after success",
+  "database_migrations_or_restore_on_vm": false,
+  "new_resources_secrets_accounts_or_mfa_resets": false,
+  "agent_tests_builds_docker_ssh_gcp_or_git_push": false,
+  "full_requirement_acceptance": "Pending",
+  "runbook": "docs/implementation/s24a_vm_release.md"
+}

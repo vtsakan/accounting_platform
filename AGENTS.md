@@ -49,7 +49,8 @@ see evidence/S24A-local-preview-fix.json. No production-context input changes.
 Manual responsive/keyboard/dark theme/client and full S47 acceptance remain
 Pending. New local preview command requires the existing S24/0020 schema and
 starts web without migrating or resetting accounts. Historical S14-to-S24 tools
-must not deploy S24A. No S25 implementation or cloud operation in this scope.
+must not deploy S24A. No S25 implementation. The separately selected VM
+image-only release below is operator-executed; no agent cloud action.
 The preview --inspect option reads only migration/version metadata and may start
 the already existing demo database; it never builds/replaces web. An old local
 schema is separate from the disposable production-test database and upgraded VM.
@@ -62,7 +63,25 @@ decryption, applies only versioned forward migrations and compares all original
 columns/rows including account/password/MFA/session tables before starting the
 Material preview. No bootstrap/reset, volume removal, .env/key rewrite, cloud
 or VM operation. Preserve the successful 661-test receipt. This operator helper
-is Prepared; no agent runtime/test/build/migration execution is authorised.
+has now been operator-executed successfully: twenty migrations, 27 old tables,
+all retained rows/accounts/MFA/sessions and checked encrypted backup. See
+evidence/S24A-local-deployment.json. No agent execution is authorised.
+
+## Selected follow-up — S24A VM and GitHub, operator commands only
+
+The user explicitly requests the existing VM upgrade and a GitHub update in
+parallel. Supply the Git-only patch and operator commands on step/s24a-material-ui.
+Read s24a_vm_release.md. Reuse the existing 661-test production receipt/image;
+operator commits get a separate deployment identity. Do not rebuild or rerun the
+production suite. The VM is already S24/0020: replace only image/static on the
+same active DB. Never migrate/bootstrap/restore on the VM or use old installers.
+Preserve pinned secrets, PG container, users/MFA, certificates, IAM and domain.
+Require encrypted backups, all-table equality before public activation, and an
+exact off-VM restore with the independent key copy. Image rollback retains this
+same current database, including any new public writes. GitHub receives code
+first and the successful public evidence afterwards. New tools and 15 release-
+guard tests are Prepared, not agent-executed. No agent tests/builds/Docker/SSH/
+GCP/GitHub push or S25 work in this scope.
 
 The actual operator VM log is now deployed_and_restored: through 0020, 24 old
 tables preserved, restricted role, matching off-VM restore and HTTPS/CSRF checks.

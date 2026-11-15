@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-15. Current step: **S24A Verified — Material-inspired workspace**. Next step: **Browser review; S25 remains separate**.
+Updated 2026-11-15. Current step: **S24A Verified — local and VM Material workspace**. Next step: **Browser/client review; S25 remains separate**.
 
 
 
@@ -10,11 +10,20 @@ Updated 2026-11-15. Current step: **S24A Verified — Material-inspired workspac
 
 ## Current selected work — S24A
 
+<!-- S24A-VM-RESULT -->
+Operator S24A VM image-only deployment Verified: same 20-migration database,
+all original rows/credentials/MFA retained before public activation, encrypted
+backups and exact off-VM restore, Greek Material login, HTTPS/CSRF and same-image
+static assets. Browser/MFA/accessibility/full acceptance remains Pending.
+<!-- /S24A-VM-RESULT -->
+
 <!-- S24A-RESULT -->
-Operator production-image gate Verified: 661 passes, all 36 finance assertions,
-Greek catalog, dependency locks, secret scan and manifest static assets.
-Historical S24 receipt remains unchanged. Browser/keyboard/responsive/dark
-theme acceptance and S24A local/VM deployment remain Pending. S25 is separate.
+Operator production-image gate Verified: 661 passes and all 36 finance cases.
+Local preview and VM Material image/static deployment are now operator-Verified;
+the same VM database, original rows/accounts/MFA and pinned credentials were
+retained before public activation. Encrypted backups, exact off-VM restore and
+public HTTPS/CSRF/static checks passed. Browser/MFA/responsive/dark-theme/full
+S47 acceptance remains Pending. S25 is separate.
 <!-- /S24A-RESULT -->
 
 The supplied latest VM log confirms the previous S24 upgrade is technically

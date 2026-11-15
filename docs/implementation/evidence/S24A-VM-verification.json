@@ -1,0 +1,33 @@
+{
+  "step": "S24A-VM",
+  "status": "Verified",
+  "verified_at": "2026-11-15T13:06:42+00:00",
+  "hostname": "totalaccounting.duckdns.org",
+  "application_commit": "git:a170a885ca186b194f4df557fad2ced6f59fa034",
+  "deployment_commit": "git:231c2c2bb1b2438fedc29ba797a9b07916988719",
+  "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:08cf99dc5ab117b08db3739600e4f6486611a6c63238cb4a2b9efba141b115b1",
+  "application_context_digest": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
+  "production_tests_previously_passed": 661,
+  "financial_cases_previously_passed": 36,
+  "database_migrated_or_restored_on_vm": false,
+  "database_restarted_during_release": false,
+  "accounts_mfa_or_keys_reset": false,
+  "all_original_rows_preserved_before_public_activation": true,
+  "encrypted_prechange_and_new_binding_backups_created": true,
+  "off_vm_restore_tables_match": true,
+  "restore_tables_checked": 41,
+  "public_checks": {
+    "public_https_readiness": true,
+    "greek_login": true,
+    "same_origin_form_post": true,
+    "null_foreign_origin_denied": true,
+    "missing_csrf_denied": true,
+    "certificate_chain_and_hostname_verified": true,
+    "actual_browser_mfa_acceptance": "Pending operator login",
+    "material_login": true,
+    "immutable_image_static_assets_verified": 3
+  },
+  "actual_browser_mfa_acceptance": "Pending operator login",
+  "full_requirement_acceptance": "Pending",
+  "agent_vm_or_test_execution": false
+}

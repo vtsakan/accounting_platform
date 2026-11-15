@@ -477,6 +477,10 @@ def record(proof):
     path = DOCS/'traceability.csv'; rows = list(csv.DictReader(path.open(newline=''))); fields = list(rows[0])
     for row in rows:
         if row.get('requirement_id') in {'QR-03','QR-04','QR-09','QR-14'}:
+            row['last_reviewed'] = proof['verified_at'][:10]
+            note = ' S25 operator synthetic technical rehearsal passed; D05/G2/full acceptance remain Pending.'
+            if note not in row['notes']:
+                row['notes'] += note
             for column in ('evidence','evidence_paths'):
                 if column in row and 'S25-verification.json' not in row[column]:
                     row[column] += '; docs/implementation/evidence/S25-verification.json'

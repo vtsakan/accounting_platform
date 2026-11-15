@@ -182,7 +182,9 @@ def replay(plan):
         if row:
             if row[0] != plan['plan_sha256']:
                 raise ReplayMismatch('Η παγωμένη πηγή ή η ανασκόπηση άλλαξε. Δεν έγινε ενημέρωση οικονομικών εγγραφών.')
-            return row[1]
+            value = json.loads(row[1]) if isinstance(row[1], (str,bytes)) else row[1]
+            require(isinstance(value,dict), 'Μη έγκυρο καταγεγραμμένο αποτέλεσμα παρτίδας.')
+            return value
     return None
 
 

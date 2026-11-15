@@ -1,0 +1,46 @@
+{
+  "step": "S24A",
+  "follow_up": "local-preview-container-authentication",
+  "status": "Prepared",
+  "prepared_on": "2026-11-15",
+  "mode": "operator-helper-only-source-delivery",
+  "observed_operator_production_gate": {
+    "status": "Verified",
+    "verified_at": "2026-11-15T08:13:37+02:00",
+    "source_commit": "git:a170a885ca186b194f4df557fad2ced6f59fa034",
+    "application_context_digest": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
+    "suite": {
+      "tests_run": 661,
+      "tests_passed": 661,
+      "known_failures_reproduced": 0,
+      "unexpected_failures": 0,
+      "unexpected_errors": 0,
+      "unexpected_successes": 0,
+      "skips": 0
+    },
+    "production_image_id": "sha256:c10aada2826f7110ba43870e0a069d01037f5bd72ed1d3cc1bd00072778d02f6",
+    "delivery_receipt_sha256": "sha256:4e01b7433e9d0665b3ff8a14069c2b3a251b71d5234a93e733e8b0e7cf7d5934"
+  },
+  "observed_operator_financial_cases_passed": 36,
+  "observed_local_preview_stop": "Local Compose operation failed; resolved credentials/output omitted",
+  "confirmed_source_defect": "psql omitted PGPASSWORD while Compose uses SCRAM local authentication",
+  "original_runtime_failure_stage": "Not available in the original generic error; operator retry pending",
+  "correction": "Use the existing POSTGRES_PASSWORD only inside the container as PGPASSWORD; psql --no-password",
+  "diagnostics": "Stage, exit code and fixed reason code; no raw Compose output or resolved configuration",
+  "inspect_mode": "Version/migration SELECT; may start only the existing local database, never builds/replaces web",
+  "schema_guard": "PostgreSQL 17 and exact twenty S24 migrations; no automatic migration",
+  "production_context_inputs_changed": false,
+  "existing_operator_verification_receipt_preserved": true,
+  "production_reverification_required_for_this_helper_change": false,
+  "agent_tests_builds_docker_database_browser_or_cloud_execution": false,
+  "accounts_mfa_keys_or_database_volumes_changed": false,
+  "local_helper_runtime_execution": "Pending operator command",
+  "browser_responsive_keyboard_dark_theme_acceptance": "Pending",
+  "s24a_vm_rollout": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "runbook": "docs/implementation/material_workspace.md",
+  "operator_commands": [
+    "python3 tools/preview_s24a.py --inspect --port 8003",
+    "python3 tools/preview_s24a.py --port 8003"
+  ]
+}

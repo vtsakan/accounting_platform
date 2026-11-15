@@ -40,13 +40,19 @@ old assertion, all 20 migrations, financial services, dependency locks, users,
 MFA and recovery setup. No chart/sample amounts in the live app; unknown openings
 remain unknown. The standalone design preview is explicitly illustrative.
 No agent tests/builds/Docker/browser verification/migrations/VM actions. Supply
-five focused overview/search contracts; target 661 passes and all 36 finance
-cases is NOT observed. Optional operator gate: tools/verify_s24a.py --record.
-Keep S24's Verified receipt unchanged; S24A is Prepared until operator execution.
+five focused overview/search contracts. The operator has now passed 661/661
+production-image tests and all 36 finance cases on 2026-11-15; preserve that
+recorded S24A receipt and S24's historical receipt. Do not rebuild or rerun the
+suite just for the operator-only local-preview helper fix. Its container-local
+psql authentication and staged diagnostics remain Prepared until operator use;
+see evidence/S24A-local-preview-fix.json. No production-context input changes.
 Manual responsive/keyboard/dark theme/client and full S47 acceptance remain
 Pending. New local preview command requires the existing S24/0020 schema and
 starts web without migrating or resetting accounts. Historical S14-to-S24 tools
 must not deploy S24A. No S25 implementation or cloud operation in this scope.
+The preview --inspect option reads only migration/version metadata and may start
+the already existing demo database; it never builds/replaces web. An old local
+schema is separate from the disposable production-test database and upgraded VM.
 
 The actual operator VM log is now deployed_and_restored: through 0020, 24 old
 tables preserved, restricted role, matching off-VM restore and HTTPS/CSRF checks.

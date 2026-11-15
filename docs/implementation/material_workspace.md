@@ -5,8 +5,11 @@ impressive Material-style interface. The existing Django templates and Bootstrap
 CSS remain the application stack. Local color/type/shape tokens, original SVG
 icons and a small native script provide the new presentation. Dependency locks,
 all twenty migrations, the financial services and prior test assertions remain
-unchanged. This is source delivery: **Prepared**, with no agent-run tests,
-containers, builds, migrations, browser acceptance or VM operations.
+unchanged. The operator's 2026-11-15 production-image execution passed **661/661
+tests and all 36 financial cases**. Preserve the generated S24A verification
+receipt. The local-preview helper follow-up is **Prepared** until operator use;
+no agent-run tests, containers, builds, migrations, browser acceptance or VM
+operations were performed. See evidence/S24A-local-preview-fix.json.
 
 ## Design and implemented behavior
 
@@ -113,6 +116,43 @@ private, builds/restarts web with a management entrypoint that never calls migra
 and retains existing credentials/accounts/MFA. If the local database is older,
 it stops before replacing web; its separate migration/recovery scope needs review.
 The VM and the currently deployed S24 remain independent of local preview.
+
+### Local-preview authentication follow-up
+
+The operator's production verification passed, followed by a generic local
+Compose failure. The original helper did not pass the existing container's
+POSTGRES_PASSWORD to psql, although the retained database requires password
+authentication for local connections. The helper now exports PGPASSWORD inside
+the database container and uses --no-password so SQL input cannot be mistaken
+for a password response. No password is printed, copied to the host, changed or
+added to Git. This corrects a confirmed source defect; the original generic
+message did not identify the exact runtime failure stage.
+
+Failures now identify the stage and exit code with an allowlisted reason such
+as database_authentication_failed, port_in_use or unhealthy_or_timed_out.
+Resolved Compose configuration and raw subprocess output remain private.
+
+Inspect the existing local schema without building or replacing web:
+
+```bash
+python3 tools/preview_s24a.py --inspect --port 8003
+```
+
+This can start the already existing demo database if stopped, then performs a
+SELECT of version/migration metadata. When s24_schema_matches is true, run the
+normal preview command above and visit http://localhost:8003/. A successful
+661-test receipt describes its disposable database; it does not upgrade the
+retained accounting-client-demo database. A false schema match intentionally
+stops normal preview before web replacement. Keep its accounts/MFA and retained
+volume intact; use the illustrative PREVIEW_S24A.html until the local upgrade
+is separately selected. Do not run old VM clone installers against that database.
+
+The follow-up package preserves and commits only the four generated successful
+S24A evidence/state/traceability files when they are the only pending changes.
+It then applies operator tools/documentation only. Existing production-context
+bytes and the already completed production proof remain unchanged. Do not rerun
+verify_s24a.py just because these documentation/tool commits have a new Git ID;
+the existing receipt remains tied to its actual tested source commit.
 
 ## Manual acceptance, still Pending
 

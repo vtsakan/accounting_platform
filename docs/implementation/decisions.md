@@ -678,3 +678,19 @@ Separately, the latest operator log completes the prior S24 VM technical upgrade
 20 migrations, retained original database/24 tables/people/MFA, restricted role,
 matching off-VM restore and public HTTPS/CSRF checks. Record that actual evidence
 in S24-VM-deployment.json while preserving the earlier failed-attempt receipts.
+
+### S24A operator proof and local-preview follow-up — 2026-11-15
+
+The supplied operator log passes the complete production-image gate: 661/661
+tests, all 36 financial cases, Greek catalog/locks/static runtime and zero
+unreviewed secret findings. Retain the operator-generated verification receipt
+and its tested source identity. The subsequent generic Compose error concerns
+the local-preview helper, whose source omitted container-local psql password
+authentication. Export the existing password only inside that container, forbid
+password prompting and report safe failure stages/reason codes. Add a schema
+inspection option that may start only the retained local database and never
+replaces web. Keep the exact S24/0020 schema guard; an old local database needs
+a separately selected upgrade. Operator-only files do not change the verified
+production context or require a repeat production suite. The helper correction
+is Prepared until operator execution; browser/local deployment acceptance and
+S24A VM rollout remain Pending. No S25, account/MFA reset or migration action.

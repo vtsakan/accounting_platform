@@ -1,0 +1,73 @@
+{
+  "step": "S25",
+  "status": "Prepared",
+  "recorded_at": "2026-11-16",
+  "scope": "canonical allocation plan identities; source-only fix",
+  "source_reference_commit": "git:80c73d7998ba5a5b98dca23fa01124d35f62be76",
+  "source_commit": "git:92f5bb77d08f4ceff8284813d5d3b402f8ad9f65",
+  "operator_observed_failure": {
+    "status": "Failed",
+    "stage": "concurrent-idempotent-import",
+    "operation": "docker",
+    "exit_code": 1,
+    "worker_error": "AttributeError",
+    "worker_action": "apply",
+    "worker_function": "apply_plan",
+    "worker_file": "legacy_worker.py",
+    "worker_line": 299,
+    "postgres_versions": {
+      "source_server": 150020,
+      "source_pg_dump": 150020,
+      "source_pg_restore": 150020,
+      "target_server": 170012,
+      "target_pg_dump": 170012,
+      "target_pg_restore": 170012
+    },
+    "latest_restore_metadata": {
+      "archive_bytes_match": true,
+      "server_version_num": 170012,
+      "source_version_num": 150020,
+      "dumped_by_version_num": 170012,
+      "pg_restore_version_num": 170012,
+      "database_matches": true,
+      "role_matches": true,
+      "read_only": "off",
+      "user_tables": 0
+    }
+  },
+  "diagnosis": {
+    "confirmed_in_source": true,
+    "planner_expression_before": "{'cash': key, 'charge': ckey, **allocation}",
+    "cause": "Review charge integer is unpacked last and overwrites the computed agreement/position string; apply_plan calls split on that integer",
+    "planner_expression_after": "{**allocation, 'cash': key, 'charge': ckey}",
+    "review_json_mutated": false,
+    "derived_plan_hash_changes": true
+  },
+  "preceding_gates": {
+    "inference_basis": "Execution reached concurrent-idempotent-import in supplied operator log",
+    "logical_restore_setup_backup_and_injected_rollback_returned_without_error": true,
+    "separate_full_success_receipts_supplied": false
+  },
+  "remaining_operator_gate": "Full concurrent import, replay, reconciliation, encrypted source/target restore and cleanup",
+  "previous_test_method_bodies_preserved": 58,
+  "additional_test_methods_supplied": 3,
+  "total_s25_test_methods_supplied": 61,
+  "agent_static_checks": {
+    "python_ast_files": 2,
+    "prior_method_bodies_unchanged": true,
+    "production_context_unchanged": true,
+    "production_context_file_count": 226,
+    "source_review_and_image_policy_fixtures_unchanged": true,
+    "historical_receipts_preserved": true
+  },
+  "agent_tests_or_application_execution": false,
+  "agent_docker_migrations_or_cloud_execution": false,
+  "application_source_financial_services_migrations_locks_changed": false,
+  "existing_demo_vm_accounts_mfa_or_keys_changed": false,
+  "sql_or_financial_assertions_waived": false,
+  "actual_operator_retry_result": "Pending",
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85
+}

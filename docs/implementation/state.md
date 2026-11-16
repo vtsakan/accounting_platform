@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-16. Current step: **S25 Prepared — PostgreSQL maintenance-pair fix**. Next: **Operator retry; D05/G2 remain Pending**.
+Updated 2026-11-16. Current step: **S25 Prepared — canonical allocation-key fix**. Next: **Operator retry; D05/G2 remain Pending**.
 
 
 
@@ -11,15 +11,15 @@ Updated 2026-11-16. Current step: **S25 Prepared — PostgreSQL maintenance-pair
 ## Current selected work — S25
 
 <!-- S25-RESULT -->
-The operator retry passes tmpfs transfer/hash and archive checks, then fails in
-CREATE TABLE on reserved pg_attver metadata. The former floating PG15 source
-and 17.11 tools/target allowed an incompatible maintenance combination. Only the
-S25 disposable source/target are pinned to 15.20/17.12; all six server/client
-versions are checked before rehearsal database creation. The exact prior source
-minor was not supplied. All 50 previous test bodies remain and eight new contracts
-are supplied (58 total), unexecuted by the agent. Static syntax/context/source
-preservation checks passed. S25 remains Prepared; retry tools/verify_s25.py
---record. See evidence/S25-postgres-pair-fix.json and fixtures/s25-image-pins.json.
+The latest operator log confirms all six 15.20/17.12 server/client versions and
+reaches concurrent-idempotent-import after the logical restore and earlier guards.
+It stops at apply_plan / legacy_worker.py:299: the review's integer charge position
+overwrites the planner's canonical agreement/charge key and fails on split.
+The source fix copies review metadata first and writes computed cash/charge
+identities last, preserving source JSON, financial services and all assertions.
+All 58 existing test bodies remain; three new contracts are supplied (61 total),
+unexecuted by the agent. Static syntax/context/source checks passed. S25 remains
+Prepared; retry tools/verify_s25.py --record. See evidence/S25-allocation-key-fix.json.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

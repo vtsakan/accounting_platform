@@ -8,7 +8,7 @@
   "preserved_application_context": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
   "production_tests_previously_passed": 661,
   "financial_cases_previously_passed": 36,
-  "new_planner_test_methods_supplied": 58,
+  "new_planner_test_methods_supplied": 61,
   "new_tests_executed": false,
   "application_tests_rerun": false,
   "docker_builds_or_containers_executed": false,
@@ -34,20 +34,39 @@
     "tests_executed": false
   },
   "operator_latest_attempt": {
-    "stage": "logical-15-to-17/restore-execute",
     "status": "Failed",
-    "postgres17_target_preflight": "Passed",
-    "archive_bytes_match": true,
-    "pg_restore_executed": true,
-    "unrecognized_parameters": [
-      "pg_attver"
-    ],
-    "statement_type": "CREATE TABLE",
-    "full_source_minor_version": "Not supplied"
+    "stage": "concurrent-idempotent-import",
+    "operation": "docker",
+    "exit_code": 1,
+    "worker_error": "AttributeError",
+    "worker_action": "apply",
+    "worker_function": "apply_plan",
+    "worker_file": "legacy_worker.py",
+    "worker_line": 299,
+    "postgres_versions": {
+      "source_server": 150020,
+      "source_pg_dump": 150020,
+      "source_pg_restore": 150020,
+      "target_server": 170012,
+      "target_pg_dump": 170012,
+      "target_pg_restore": 170012
+    },
+    "latest_restore_metadata": {
+      "archive_bytes_match": true,
+      "server_version_num": 170012,
+      "source_version_num": 150020,
+      "dumped_by_version_num": 170012,
+      "pg_restore_version_num": 170012,
+      "database_matches": true,
+      "role_matches": true,
+      "read_only": "off",
+      "user_tables": 0
+    }
   },
   "restore_followup": "docs/implementation/evidence/S25-restore-fix.json",
   "tmpfs_transfer_followup": "docs/implementation/evidence/S25-tmpfs-fix.json",
-  "latest_operator_tools_commit": "git:8f0b4c49151fec2c3bf3c1f380247a15e340c270",
+  "latest_operator_tools_commit": "git:92f5bb77d08f4ceff8284813d5d3b402f8ad9f65",
   "maintenance_pair_followup": "docs/implementation/evidence/S25-postgres-pair-fix.json",
-  "rehearsal_image_policy_sha256": "sha256:e9d579a999c99294fdb55a4592c975523bd20a9f96b1c193568abd7a67549304"
+  "rehearsal_image_policy_sha256": "sha256:e9d579a999c99294fdb55a4592c975523bd20a9f96b1c193568abd7a67549304",
+  "allocation_key_followup": "docs/implementation/evidence/S25-allocation-key-fix.json"
 }

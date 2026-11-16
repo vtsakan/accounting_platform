@@ -765,3 +765,17 @@ contracts supplement the 50 preserved methods; runtime remains operator-only.
 This supporting rehearsal dependency change does not approve real migration,
 D05 exceptions, G2 release or accepted workload recovery. See
 S25-postgres-pair-fix.json and fixtures/s25-image-pins.json.
+
+
+### S25 canonical allocation key — source Prepared, 2026-11-16
+
+The operator confirms 15.20/17.12 tools and reaches concurrent-idempotent-import.
+The planner unpacked review metadata after its computed charge key, overwriting
+agreements:<id>/<position> with an integer; apply_plan then failed on split.
+Copy metadata first and put computed cash/charge IDs last. Keep reviewed input,
+source/review bindings, amounts, references and normal financial services.
+The corrected derived plan gets a different hash; old batches are never edited.
+Preserve all 58 earlier test bodies and supply three focused contracts without
+agent execution. Prior progress is not a full concurrency/recovery receipt.
+S25 remains Prepared and D05/G2/full acceptance Pending. See
+S25-allocation-key-fix.json. No application, image, migration, demo/VM or key change.

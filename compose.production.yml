@@ -44,7 +44,9 @@ services:
     pull_policy: never
     user: "10001:10001"
     restart: unless-stopped
-    environment:
+    environment: &production_environment
+      BACKGROUND_JOBS_ENABLED: ${BACKGROUND_JOBS_ENABLED:-false}
+      CELERY_BROKER_URL: redis://redis:6379/0
       DJANGO_SETTINGS_MODULE: core.settings.production
       DJANGO_DEBUG: "false"
       DJANGO_ALLOWED_HOSTS: ${SITE_DOMAIN:?Configure the exact DuckDNS hostname}
@@ -82,7 +84,7 @@ services:
         source: /srv/accounting/media
         target: /app/media
         bind: {create_host_path: false}
-    networks: [application, database]
+    networks: [application, database, jobs]
     depends_on: {db: {condition: service_healthy}}
     stop_grace_period: 40s
     logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
@@ -127,7 +129,106 @@ services:
     depends_on: {web: {condition: service_healthy}}
     stop_grace_period: 30s
     logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+  redis:
+    profiles: [jobs]
+    image: redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d
+    platform: linux/amd64
+    restart: unless-stopped
+    command: [redis-server, --bind, 0.0.0.0, --protected-mode, "no", --appendonly, "yes", --appendfsync, everysec, --maxmemory, 96mb, --maxmemory-policy, noeviction]
+    volumes: [redis_jobs:/data]
+    networks: [jobs]
+    mem_limit: 192m
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+  worker:
+    profiles: [jobs]
+    image: ${APP_IMAGE:?Publish and pin the application image first}
+    platform: linux/amd64
+    pull_policy: never
+    user: "10001:10001"
+    restart: unless-stopped
+    environment:
+      <<: *production_environment
+      BACKGROUND_JOBS_ENABLED: "true"
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    networks: [database, jobs]
+    volumes:
+      - type: bind
+        source: /run/accounting/signing
+        target: /run/secrets/signing
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: /run/accounting/database
+        target: /run/secrets/database
+        read_only: true
+        bind: {create_host_path: false}
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+    command: [python, -m, celery, -A, 'core.celery:app', worker, --concurrency=1, --prefetch-multiplier=1, --loglevel=WARNING, --without-gossip, --without-mingle]
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}}
+    mem_limit: 512m
+    stop_grace_period: 75s
+    healthcheck:
+      test: [CMD, python, manage.py, background_jobs, health, --component, worker, --strict]
+      interval: 15s
+      timeout: 6s
+      retries: 6
+      start_period: 45s
+  scheduler:
+    profiles: [jobs]
+    image: ${APP_IMAGE:?Publish and pin the application image first}
+    platform: linux/amd64
+    pull_policy: never
+    user: "10001:10001"
+    restart: unless-stopped
+    environment:
+      <<: *production_environment
+      BACKGROUND_JOBS_ENABLED: "true"
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    networks: [database, jobs]
+    volumes:
+      - scheduler_state:/app/run/beat
+      - type: bind
+        source: /run/accounting/signing
+        target: /run/secrets/signing
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: /run/accounting/database
+        target: /run/secrets/database
+        read_only: true
+        bind: {create_host_path: false}
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+    command: [python, -m, celery, -A, 'core.celery:app', beat, --loglevel=WARNING, --pidfile=, --schedule=/app/run/beat/celerybeat-schedule]
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}, worker: {condition: service_started}}
+    mem_limit: 192m
+    stop_grace_period: 30s
+    deploy: {replicas: 1}
+    healthcheck:
+      test: [CMD, python, manage.py, background_jobs, health, --component, scheduler, --strict]
+      interval: 15s
+      timeout: 6s
+      retries: 6
+      start_period: 30s
 networks:
   application: {internal: true}
   database: {internal: true}
   egress: {}
+  jobs: {internal: true}
+
+volumes:
+  redis_jobs:
+  scheduler_state:

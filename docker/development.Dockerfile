@@ -24,6 +24,7 @@ COPY --chown=app:app templates /app/templates
 COPY --chown=app:app tools/init_local_env.py /app/tools/init_local_env.py
 COPY --chown=app:app docker/development-entrypoint.sh /app/docker/development-entrypoint.sh
 
+RUN mkdir -p /app/run/beat && chown -R 10001:10001 /app/run
 USER app
 EXPOSE 8000
 ENTRYPOINT ["sh", "/app/docker/development-entrypoint.sh"]

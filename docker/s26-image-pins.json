@@ -1,0 +1,20 @@
+{
+  "step": "S26",
+  "reviewed_at": "2026-11-16",
+  "platform": "linux/amd64",
+  "redis": {
+    "version": "8.2.11",
+    "reference": "redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d",
+    "platform_manifest": "sha256:c13389a69fa54b26002fb052b062be6175f915e314d38969f7293ffc27b02d31"
+  },
+  "celery": "5.7.0",
+  "redis_py": "8.1.0",
+  "existing_python_django_postgresql_pins_changed": false,
+  "sources": [
+    "https://raw.githubusercontent.com/docker-library/official-images/master/library/redis",
+    "https://registry-1.docker.io/v2/library/redis/manifests/8.2.11-bookworm",
+    "https://pypi.org/pypi/celery/5.7.0/json",
+    "https://pypi.org/pypi/redis/8.1.0/json",
+    "https://docs.celeryq.dev/en/stable/changelog.html"
+  ]
+}

@@ -29,7 +29,7 @@ def redact_text(value):
     variants = {variant for item in known for variant in (item, quote(item, safe=""), json.dumps(item)[1:-1])}
     for item in sorted(variants, key=len, reverse=True):
         text = text.replace(item, "[REDACTED]")
-    text = re.sub(r"(?i)(https?://)[^\s/@:]+:[^\s/@]+@", r"\1[REDACTED]@", text)
+    text = re.sub(r"(?i)((?:https?|rediss?)://)[^\s/@:]*:[^\s/@]+@", r"\1[REDACTED]@", text)
     text = re.sub(r"(?i)\b(Bearer|Basic)\s+[A-Za-z0-9._~+/=-]+", r"\1 [REDACTED]", text)
     text = re.sub(r"(?im)((?:authorization|cookie|set-cookie)\s*:\s*)[^\r\n]+", r"\1[REDACTED]", text)
     return _assignment.sub(r"\1[REDACTED]", text)

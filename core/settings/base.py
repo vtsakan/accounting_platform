@@ -72,3 +72,39 @@ OWNERSHIP_HANDOVER_SECONDS = 604800
 AUTH_PUBLIC_ORIGIN = "http://localhost:8000"
 AUTH_MAIL_CAPTURE_ROOT = "/tmp/accounting-auth-mail"
 DEFAULT_FROM_EMAIL = "Λογιστική πλατφόρμα <noreply@example.invalid>"
+
+# S26: durable DB intents; enable execution only in explicitly selected stacks.
+from core.config import boolean, env
+BACKGROUND_JOBS_ENABLED = boolean('BACKGROUND_JOBS_ENABLED', False)
+BACKGROUND_LEASE_SECONDS = 120
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', 'redis://redis:6379/0', secret=True)
+CELERY_RESULT_BACKEND = None
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = False
+CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_DEFAULT_QUEUE = 'accounting'
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT = False
+CELERY_TASK_TIME_LIMIT = 60
+CELERY_TASK_SOFT_TIME_LIMIT = 45
+CELERY_WORKER_CONCURRENCY = 1
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
+CELERY_WORKER_HIJACK_ROOT_LOGGER = False
+CELERY_WORKER_REDIRECT_STDOUTS = False
+CELERY_BROKER_CONNECTION_TIMEOUT = 3
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 20
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 120, 'socket_connect_timeout': 3,
+    'socket_timeout': 3, 'max_retries': 0, 'global_keyprefix': 'accounting-s26:'}
+CELERY_BROKER_POOL_LIMIT = 2
+CELERY_TASK_PUBLISH_RETRY = False
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = 'Europe/Athens'
+CELERY_BEAT_SCHEDULER = 'core.job_scheduler:SingletonScheduler'
+CELERY_BEAT_SCHEDULE_FILENAME = '/app/run/beat/celerybeat-schedule'
+CELERY_BEAT_MAX_LOOP_INTERVAL = 10
+CELERY_BEAT_SCHEDULE = {'durable-dispatch-recovery': {'task': 'accounting.recover_jobs',
+    'schedule': 10.0, 'options': {'queue': 'accounting', 'expires': 20}}}

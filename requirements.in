@@ -7,3 +7,7 @@ psycopg[binary]>=3.3.8,<3.4
 django-otp>=1.7.5,<1.8
 cryptography>=50.0.2,<51
 qrcode>=8.2,<9
+
+# S26: bounded JSON Celery transport; PostgreSQL retains durable job state.
+celery[redis]==5.7.0
+redis==8.1.0

@@ -29,7 +29,36 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S25 — legacy rehearsal, source only
+## Selected S26 — reliable background execution, source only
+
+The user selected continuation after the actual successful S25 rehearsal on
+2026-11-16: 61 planner tests, 184 reconciliation checks and encrypted source/target
+recovery. See evidence/S25-operator-completion.json. Preserve the operator's
+existing S25-verification.json and every historical receipt; real D05/G2 and all
+85 full acceptances remain Pending.
+
+Read background_jobs.md. Implement only S26 from prompts.json: private Redis,
+same-image Celery worker at concurrency one and exactly one separate persistent
+scheduler, durable DB/outbox state, execution-time office/client/cancellation
+checks, bounded retry/recovery and data-free queue health. Use the existing
+clients.read capability only for the inert client probe; no broad future job or
+external-effect authority is inferred. Add only 0021/0022, preserve all twenty
+old migrations, all previous test files, financial services and existing runtime
+versions. Celery/Redis dependencies are now intentionally introduced under S26.
+No generic admin/records adapter for new event/effect models. No HTTP route is
+needed for this operational foundation.
+
+Deliver source and optional tools/verify_s26.py --record. No agent tests/builds/
+Docker/migrations/native verification/browser/SSH/cloud/push or local demo/VM/
+account/MFA/key actions. Static syntax/YAML/source/hash checks are allowed. The
+operator gate must execute the unchanged 661-test baseline plus 35 supplied
+methods (696 is an unobserved target), all 36 finance cases and actual Redis,
+restricted-role migration, duplicate/cancellation/revocation/scheduler/restart/
+cleanup proofs before recording Verified. A new production image is required;
+never reuse S24A for changed application context. Worker/beat definitions are
+opt-in and are not a live VM rollout. Stop after S26; S27 is separately selected.
+
+## Historical S25 — legacy rehearsal, source only
 
 The user now selects S25. Read legacy_migration.md and legacy_review_el.md.
 Keep the actual operator S24A 661-test/36-case receipt and successful local/VM

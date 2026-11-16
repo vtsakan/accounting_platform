@@ -779,3 +779,37 @@ Preserve all 58 earlier test bodies and supply three focused contracts without
 agent execution. Prior progress is not a full concurrency/recovery receipt.
 S25 remains Prepared and D05/G2/full acceptance Pending. See
 S25-allocation-key-fix.json. No application, image, migration, demo/VM or key change.
+
+
+## S25 operator completion and S26 selection — 2026-11-16
+
+The supplied operator S25 result is Verified for synthetic isolated PG15→17
+rehearsal: 61 tests, 184 reconciliation checks, concurrent idempotency, atomic
+rollback and encrypted source-native/target recovery. Source identity is
+456f7db74a7dfbf8599d588fedf6cc0f16483d32. Preserve the local generated receipt;
+S25-operator-completion.json records the supplied conversation evidence. D05/G2,
+real-data cutover and all 85 full acceptances stay Pending.
+
+The user's continuation now selects S26 under the existing authorised sequence.
+Add Celery 5.7.0, redis-py 8.1.0 and digest-pinned official Redis 8.2.11; preserve
+all twelve old runtime versions and the maintenance lock. JSON tasks contain
+only a job UUID, while PostgreSQL owns intent, authority, retry and effect state.
+The single inert client-scoped adapter uses the existing clients.read capability;
+D01 future fee/export/mail/connector job permissions are still decided at their
+features. Cancellation is linearized against a protected DB effect transaction.
+External side effects cannot use the DB-only probe contract without their own
+reviewed durable intent and uncertain-outcome behavior.
+
+Use one worker process initially and one separate persistent Celery beat with a
+PostgreSQL session lock. Losing the session stops scheduling; release/restart
+must stop the old scheduler and worker before enabling replacements. Required
+scheduler state and broker AOF use separate retained volumes, but recovery never
+depends on Redis durability. Broker ingress is internal only. Resource limits,
+heartbeats and retry delays are implementation defaults, not approved workload,
+SLA, RPO/RTO or operational-owner choices. The operator gate records actual low-
+concurrency resource/recovery samples. Production rollout remains unselected.
+
+Source-only preference applies: 0021/0022 and 35 new methods are Prepared,
+unexecuted by the agent. Static source/AST/YAML/preservation checks are separate
+from all operator runtime evidence. Read background_jobs.md for the disposable
+same-production-image/full-suite/real-Redis command and the remaining gates.

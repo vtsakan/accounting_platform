@@ -21,11 +21,14 @@ services:
     stop_grace_period: 30s
 
   web:
+    image: &dev_app_image ${DEV_APP_IMAGE:-accounting-platform-dev:s26}
     build:
       context: .
       dockerfile: docker/development.Dockerfile
     platform: linux/amd64
-    environment:
+    environment: &dev_web_environment
+      BACKGROUND_JOBS_ENABLED: ${BACKGROUND_JOBS_ENABLED:-false}
+      CELERY_BROKER_URL: redis://redis:6379/0
       DJANGO_SETTINGS_MODULE: core.settings.local
       DJANGO_DEBUG: ${DJANGO_DEBUG:-true}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Generate .env with tools/init_local_env.py}
@@ -39,6 +42,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks: [default, jobs]
     ports:
       - "127.0.0.1:${WEB_PORT:-8000}:8000"
     volumes:
@@ -54,6 +58,69 @@ services:
       start_period: 15s
     stop_grace_period: 15s
 
+  redis:
+    profiles: [jobs]
+    image: redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d
+    platform: linux/amd64
+    command: [redis-server, --bind, 0.0.0.0, --protected-mode, "no", --appendonly, "yes", --appendfsync, everysec, --maxmemory, 96mb, --maxmemory-policy, noeviction]
+    volumes: [redis_jobs:/data]
+    networks: [jobs]
+    mem_limit: 192m
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  worker:
+    profiles: [jobs]
+    image: *dev_app_image
+    platform: linux/amd64
+    entrypoint: [python, -m, celery]
+    command: [-A, 'core.celery:app', worker, --concurrency=1, --prefetch-multiplier=1, --loglevel=WARNING, --without-gossip, --without-mingle]
+    environment:
+      <<: *dev_web_environment
+      BACKGROUND_JOBS_ENABLED: "true"
+    volumes: [./accounting:/app/accounting:ro, ./core:/app/core:ro]
+    networks: [default, jobs]
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}}
+    mem_limit: 512m
+    stop_grace_period: 75s
+    healthcheck:
+      test: [CMD, python, manage.py, background_jobs, health, --component, worker, --strict]
+      interval: 15s
+      timeout: 6s
+      retries: 6
+      start_period: 45s
+
+  scheduler:
+    profiles: [jobs]
+    image: *dev_app_image
+    platform: linux/amd64
+    entrypoint: [python, -m, celery]
+    command: [-A, 'core.celery:app', beat, --loglevel=WARNING, --pidfile=, --schedule=/app/run/beat/celerybeat-schedule]
+    environment:
+      <<: *dev_web_environment
+      BACKGROUND_JOBS_ENABLED: "true"
+    volumes: [./accounting:/app/accounting:ro, ./core:/app/core:ro, scheduler_state:/app/run/beat]
+    networks: [default, jobs]
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}, worker: {condition: service_started}}
+    mem_limit: 192m
+    stop_grace_period: 30s
+    deploy: {replicas: 1}
+    healthcheck:
+      test: [CMD, python, manage.py, background_jobs, health, --component, scheduler, --strict]
+      interval: 15s
+      timeout: 6s
+      retries: 6
+      start_period: 30s
+
 volumes:
   # Deliberately new and project-scoped; never reuses the legacy PG15 volume.
   postgres17_data:
+  redis_jobs:
+  scheduler_state:
+
+networks:
+  default: {}
+  jobs: {internal: true}

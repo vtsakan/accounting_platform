@@ -535,13 +535,14 @@
     "bootstrap_office_owner",
     "prune_auth_attempts",
     "probe_development_database",
-    "seed_development_data"
+    "seed_development_data",
+    "background_jobs"
   ],
   "operator_boundary": "Trusted process/database credentials; complete private mapping, reviewed digest or explicit office; no staff HTTP route to management commands.",
   "future_pending": {
     "export-downloads": "No implemented CSV/PDF/export-download route. Current /report/ is scoped HTML only.",
     "private-files": "Document upload, object ownership, download and restore deferred to their implementation steps.",
-    "workers": "execution_record is a synchronous adapter proof; no deployed queue/worker is claimed.",
+    "workers": "S26 common client-scoped DB probe/jobs and singleton scheduler source supplied; operator verification and future feature-specific jobs remain Pending.",
     "portal": "Client portal, representation and cross-office grants remain unimplemented and policy Pending.",
     "connectors": "External tax connectors and their tenant credentials are not implemented."
   },

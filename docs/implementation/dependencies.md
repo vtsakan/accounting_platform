@@ -70,3 +70,18 @@ The [secret-scan policy](../security/README.md) explains the offline scan and ex
 ## Acceptance boundary
 
 S03 demonstrates clean dependency installation, module/driver imports and migration deserialisation. It does not execute schema migrations, business tests, financial regressions, PostgreSQL queries, the production image or Greek UI acceptance. QR-02 and QR-14 remain Pending until their full checks run at later release gates. All existing application models, forms, views, templates and migration files are unchanged.
+
+
+## S26 runtime extension — Prepared, 2026-11-16
+
+Celery 5.7.0 with Redis transport and redis-py 8.1.0 extend the current runtime
+lock from 12 to 28 packages. All twelve prior package versions, framework/driver
+pins and the entire maintenance lock remain unchanged. The official PyPI metadata
+supports Python >=3.10 for both direct additions; the project stays on 3.12.16.
+The existing uv 0.13.7 compiler produced the extended distribution hash lock.
+This is dependency resolution/source evidence, not an installed runtime, executed
+application or production build. Operator tools/verify_s26.py performs actual
+hash installation/reproduction and the complete production-image/runtime gate.
+Redis server is separately pinned in docker/s26-image-pins.json. See
+background_jobs.md for the private transport, JSON serializer and durable DB
+state design. No S03 or S13 historical receipt is rewritten by this extension.

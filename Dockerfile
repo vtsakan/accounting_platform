@@ -28,6 +28,7 @@ COPY docker/production-entrypoint.sh docker/healthcheck.py /app/docker/
 RUN python manage.py collectstatic --noinput --settings=core.settings.build \
     && find /app/staticfiles -type d -exec chmod 0555 {} + \
     && find /app/staticfiles -type f -exec chmod 0444 {} +
+RUN mkdir -p /app/run/beat && chown 10001:10001 /app/run/beat
 USER 10001:10001
 EXPOSE 8000
 HEALTHCHECK --interval=10s --timeout=10s --start-period=15s --retries=3 \

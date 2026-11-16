@@ -39,5 +39,6 @@
   "d05_real_migration_review": "Pending",
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
-  "operator_command": "python3 tools/verify_s26.py --record"
+  "operator_command": "python3 tools/verify_s26.py --record",
+  "applied_source_commit": "git:07c9a3be56d3966b827392739234b8710555e848"
 }

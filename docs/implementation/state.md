@@ -13,6 +13,7 @@ Updated 2026-11-16. Current step: **S26 Prepared — reliable background executi
 
 <!-- S26-RESULT -->
 Prepared source-only S26: same-image Redis/Celery worker and exactly-one scheduler definitions, durable DB outbox, fenced atomic client probe, retry/cancellation/fresh authority guards and private queue health. 35 new test methods supplied; expected 696 total is a target, not an observed result. Agent execution: static source checks only. Operator command: python3 tools/verify_s26.py --record. VM/deployment, future fee/mail/task adapters and all 85 full acceptances remain Pending.
+Preservation follow-up: canonical SHA-256 prefix correction Prepared after the supplied pre-Docker failure; four host contracts supplied, unexecuted by the agent. Full operator retry remains Pending.
 <!-- /S26-RESULT -->
 
 ## Previous verified work — S25

@@ -32,5 +32,10 @@
   "next_step": "S27 when selected",
   "static_text_scan": "Passed static text review; zero unreviewed findings. Operator gate reruns it against applied source.",
   "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json",
-  "source_commit": "git:e97eb3d5e450b726871157c843b69a427c19f0bc"
+  "source_commit": "git:07c9a3be56d3966b827392739234b8710555e848",
+  "preservation_followup": "Prepared canonical SHA-256 prefix correction",
+  "host_preservation_contracts_supplied": 4,
+  "host_preservation_contracts_executed_by_agent": false,
+  "latest_operator_failure": "Pre-Docker ensure_preserved compared a bare hexdigest with sha256:<hex>",
+  "runtime_retry_result": "Pending"
 }

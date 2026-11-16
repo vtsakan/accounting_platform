@@ -316,7 +316,9 @@ def build_plan(source, review):
             require(cash_total <= cents(row['amount']) and charge_total <= cents(target['amount']), 'Υπέρβαση ποσού αντιστοίχισης.')
             expected['cash'][key].update(allocated=f'{cash_total:.2f}', unallocated=f'{cents(row["amount"]) - cash_total:.2f}')
             target.update(allocated=f'{charge_total:.2f}', outstanding=f'{cents(target["amount"]) - charge_total:.2f}')
-            expected['allocations'].append({'cash': key, 'charge': ckey, **allocation})
+            # Reviewed charge is an integer position; workers need its canonical
+            # agreement/position key. Source metadata must not overwrite either ID.
+            expected['allocations'].append({**allocation, 'cash': key, 'charge': ckey})
     raw_accounts = {}
     for row in rows['cash_accounts']:
         key = record_key('cash_accounts',row['id'])

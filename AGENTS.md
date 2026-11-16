@@ -82,6 +82,17 @@ do not turn an inferred floating-image version into an observed receipt.
 No agent runtime execution. S25, D05/G2 and all full acceptances stay Pending
 for their respective operator/acceptance gates; source status is Prepared.
 
+The next operator retry confirms all six 15.20/17.12 versions and reaches
+concurrent-idempotent-import after logical restore and earlier gates. It stops
+in apply_plan at legacy_worker.py:299 because an integer charge position has
+overwritten the canonical agreement/charge key in the planner's dictionary
+unpacking. Put the copied review metadata first and the computed cash/charge
+identities last. Keep reviewed JSON and all financial services unchanged.
+Preserve all 58 prior test methods; three new contracts cover canonical keys,
+nonzero charge positions and metadata collisions. Read S25-allocation-key-fix.json.
+Agent checks remain static only. The full concurrent/reconciliation/recovery
+gate and D05/G2 acceptance remain Pending; do not infer completion from progress.
+
 ## Historical S24A — Material-inspired office workspace
 
 The product owner explicitly selected S24A now, before S25, and requested an

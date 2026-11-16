@@ -500,5 +500,56 @@ class MaintenancePairTests(unittest.TestCase):
             self.assertIn('NOSUPERUSER NOCREATEDB NOCREATEROLE',runner.queries[3])
 
 
+class AllocationKeyTests(unittest.TestCase):
+    def setUp(self):
+        self.source=read_json(FIXTURES/'s25-source.json')
+        self.review=read_json(FIXTURES/'s25-review.json')
+
+    def test_canonical_charge_keys_reach_both_worker_consumers_without_mutating_review(self):
+        original=copy.deepcopy(self.review)
+        plan=build_plan(self.source,self.review)
+        rows=plan['expected']['allocations']
+        self.assertEqual([(row['cash'],row['charge']) for row in rows],[
+            ('transactions:2','agreements:1/0'),('transactions:3','agreements:1/0'),
+            ('transactions:4','agreements:2/0'),('transactions:5','agreements:2/0'),
+            ('transactions:16','agreements:3/0')])
+        for row in rows:
+            agreement_key,position=row['charge'].split('/')
+            reviewed=self.review['records'][row['cash']]['allocations'][0]
+            self.assertEqual(agreement_key,'agreements:'+str(reviewed['agreement']))
+            self.assertEqual(int(position),reviewed['charge'])
+            self.assertIn(row['charge'],plan['expected']['charges'])
+            self.assertEqual({k:row[k] for k in ('amount','date','reference')},
+                {k:reviewed[k] for k in ('amount','date','reference')})
+        self.assertEqual(self.review,original)
+        self.assertEqual(plan['review_sha256'],digest(original))
+        self.assertIs(type(self.review['records']['transactions:2']['allocations'][0]['charge']),int)
+
+    def test_nonzero_monthly_charge_position_keeps_the_correct_obligation(self):
+        choice=self.review['records']['agreements:1']
+        choice['billing_mode']='MONTHLY'
+        choice['charges']=[
+            {'amount':'300.00','date':'2026-01-01','due':'2026-01-31','period':'2026-01-01'},
+            {'amount':'300.00','date':'2026-02-01','due':'2026-02-28','period':'2026-02-01'}]
+        self.review['records']['transactions:2']['allocations'][0].update(charge=1,date='2026-02-01')
+        plan=build_plan(self.source,self.review)
+        rows={row['cash']:row for row in plan['expected']['allocations']}
+        self.assertEqual(rows['transactions:2']['charge'],'agreements:1/1')
+        self.assertEqual(rows['transactions:3']['charge'],'agreements:1/0')
+        self.assertEqual(plan['expected']['charges']['agreements:1/1']['allocated'],'200.00')
+        self.assertEqual(plan['expected']['charges']['agreements:1/0']['allocated'],'100.00')
+
+    def test_review_metadata_cannot_replace_the_canonical_cash_identity(self):
+        reviewed=self.review['records']['transactions:2']['allocations'][0]
+        reviewed['cash']='transactions:16'
+        plan=build_plan(self.source,self.review)
+        row=plan['expected']['allocations'][0]
+        self.assertEqual(row['cash'],'transactions:2')
+        self.assertEqual(row['charge'],'agreements:1/0')
+        self.assertEqual(reviewed['cash'],'transactions:16')
+        self.assertEqual(reviewed['charge'],0)
+        self.assertEqual(plan['expected']['cash']['transactions:2']['allocated'],'200.00')
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -351,3 +351,40 @@ Primary references, checked 2026-11-16:
 - [PostgreSQL 17.12 pg_dump source: special attoptions handling](https://github.com/postgres/postgres/blob/REL_17_12/src/bin/pg_dump/pg_dump.c).
 - [Official PostgreSQL 15.20 Bookworm image metadata](https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/15.20-bookworm.md).
 - [Official PostgreSQL 17.12 Bookworm image metadata](https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/17.12-bookworm.md).
+
+## Canonical allocation key follow-up — Prepared, 2026-11-16
+
+The next operator log confirms all six full server/client versions at 15.20 and
+17.12. It reaches `concurrent-idempotent-import`, then reports `AttributeError`
+in `apply_plan`, `legacy_worker.py:299`. The exact source line calls `.split('/')`
+on the planned allocation's charge key. The planner had computed a string such
+as `agreements:1/0`, but unpacked the review's integer `charge: 0` after that
+computed field, replacing it. This is an operator-planner composition bug, not
+a failed PostgreSQL restore or a change to settlement policy.
+
+Copy the review metadata first, then write both canonical cash and charge
+identities last. The reviewed source JSON remains unchanged: `charge` is still
+an integer position there, while the derived plan supplies a full string key
+to both the apply and reconciliation consumers. Amounts, dates, references,
+source/review bindings, office checks and all service/SQL assertions remain.
+The derived plan hash changes with the corrected output; no old completed batch
+is rewritten or accepted under another hash. The retry creates fresh resources.
+
+The progress indicates that preceding restore/setup/backup/atomic-rollback
+guards returned without error. Their complete result summaries were not shared,
+and concurrency, full reconciliation, source/target restore and technical S25
+completion are still Pending. Do not mark the full step Verified from this log.
+
+All 58 previous test bodies are preserved. Three additional unexecuted contracts
+cover all fixture allocation keys and unchanged review data, a nonzero monthly
+charge position and a metadata collision with the canonical cash identity.
+Agent checks are static syntax/source/patch preservation only. The command is:
+
+```bash
+python3 tools/verify_s25.py --record
+```
+
+Use the existing cached image pair and verified S24A application image. No image
+rebuild, new migration, demo/VM action, account/MFA reset or key replacement is
+part of this fix. S25 source stays Prepared; D05/G2 and all full acceptances
+stay Pending. See `evidence/S25-allocation-key-fix.json`.

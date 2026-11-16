@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-16. Current step: **S25 Prepared — canonical allocation-key fix**. Next: **Operator retry; D05/G2 remain Pending**.
+Updated 2026-11-16. Current step: **S25 Verified — synthetic technical rehearsal**. Next: **D05/G2 migration review; S26 when selected**.
 
 
 
@@ -11,15 +11,7 @@ Updated 2026-11-16. Current step: **S25 Prepared — canonical allocation-key fi
 ## Current selected work — S25
 
 <!-- S25-RESULT -->
-The latest operator log confirms all six 15.20/17.12 server/client versions and
-reaches concurrent-idempotent-import after the logical restore and earlier guards.
-It stops at apply_plan / legacy_worker.py:299: the review's integer charge position
-overwrites the planner's canonical agreement/charge key and fails on split.
-The source fix copies review metadata first and writes computed cash/charge
-identities last, preserving source JSON, financial services and all assertions.
-All 58 existing test bodies remain; three new contracts are supplied (61 total),
-unexecuted by the agent. Static syntax/context/source checks passed. S25 remains
-Prepared; retry tools/verify_s25.py --record. See evidence/S25-allocation-key-fix.json.
+Operator S25 synthetic PostgreSQL 15→17 rehearsal Verified. Exact reconciliation, idempotent concurrency and encrypted source/target recovery passed. D05/G2/live migration and all 85 acceptances remain Pending.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

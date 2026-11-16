@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import subprocess
 import sys
@@ -22,9 +23,27 @@ DOCS = ROOT / 'docs/implementation'
 
 def ensure_preserved():
     manifest = json.loads((DOCS / 'evidence/S26-preserved-source.json').read_text())
-    for name, digest in manifest['sha256'].items():
-        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
-            raise RuntimeError('Retained source or historical receipt changed: ' + name)
+    entries = manifest.get('sha256')
+    if not isinstance(entries, dict) or not entries:
+        raise RuntimeError('Invalid retained-source manifest')
+    for name, digest in entries.items():
+        if not isinstance(digest, str) or not re.fullmatch(r'sha256:[0-9a-f]{64}', digest):
+            raise RuntimeError('Invalid retained-source SHA-256: ' + name)
+        actual = 'sha256:' + hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        if actual != digest:
+            raise RuntimeError('Retained source changed: ' + name + '; expected=' + digest + '; actual=' + actual)
+    return len(entries)
+
+
+def preservation_contracts():
+    result = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT/'tools'),
+        '-p', 'test_s26_preservation.py'], cwd=ROOT, text=True, capture_output=True)
+    if result.returncode:
+        raise RuntimeError('S26 source-preservation contracts failed:\n' + result.stderr[-4000:])
+    count = re.search(r'Ran (\d+) tests?', result.stderr + result.stdout)
+    if count is None or int(count.group(1)) != 4:
+        raise RuntimeError('Four source-preservation contracts must be discovered')
+    return int(count.group(1))
 
 
 def receipt_snapshot():
@@ -179,7 +198,10 @@ def main():
     try:
         if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip():
             raise RuntimeError('Commit source/evidence before S26 verification')
-        ensure_preserved();require_local_docker()
+        preserved_count = ensure_preserved()
+        preservation_tests = preservation_contracts()
+        print('[S26] Διατήρηση '+str(preserved_count)+' αρχείων και '+str(preservation_tests)+' έλεγχοι ακεραιότητας επιβεβαιώθηκαν.', flush=True)
+        require_local_docker()
         receipts=receipt_snapshot()
         before=candidate_context()[1]['digest']
         print('[S26] Πλήρης έλεγχος της νέας εικόνας και των προηγούμενων οικονομικών δοκιμών.',flush=True)
@@ -208,6 +230,8 @@ def main():
             'verified_at':datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
             'source_commit':'git:'+subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             'application_context_digest':before,'suite':suite,'s26_test_methods':count,'image':image,
+            'retained_source_files_checked':preserved_count,'preservation_guard_tests_passed':preservation_tests,
+            'retained_source_files_checked':preserved_count,'source_preservation_contracts_passed':preservation_tests,
             'agent_tests_builds_docker_migrations_run':False,'docker_execution_by_operator':True,
             'local_demo_or_vm_changed':False,'human_accounts_or_mfa_changed':False,
             'full_requirement_acceptance':'Pending','d05_real_migration_review':'Pending','g2_release_acceptance':'Pending',

@@ -155,6 +155,31 @@ Full acceptance of QR-01/06/12, all 85 requirements, manual Greek browser review
 actual VM rollout, D05/G2 and workload/incident-owner approvals remain Pending.
 Stop after S26. S27 recurring fee schedules is the next planned step when selected.
 
+## Operator preflight correction — Prepared, 2026-11-16
+
+The supplied operator log applies S26 successfully, then fails in
+`ensure_preserved` before any Docker/build action. Reapplying the original ZIP
+correctly reports already applied and does not repair this verifier defect.
+
+The recorded manifest and installer both use `sha256:<64 lowercase hex>`.
+The original verifier compared a bare hexdigest to that prefixed value, so even
+identical bytes failed on the first entry, accounting/account_services.py. The
+follow-up compares the same canonical representation and rejects malformed or
+empty metadata. A genuine changed file still stops the gate with expected and
+actual public hashes; no stored digest is recalculated or replaced to accept it.
+
+Four supplied stdlib host contracts exercise the real retained manifest, a
+matching prefixed digest, a real changed-file rejection without manifest writes,
+and malformed/empty metadata. The operator's existing `verify_s26.py --record`
+command now runs them before checking Docker. They are separate from the 35
+application methods; target 696 application tests and all 36 financial cases
+remain unchanged and unexecuted by the agent. No app image input changes.
+
+Apply only accounting-platform-S26-hash-fix.zip with APPLY_S26_HASH_FIX.sh, then
+retry the same verifier command. The fix is Git/source/metadata only and remains
+Prepared. See evidence/S26-hash-fix.json. D05/G2, VM rollout and all full
+acceptances stay Pending. Do not reapply the original S26 ZIP to repair this issue.
+
 ## Primary references
 
 - https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html

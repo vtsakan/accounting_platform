@@ -1,0 +1,43 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "recorded_at": "2026-11-16",
+  "scope": "canonical prefixed SHA-256 comparison in source-preservation preflight",
+  "reference_base_commit": "git:5144e4859aae6d3e4974d17aa8ced4f060cf38db",
+  "operator_observed_failure": {
+    "attempts": 2,
+    "original_apply_succeeded": true,
+    "reapply_correctly_reported_already_applied": true,
+    "last_observed_preparation_commit": "git:ce41fd7",
+    "stage": "ensure_preserved",
+    "file": "accounting/account_services.py",
+    "stopped_before_build_or_docker": true
+  },
+  "root_cause_confirmed_in_source": true,
+  "manifest_schema": "sha256:<64 lowercase hexadecimal characters>",
+  "previous_comparison": "bare 64-character hexdigest compared with a 71-character prefixed manifest value",
+  "corrected_comparison": "strict canonical prefixed SHA-256 on both sides; malformed/empty metadata rejected",
+  "recorded_hashes_rewritten": false,
+  "retained_source_changed": false,
+  "source_manifest_unchanged": true,
+  "all_financial_assertions_and_migrations_unchanged": true,
+  "application_test_file_unchanged": true,
+  "application_tests_supplied_total": 696,
+  "application_tests_not_executed_by_agent": true,
+  "new_host_contracts_supplied": 4,
+  "new_host_contracts_executed_by_agent": false,
+  "static_checks": {
+    "python_ast_files": 2,
+    "retained_source_files_independently_compared": 145,
+    "broker_gate_and_receipt_snapshot_bodies_unchanged": true,
+    "production_inputs_changed": false
+  },
+  "agent_tests_builds_docker_migrations_or_native_verification": false,
+  "operator_retry_result": "Pending",
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "operator_command": "python3 tools/verify_s26.py --record"
+}

@@ -813,3 +813,17 @@ Source-only preference applies: 0021/0022 and 35 new methods are Prepared,
 unexecuted by the agent. Static source/AST/YAML/preservation checks are separate
 from all operator runtime evidence. Read background_jobs.md for the disposable
 same-production-image/full-suite/real-Redis command and the remaining gates.
+
+
+### S26 preservation preflight correction — Prepared, 2026-11-16
+
+Both supplied verifier retries fail before Docker at the first retained source.
+The installer uses canonical sha256:<hex>, but the verifier compares a bare
+hexdigest to that prefixed string. Correct the representation comparison and
+reject malformed/empty manifests. Never replace a recorded digest to match a
+changed file or remove any retained source from the guard. Four supplied host
+contracts run before Docker on operator retry; no agent tests/builds/runtime
+execution. Existing application, image inputs, 35 application test bodies, all
+financial assertions, 20 old plus two S26 migrations and historical receipts
+remain intact. Actual S26 verification, D05/G2 and full acceptance stay Pending.
+See evidence/S26-hash-fix.json and background_jobs.md.

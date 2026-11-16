@@ -58,6 +58,20 @@ cleanup proofs before recording Verified. A new production image is required;
 never reuse S24A for changed application context. Worker/beat definitions are
 opt-in and are not a live VM rollout. Stop after S26; S27 is separately selected.
 
+### S26 operator follow-up — digest prefix, source only
+
+The operator applied S26 twice; the first application succeeded and the second
+correctly reported already applied. Both verifier attempts stop before Docker
+at accounting/account_services.py. The manifest and installer use sha256:<hex>,
+but ensure_preserved compared a bare hexdigest to that prefixed string. Correct
+the comparison and validate the canonical format; do not rewrite recorded hashes,
+alter retained source or skip the guard. Supply four stdlib host contracts for
+the real manifest, matching bytes, changed bytes and malformed metadata. The
+operator verifier runs these before Docker; all 35 application test bodies and
+the 696/36 targets stay unchanged. Read evidence/S26-hash-fix.json. No agent
+tests/builds/Docker/migrations or application execution. Prepared until retry;
+old receipts, local demo/VM, people/MFA and all acceptance states are retained.
+
 ## Historical S25 — legacy rehearsal, source only
 
 The user now selects S25. Read legacy_migration.md and legacy_review_el.md.

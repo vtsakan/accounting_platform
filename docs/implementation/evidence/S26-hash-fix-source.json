@@ -1,0 +1,11 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:6f68e93503c4b4490a991354532f7a2e06f648a5",
+  "scope": "operator-only preservation digest comparison and four unexecuted host contracts",
+  "operator_failure_reference": "git:ce41fd7",
+  "application_input_changes": false,
+  "agent_tests_builds_docker_migrations": false,
+  "remaining_gate": "Full operator tools/verify_s26.py --record",
+  "full_requirement_acceptance": "Pending"
+}

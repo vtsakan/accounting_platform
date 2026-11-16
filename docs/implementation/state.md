@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-16. Current step: **S25 Prepared — tmpfs transfer source fix**. Next: **Operator retry; D05/G2 remain Pending**.
+Updated 2026-11-16. Current step: **S25 Prepared — PostgreSQL maintenance-pair fix**. Next: **Operator retry; D05/G2 remain Pending**.
 
 
 
@@ -11,13 +11,15 @@ Updated 2026-11-16. Current step: **S25 Prepared — tmpfs transfer source fix**
 ## Current selected work — S25
 
 <!-- S25-RESULT -->
-The latest operator retry passes PostgreSQL 17, role/database, writable and empty-
-target checks, then fails at logical-15-to-17/archive-copy before pg_restore.
-The adapter used docker cp into a user-created tmpfs mount, a documented Docker
-limitation. A fixed docker exec binary writer and exact SHA-256 verification
-replace that transfer. All 46 prior test method bodies are retained and four
-new contracts are supplied (50 total). Agent checks are static only. S25 remains
-Prepared; retry tools/verify_s25.py --record. See evidence/S25-tmpfs-fix.json.
+The operator retry passes tmpfs transfer/hash and archive checks, then fails in
+CREATE TABLE on reserved pg_attver metadata. The former floating PG15 source
+and 17.11 tools/target allowed an incompatible maintenance combination. Only the
+S25 disposable source/target are pinned to 15.20/17.12; all six server/client
+versions are checked before rehearsal database creation. The exact prior source
+minor was not supplied. All 50 previous test bodies remain and eight new contracts
+are supplied (58 total), unexecuted by the agent. Static syntax/context/source
+preservation checks passed. S25 remains Prepared; retry tools/verify_s25.py
+--record. See evidence/S25-postgres-pair-fix.json and fixtures/s25-image-pins.json.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

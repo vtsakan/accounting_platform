@@ -1,14 +1,14 @@
 {
   "step": "S25",
   "status": "Prepared",
-  "recorded_at": "2026-11-15",
+  "recorded_at": "2026-11-16",
   "scope": "synthetic-isolated-migration-rehearsal-source-only",
   "source_reference_commit": "git:8776216da1bb39cf4d24c00f31b216e9fd856ccd",
   "operator_s24a_reference": "git:8776216da1bb39cf4d24c00f31b216e9fd856ccd",
   "preserved_application_context": "sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0",
   "production_tests_previously_passed": 661,
   "financial_cases_previously_passed": 36,
-  "new_planner_test_methods_supplied": 50,
+  "new_planner_test_methods_supplied": 58,
   "new_tests_executed": false,
   "application_tests_rerun": false,
   "docker_builds_or_containers_executed": false,
@@ -34,11 +34,20 @@
     "tests_executed": false
   },
   "operator_latest_attempt": {
-    "stage": "logical-15-to-17/archive-copy",
+    "stage": "logical-15-to-17/restore-execute",
     "status": "Failed",
     "postgres17_target_preflight": "Passed",
-    "pg_restore_executed": false
+    "archive_bytes_match": true,
+    "pg_restore_executed": true,
+    "unrecognized_parameters": [
+      "pg_attver"
+    ],
+    "statement_type": "CREATE TABLE",
+    "full_source_minor_version": "Not supplied"
   },
   "restore_followup": "docs/implementation/evidence/S25-restore-fix.json",
-  "tmpfs_transfer_followup": "docs/implementation/evidence/S25-tmpfs-fix.json"
+  "tmpfs_transfer_followup": "docs/implementation/evidence/S25-tmpfs-fix.json",
+  "latest_operator_tools_commit": "git:8f0b4c49151fec2c3bf3c1f380247a15e340c270",
+  "maintenance_pair_followup": "docs/implementation/evidence/S25-postgres-pair-fix.json",
+  "rehearsal_image_policy_sha256": "sha256:e9d579a999c99294fdb55a4592c975523bd20a9f96b1c193568abd7a67549304"
 }

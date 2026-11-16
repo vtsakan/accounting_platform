@@ -749,3 +749,19 @@ S17 policy approval does not close it. A passing synthetic technical S25 receipt
 must retain Pending real-data/G2, accepted workload RPO/RTO and all 85 full
 acceptances. New tests/runtime are unexecuted by the agent under the established
 source-only preference. See legacy_migration.md and legacy_review_el.md.
+
+
+### S25 maintenance-pair correction — source Prepared, 2026-11-16
+
+The operator now reaches CREATE TABLE after a matching tmpfs archive hash and
+reports reserved pg_attver. Upstream November maintenance pg_dump explicitly
+handles this internal attribute option. Replace the former floating PG15/17.11
+rehearsal combination with a digest-pinned official 15.20/17.12 pair, full
+server/client preflight and bound version/policy evidence. The old exact source
+minor was not shared and is not invented. Production/VM pins, application image,
+all twenty migrations, financial assertions, accounts/MFA and existing receipts
+stay intact. No SQL filtering or acceptance bypass is allowed. Eight new source
+contracts supplement the 50 preserved methods; runtime remains operator-only.
+This supporting rehearsal dependency change does not approve real migration,
+D05 exceptions, G2 release or accepted workload recovery. See
+S25-postgres-pair-fix.json and fixtures/s25-image-pins.json.

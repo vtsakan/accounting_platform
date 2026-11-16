@@ -1,0 +1,67 @@
+{
+  "step": "S25",
+  "status": "Prepared",
+  "recorded_at": "2026-11-16",
+  "scope": "S25 disposable rehearsal maintenance-pair correction; source only",
+  "source_commit": "git:8f0b4c49151fec2c3bf3c1f380247a15e340c270",
+  "source_reference_commit": "git:6378b3b4b1a14e12d6e63f71e57c1d4005e748fa",
+  "operator_observed_failure": {
+    "stage": "logical-15-to-17/restore-execute",
+    "operation": "pg_restore",
+    "exit_code": 1,
+    "archive_bytes_match": true,
+    "server_major": 17,
+    "source_major": 15,
+    "dumped_by_major": 17,
+    "database_matches": true,
+    "role_matches": true,
+    "read_only": "off",
+    "user_tables": 0,
+    "unrecognized_parameters": [
+      "pg_attver"
+    ],
+    "statement_type": "CREATE TABLE",
+    "source_minor_version": "Not supplied in operator diagnostic",
+    "previous_configured_forward_client_and_target": "17.11",
+    "previous_source_reference": "postgres:15-bookworm (floating)"
+  },
+  "diagnosis": {
+    "category": "postgres-attribute-version-mismatch",
+    "basis": "Operator CREATE TABLE/pg_attver error, former 17.11 client/target configuration, and upstream pg_dump handling of reserved attribute-version options",
+    "new_runtime_pass_observed": false,
+    "unobserved_source_minor_not_invented": true,
+    "primary_catalog": "https://www.postgresql.org/docs/17/catalog-pg-attribute.html",
+    "primary_release": "https://www.postgresql.org/docs/17/release-17-12.html",
+    "primary_dump_source": "https://github.com/postgres/postgres/blob/REL_17_12/src/bin/pg_dump/pg_dump.c",
+    "primary_dump_source_git_blob": "52e6fc808b43dd6f13fa8a71f29935af848511cb"
+  },
+  "source_fix": {
+    "source_server_and_native_tools": "15.20",
+    "forward_target_server_and_tools": "17.12",
+    "image_policy": "docs/implementation/fixtures/s25-image-pins.json",
+    "image_policy_sha256": "sha256:e9d579a999c99294fdb55a4592c975523bd20a9f96b1c193568abd7a67549304",
+    "official_image_digests_and_metadata_blob_ids_recorded": true,
+    "all_six_versions_checked_before_rehearsal_database_creation": true,
+    "full_server_client_archive_versions_in_diagnostics": true,
+    "full_versions_and_policy_digest_in_recovery_manifest_and_success_receipt": true,
+    "known_pg_attver_public_diagnostic_only": true,
+    "sql_filtering_or_assertions_waived": false
+  },
+  "original_test_method_bodies_preserved": 50,
+  "additional_test_methods_supplied": 8,
+  "total_s25_test_methods_supplied": 58,
+  "agent_static_checks": {
+    "python_ast_files": 3,
+    "production_context_file_count": 226,
+    "production_context_unchanged": true,
+    "historical_receipts_preserved": true
+  },
+  "agent_tests_or_application_execution": false,
+  "agent_builds_containers_or_migrations": false,
+  "application_schema_locks_production_vm_pins_demo_accounts_mfa_keys_changed": false,
+  "actual_operator_retry_result": "Pending",
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85
+}

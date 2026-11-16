@@ -1,0 +1,12 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:3bd89dbeaba6d58692cd69dd77d37bdf2ff1b53f",
+  "scope": "parenthesized attempt-counter CASE expression; all operator runtime gates remain required",
+  "application_context_changes": true,
+  "new_production_image_required": true,
+  "all_35_application_test_bodies_preserved": true,
+  "agent_tests_builds_docker_migrations": false,
+  "remaining_gate": "Full operator S26_DNS_BUILD.py --verify",
+  "full_requirement_acceptance": "Pending"
+}

@@ -1,0 +1,20 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:778f637f623d61b4464128e1b29a9da835d9079a",
+  "implementation_reference_tree": "git:b272914d6d9518b4cfc29d99eebfd27e849dd462",
+  "reference_base_commit": "git:f2033da58cab0471b5b30459513ab5b0475f1a10",
+  "reference_base_note": "Resolve authoritative baseline from S26-preserved-source.json; original patch application produces its own commit identity",
+  "operator_binding": "APPLY runs prepare_s26.py after git am to record the actual applied HEAD",
+  "agent_application_execution": false,
+  "operator_runtime_gate": "Pending",
+  "static_evidence": "docs/implementation/evidence/S26-static-checks.json",
+  "new_migrations": [
+    "0021_background_jobs",
+    "0022_background_job_guards"
+  ],
+  "new_test_methods": 35,
+  "target_production_suite": 696,
+  "historical_S25_gate": "Verified from supplied operator log; original local receipt preserved",
+  "g2_and_full_acceptance": "Pending"
+}

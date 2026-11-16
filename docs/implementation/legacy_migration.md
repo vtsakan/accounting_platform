@@ -69,12 +69,18 @@ existing pinned age installation and an existing external private identity
 file matching `private/operations.json` if that configuration exists. No new
 key or service account is created. Images may need downloading. The application
 image revision, context label, user and architecture are checked before use.
-The official `postgres:15-bookworm` legacy-test image is resolved once to an
-immutable registry digest and recorded; only that digest starts containers.
-The production PostgreSQL 17.11 lock is retained unchanged.
+The disposable rehearsal uses the official **PostgreSQL 15.20 → 17.12** pair,
+with immutable digests and primary metadata provenance in
+`fixtures/s25-image-pins.json`. This replaces the earlier floating PG15 source
+and old 17.11 rehearsal target. Before creating or seeding its databases, the
+command checks all six full versions: both servers and their `pg_dump` and
+`pg_restore` clients. A missing, older or unreviewed newer version stops the run.
+The production/VM PostgreSQL 17.11 lock remains unchanged.
 
-To repeat the exact legacy image from a previous receipt, add
-`--source-image postgres@sha256:<the recorded source_postgres15 digest>`.
+`--source-image postgres@sha256:<recorded source_postgres15 digest>` still
+accepts an immutable official image, but it must provide the declared 15.20
+server/client set. Replaying a different maintenance release needs a separately
+reviewed image-pair policy; a former floating source is not silently reused.
 There is no PostgreSQL production dependency update in this step.
 
 On success, commit the generated four-file evidence set once. A second gate
@@ -234,7 +240,8 @@ does not prove the forward restore or financial/recovery acceptance.
 The follow-up keeps the original 34 planner methods and supplies twelve new
 restore/diagnostic contracts. The optional operator command remains
 `python3 tools/verify_s25.py --record`; it starts fresh owned resources.
-No new application image, dependency update or rebuild is required.
+No new application image or rebuild is required. The later maintenance-pair
+follow-up below updates only the disposable S25 PostgreSQL images.
 
 Before restoration it now checks the custom archive header, the exact owned
 database name/role, server major/port/read-write mode and empty target, then
@@ -291,3 +298,56 @@ python3 tools/verify_s25.py --record
 See [Docker cp corner cases](https://docs.docker.com/reference/cli/docker/container/cp/#corner-cases)
 and [Docker exec](https://docs.docker.com/reference/cli/docker/container/exec/).
 No application source, dependency, schema, retained demo or VM change is included.
+
+## PostgreSQL attribute metadata follow-up — Prepared, 2026-11-16
+
+The next actual retry passes the exact tmpfs byte hash and archive metadata,
+then fails at `logical-15-to-17/restore-execute`. The operator's bounded local
+inspection identifies `pg_attver` in a failing `CREATE TABLE`. The target was
+empty and writable with the expected database/role. This is a different stage
+from the earlier Docker transfer failure; the transfer safeguard is retained.
+
+`pg_attver` is reserved internal PostgreSQL attribute-version metadata. The
+November maintenance release teaches `pg_dump` to handle that metadata and
+remove the reserved option from ordinary column options. The former S25
+configuration combined a floating PG15 source with 17.11 tools/target. That
+combination can emit a `CREATE TABLE` rejected by the older target. The exact
+source minor was not in the shared log; it is not recorded as observed.
+
+The correction pins the disposable source to **15.20** and the forward tools,
+raw copy, migrated target and target recovery to **17.12**. Native source
+rollback still uses pg_dump/pg_restore **15.20**. Both server versions and all
+four client versions must match before any rehearsal database creation or
+seeding. All containers remain fresh, labelled and unexposed. The encrypted
+archive manifest and successful public receipt bind the actual full versions
+and the image-policy digest alongside their existing image/source bindings.
+
+No dump SQL is rewritten, filtered or ignored. The tmpfs transfer/hash check,
+atomic `--single-transaction` / `--exit-on-error` restore, restricted-role target,
+all-table fingerprints, exact financial reconciliation and both encrypted
+recovery checks remain required. Only the known public technical identifier
+`pg_attver` may appear in the small failure diagnostic; arbitrary quoted SQL
+identifiers and values remain hidden. Diagnostic server/client/archive metadata
+now includes maintenance versions, not just major numbers.
+
+All 50 earlier test method bodies are retained. Eight new source contracts cover
+the full-version gate, old/new mismatches, malformed metadata, immutable defaults,
+safe parameter diagnostics and the stop before database creation. They have
+not been executed by the agent. The optional command is unchanged:
+
+```bash
+python3 tools/verify_s25.py --record
+```
+
+S25 stays **Prepared** until the operator reruns the full synthetic gate.
+Existing S24A production evidence, application image, twenty migrations, runtime
+locks, retained demo/VM, accounts/MFA and recovery identities are unchanged.
+D05/G2, real-dataset/workload recovery and all 85 full acceptances stay Pending.
+
+Primary references, checked 2026-11-16:
+
+- [PostgreSQL 17 pg_attribute: reserved internal pg_attver option](https://www.postgresql.org/docs/17/catalog-pg-attribute.html).
+- [PostgreSQL 17.12 release notes](https://www.postgresql.org/docs/17/release-17-12.html).
+- [PostgreSQL 17.12 pg_dump source: special attoptions handling](https://github.com/postgres/postgres/blob/REL_17_12/src/bin/pg_dump/pg_dump.c).
+- [Official PostgreSQL 15.20 Bookworm image metadata](https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/15.20-bookworm.md).
+- [Official PostgreSQL 17.12 Bookworm image metadata](https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/17.12-bookworm.md).

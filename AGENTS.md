@@ -68,6 +68,20 @@ path docker exec writer, verify exact SHA-256 inside tmpfs, and keep the seekabl
 file restore and every existing assertion. Preserve all 46 prior test methods;
 four additional contracts are source-only. S25 remains Prepared until retry.
 
+Latest restore retry passes the tmpfs SHA-256/TOC checks and reaches CREATE TABLE,
+which rejects the internal pg_attver parameter. The configured 17.11 dump/restore
+tools predate the November 2026 attribute-version metadata; the floating PG15
+image allowed a newer source. Pin only the disposable S25 pair to official
+15.20/17.12 immutable images in fixtures/s25-image-pins.json. Check full server,
+pg_dump and pg_restore versions before creating/seeding rehearsal databases.
+Read evidence/S25-postgres-pair-fix.json and retain all 50 earlier test bodies;
+eight additional contracts are unexecuted. Do not strip SQL, bypass checks or
+change production/VM image pins, application dependencies or twenty migrations.
+The actual source minor version was not supplied in the operator diagnostic;
+do not turn an inferred floating-image version into an observed receipt.
+No agent runtime execution. S25, D05/G2 and all full acceptances stay Pending
+for their respective operator/acceptance gates; source status is Prepared.
+
 ## Historical S24A — Material-inspired office workspace
 
 The product owner explicitly selected S24A now, before S25, and requested an

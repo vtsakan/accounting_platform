@@ -8,6 +8,8 @@ import unittest
 
 from legacy_plan import afm, build_plan, cents, day, digest, positive_id, read_json
 from legacy_restore import archive_versions, client_major, failure_category, redact, safe_error_lines, validate_server
+from legacy_restore import (REHEARSAL_VERSIONS, archive_version_numbers, client_version_number,
+    diagnostic_parameters, validate_rehearsal_pair)
 
 FIXTURES = Path(__file__).resolve().parents[1]/'docs/implementation/fixtures'
 
@@ -392,6 +394,110 @@ class RestoreContractTests(unittest.TestCase):
         self.assertIn('Error response from daemon:',headers);self.assertIn('Read-only file system',headers)
         self.assertNotIn('private-path',headers);self.assertNotIn('excluded-value',headers)
         self.assertEqual(failure_category(text),'private-mount-write')
+
+
+class MaintenancePairTests(unittest.TestCase):
+    def test_full_client_versions_are_distinct_from_the_major(self):
+        for tool in ('pg_dump','pg_restore'):
+            for version,number in [('15.20',150020),('17.11',170011),('17.12',170012)]:
+                self.assertEqual(client_version_number(f'{tool} (PostgreSQL) {version} (Debian)'),number)
+        for text in ('pg_dump 17.12','pg_restore (PostgreSQL) 17','unrelated output'):
+            with self.subTest(text=text),self.assertRaises(ValueError):
+                client_version_number(text)
+
+    def test_declared_pair_requires_all_six_integer_versions(self):
+        self.assertIsNone(validate_rehearsal_pair(dict(REHEARSAL_VERSIONS)))
+        for replacement in (True,'170012',None):
+            with self.subTest(replacement=replacement),self.assertRaises(ValueError):
+                validate_rehearsal_pair({**REHEARSAL_VERSIONS,'target_server':replacement})
+        for versions in ({},{**REHEARSAL_VERSIONS,'unexpected':170012},
+                {key:value for key,value in REHEARSAL_VERSIONS.items() if key!='source_pg_dump'}):
+            with self.assertRaises(ValueError):
+                validate_rehearsal_pair(versions)
+
+    def test_older_and_unreviewed_newer_patch_versions_are_denied(self):
+        for key,expected in REHEARSAL_VERSIONS.items():
+            for version in (expected-1,expected+1):
+                with self.subTest(key=key,version=version),self.assertRaises(ValueError):
+                    validate_rehearsal_pair({**REHEARSAL_VERSIONS,key:version})
+
+    def test_archive_reports_full_source_and_dumper_versions(self):
+        toc='; Dumped from database version: 15.20 (Debian)\n; Dumped by pg_dump version: 17.12 (Debian)\n'
+        self.assertEqual(archive_version_numbers(toc),{'source_version_num':150020,'dumped_by_version_num':170012})
+        for text in ('','; Dumped from database version: 15.20','; Dumped by pg_dump version: 17.12'):
+            with self.assertRaises(ValueError):
+                archive_version_numbers(text)
+
+    def test_only_known_public_attribute_parameter_is_disclosed(self):
+        text='pg_restore: error: unrecognized parameter "pg_attver"\nCommand was: CREATE TABLE "private_name" (...);'
+        self.assertEqual(failure_category(text),'postgres-attribute-version-mismatch')
+        self.assertEqual(diagnostic_parameters(text,[]),['pg_attver'])
+        self.assertEqual(diagnostic_parameters(text,['pg_attver']),[])
+        self.assertNotIn('private_name','\n'.join(safe_error_lines(text,[])))
+        other='ERROR: unrecognized parameter "private_parameter"'
+        self.assertEqual(diagnostic_parameters(other,[]),[])
+        self.assertEqual(failure_category(other),'unsupported-server-setting')
+
+    def test_runtime_defaults_use_immutable_official_maintenance_pair(self):
+        from legacy_migration import PG15_DISCOVERY, PG17
+        policy=read_json(FIXTURES/'s25-image-pins.json')
+        self.assertEqual(policy['scope'],'S25 disposable rehearsal only')
+        self.assertEqual(policy['platform'],'linux/amd64')
+        for key,version,reference in [('postgres15','15.20',PG15_DISCOVERY),('postgres17','17.12',PG17)]:
+            pin=policy[key]
+            self.assertEqual(pin['version'],version)
+            self.assertEqual(reference,'postgres:'+version+'-bookworm@'+pin['index_digest'])
+            self.assertRegex(pin['index_digest'],r'^sha256:[0-9a-f]{64}$')
+            self.assertRegex(pin['amd64_manifest_digest'],r'^sha256:[0-9a-f]{64}$')
+
+    def start_runner(self, directory, target_version):
+        from legacy_migration import Runner, APPLICATION_REVISION, CONTEXT
+        class Fake(Runner):
+            def __init__(self):
+                self.work=Path(directory);self.nonce='b'*20;self.prefix='accounting-s25-'+self.nonce
+                self.admin_password='synthetic';self.values={'DB_PASSWORD':'synthetic-app'}
+                self.resources=[];self.queries=[];self.calls=[];self.postgres_versions=None
+            def inspect_image(self, image):
+                return {'Architecture':'amd64','Os':'linux','Id':'synthetic-image',
+                    'Config':{'User':'10001:10001','Labels':{'org.opencontainers.image.revision':APPLICATION_REVISION,
+                        'gr.accounting.source-context':CONTEXT}}}
+            def pinned(self, image):
+                return image
+            def own(self, *args):
+                return {'HostConfig':{'PortBindings':{}}}
+            def docker(self, *args, **kwargs):
+                self.calls.append(args)
+                if '--version' in args:
+                    version='15.20' if self.pg15 in args else target_version
+                    return f'pg_dump (PostgreSQL) {version}'.encode(),0,b''
+                return b'',0,b''
+            def psql(self, container, database, query, **kwargs):
+                self.queries.append(query)
+                if query.startswith('SELECT'):
+                    return str(150020 if container==self.pg15 else client_version_number('(PostgreSQL) '+target_version))
+                return ''
+        return Fake()
+
+    def test_old_mixed_pair_stops_before_database_creation_or_seed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.start_runner(directory,'17.11')
+            with self.assertRaises(ValueError):
+                runner.start('synthetic-image')
+            self.assertEqual(runner.stage,'postgres-maintenance-pair')
+            self.assertEqual(len(runner.queries),2)
+            self.assertTrue(all(query.startswith('SELECT') for query in runner.queries))
+            self.assertFalse(any('pg_dump' in args and '--version' not in args for args in runner.calls))
+
+    def test_accepted_pair_creates_only_the_fresh_run_databases(self):
+        with tempfile.TemporaryDirectory() as directory:
+            runner=self.start_runner(directory,'17.12')
+            result=runner.start('synthetic-image')
+            self.assertEqual(result,tuple('s25_'+kind+'_'+runner.nonce for kind in ('source','raw','target')))
+            self.assertEqual(runner.postgres_versions,REHEARSAL_VERSIONS)
+            self.assertEqual(len(runner.queries),4)
+            self.assertTrue(all(query.startswith('SELECT') for query in runner.queries[:2]))
+            self.assertIn('CREATE DATABASE '+result[0],runner.queries[2])
+            self.assertIn('NOSUPERUSER NOCREATEDB NOCREATEROLE',runner.queries[3])
 
 
 if __name__ == '__main__':

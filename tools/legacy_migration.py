@@ -21,12 +21,15 @@ import time
 
 from dev import ROOT, require_local_docker
 from legacy_plan import build_plan, digest, read_json, require
-from legacy_restore import archive_versions, client_major, failure_category, redact, safe_error_lines, validate_server
+from legacy_restore import (archive_versions, archive_version_numbers, client_major, client_version_number,
+    diagnostic_parameters, failure_category, redact, safe_error_lines, validate_rehearsal_pair, validate_server)
 
 DOCS = ROOT / 'docs/implementation'
 FIXTURES = DOCS / 'fixtures'
-PG17 = 'postgres:17.11-bookworm@sha256:665dc7b37ac52a17e298511414c21d23ffa4e6a6ef6225b3e5d59c7afb35e994'
-PG15_DISCOVERY = 'postgres:15-bookworm'
+IMAGE_POLICY_PATH = FIXTURES / 's25-image-pins.json'
+IMAGE_POLICY = read_json(IMAGE_POLICY_PATH)
+PG17 = IMAGE_POLICY['postgres17']['reference']
+PG15_DISCOVERY = IMAGE_POLICY['postgres15']['reference']  # Historical name; now an immutable pin.
 CONTEXT = 'sha256:aa53c8f70d8ca11881457a7c80ee7e21684c8b4212a86fe9dbfe28ed95220ba0'
 APPLICATION_REVISION = 'a170a885ca186b194f4df557fad2ced6f59fa034'
 APP_REGISTRY = 'europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:08cf99dc5ab117b08db3739600e4f6486611a6c63238cb4a2b9efba141b115b1'
@@ -116,6 +119,7 @@ class Runner:
         self.report_dir = ROOT / 'private/s25' / self.nonce
         self.failure_summary = None
         self.restore_context = None
+        self.postgres_versions = None
         self.failure_lock = threading.Lock()
 
     def save_failure(self, operation, code, stderr):
@@ -130,7 +134,8 @@ class Runner:
         secrets_to_hide = [self.admin_password, *[v for k,v in self.values.items() if k.endswith(('_PASSWORD','_KEY'))]]
         summary = {'step':'S25','status':'Failed','stage':self.stage,'operation':operation,
             'exit_code':code,'category':failure_category(text),'error_headers':safe_error_lines(text,secrets_to_hide),
-            'restore_metadata':self.restore_context,'root_cause_confirmed':False}
+            'restore_metadata':self.restore_context,'postgres_versions':self.postgres_versions,
+            'unrecognized_parameters':diagnostic_parameters(text,secrets_to_hide),'root_cause_confirmed':False}
         try:
             private_json(self.report_dir/'failure-private.json', {**summary, 'stderr_redacted':redact(text,secrets_to_hide)[-32768:]})
             private_json(self.report_dir/'failure-summary.json',summary)
@@ -263,11 +268,13 @@ class Runner:
             'read_only',current_setting('transaction_read_only'),
             'user_tables',(SELECT count(*) FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')))::text;""",user=user))
         self.restore_context = {'server_major':info.get('version',0)//10000,'expected_major':major,
+            'server_version_num':info.get('version'),
             'role_matches':info.get('user')==user,'database_matches':info.get('database')==database,
             'read_only':info.get('read_only'),'user_tables':info.get('user_tables')}
         validate_server(info,database=database,user=user,major=major)
         version = self.docker('exec','--user','0:0',container,'pg_restore','--version')[0].decode()
         require(client_major(version) == major,'Το pg_restore δεν συμφωνεί με τη δοκιμαστική έκδοση στόχου.')
+        self.restore_context['pg_restore_version_num'] = client_version_number(version)
         remote = '/s25-recovery/restore-'+secrets.token_hex(8)+'.dump'
         try:
             self.stage = phase+'/archive-copy'
@@ -286,6 +293,7 @@ class Runner:
             self.stage = phase+'/archive-preflight'
             toc = self.docker('exec','--user','0:0',container,'pg_restore','--list',remote)[0].decode()
             metadata = archive_versions(toc); self.restore_context.update(metadata)
+            self.restore_context.update(archive_version_numbers(toc))
             require(metadata['dumped_by_major'] == major and metadata['source_major'] <= major,
                 'Η έκδοση αρχείου δεν συμφωνεί με την αναμενόμενη πηγή/στόχο· δεν γίνεται παράκαμψη SQL.')
             self.stage = phase+'/restore-execute'
@@ -312,12 +320,10 @@ class Runner:
             and labels.get('gr.accounting.source-context') == CONTEXT, 'Χρησιμοποιήστε την ήδη ελεγμένη εικόνα S24A.')
         self.application = info['Id']
         self.stage = 'postgres-image-resolution'
-        # Resolve the official legacy tag once, record its immutable digest and
-        # use only that digest for containers. Existing production pins stay intact.
+        # The S25 source and target are pinned as one reviewed maintenance pair.
+        # Production/VM pins remain in their existing independent files.
         require(source_image == PG15_DISCOVERY or re.fullmatch(r'(?:postgres|docker.io/library/postgres)@sha256:[a-f0-9]{64}',source_image),
             'Η πηγή χρειάζεται επίσημη εικόνα PostgreSQL με αμετάβλητο digest.')
-        if source_image == PG15_DISCOVERY:
-            self.docker('pull','--platform','linux/amd64',PG15_DISCOVERY,timeout=600)
         self.image15 = self.pinned(source_image); self.image17 = self.pinned(PG17)
         self.network = self.prefix + '-net'; self.volume = self.prefix + '-pg17'
         self.pg15 = self.prefix + '-pg15'; self.pg17 = self.prefix + '-pg17'
@@ -342,6 +348,15 @@ class Runner:
                 require(time.monotonic() < deadline, 'Η απομονωμένη βάση δεν είναι έτοιμη.'); time.sleep(1)
             record = self.own('container',name)
             require(not record['HostConfig'].get('PortBindings'), 'Δεν επιτρέπονται δημοσιευμένες θύρες δοκιμής.')
+        self.stage = 'postgres-maintenance-pair'
+        self.postgres_versions = {}
+        for prefix,container in [('source',self.pg15),('target',self.pg17)]:
+            self.postgres_versions[prefix+'_server'] = int(self.psql(container,'postgres',"SELECT current_setting('server_version_num');").strip())
+            for command in ('pg_dump','pg_restore'):
+                version = self.docker('exec',container,command,'--version')[0].decode()
+                self.postgres_versions[prefix+'_'+command] = client_version_number(version)
+        validate_rehearsal_pair(self.postgres_versions)
+        print('[S25] Ζεύγος PostgreSQL 15.20 → 17.12 και εργαλεία επιβεβαιώθηκαν.',flush=True)
         source_db = 's25_source_' + self.nonce; raw_db = 's25_raw_' + self.nonce; target_db = 's25_target_' + self.nonce
         # All identifiers and passwords below are generated ASCII, never external input.
         self.psql(self.pg15,'postgres',f'CREATE DATABASE {source_db} TEMPLATE template0;')
@@ -389,6 +404,7 @@ def archive(runner, source, review, baseline, paths, identity):
     manifest = {'schema':1,'nonce':runner.nonce,'source_sha256':digest(source),'review_sha256':digest(review),
         'files':{p.name:sha(p) for p in [*paths,baseline,values_path,source_path,review_path]},
         'postgres15_image':runner.image15,'postgres17_image':runner.image17,'application_image':runner.application,
+        'postgres_versions':runner.postgres_versions,'image_policy_sha256':sha(IMAGE_POLICY_PATH),
         'signing_and_mfa_key_material_included':True,'age_private_identity_included':False}
     manifest_path = runner.work / 'manifest.json'; private_json(manifest_path,manifest)
     with tarfile.open(archive_path,'w',format=tarfile.PAX_FORMAT) as stream:
@@ -426,6 +442,7 @@ def rehearse(args):
     counts = re.findall(r'Ran ([0-9]+) tests?',unit.stderr)
     require(len(counts) == 1 and int(counts[0]) > 0 and 'skipped=' not in unit.stderr, 'Μη πλήρης εκτέλεση ελέγχων σχεδιασμού.')
     tool_manifest = {name:sha(ROOT/'tools'/name) for name in (*S25_FILES,'legacy_migration.py','legacy_restore.py','verify_s25.py','test_s25.py')}
+    image_policy_sha256 = sha(IMAGE_POLICY_PATH)
     require_local_docker(); check_age(); identity_file(args.identity)
     require_tmpfs('/dev/shm')
     source = read_json(FIXTURES/'s25-source.json'); review = read_json(FIXTURES/'s25-review.json')
@@ -504,6 +521,7 @@ def rehearse(args):
                 'source_sha256':digest(source),'review_sha256':digest(review),'plan_sha256':plan['plan_sha256'],
                 'operator_tool_manifest':tool_manifest,'planner_tests_passed':int(counts[0]),
                 'images':{'source_postgres15':runner.image15,'target_postgres17':runner.image17,'application':runner.application},
+                'postgres_versions':runner.postgres_versions,'image_policy_sha256':image_policy_sha256,
                 'preserved_application_context':CONTEXT,'production_suite_previously_passed':661,
                 'production_suite_rerun':False,'docker_execution_by_operator':True,
                 'secret_scan_this_step':'Not rerun; preserved S24A history evidence is not a new S25 scan',
@@ -533,6 +551,7 @@ def rehearse(args):
                 print('S25: Η εκκαθάριση χρειάζεται έλεγχο: '+str(report_dir/'resource-cleanup.json'),file=sys.stderr)
         require(not failures, 'Η τεχνική απόδειξη μένει εκκρεμής μέχρι την εκκαθάριση των δικών της πόρων.')
         require(tool_manifest == {name:sha(ROOT/'tools'/name) for name in tool_manifest}, 'Ο κώδικας εργαλείων άλλαξε κατά την εκτέλεση.')
+        require(image_policy_sha256 == sha(IMAGE_POLICY_PATH),'Η πολιτική εικόνων άλλαξε κατά την εκτέλεση.')
         proof['owned_resources_removed'] = True
         private_json(report_dir/'verification.json',proof)
     # The tmpfs context has now removed all plaintext dumps, runtime secrets and recovered members.

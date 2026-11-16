@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "scope": "S25 disposable rehearsal only",
+  "platform": "linux/amd64",
+  "release_date": "2026-11-12",
+  "retrieved_on": "2026-11-16",
+  "postgres15": {
+    "version": "15.20",
+    "reference": "postgres:15.20-bookworm@sha256:72ccb1ad4dc9d5813ea40a8c1c87af746f16658fb029c17fe570ea9b881f68b3",
+    "index_digest": "sha256:72ccb1ad4dc9d5813ea40a8c1c87af746f16658fb029c17fe570ea9b881f68b3",
+    "amd64_manifest_digest": "sha256:e924003122c1459b25ebe2af0f5b8becc8b50ccee1354b304e5ba7ec1e0bb42c",
+    "primary_metadata_url": "https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/15.20-bookworm.md",
+    "primary_metadata_git_blob": "551db97f1ea03c27572995cc6f9621915eb057b9"
+  },
+  "postgres17": {
+    "version": "17.12",
+    "reference": "postgres:17.12-bookworm@sha256:40865bc877a289da75963d97d72b59633f639fc5af7a4e856bfa3714cae5b536",
+    "index_digest": "sha256:40865bc877a289da75963d97d72b59633f639fc5af7a4e856bfa3714cae5b536",
+    "amd64_manifest_digest": "sha256:99d1a998c76487d3abb48b141505bda5dcf8089c0c4cd7be40f75de314fa32f0",
+    "primary_metadata_url": "https://github.com/docker-library/repo-info/blob/master/repos/postgres/remote/17.12-bookworm.md",
+    "primary_metadata_git_blob": "05c0311dfd394b04a8700e770e31ef02e01b520f"
+  }
+}

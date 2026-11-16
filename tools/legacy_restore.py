@@ -1,6 +1,34 @@
 """S25 restore metadata/diagnostics only; no DB, Docker or application imports."""
 import re
 
+REHEARSAL_VERSIONS = {
+    'source_server':150020, 'source_pg_dump':150020, 'source_pg_restore':150020,
+    'target_server':170012, 'target_pg_dump':170012, 'target_pg_restore':170012,
+}
+
+
+def client_version_number(text):
+    match = re.search(r'\(PostgreSQL\)\s+([0-9]+)\.([0-9]+)',text)
+    if not match:
+        raise ValueError('Δεν αναγνωρίζεται η πλήρης έκδοση εργαλείου PostgreSQL.')
+    return int(match.group(1))*10000+int(match.group(2))
+
+
+def validate_rehearsal_pair(versions):
+    if set(versions) != set(REHEARSAL_VERSIONS) or any(type(versions[k]) is not int
+            or versions[k] != value for k,value in REHEARSAL_VERSIONS.items()):
+        raise ValueError('Το S25 χρειάζεται το δηλωμένο ζεύγος PostgreSQL 15.20/17.12 και αντίστοιχα pg_dump/pg_restore. Δεν αλλάζει υπάρχουσα βάση.')
+
+
+def archive_version_numbers(text):
+    values = {}
+    for key,label in [('source_version_num','Dumped from database version'),('dumped_by_version_num','Dumped by pg_dump version')]:
+        match = re.search(re.escape(label)+r':\s*([0-9]+)\.([0-9]+)',text)
+        if not match:
+            raise ValueError('Λείπει η πλήρης έκδοση πηγής ή pg_dump από το αρχείο.')
+        values[key] = int(match.group(1))*10000+int(match.group(2))
+    return values
+
 
 def client_major(text):
     match = re.search(r'\(PostgreSQL\)\s+([0-9]+)\.', text)
@@ -29,8 +57,10 @@ def validate_server(info, *, database, user, major):
 
 def failure_category(text):
     text = text.lower()
+    if re.search(r'unrecognized (?:configuration )?parameter\s+"pg_attver"',text):
+        return 'postgres-attribute-version-mismatch'
     for needles, name in [
-        (('unrecognized configuration parameter',), 'unsupported-server-setting'),
+        (('unrecognized configuration parameter','unrecognized parameter'), 'unsupported-server-setting'),
         (('unsupported version',), 'unsupported-archive-version'),
         (('could not find block id', 'could not seek', 'does not support random access'), 'archive-seek-or-block'),
         (('valid archive', 'did not find magic string', 'input file is too short'), 'invalid-archive'),
@@ -55,6 +85,13 @@ def redact(text, secrets):
         text = text.replace(value, '<redacted>')
     text = re.sub(r'(https?://)[^\s/@:]+:[^\s/@]+@', r'\1<redacted>@', text)
     return text
+
+
+def diagnostic_parameters(text, secrets):
+    # Only this known public technical identifier is disclosed; arbitrary SQL
+    # identifiers, values and all other quoted strings stay redacted.
+    text = redact(text,secrets)
+    return ['pg_attver'] if re.search(r'unrecognized (?:configuration )?parameter\s+"pg_attver"',text,re.I) else []
 
 
 def safe_error_lines(text, secrets):

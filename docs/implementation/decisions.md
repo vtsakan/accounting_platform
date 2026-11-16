@@ -827,3 +827,20 @@ execution. Existing application, image inputs, 35 application test bodies, all
 financial assertions, 20 old plus two S26 migrations and historical receipts
 remain intact. Actual S26 verification, D05/G2 and full acceptance stay Pending.
 See evidence/S26-hash-fix.json and background_jobs.md.
+
+### S26 attempt-counter migration correction — Prepared, 2026-11-16
+
+The supplied host-DNS build log confirms DNS/HTTP access, locked installation,
+production-image export and removal of the temporary builder. The 145 retained
+files and four preservation contracts pass. Delivery then fails while compiling
+0022's attempt-counter IF at the inner CASE THEN. Parenthesize that expression
+without changing its state/attempt rule, any constraint name, reverse SQL,
+other guard or test body. The failing database belongs to disposable delivery
+verification; no retained demo/VM migration is selected or inferred.
+
+This is an application-context change, so the previous image cannot establish
+the correction. Rebuild clean committed source using the resolver-aware helper
+and rerun every existing gate. The 35 new test methods, 696-test target and
+36 financial cases are preserved. Agent checks are static only; the full suite,
+real Redis proofs, S26 completion, D05/G2 and all full acceptances stay Pending.
+See evidence/S26-migration-fix.json and background_jobs.md.

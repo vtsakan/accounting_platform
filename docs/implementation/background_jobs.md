@@ -180,6 +180,43 @@ retry the same verifier command. The fix is Git/source/metadata only and remains
 Prepared. See evidence/S26-hash-fix.json. D05/G2, VM rollout and all full
 acceptances stay Pending. Do not reapply the original S26 ZIP to repair this issue.
 
+## Operator migration correction — Prepared, 2026-11-16
+
+The host-DNS build helper passed its DNS/HTTP proof, installed all locked
+dependencies and built the production image. The operator then passed the 145
+retained-file checks and four host preservation contracts. Delivery stopped at
+`0022_background_job_guards` with a PL/pgSQL syntax error in the attempt counter;
+no successful application-suite or actual Redis gate result has been supplied.
+
+The SQL CASE expression inside the IF condition was not parenthesized. Its
+inner THEN ended the PL/pgSQL condition early. The correction adds parentheses
+around that expression; the counter still increments by exactly one on entry
+to running and remains unchanged on all other updates. The constraint name,
+all other guards, reverse SQL, all 35 existing S26 methods, 696/36 targets,
+0021 and the twenty older migrations remain unchanged. The existing migration
+and bounded retry/concurrency/SQL guard contracts remain the operator checks.
+
+Apply `accounting-platform-S26-migration-fix.zip` using
+`APPLY_S26_MIGRATION_FIX.sh`. APPLY performs Git/source/metadata operations only;
+it preserves every historical receipt and records S26 as Prepared. It never
+runs Docker, migrations or tests. The observed failure was in the newly created
+disposable verification database, not the retained local demo or VM.
+
+The changed application context requires a new production image. From the clean
+checkout, use the already supplied resolver-aware helper in Downloads:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+python3 ~/Downloads/S26_DNS_BUILD.py --verify
+```
+
+The previous image `sha256:48ade7a34781a22b1bf7db83f3db9e142ed3ecdb9a02bcaea16f15a7e0928ce0`
+contains the failing migration and cannot verify the corrected application.
+The helper creates a temporary builder for the new source and removes only its
+own builder/cache afterward. Full operator verification, real Redis recovery,
+D05/G2, VM rollout and all 85 full acceptances remain Pending. See
+`evidence/S26-migration-fix.json` for observed evidence and static check scope.
+
 ## Primary references
 
 - https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
@@ -188,5 +225,7 @@ acceptances stay Pending. Do not reapply the original S26 ZIP to repair this iss
 - https://docs.celeryq.dev/en/stable/_modules/celery/beat.html
 - https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html
 - https://www.postgresql.org/docs/17/explicit-locking.html#ADVISORY-LOCKS
+- https://www.postgresql.org/docs/17/plpgsql-control-structures.html
+- https://www.postgresql.org/docs/17/functions-conditional.html
 - https://docs.djangoproject.com/en/5.2/topics/db/transactions/#performing-actions-after-commit
 - https://raw.githubusercontent.com/docker-library/official-images/master/library/redis

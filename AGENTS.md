@@ -72,6 +72,21 @@ the 696/36 targets stay unchanged. Read evidence/S26-hash-fix.json. No agent
 tests/builds/Docker/migrations or application execution. Prepared until retry;
 old receipts, local demo/VM, people/MFA and all acceptance states are retained.
 
+### S26 operator follow-up — attempt-counter SQL, source only
+
+The host-DNS helper built the new production image successfully. The operator
+then passed all 145 retained-file checks and four host contracts, but the
+delivery gate stopped while compiling 0022_background_job_guards, before the
+application suite and real Redis gate. Parenthesize only the SQL CASE expression
+inside the attempt-counter IF so its inner THEN is not read as the IF delimiter.
+Keep the attempt rule, constraint identity, reverse SQL, all other guards,
+0021 and the twenty older migrations, all 35 application test bodies and every
+retained digest unchanged. No extra migration or checksum replacement is needed:
+the supplied failing migration ran only in the disposable verification database.
+Read evidence/S26-migration-fix.json. Require a new committed-context image via
+the existing host-DNS helper, then the complete 696/36 and real Redis gate.
+Agent work remains static only; S26 Prepared and all full acceptances Pending.
+
 ## Historical S25 — legacy rehearsal, source only
 
 The user now selects S25. Read legacy_migration.md and legacy_review_el.md.

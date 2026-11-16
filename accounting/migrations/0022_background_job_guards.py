@@ -36,7 +36,7 @@ BEGIN
      (OLD.state='running' AND NEW.state IN ('succeeded','retry','failed','cancelled','blocked'))) THEN
    RAISE EXCEPTION 'Invalid job transition' USING ERRCODE='23514',CONSTRAINT='s26_job_transition';
   END IF;
-  IF NEW.attempts<>OLD.attempts + CASE WHEN NEW.state='running' AND OLD.state<>'running' THEN 1 ELSE 0 END THEN
+  IF NEW.attempts<>OLD.attempts + (CASE WHEN NEW.state='running' AND OLD.state<>'running' THEN 1 ELSE 0 END) THEN
    RAISE EXCEPTION 'Invalid attempt counter' USING ERRCODE='23514',CONSTRAINT='s26_attempt_counter';
   END IF;
  ELSE

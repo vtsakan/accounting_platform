@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-16. Current step: **S25 Verified — synthetic technical rehearsal**. Next: **D05/G2 migration review; S26 when selected**.
+Updated 2026-11-16. Current step: **S26 Prepared — reliable background execution**. Next: **Operator S26 verification; S27 follows**.
 
 
 
@@ -8,10 +8,17 @@ Updated 2026-11-16. Current step: **S25 Verified — synthetic technical rehears
 
 
 
-## Current selected work — S25
+
+## Current selected work — S26
+
+<!-- S26-RESULT -->
+Prepared source-only S26: same-image Redis/Celery worker and exactly-one scheduler definitions, durable DB outbox, fenced atomic client probe, retry/cancellation/fresh authority guards and private queue health. 35 new test methods supplied; expected 696 total is a target, not an observed result. Agent execution: static source checks only. Operator command: python3 tools/verify_s26.py --record. VM/deployment, future fee/mail/task adapters and all 85 full acceptances remain Pending.
+<!-- /S26-RESULT -->
+
+## Previous verified work — S25
 
 <!-- S25-RESULT -->
-Operator S25 synthetic PostgreSQL 15→17 rehearsal Verified. Exact reconciliation, idempotent concurrency and encrypted source/target recovery passed. D05/G2/live migration and all 85 acceptances remain Pending.
+Operator S25 synthetic rehearsal Verified on 2026-11-16: 61 planner tests, 184 financial checks, concurrency, atomic rollback and encrypted native15/target17 recovery passed. Source git:456f7db74a7dfbf8599d588fedf6cc0f16483d32. See evidence/S25-operator-completion.json; actual local S25-verification.json is preserved. D05/G2 and all 85 full acceptances remain Pending.
 <!-- /S25-RESULT -->
 
 Read [legacy migration](legacy_migration.md) and the

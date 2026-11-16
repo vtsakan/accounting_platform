@@ -31,5 +31,6 @@
   "operator_command": "python3 tools/verify_s26.py --record",
   "next_step": "S27 when selected",
   "static_text_scan": "Passed static text review; zero unreviewed findings. Operator gate reruns it against applied source.",
-  "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json"
+  "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json",
+  "source_commit": "git:e97eb3d5e450b726871157c843b69a427c19f0bc"
 }

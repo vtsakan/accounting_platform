@@ -1,0 +1,17 @@
+{
+  "step": "S28",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:ad71f10acc350f142a57c3ba77c0eb30e8a21fa5",
+  "scope": "UUID office argument and complete operator-command classification",
+  "application_input_files_changed": 2,
+  "all_test_sources_assertions_and_26_migrations_unchanged": true,
+  "retained_exact_source_files": 343,
+  "production_suite_target": 772,
+  "financial_cases_retained": 36,
+  "new_tests_added": 0,
+  "new_image_required": true,
+  "agent_tests_builds_docker_migrations": false,
+  "operator_corrected_full_retry": "Pending",
+  "operator_gate": "python3 tools/verify_s28.py --record --host-dns",
+  "full_requirement_acceptance": "Pending"
+}

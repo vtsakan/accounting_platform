@@ -1,0 +1,13 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:daf5acba1b9739f19d752e94640a4105113f4830",
+  "scope": "operator-only probe mount and execution path under /app",
+  "application_context_changes": false,
+  "production_image_rebuild_required": false,
+  "matching_existing_image": "sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e",
+  "matching_application_context": "sha256:a25ccb68e1349b974a113e31f9d01effd1f7e2b162d0eb753f90dad483845327",
+  "agent_tests_builds_docker_migrations": false,
+  "remaining_gate": "Full operator verify_s26.py --record --image with existing identity checks",
+  "full_requirement_acceptance": "Pending"
+}

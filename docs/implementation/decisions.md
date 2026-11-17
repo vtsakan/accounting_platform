@@ -2,6 +2,16 @@
 
 ## S28 selected — source Prepared, 2026-11-17
 
+Operator follow-up: the new image builds and the suite runs all 772 tests, with
+one error and one failure. Correct the new CLI's --office-id parser to uuid.UUID,
+matching the unchanged Office primary key, and add generate_fees to the trusted
+operator-command inventory. Preserve the profile-derived office check and every
+assertion, migration, financial rule, role/scope guard and historical receipt.
+The existing dry-run and inventory contracts remain the exact regression gates.
+Only two application-image inputs change; rebuild and repeat the complete gate.
+No agent tests/builds/Docker/migrations/native verification. S28 Prepared until
+operator success. See evidence/S28-cli-boundary-fix.json.
+
 S27 is operator-Verified: 738/738, all 36 financial cases, 327 retained sources,
 four host contracts and real Redis regression. The original receipt is kept.
 The user now selects S28. Generation reuses the S22 agreement/month source

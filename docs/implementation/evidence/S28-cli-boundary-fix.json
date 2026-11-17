@@ -1,0 +1,71 @@
+{
+  "step": "S28",
+  "status": "Prepared",
+  "recorded_at": "2026-11-17",
+  "scope": "Office UUID CLI parsing and trusted operator-command inventory",
+  "reference_base_commit": "git:2fbbb04ffe1e2cff328cc0e250b44fc545ba01f3",
+  "operator_log": {
+    "attachment": "Pasted text(20261117-154053).txt",
+    "sha256": "sha256:9f1020b09b5ef53a0c1c3c6d07008c5c5a7e13225f571474914f705b95836bdb",
+    "preparation_commit_supplied": "a82da84 (short identity)",
+    "source_preflight_passed": true,
+    "retained_files_checked": 343,
+    "host_contracts_passed": 4,
+    "built_application_image": "sha256:4cdd7e9bf33ac1c7124afd50a8b9532d0e54492f6d1a9fef6d58eb6110179718",
+    "tests_run": 772,
+    "failures": 1,
+    "errors": 1,
+    "seconds": 205.588,
+    "failure_stage": "full-production-delivery",
+    "error_contract": "GenerationContracts.test_cli_defaults_to_dry_run_without_business_writes",
+    "failure_contract": "BoundaryInventoryTests.test_every_current_route_admin_model_and_operator_command_has_a_realm",
+    "real_broker_stage_reached": false,
+    "structured_financial_case_receipt_supplied": false
+  },
+  "corrections": [
+    {
+      "file": "accounting/management/commands/generate_fees.py",
+      "change": "--office-id type=int -> type=uuid.UUID",
+      "model_office_primary_key": "UUIDField",
+      "user_id_type_unchanged": "int",
+      "fresh_profile_office_comparison_unchanged": true
+    },
+    {
+      "file": "accounting/office_boundary_matrix.json",
+      "change": "Add only generate_fees to operator_commands",
+      "other_inventory_entries_unchanged": true
+    }
+  ],
+  "static_checks": {
+    "python_ast": "Passed",
+    "exact_cli_diff_one_parser_type": true,
+    "inventory_exact_command_file_set": true,
+    "declared_accounting_operator_commands": 8,
+    "retained_file_hashes_matched": 343,
+    "all_test_sources_and_assertions_unchanged": true,
+    "all_26_migrations_unchanged": true
+  },
+  "new_tests_added": 0,
+  "application_test_methods_retained": 34,
+  "target_production_suite": 772,
+  "financial_cases_retained": 36,
+  "only_application_inputs_changed": [
+    "accounting/management/commands/generate_fees.py",
+    "accounting/office_boundary_matrix.json"
+  ],
+  "application_inputs_total": 259,
+  "other_application_inputs_unchanged": 257,
+  "application_context_digest_before": "sha256:7f16676248a5558481647a99a630c2fd68662e3dec143cff6e205baa555fb1b0",
+  "application_context_digest": "sha256:1520b09a801bfb1cd9447a6fd0f6f6c9a68d4842ed412ea68c7c2c69606afb59",
+  "new_committed_image_required": true,
+  "source_manifests_historical_receipts_financial_services_runtime_locks_unchanged": true,
+  "agent_tests_builds_docker_migrations_or_native_verification": false,
+  "operator_corrected_full_retry": "Pending",
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "operator_command": "python3 tools/verify_s28.py --record --host-dns"
+}

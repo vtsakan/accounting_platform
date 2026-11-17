@@ -117,6 +117,34 @@ S28 remains Prepared until the full operator command passes. Manual Greek/browse
 acceptance, live VM rollout, D05/G2, workload recovery targets and all 85 full
 requirement acceptances stay Pending. Stop after S28; S29 needs user selection.
 
+## Operator follow-up — CLI office UUID and inventory
+
+The supplied S28 operator log passes the source preflight and builds
+`sha256:4cdd7e9bf33ac1c7124afd50a8b9532d0e54492f6d1a9fef6d58eb6110179718`.
+The full suite executes 772 tests in 205.588 seconds, with one error and one
+failure. The command's --office-id parser attempts to convert the actual office
+UUID to int; the unchanged S16 inventory contract also detects that generate_fees
+has not been declared in operator_commands.
+
+Correct only that parser type to uuid.UUID and add the missing trusted command
+name to the existing inventory. The actor ID remains an integer. The expected
+office must still match the actor's fresh profile; no submitted UUID grants
+authority. Every test and assertion, all 26 migrations, financial services,
+generation/opt-in behaviour, source manifests and locks remain unchanged.
+No new test is supplied: the existing contracts already check these cases.
+
+Apply accounting-platform-S28-cli-boundary-fix.zip with
+APPLY_S28_CLI_BOUNDARY_FIX.sh, then repeat:
+
+```bash
+python3 tools/verify_s28.py --record --host-dns
+```
+
+Both corrected files are embedded in the image. A new committed-context build
+is required; the failing image contains their old versions. Agent checks are
+static only. The corrected 772/36 and actual Redis/scheduler/worker/ack-loss
+gate remain Pending. The previous run did not reach that real-broker stage.
+
 References: Django 5.2 QuerySet select_for_update and transaction.on_commit;
 Celery 5.7 tasks/acks_late/task_reject_on_worker_lost; PostgreSQL 17 unique
 constraints and CREATE OR REPLACE FUNCTION. Existing version pins are unchanged.

@@ -67,6 +67,23 @@ Static AST, template compilation without rendering/setup, SQL parsing, source
 and hash scans only. S28 Prepared until operator retry. D05/G2, VM rollout,
 accepted workload recovery targets and all 85 full acceptances remain Pending.
 
+### S28 operator follow-up — office UUID and operator-command inventory
+
+The supplied operator log applies S28, passes its source preflight and builds
+sha256:4cdd7e9bf33ac1c7124afd50a8b9532d0e54492f6d1a9fef6d58eb6110179718.
+The full suite runs 772 tests with one error and one failure: --office-id uses
+int although Office.id is UUID; generate_fees is missing from operator_commands.
+Use uuid.UUID for that argument and declare only the missing command in the
+existing inventory. Keep the fresh profile-to-expected-office comparison and
+all scopes, capabilities, tests/assertions, 26 migrations, financial services,
+source manifests, runtime locks, automatic opt-in and historical receipts.
+No new test is needed: the existing dry-run and boundary contracts expose both
+defects. A new committed application image is required for these two inputs.
+Source-only APPLY plus full --record --host-dns retry. No agent tests/builds/
+Docker/migrations/native application verification; static AST/source/hash only.
+Read evidence/S28-cli-boundary-fix.json. Prepared until the full 772/36 and
+actual scheduler/worker/Redis/ack-loss operator gate completes. S29 is separate.
+
 ## Historical S27 — catalogue and monthly fee plans, source only
 
 The user selected S27 on 2026-11-17 after the supplied S26 Verified receipt:

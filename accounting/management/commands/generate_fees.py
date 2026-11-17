@@ -20,7 +20,7 @@ class Command(BaseCommand):
     def add_arguments(self,parser):
         parser.add_argument('action',choices=['preview','enqueue','run','reconcile'],nargs='?',default='preview')
         parser.add_argument('--user-id',type=int,required=True,help='Ενεργός λογιστής που αναλαμβάνει την ενέργεια.')
-        parser.add_argument('--office-id',type=int,required=True,help='Ρητή επιβεβαίωση γραφείου· ελέγχεται έναντι του προφίλ.')
+        parser.add_argument('--office-id',type=uuid.UUID,required=True,help='Ρητή επιβεβαίωση γραφείου· ελέγχεται έναντι του προφίλ.')
         parser.add_argument('--start-period',help='Πρώτος μήνας ΕΕΕΕ-ΜΜ. Προεπιλογή ο τρέχων μήνας Αθήνας.')
         parser.add_argument('--months',type=int,default=1,help='Από 1 έως 24 μήνες αναπλήρωσης.')
         parser.add_argument('--schedule',help='Προαιρετικό συγκεκριμένο πρόγραμμα UUID.')

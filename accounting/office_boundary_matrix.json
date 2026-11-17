@@ -622,7 +622,8 @@
     "prune_auth_attempts",
     "probe_development_database",
     "seed_development_data",
-    "background_jobs"
+    "background_jobs",
+    "generate_fees"
   ],
   "operator_boundary": "Trusted process/database credentials; complete private mapping, reviewed digest or explicit office; no staff HTTP route to management commands.",
   "future_pending": {

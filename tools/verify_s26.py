@@ -102,8 +102,8 @@ def broker_gate(directory, image_id):
         return compose('run','--rm','--no-deps','-T','web','manage.py',*args)
 
     def probe(*args):
-        result=compose('run','--rm','--no-deps','-T','--volume',str(ROOT/'tools/s26_runtime_probe.py')+':/probe.py:ro',
-            'web','/probe.py',*args)
+        result=compose('run','--rm','--no-deps','-T','--volume',str(ROOT/'tools/s26_runtime_probe.py')+':/app/s26_runtime_probe.py:ro',
+            'web','/app/s26_runtime_probe.py',*args)
         return json.loads(result.stdout.strip().splitlines()[-1])
 
     def healthy(timeout=90):

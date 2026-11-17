@@ -101,6 +101,20 @@ Read evidence/S26-redelivery-fix.json. Rebuild through the existing host-DNS
 helper and rerun the full gate. Agent tests/builds/Docker/migrations remain
 unexecuted; S26 Prepared, real Redis verification and all full acceptances Pending.
 
+### S26 operator follow-up — isolated probe import path, source only
+
+The latest 2026-11-17 delivery receipt confirms 696/696 tests, all 36 finance
+cases, 22 accounting migrations and zero unreviewed text-secret findings for
+image b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e.
+The real-broker gate stops at start-worker-scheduler because a root-mounted
+/probe.py cannot import core from /app. Mount the unchanged operator probe at
+/app/s26_runtime_probe.py and execute that same path. Preserve its isolated-DB
+identity guard, all gate stages, historical receipts, source hashes, tests,
+migrations and application files. The application image context is unchanged;
+reuse the exact image only through the existing --image context/identity guard.
+Read evidence/S26-probe-path-fix.json. No agent tests/builds/Docker/migrations;
+S26 remains Prepared until the full operator real Redis gate completes.
+
 ## Historical S25 — legacy rehearsal, source only
 
 The user now selects S25. Read legacy_migration.md and legacy_review_el.md.

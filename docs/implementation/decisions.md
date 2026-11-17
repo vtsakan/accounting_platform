@@ -859,3 +859,19 @@ assertions and locks intact. Static reference/inheritance/hash checks do not
 establish runtime completion. Require a new committed-context image and every
 existing operator gate. S26 Prepared; real Redis/scheduler proofs, D05/G2, VM
 rollout and all 85 full acceptances remain Pending. See S26-redelivery-fix.json.
+
+### S26 isolated probe path — Prepared, 2026-11-17
+
+The supplied production delivery receipt now confirms 696/696 tests, 36/36
+financial cases and the complete unchanged application-image checks. The real
+broker gate instead fails in the root-mounted health probe before its business
+probes can start: /probe.py sets the script import directory to /, not /app.
+Mount and execute the unchanged probe at /app/s26_runtime_probe.py. Keep its
+isolated-database check, all access/effect/retry/scheduler assertions and cleanup.
+
+This host-verifier correction does not change any application image input.
+Reuse only the supplied b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e
+image through the existing exact-context/identity --image checks and rerun every
+gate. Preserve historical receipts. S26 remains Prepared; the agent executes
+only static checks. Real Redis completion, VM rollout, D05/G2 and all full
+acceptances stay Pending. See evidence/S26-probe-path-fix.json.

@@ -254,6 +254,43 @@ source/hash preservation only. Full operator retry, S26 completion, actual Redis
 proofs, D05/G2, VM rollout and all 85 full acceptances remain Pending. See
 `evidence/S26-redelivery-fix.json`. Stop after S26.
 
+## Operator probe path correction — Prepared, 2026-11-17
+
+The latest operator delivery gate passes 696/696 tests, all 36 retained finance
+cases, migrations, hashed locks/catalog, static/HTTP/readiness and the text-secret
+scan (zero unreviewed findings). Its immutable image is
+`sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e`,
+with application context
+`sha256:a25ccb68e1349b974a113e31f9d01effd1f7e2b162d0eb753f90dad483845327`.
+This is delivery evidence, not completion of the real Redis S26 gate.
+
+The fresh broker/database stage reaches start-worker-scheduler, but its health
+probe cannot import `core`. Python starts a script's import path from the
+script's directory: mounting and executing `/probe.py` puts `/` there, while
+the actual application lives in `/app`. Change only the verifier's read-only
+mount target and execution path to `/app/s26_runtime_probe.py`. The probe source,
+fresh-database identity check, production settings, all runtime assertions and
+cleanup stay unchanged. No application/Dockerfile/lock/test/migration input
+changes; the existing immutable image remains eligible for guarded reuse.
+
+Apply `accounting-platform-S26-probe-path-fix.zip` using
+`APPLY_S26_PROBE_PATH_FIX.sh` from the clean checkout after previous S26 fixes.
+APPLY is Git/source/tracking only. Then rerun the complete operator gate using
+the existing image:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+python3 tools/verify_s26.py --record \
+  --image sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e
+```
+
+The existing verifier rechecks the exact application context and image identity,
+reruns delivery and every Redis/retry/recovery/scheduler gate. The agent makes
+static AST/path/hash/context checks only. No new application execution is
+claimed. S26, real Redis completion, VM rollout, D05/G2 and all 85 full
+acceptances remain Pending for their respective operator/review gates. See
+`evidence/S26-probe-path-fix.json`. Stop after S26.
+
 ## Primary references
 
 - https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
@@ -264,5 +301,6 @@ proofs, D05/G2, VM rollout and all 85 full acceptances remain Pending. See
 - https://www.postgresql.org/docs/17/explicit-locking.html#ADVISORY-LOCKS
 - https://www.postgresql.org/docs/17/plpgsql-control-structures.html
 - https://www.postgresql.org/docs/17/functions-conditional.html
+- https://docs.python.org/3.12/library/sys_path_init.html
 - https://docs.djangoproject.com/en/5.2/topics/db/transactions/#performing-actions-after-commit
 - https://raw.githubusercontent.com/docker-library/official-images/master/library/redis

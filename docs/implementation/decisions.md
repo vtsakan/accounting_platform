@@ -1,5 +1,26 @@
 # Decision register
 
+## S27 selected — source Prepared, 2026-11-17
+
+The user selected S27 after actual S26 verification (696/696, 36 finance cases
+and real Redis/recovery/singleton scheduler). Preserve that local receipt and
+all historical evidence. Implement catalogue and monthly configuration/preview
+only; automatic effects remain S28. Owner office.settings maintains prices;
+finance.write creates initial plans and quoted monthly agreements. Existing
+plan changes/cancellation use owner finance.amend with password/recent MFA;
+rate changes retain the existing S24 amendment service and financial policy.
+
+One retained plan per agreement uses the unchanged canonical agreement/month
+charge source; neither a version nor a reversal creates a new occurrence.
+Calendar months/endpoints, explicit due day 1–28 in same/following month,
+reviewed first partial amount and no inferred proration/VAT follow the accepted
+D08 snapshot. Catalogue changes affect new explicit quotes, not existing agreed
+rates. Mid-month later term changes require manual review. Add 0023/0024 only.
+The S16 setup/URL fixture adapts to eight new routes while every old test method
+and assertion remains unchanged. The 42 new methods and all runtime checks are
+unexecuted by the agent. S27 Prepared; full acceptance, D05/G2 and VM Pending.
+Read recurring_fees.md. Stop after S27; S28 needs separate selection.
+
 Recorded 2026-11-07 for S02. [Machine-readable register](decision_register.json) is the source for these records. Recommendations are implementation proposals, not domain approvals. Named role owners must be assigned to actual people before their acceptance gates.
 
 ## Confirmed constraints

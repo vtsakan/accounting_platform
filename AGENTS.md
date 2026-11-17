@@ -29,7 +29,41 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S26 — reliable background execution, source only
+## Selected S27 — catalogue and monthly fee plans, source only
+
+The user selected S27 on 2026-11-17 after the supplied S26 Verified receipt:
+696/696, all 36 finance cases, real Redis duplicate/retry/loss recovery,
+cancellation/revocation and singleton scheduler. Preserve that exact local
+receipt and all historical evidence. Read recurring_fees.md and S27 in
+prompts.json. Implement UR-BIL-01/02 and Greek copy under UR-LOC-01.
+
+Deliver owner-managed immutable service-price versions, client monthly plan
+schema/screens and a read-only effective-period preview. Catalogue defaults
+copy into explicitly confirmed monthly agreements. Agreed future rates use
+the existing S24 owner/password/recent-MFA amendment, not silent repricing.
+Use finance.write for initial schedules and office.settings for price
+maintenance; changes/cancellation of an existing schedule use finance.amend
+with the existing proof. One schedule per agreement and the S22 canonical
+agreement/month source prevent a second obligation after version or reversal.
+Store a reviewed first partial-month amount; never infer proration or VAT.
+Period ends are inclusive calendar months, due days 1–28, explicitly in the
+same or following month. Mid-month later term changes require manual review.
+
+Add only migrations 0023/0024. Preserve all 22 older migrations, financial
+service code, dependencies, S26 runtime tools and every old test method/assertion.
+The S16 HTTP fixture's setup/URL adapter may add synthetic S27 records so its
+unchanged role/scope assertions also cover the new routes. Keep the new models
+out of generic records/admin. No scheduler task or charge/cash generator is
+introduced: S28 is separately selected. Optional verify_s27.py executes the
+full retained suite plus 42 supplied methods (738 is an unobserved target),
+all 36 finance cases, restricted-role migration and actual Redis regression.
+The --host-dns option owns only a temporary builder and preserves the daemon,
+active default builder and source pins. No agent tests/builds/Docker/migrations,
+browser/SSH/cloud/push/local-demo/VM/account/MFA/key action. Static syntax,
+template/source/hash/SQL-parser checks are permitted. S27 remains Prepared
+until operator verification; D05/G2 and all 85 full acceptances remain Pending.
+
+## Historical S26 — reliable background execution, source only
 
 The user selected continuation after the actual successful S25 rehearsal on
 2026-11-16: 61 planner tests, 184 reconciliation checks and encrypted source/target

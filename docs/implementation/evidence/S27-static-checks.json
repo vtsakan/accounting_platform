@@ -1,0 +1,22 @@
+{
+  "step": "S27",
+  "status": "Prepared",
+  "static_only": true,
+  "retained_file_hashes_matched": 326,
+  "retained_explicit_test_ast_nodes_unchanged": 698,
+  "operator_baseline_cases_retained": 696,
+  "new_methods_supplied": 42,
+  "target_production_suite": 738,
+  "financial_cases_retained": 36,
+  "older_migrations_unchanged": 22,
+  "sql_forward_statements_parsed": 5,
+  "sql_plpgsql_functions_parsed": 1,
+  "sql_reverse_statements_parsed": 5,
+  "sql_parser": "pglast v7.23 embedded PostgreSQL 17.7",
+  "model_migration_declarations_statically_matched": 4,
+  "templates_statically_compiled_without_render_or_setup": 8,
+  "static_text_scan_unreviewed_findings": 0,
+  "static_text_scan_rerun_by_operator": true,
+  "agent_tests_builds_docker_migrations_or_native_verification": false,
+  "operator_runtime_result": "Pending"
+}

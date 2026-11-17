@@ -1,0 +1,3 @@
+{% extends 'accounting/base.html' %}{% block title %}Νέα συμφωνία από υπηρεσία{% endblock %}{% block content %}
+<h1>Νέα μηνιαία συμφωνία</h1><p>Υπηρεσία {{ service.code }}, έκδοση {{ price.revision }}: {{ price.description }} · {{ price.amount }} €. Ελέγξτε και επιβεβαιώστε την περιγραφή και τη συμφωνημένη μικτή αμοιβή. Η αποθήκευση δημιουργεί όρους συμφωνίας, χωρίς χρέωση ή είσπραξη.</p>
+<form method="post" class="card card-body">{% csrf_token %}<input type="hidden" name="price_version" value="{{ price.pk }}">{{ form.as_p }}<button type="submit" class="btn btn-primary">Επιβεβαίωση συμφωνίας και συνέχεια</button></form>{% endblock %}

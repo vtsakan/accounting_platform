@@ -1,0 +1,27 @@
+{
+  "step": "S27",
+  "status": "Prepared",
+  "prepared_at": "2026-11-17",
+  "scope": "versioned owner catalogue and monthly fee configuration/preview",
+  "retained_production_suite": 696,
+  "new_methods_supplied": 42,
+  "target_production_suite": 738,
+  "financial_cases_retained": 36,
+  "migrations_added": [
+    "0023_fee_catalogue_schedules",
+    "0024_fee_configuration_guards"
+  ],
+  "older_migrations_unchanged": 22,
+  "automatic_generation": "Pending S28",
+  "runtime_results": "Not run; operator executes all tests/builds/Docker/migrations",
+  "agent_tests_builds_docker_migrations_run": false,
+  "static_checks_evidence": "docs/implementation/evidence/S27-static-checks.json",
+  "previous_s26_operator_verified_source": "git:5e583cf2d4aae0e2597084b5389bc7614edfeaf6",
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "operator_command": "python3 tools/verify_s27.py --record --host-dns"
+}

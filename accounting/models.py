@@ -349,3 +349,5 @@ from .settlement_models import SettlementCommand, CashAllocation, AllocationRele
 from .correction_models import FinanceCorrection, CorrectionRelease, CashRefund, ChargeReversal, ChargeReplacement, AgreementChange, FinancePeriodClose
 
 from .job_models import BackgroundJob, JobEvent, JobProbeEffect, BackgroundPulse
+
+from .fee_models import ServiceItem, ServicePrice, FeeSchedule, FeeScheduleVersion

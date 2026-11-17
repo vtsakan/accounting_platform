@@ -7,8 +7,17 @@ from . import auth_views
 from . import office_views, invite_views
 from . import counterparty_views
 from .office_access import office_write_guard
+from . import fee_views
 
 urlpatterns = [
+    path('fees/services/', fee_views.catalogue_list, name='service-catalogue'),
+    path('fees/services/add/', fee_views.price_edit, name='service-add'),
+    path('fees/services/<uuid:key>/', fee_views.price_edit, name='service-price-edit'),
+    path('fees/services/<uuid:key>/agreement/', fee_views.agreement_from_service, name='service-agreement-add'),
+    path('fees/schedules/', fee_views.schedule_list, name='fee-schedule-list'),
+    path('fees/schedules/add/', fee_views.schedule_add, name='fee-schedule-add'),
+    path('fees/schedules/<uuid:key>/', fee_views.schedule_detail, name='fee-schedule-detail'),
+    path('fees/schedules/<uuid:key>/change/', fee_views.schedule_change, name='fee-schedule-change'),
     path('cash-movement/<int:pk>/correct/', correction_views.cash_correction, name='cash-correction'),
     path('cash-movement/<int:pk>/refund/', correction_views.refund, name='cash-refund'),
     path('charge/<uuid:key>/correct/', correction_views.charge_correction, name='charge-correction'),

@@ -516,6 +516,75 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "service-catalogue",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "service-add",
+      "realm": "office-business",
+      "capability": "office.settings",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "service-price-edit",
+      "realm": "office-business",
+      "capability": "office.settings",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "service-agreement-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "fee-schedule-list",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "fee-schedule-add",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "fee-schedule-detail",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "fee-schedule-change",
+      "realm": "office-business",
+      "capability": "finance.amend",
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [
@@ -542,7 +611,7 @@
   "future_pending": {
     "export-downloads": "No implemented CSV/PDF/export-download route. Current /report/ is scoped HTML only.",
     "private-files": "Document upload, object ownership, download and restore deferred to their implementation steps.",
-    "workers": "S26 common client-scoped DB probe/jobs and singleton scheduler source supplied; operator verification and future feature-specific jobs remain Pending.",
+    "workers": "S26 common Redis/job/singleton-scheduler gate operator-Verified; fee generation, mail and future feature adapters remain separately gated.",
     "portal": "Client portal, representation and cross-office grants remain unimplemented and policy Pending.",
     "connectors": "External tax connectors and their tenant credentials are not implemented."
   },

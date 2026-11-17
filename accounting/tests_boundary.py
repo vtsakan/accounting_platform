@@ -176,7 +176,10 @@ def mark(area,route,persona,scenario,actual='passed'):
 
 class BoundaryHTTPTests(BoundaryFixtures,TestCase):
     @classmethod
-    def setUpTestData(cls):cls.seed()
+    def setUpTestData(cls):
+        cls.seed()
+        from .fee_test_support import seed_fee_routes
+        seed_fee_routes(cls)
 
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
@@ -190,6 +193,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name=='office-handover-detail':kwargs={'key':getattr(self,'handover_'+suffix).pk}
         if name in {'cash-allocation-add','cash-correction','cash-refund'}:kwargs={'pk':getattr(self,'movement_'+suffix).pk}
         if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
+        if name in {'service-price-edit','service-agreement-add'}:kwargs={'key':getattr(self,'service_'+suffix).pk}
+        if name in {'fee-schedule-detail','fee-schedule-change'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):

@@ -8,6 +8,25 @@ actual scheduler-created obligations and two deliveries/one charge after a
 worker child died after commit/before acknowledgement. The receipt is retained.
 S29 implements UR-REP-01/02/03 and Greek frontend under UR-LOC-01.
 
+## Operator follow-up — opening-adjustment fixture
+
+The operator successfully built S29 and executed all 808 tests. One new
+report test errored before its assertions because it supplied historical DAY
+to adjust_opening, whose retained rule accepts only today's local date. The
+correction uses timezone.localdate() for that fixture and the same report
+end/as-of date, so the adjustment is included in the selected snapshot.
+Every assertion and the 36-method count remain unchanged. No production
+financial service, selector, migration, runtime setting or source manifest
+changes. The failed image is
+sha256:10200edb5e1473883f2ba7fa377ebde8d00f7bc183c3e7029efdb34963635f96.
+
+Apply the source-only adjustment-date fix, then rebuild and repeat
+`python3 tools/verify_s29.py --record --host-dns`. The test fixture belongs
+to the immutable application context, so the prior image cannot verify the
+corrected source. The full 808/36 and real-broker completion remain Pending;
+the failed run stopped at full-production-delivery, before the broker gate.
+No agent tests/builds/Docker/migrations/native application execution.
+
 ## Screen bases and reconciliation
 
 The office dashboard keeps its S24A Material workspace, active cash balances,

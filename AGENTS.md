@@ -67,6 +67,25 @@ scans only. No new migration. S29 Prepared until operator verification; VM,
 D05/G2, full Greek/browser acceptance and all 85 full acceptances remain Pending.
 Stop after S29; S30 requires separate user selection.
 
+### S29 operator follow-up — current-day adjustment fixture
+
+The supplied operator log builds image
+sha256:10200edb5e1473883f2ba7fa377ebde8d00f7bc183c3e7029efdb34963635f96
+and runs all 808 tests with one error in the new signed-adjustment report
+contract. The retained adjust_opening service requires today's local date;
+the fixture wrongly supplies historical DAY. Set only this new fixture's
+effective date to timezone.localdate() and its report end/as-of to the same
+day. Preserve every assertion, all 36 new methods, 360 retained bindings,
+all 26 migrations, financial services/selectors, locks and historical receipts.
+No additional test is needed: the existing case covers the corrected path.
+
+The fixture is an application-image input, so rebuild the committed image
+and repeat the full 808/36 and real S28 broker gate. Do not reuse the failed
+image. No agent tests/builds/Docker/migrations/native app verification.
+Static AST/source/hash/text checks only. Read
+evidence/S29-adjustment-date-fix.json. S29 stays Prepared until operator retry;
+browser/full acceptance, D05/G2, VM and all 85 full acceptances stay Pending.
+
 ## Historical S28 — recurring obligation generation, source only
 
 The user selected S28 after the actual S27 receipt on 2026-11-17 at

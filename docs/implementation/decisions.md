@@ -2,6 +2,14 @@
 
 ## S29 selected — source Prepared, 2026-11-17
 
+Operator follow-up: all 808 tests executed, with one error in the new signed
+adjustment fixture. It supplied historical DAY to the retained same-day-only
+opening-adjustment service. Use timezone.localdate() for that fixture and
+the same report end/as-of date; retain the financial rule and all assertions.
+No production source or migration changes. A fresh committed image and full
+808/36 plus retained real-broker retry are required; Prepared until success.
+See evidence/S29-adjustment-date-fix.json.
+
 The actual S28 operator receipt confirms 772/772, all 36 finance cases and real
 scheduler generation/ack-loss redelivery with one charge. Preserve it exactly.
 S29 is now selected. Use the existing cash, operating, settlement, reversal,

@@ -75,9 +75,10 @@ class ReportContracts(ReportFixtures,TestCase):
         self.assertFalse(row['known']);self.assertIsNone(row['closing']);self.assertEqual(result['cash_bridge']['unknown_count'],1)
 
     def test_signed_adjustment_is_in_bridge_but_not_income(self):
-        adjust_opening(self.request(),account_id=self.account.pk,amount='10.00',effective_date=DAY,reason=WHY,
+        day=timezone.localdate()
+        adjust_opening(self.request(),account_id=self.account.pk,amount='10.00',effective_date=day,reason=WHY,
             review_reference='Συνθετικός έλεγχος αρχικού υπολοίπου S29',password=self.password,idempotency_key=str(uuid.uuid4()))
-        result=self.report(cash_account=str(self.account.pk));row=result['cash_bridge']['rows'][0]
+        result=self.report(cash_account=str(self.account.pk),end_date=day.isoformat(),as_of=day.isoformat());row=result['cash_bridge']['rows'][0]
         self.assertEqual((row['adjustments'],row['closing'],row['difference']),(Decimal('10.00'),Decimal('110.00'),0))
         self.assertEqual(result['total_income'],0)
 

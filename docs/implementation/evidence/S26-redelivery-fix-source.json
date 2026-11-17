@@ -1,0 +1,13 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:dcfd00c7566f081e6d5e6ee23bf5c4ec9844d553",
+  "scope": "shared 30-second durable dispatch redelivery setting",
+  "application_context_changes": true,
+  "new_production_image_required": true,
+  "all_35_application_test_bodies_preserved": true,
+  "all_22_migrations_preserved": true,
+  "agent_tests_builds_docker_migrations": false,
+  "remaining_gate": "Full operator S26_DNS_BUILD.py --verify",
+  "full_requirement_acceptance": "Pending"
+}

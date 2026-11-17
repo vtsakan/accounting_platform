@@ -1,0 +1,31 @@
+{
+  "step": "S29",
+  "status": "Prepared",
+  "fix_implementation_reference_commit": "git:b21773a348e95c33c075761a387d12619eea52e4",
+  "scope": "Only the new signed-adjustment fixture date and its report cutoff; no assertion changes",
+  "application_context_digest_before": "sha256:329345a3cdf2ae2c8e6da7bf02ad3414ed8eab828830fb7fd2992ed47e1a87f3",
+  "application_context_digest": "sha256:94a1ed77bae390b0d508edeff42a34ab77ab107e33b1afae13e3223ed1b14465",
+  "application_input_files": 273,
+  "changed_application_inputs": [
+    "accounting/tests_reports.py"
+  ],
+  "all_272_other_application_inputs_unchanged": true,
+  "same_day_adjustment_policy_unchanged": true,
+  "retained_exact_sources_unchanged": 360,
+  "s29_methods_unchanged": 36,
+  "all_assertions_unchanged": true,
+  "all_26_migrations_unchanged": true,
+  "prior_operator_run": {
+    "tests_run": 808,
+    "errors": 1,
+    "failures": 0
+  },
+  "new_image_required": true,
+  "operator_command": "python3 tools/verify_s29.py --record --host-dns",
+  "full_808_36_and_retained_real_broker_retry": "Pending",
+  "agent_runtime_tests_builds_docker_migrations_or_native_verification": false,
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false
+}

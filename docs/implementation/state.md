@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S28 Prepared — recurring fee generation**. Next: **Operator S28 verification; S29 follows**.
+Updated 2026-11-17. Current step: **S28 Verified — recurring fee generation**. Next: **S29 when selected**.
 
 
 
@@ -14,8 +14,7 @@ Updated 2026-11-17. Current step: **S28 Prepared — recurring fee generation**.
 ## Current selected work — S28
 
 <!-- S28-RESULT -->
-Prepared source-only S28: explicit owner/MFA opt-in, default-off monthly discovery, canonical-source charge generation through the fenced S26 worker, scoped reviewed catch-up CLI and Greek office/month reconciliation. 34 PG contracts supplied; 772/36 and the actual scheduler/commit-before-ack real Redis gate are unobserved targets. Agent tests/builds/Docker/migrations unexecuted. VM rollout, D05/G2 and all full acceptances remain Pending.
-Operator follow-up 2026-11-17: S28 preflight/build passed; 772 tests ran with one error and one failure. Correct the new CLI office UUID parser and declare generate_fees in the trusted operator inventory. Every assertion, 26 migrations and financial rules remain unchanged. Prepared source correction; new image and full 772/36 plus real Redis/scheduler/ack-loss retry Pending. Agent runtime unexecuted.
+Operator S28 production-image/PG17 gate Verified: retained suite and finance cases, scoped generation, retries/concurrency, actual scheduler-discovered charges, commit-before-ack worker loss/redelivery and zero-cash reconciliation passed. VM rollout, D05/G2 and all full acceptances remain Pending.
 <!-- /S28-RESULT -->
 
 ## Previous verified work — S27

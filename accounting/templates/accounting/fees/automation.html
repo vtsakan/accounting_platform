@@ -1,0 +1,9 @@
+{% extends 'accounting/base.html' %}{% block title %}Αυτόματη δημιουργία χρεώσεων{% endblock %}{% block content %}
+<h1>Αυτόματη δημιουργία μηνιαίων χρεώσεων</h1>
+<p>{{ schedule.agreement.entity.name }} · {{ schedule.agreement.description }}</p>
+{% if not automation_available %}<p class="alert alert-info">Η υπηρεσία αυτόματης δημιουργίας είναι ανενεργή. Η εξουσιοδότηση αποθηκεύεται, αλλά η αυτόματη εκτέλεση θα ξεκινήσει όταν ενεργοποιηθεί η υπηρεσία.</p>{% endif %}
+<p>Η ενεργοποίηση αφορά τον τρέχοντα και τους επόμενους μήνες του προγράμματος. Δημιουργούνται μόνο οφειλές, χωρίς είσπραξη. Οι χρεώσεις που έχουν καταχωριστεί ή αντιλογιστεί διατηρούνται.</p>
+<p>Οι παραλειφθέντες παλιοί μήνες χρειάζονται ξεχωριστό έλεγχο και ρητή αναπλήρωση. Η αλλαγή εξουσιοδότησης σταματά τις παλιές εργασίες που δεν έχουν ολοκληρωθεί. Η εκτέλεση προϋποθέτει ενεργή υπηρεσία αυτόματων χρεώσεων.</p>
+<form method="post" class="card card-body">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn btn-primary">Επιβεβαίωση εξουσιοδότησης</button></form>
+<h2>Ιστορικό εξουσιοδοτήσεων</h2><ul>{% for version in versions %}<li>Έκδοση {{ version.revision }} · {{ version.enabled|yesno:'Ενεργή,Ανενεργή' }} · από {{ version.first_period|date:'m/Y' }} · {{ version.reason }} · {{ version.actor }} · {{ version.recorded_at|date:'d/m/Y H:i' }}</li>{% empty %}<li>Η αυτόματη δημιουργία δεν έχει ενεργοποιηθεί.</li>{% endfor %}</ul>
+<a href="{% url 'fee-schedule-detail' schedule.pk %}">Επιστροφή στο πρόγραμμα</a>{% endblock %}

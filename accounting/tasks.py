@@ -11,5 +11,7 @@ def run_job(job_id):
 @app.task(name='accounting.recover_jobs', ignore_result=True)
 def recover_jobs():
     from .job_services import recover_jobs as recover, worker_pulse
+    from .fee_generation_services import schedule_due_fees
+    schedule_due_fees()
     recover()
     worker_pulse()

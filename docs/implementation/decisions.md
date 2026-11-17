@@ -1,5 +1,31 @@
 # Decision register
 
+## S28 selected — source Prepared, 2026-11-17
+
+S27 is operator-Verified: 738/738, all 36 financial cases, 327 retained sources,
+four host contracts and real Redis regression. The original receipt is kept.
+The user now selects S28. Generation reuses the S22 agreement/month source
+and S27 effective-period preview, without any cash/settlement effect.
+
+Extend the S26 DB/outbox with a single finance.write adapter, never broker-supplied
+office/actor authority. A FeeGenerationRun receipt records each job against its
+schedule, calendar month and canonical source. The existing Charge unique source
+and one schedule per agreement enforce one obligation despite distinct requests,
+concurrency, replay or reversal. Effect and terminal job receipt commit together.
+
+Explicit owner/password/recent-MFA consent and the default-off shared switch
+control automatic execution. Discovery covers the current Athens month only;
+historical catch-up requires the operator's explicit scoped preview/range/reason/
+request UUID. No inferred proration, VAT, fee-rate change or historical catch-up.
+Cancellation/closed/review/invalid-source outcomes remain visible in reconciliation.
+The existing singleton scheduler drives durable recovery; no second scheduler.
+
+Add 0025/0026 only. Preserve every old financial service, migration, assertion,
+runtime lock and historical receipt. The S16 URL adapter adds only the automation
+route. Supply 34 PG contracts and an operator-only real-worker commit-before-ack
+fault probe; none is run by the agent. Target 772/36 is unobserved. Source status
+Prepared; S29 is separately selected. Read fee_generation.md.
+
 ## S27 selected — source Prepared, 2026-11-17
 
 Latest operator follow-up: the portable preflight and host-DNS build succeed.

@@ -1,0 +1,26 @@
+{
+  "step": "S28",
+  "status": "Prepared",
+  "static_only": true,
+  "python_ast_files": 19,
+  "sql_statements": {
+    "SQL": 5,
+    "REVERSE": 5
+  },
+  "plpgsql_function_blocks_parsed": 4,
+  "sql_parser": "pglast 7.23 (embedded PostgreSQL 17 grammar)",
+  "fee_templates_compiled_without_setup_or_rendering": 9,
+  "template_compiler": "Django 5.2.19",
+  "production_compose_yaml_parsed": true,
+  "new_test_methods": 34,
+  "target_suite": 772,
+  "financial_cases_retained": 36,
+  "agent_tests_builds_docker_migrations_or_native_app_verification": false,
+  "model_migration_declarations_matched": 2,
+  "all_24_previous_migrations_unchanged": true,
+  "all_original_tests_unchanged_except_authorised_url_fixture": true,
+  "all_original_assertions_unchanged": true,
+  "generation_effect_and_run_also_atomic_if_called_directly": true,
+  "static_secret_scan_unreviewed_findings": 0,
+  "runtime_and_maintenance_locks_unchanged": true
+}

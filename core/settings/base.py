@@ -76,6 +76,7 @@ DEFAULT_FROM_EMAIL = "Λογιστική πλατφόρμα <noreply@example.inv
 # S26: durable DB intents; enable execution only in explicitly selected stacks.
 from core.config import boolean, env
 BACKGROUND_JOBS_ENABLED = boolean('BACKGROUND_JOBS_ENABLED', False)
+FEE_AUTOMATION_ENABLED = boolean('FEE_AUTOMATION_ENABLED', False)
 BACKGROUND_LEASE_SECONDS = 120
 BACKGROUND_REDELIVERY_SECONDS = 30
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', 'redis://redis:6379/0', secret=True)

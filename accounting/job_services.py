@@ -80,8 +80,10 @@ def _locked(job_id):
         entity = Entity.objects.select_for_update().get(pk=snapshot.entity_id)
         job = BackgroundJob.objects.select_for_update().get(pk=snapshot.pk)
         try:
-            profile = require_capability(user, CAPABILITY)
-            allowed = (profile.office_id == job.office_id == entity.office_id and not entity.is_archived and job.kind == KIND)
+            from .fee_generation_services import KIND as FEE_KIND
+            profile = require_capability(user, 'finance.write' if job.kind == FEE_KIND else CAPABILITY)
+            allowed = (profile.office_id == job.office_id == entity.office_id and not entity.is_archived and
+                job.kind in {KIND, FEE_KIND} and (job.kind != FEE_KIND or entity.is_customer))
         except PermissionDenied:
             allowed = False
         yield job, allowed
@@ -229,7 +231,11 @@ def complete_claim(job_id, lease_token):
             with connection.cursor() as cursor:
                 cursor.execute("SELECT set_config('accounting.s26_job',%s,true),set_config('accounting.s26_lease',%s,true)",
                     [str(job.pk), str(lease_token)])
-            _probe(job)
+            from .fee_generation_services import KIND as FEE_KIND, complete_period
+            if job.kind == FEE_KIND:
+                complete_period(job)
+            else:
+                _probe(job)
             _finish(job, JobState.SUCCEEDED, 'completed')
     except Exception as error:
         # Never persist exception messages, payloads, credentials or tracebacks.

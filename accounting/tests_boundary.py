@@ -194,7 +194,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'cash-allocation-add','cash-correction','cash-refund'}:kwargs={'pk':getattr(self,'movement_'+suffix).pk}
         if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
         if name in {'service-price-edit','service-agreement-add'}:kwargs={'key':getattr(self,'service_'+suffix).pk}
-        if name in {'fee-schedule-detail','fee-schedule-change'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
+        if name in {'fee-schedule-detail','fee-schedule-change','fee-automation'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):

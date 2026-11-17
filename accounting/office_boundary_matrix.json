@@ -585,6 +585,23 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "fee-automation",
+      "realm": "office-business",
+      "capability": "finance.amend",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "fee-reconciliation",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

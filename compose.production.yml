@@ -46,6 +46,7 @@ services:
     restart: unless-stopped
     environment: &production_environment
       BACKGROUND_JOBS_ENABLED: ${BACKGROUND_JOBS_ENABLED:-false}
+      FEE_AUTOMATION_ENABLED: ${FEE_AUTOMATION_ENABLED:-false}
       CELERY_BROKER_URL: redis://redis:6379/0
       DJANGO_SETTINGS_MODULE: core.settings.production
       DJANGO_DEBUG: "false"

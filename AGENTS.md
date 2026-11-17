@@ -29,7 +29,45 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S27 — catalogue and monthly fee plans, source only
+## Selected S28 — recurring obligation generation, source only
+
+The user selected S28 after the actual S27 receipt on 2026-11-17 at
+16:52:17 Europe/Athens: 738/738, all 36 financial cases, 327 retained files,
+four host contracts and the real Redis/worker/scheduler gate. Preserve that
+exact S27-verification.json and all historical receipts. Its source is
+git:e318bd9ef47d04026243d42373b590e8089ac3dc and its immutable image is
+sha256:0dd24ba422c85befbc29e12bbfb84edba0b920346b0b2ebc46d76d5e5722a721.
+Read fee_generation.md and the selected S28 prompt; implement UR-BIL-03,
+QR-06 and Greek copy under UR-LOC-01. Stop after S28.
+
+Use the unchanged S22 canonical agreement/month Charge uniqueness and S27
+preview/effective terms; never generate cash or reopen a reversed source.
+Register only fee-occurrence.v1 alongside the retained S26 inert adapter,
+under the same fresh office/actor/entity locks and lease/atomic receipt.
+Add only 0025/0026; keep all 24 existing migrations, financial services,
+runtime/dependency/image pins and all old test methods/assertions unchanged.
+Only the S16 URL fixture adapter adds the new automation route key.
+
+Owner/password/recent-MFA consent is append-only and opt-in per schedule.
+FEE_AUTOMATION_ENABLED defaults false in shared production configuration;
+no VM or running environment is changed. Automatic discovery covers only the
+current Athens calendar month. Missed historical months require explicit
+preview and a controlled office/actor/request/reason CLI range of 1–24 months.
+The worker rechecks live authority, policy, cancellation, client, terms and
+period close. Every job has an immutable canonical-source reconciliation row;
+pending becomes generated/existing/skipped only under its current S26 fence.
+
+Supply 34 meaningful PG contracts (772 is an unobserved target) and an optional
+full production-image gate with all 36 financial cases, all retained S26 real
+Redis stages, actual scheduler-discovered fee generation and a strictly isolated
+worker-child SIGKILL after charge/receipt commit but before acknowledgement.
+The fault harness stays outside the application image. No agent tests/builds/
+Docker/migrations/native application verification/browser/SSH/cloud/push.
+Static AST, template compilation without rendering/setup, SQL parsing, source
+and hash scans only. S28 Prepared until operator retry. D05/G2, VM rollout,
+accepted workload recovery targets and all 85 full acceptances remain Pending.
+
+## Historical S27 — catalogue and monthly fee plans, source only
 
 The user selected S27 on 2026-11-17 after the supplied S26 Verified receipt:
 696/696, all 36 finance cases, real Redis duplicate/retry/loss recovery,

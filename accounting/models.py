@@ -351,3 +351,5 @@ from .correction_models import FinanceCorrection, CorrectionRelease, CashRefund,
 from .job_models import BackgroundJob, JobEvent, JobProbeEffect, BackgroundPulse
 
 from .fee_models import ServiceItem, ServicePrice, FeeSchedule, FeeScheduleVersion
+
+from .fee_generation_models import FeeAutomationVersion, FeeGenerationRun

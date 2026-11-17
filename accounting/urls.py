@@ -8,8 +8,11 @@ from . import office_views, invite_views
 from . import counterparty_views
 from .office_access import office_write_guard
 from . import fee_views
+from . import fee_generation_views
 
 urlpatterns = [
+    path('fees/reconciliation/', fee_generation_views.reconciliation_view, name='fee-reconciliation'),
+    path('fees/schedules/<uuid:key>/automation/', fee_generation_views.automation, name='fee-automation'),
     path('fees/services/', fee_views.catalogue_list, name='service-catalogue'),
     path('fees/services/add/', fee_views.price_edit, name='service-add'),
     path('fees/services/<uuid:key>/', fee_views.price_edit, name='service-price-edit'),

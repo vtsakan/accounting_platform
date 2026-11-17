@@ -8,7 +8,7 @@
   "retained_production_test_count": 661,
   "target_production_test_count": 696,
   "target_financial_case_count": 36,
-  "runtime_test_results": "Operator suite ran 696 tests with two missing-setting errors; full corrected retry Pending",
+  "runtime_test_results": "Production delivery passed; real-broker gate stopped in probe import before health; corrected retry Pending",
   "migrations_added": [
     "0021_background_jobs",
     "0022_background_job_guards"
@@ -28,25 +28,28 @@
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "operator_command": "python3 ~/Downloads/S26_DNS_BUILD.py --verify",
+  "operator_command": "python3 tools/verify_s26.py --record --image sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e",
   "next_step": "S27 when selected",
   "static_text_scan": "Passed static text review; zero unreviewed findings. Operator gate reruns it against applied source.",
   "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json",
-  "source_commit": "git:558f5567e9c5396e4b6166128bbdcc7b35da54a3",
+  "source_commit": "git:1948ef2805c99364be14a81ed527af33a46c8aec",
   "preservation_followup": "Prepared canonical SHA-256 prefix correction",
   "host_preservation_contracts_supplied": 4,
   "host_preservation_contracts_executed_by_agent": false,
-  "latest_operator_failure": "696 tests executed; two S26 recovery errors from missing BACKGROUND_REDELIVERY_SECONDS",
+  "latest_operator_failure": "Production delivery passed 696/696 and 36/36; root-mounted broker probe cannot import core",
   "runtime_retry_result": "Pending",
   "migration_followup": "Operator-confirmed: delivery migrations passed on 2026-11-17",
   "operator_observed_retained_files_passed": 145,
   "operator_observed_preservation_contracts_passed": 4,
-  "operator_observed_prior_image": "sha256:43826b930dc405d61dcdb5d33d9283891d4fe3d5d20f5e9d433ec9221cc42292",
-  "new_production_image_required": true,
+  "operator_observed_prior_image": "sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e",
+  "new_production_image_required": false,
   "redelivery_followup": "Prepared shared BACKGROUND_REDELIVERY_SECONDS=30",
   "operator_observed_suite": {
     "tests_run": 696,
-    "errors": 2,
-    "seconds": 197.845
-  }
+    "tests_passed": 696,
+    "errors": 0,
+    "financial_cases_passed": 36
+  },
+  "probe_path_followup": "Prepared same probe mounted and executed at /app/s26_runtime_probe.py",
+  "operator_observed_delivery_status": "Verified"
 }

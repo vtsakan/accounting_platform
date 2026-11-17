@@ -53,5 +53,6 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "operator_command": "python3 tools/verify_s26.py --record --image sha256:b4a9d0676043246a22feef446178d7383b7d6577785996c9f384e005625b0b9e",
-  "primary_reference": "https://docs.python.org/3.12/library/sys_path_init.html"
+  "primary_reference": "https://docs.python.org/3.12/library/sys_path_init.html",
+  "applied_source_commit": "git:1948ef2805c99364be14a81ed527af33a46c8aec"
 }

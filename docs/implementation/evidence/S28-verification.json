@@ -3,7 +3,7 @@
   "status": "Prepared",
   "prepared_at": "2026-11-17",
   "scope": "canonical monthly obligations, opted-in scheduler, scoped catch-up and reconciliation",
-  "source_commit": "git:b17c9ff01f2200f6a050b92a5da9043039043edc",
+  "source_commit": "git:ae9f73dcf215952051ebfd97654c9dbe6825f06f",
   "retained_production_suite": 738,
   "new_methods_supplied": 34,
   "target_production_suite": 772,
@@ -26,5 +26,6 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "operator_command": "python3 tools/verify_s28.py --record --host-dns",
-  "static_checks_evidence": "docs/implementation/evidence/S28-static-checks.json"
+  "static_checks_evidence": "docs/implementation/evidence/S28-static-checks.json",
+  "applied_by_operator": true
 }

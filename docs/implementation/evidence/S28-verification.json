@@ -1,0 +1,30 @@
+{
+  "step": "S28",
+  "status": "Prepared",
+  "prepared_at": "2026-11-17",
+  "scope": "canonical monthly obligations, opted-in scheduler, scoped catch-up and reconciliation",
+  "source_commit": "git:b17c9ff01f2200f6a050b92a5da9043039043edc",
+  "retained_production_suite": 738,
+  "new_methods_supplied": 34,
+  "target_production_suite": 772,
+  "financial_cases_retained": 36,
+  "host_source_contracts_supplied": 4,
+  "retained_source_files": 343,
+  "migrations_added": [
+    "0025_fee_generation",
+    "0026_fee_generation_guards"
+  ],
+  "older_migrations_unchanged": 24,
+  "application_context_digest": "sha256:7f16676248a5558481647a99a630c2fd68662e3dec143cff6e205baa555fb1b0",
+  "runtime_results": "Not run; operator executes all tests/builds/Docker/migrations",
+  "agent_tests_builds_docker_migrations_run": false,
+  "automatic_generation_default": "Disabled globally and per schedule",
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "operator_command": "python3 tools/verify_s28.py --record --host-dns",
+  "static_checks_evidence": "docs/implementation/evidence/S28-static-checks.json"
+}

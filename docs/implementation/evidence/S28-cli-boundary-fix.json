@@ -67,5 +67,6 @@
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "operator_command": "python3 tools/verify_s28.py --record --host-dns"
+  "operator_command": "python3 tools/verify_s28.py --record --host-dns",
+  "applied_source_commit": "git:7f8990e5929a753ffa44366b25c2fdf6ebd4b6bd"
 }

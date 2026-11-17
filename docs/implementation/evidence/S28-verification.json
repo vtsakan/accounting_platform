@@ -3,7 +3,7 @@
   "status": "Prepared",
   "prepared_at": "2026-11-17",
   "scope": "canonical monthly obligations, opted-in scheduler, scoped catch-up and reconciliation",
-  "source_commit": "git:ae9f73dcf215952051ebfd97654c9dbe6825f06f",
+  "source_commit": "git:7f8990e5929a753ffa44366b25c2fdf6ebd4b6bd",
   "retained_production_suite": 738,
   "new_methods_supplied": 34,
   "target_production_suite": 772,
@@ -15,8 +15,8 @@
     "0026_fee_generation_guards"
   ],
   "older_migrations_unchanged": 24,
-  "application_context_digest": "sha256:7f16676248a5558481647a99a630c2fd68662e3dec143cff6e205baa555fb1b0",
-  "runtime_results": "Not run; operator executes all tests/builds/Docker/migrations",
+  "application_context_digest": "sha256:1520b09a801bfb1cd9447a6fd0f6f6c9a68d4842ed412ea68c7c2c69606afb59",
+  "runtime_results": "Prior full-production-delivery failed two contracts; corrected 772/36 and real-broker fee gate Pending",
   "agent_tests_builds_docker_migrations_run": false,
   "automatic_generation_default": "Disabled globally and per schedule",
   "local_demo_or_vm_changed": false,
@@ -27,5 +27,18 @@
   "full_requirement_acceptances_pending": 85,
   "operator_command": "python3 tools/verify_s28.py --record --host-dns",
   "static_checks_evidence": "docs/implementation/evidence/S28-static-checks.json",
-  "applied_by_operator": true
+  "applied_by_operator": true,
+  "cli_boundary_followup": "Prepared UUID office argument and missing generate_fees operator inventory entry",
+  "latest_operator_failure": "772 tests ran; one UUID office parsing error and one undeclared operator-command failure",
+  "operator_observed_retained_exact_files_passed": 343,
+  "operator_observed_host_preservation_contracts_passed": 4,
+  "operator_observed_prior_image": "sha256:4cdd7e9bf33ac1c7124afd50a8b9532d0e54492f6d1a9fef6d58eb6110179718",
+  "operator_observed_suite": {
+    "tests_run": 772,
+    "failures": 1,
+    "errors": 1,
+    "seconds": 205.588
+  },
+  "new_production_image_required": true,
+  "runtime_retry_result": "Pending"
 }

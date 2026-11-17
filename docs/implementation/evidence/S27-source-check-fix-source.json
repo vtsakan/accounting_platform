@@ -1,0 +1,17 @@
+{
+  "step": "S27",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:a682ee0aa1bb67f9448bb5ad30036071ea4daef7",
+  "scope": "portable exact-published-source preservation before Docker",
+  "historical_manifest_unchanged": true,
+  "test_file_bindings": 23,
+  "exact_retained_files": 327,
+  "host_contracts_supplied": 4,
+  "host_contracts_run_by_agent": false,
+  "application_context_unchanged": true,
+  "application_suite_target": 738,
+  "financial_cases_retained": 36,
+  "operator_gate": "python3 tools/verify_s27.py --record --host-dns",
+  "operator_retry": "Pending",
+  "full_requirement_acceptance": "Pending"
+}

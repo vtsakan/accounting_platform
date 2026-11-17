@@ -1,0 +1,20 @@
+{
+  "step": "S27",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:13fc26a4f80232095599eb1f0080ac3ca0af5691",
+  "scope": "owner versioned catalogue; monthly fee plan schema/screens and effective-date preview",
+  "previous_operator_verified_step": "S26",
+  "retained_operator_suite": 696,
+  "new_methods_supplied": 42,
+  "target_suite": 738,
+  "all_36_financial_cases_retained": true,
+  "all_22_old_migrations_retained": true,
+  "existing_financial_service_bodies_unchanged": true,
+  "all_original_test_method_bodies_unchanged": true,
+  "boundary_fixture_adapter_only": "Additional S27 setup/URL records; original assertions unchanged",
+  "automatic_generation": "Pending S28",
+  "runtime_versions_and_locks_unchanged": true,
+  "agent_tests_builds_docker_migrations_run": false,
+  "operator_gate": "python3 tools/verify_s27.py --record --host-dns",
+  "full_requirement_acceptance": "Pending"
+}

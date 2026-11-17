@@ -8,7 +8,7 @@
   "retained_production_test_count": 661,
   "target_production_test_count": 696,
   "target_financial_case_count": 36,
-  "runtime_test_results": "Not run; operator execution required",
+  "runtime_test_results": "Prior image build and source preflight passed; application suite and real Redis gate not reached",
   "migrations_added": [
     "0021_background_jobs",
     "0022_background_job_guards"
@@ -28,14 +28,19 @@
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "operator_command": "python3 tools/verify_s26.py --record",
+  "operator_command": "python3 ~/Downloads/S26_DNS_BUILD.py --verify",
   "next_step": "S27 when selected",
   "static_text_scan": "Passed static text review; zero unreviewed findings. Operator gate reruns it against applied source.",
   "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json",
-  "source_commit": "git:07c9a3be56d3966b827392739234b8710555e848",
+  "source_commit": "git:8a67bc6b516059222f67510ab3c5a5fcc0d6025d",
   "preservation_followup": "Prepared canonical SHA-256 prefix correction",
   "host_preservation_contracts_supplied": 4,
   "host_preservation_contracts_executed_by_agent": false,
-  "latest_operator_failure": "Pre-Docker ensure_preserved compared a bare hexdigest with sha256:<hex>",
-  "runtime_retry_result": "Pending"
+  "latest_operator_failure": "Production build passed; disposable delivery migration 0022 failed with PL/pgSQL syntax error",
+  "runtime_retry_result": "Pending",
+  "migration_followup": "Prepared parenthesized CASE expression in 0022 attempt-counter guard",
+  "operator_observed_retained_files_passed": 145,
+  "operator_observed_preservation_contracts_passed": 4,
+  "operator_observed_prior_image": "sha256:48ade7a34781a22b1bf7db83f3db9e142ed3ecdb9a02bcaea16f15a7e0928ce0",
+  "new_production_image_required": true
 }

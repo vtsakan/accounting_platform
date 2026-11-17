@@ -56,5 +56,6 @@
     "https://www.postgresql.org/docs/17/plpgsql-control-structures.html",
     "https://www.postgresql.org/docs/17/functions-conditional.html",
     "https://pglast.readthedocs.io/en/v7/parser.html"
-  ]
+  ],
+  "applied_source_commit": "git:8a67bc6b516059222f67510ab3c5a5fcc0d6025d"
 }

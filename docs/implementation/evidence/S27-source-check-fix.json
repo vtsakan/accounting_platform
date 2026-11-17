@@ -42,5 +42,6 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "operator_command": "python3 tools/verify_s27.py --record --host-dns",
-  "primary_reference": "https://docs.python.org/3.14/library/ast.html#ast.dump"
+  "primary_reference": "https://docs.python.org/3.14/library/ast.html#ast.dump",
+  "applied_source_commit": "git:18a96d5f689312612e0bc5682f0669663da3afaa"
 }

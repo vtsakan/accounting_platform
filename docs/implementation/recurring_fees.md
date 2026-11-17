@@ -131,6 +131,41 @@ git commit -m "docs: record verified S27 fee catalogue and schedules"
 git push -u origin step/s27-price-lists-fees
 ```
 
+## Portable source-preflight correction — Prepared
+
+The first S27 operator attempt applies all source commits and reaches
+source-preflight, then rejects an AST assertion fingerprint. All 326 exact-byte
+checks precede that error and pass. The agent prepared AST hashes on Python
+3.12; Python's AST/debug dump is not a stable interchange format across releases.
+The newer dump omits optional empty fields by default. This is a verifier defect,
+not evidence of a changed agreement-charge assertion in the supplied log.
+
+The original S27-preserved-source.json and its historical AST hashes remain
+unchanged. S27-test-source-bindings.json takes all 23 original test-file hashes
+from the already published S27 preflight, cross-checks the 22 existing canonical
+file bindings, and includes the exact published tests_boundary.py fixture-only
+extension. Verification now checks 327 unique retained files, with no AST
+serialization comparison or unguarded fixture. Missing, malformed, contradictory
+or changed files still stop before Docker. No digest is recalculated from
+unknown operator changes to accept them.
+
+Four stdlib host contracts are supplied and run by the operator verifier before
+Docker. They are separate from the 42 application methods and the 738/36 target.
+The new method count uses AST node names without serializing them. The complete
+delivery, application, financial and real Redis gates remain mandatory. No
+application input, migration, financial rule or existing test body changes.
+
+Apply accounting-platform-S27-source-check-fix.zip using
+APPLY_S27_SOURCE_CHECK_FIX.sh, then retry:
+
+```bash
+python3 tools/verify_s27.py --record --host-dns
+```
+
+The prior attempt stopped before building the S27 image; the normal new-image
+path remains required. Agent checks are static only; all runtime verification,
+S27 completion, D05/G2, VM rollout and full acceptance remain Pending.
+
 Primary references:
 
 - https://docs.djangoproject.com/en/5.2/ref/models/constraints/
@@ -138,3 +173,4 @@ Primary references:
 - https://www.postgresql.org/docs/17/plpgsql-declarations.html
 - https://docs.docker.com/build/buildkit/toml-configuration/
 - https://docs.docker.com/build/builders/drivers/docker-container/
+- https://docs.python.org/3.14/library/ast.html#ast.dump

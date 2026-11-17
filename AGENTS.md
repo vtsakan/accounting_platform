@@ -63,6 +63,26 @@ browser/SSH/cloud/push/local-demo/VM/account/MFA/key action. Static syntax,
 template/source/hash/SQL-parser checks are permitted. S27 remains Prepared
 until operator verification; D05/G2 and all 85 full acceptances remain Pending.
 
+### S27 source-preflight follow-up — portable exact test sources
+
+The supplied operator log applies S27 and stops before build at a retained
+AST assertion fingerprint. The original 326 exact-file SHA-256 checks pass
+first. ast.dump output is a debugging representation and differs between
+Python releases (including optional empty fields from 3.13). Keep the original
+retained manifest and historical AST map unchanged. Bind all 23 old test files
+to their exact original published S27 source bytes: 22 retain the existing
+canonical digests; tests_boundary.py uses the published S27 preflight after
+digest for the authorised fixture-only extension. This is stricter than AST
+comparison and checks 327 unique retained files without interpreter formatting.
+Do not derive new accepted hashes from unknown operator changes.
+
+Supply four stdlib host contracts for the real bindings, no AST serialization,
+changed original/fixture rejection and malformed/missing/conflicting bindings.
+The operator runs them before Docker. Keep all application inputs, 24 migrations,
+42 S27 test bodies, the 738/36 gate and all old receipts unchanged. No agent
+tests/builds/Docker/migrations or native application execution. Read
+evidence/S27-source-check-fix.json. S27 Prepared until the full operator retry.
+
 ## Historical S26 — reliable background execution, source only
 
 The user selected continuation after the actual successful S25 rehearsal on

@@ -18,29 +18,43 @@ from verify_s26 import broker_gate
 DOCS=ROOT/'docs/implementation'
 
 
-def method_fingerprints(path):
-    result={}
-    def walk(node,parents=()):
-        for child in ast.iter_child_nodes(node):
-            if isinstance(child,(ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef)):
-                name='.'.join((*parents,child.name))
-                if isinstance(child,ast.FunctionDef) and child.name.startswith('test_'):
-                    result[name]=hashlib.sha256(ast.dump(child,include_attributes=False).encode()).hexdigest()
-                walk(child,(*parents,child.name))
-            else:walk(child,parents)
-    walk(ast.parse(path.read_text()))
-    return result
+def test_method_count(path):
+    # Count the supplied methods without serializing a version-dependent AST.
+    return sum(isinstance(node,ast.FunctionDef) and node.name.startswith('test_')
+        for node in ast.walk(ast.parse(path.read_text())))
 
 
 def preserved():
     manifest=json.loads((DOCS/'evidence/S27-preserved-source.json').read_text())
-    for name,digest in manifest['sha256'].items():
-        if not re.fullmatch(r'sha256:[0-9a-f]{64}',digest) or 'sha256:'+hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=digest:
+    bindings=json.loads((DOCS/'evidence/S27-test-source-bindings.json').read_text()).get('sha256')
+    retained=manifest.get('sha256');methods=manifest.get('test_methods')
+    if not isinstance(retained,dict) or not retained or not isinstance(methods,dict) or not methods:
+        raise RuntimeError('Invalid retained-source manifest')
+    if not isinstance(bindings,dict) or set(bindings)!=set(methods):
+        raise RuntimeError('Every retained test file must have an exact source binding')
+    for name,digest in bindings.items():
+        if name in retained and digest!=retained[name]:
+            raise RuntimeError('Test binding differs from canonical retained digest: '+name)
+        if name not in retained and name!='accounting/tests_boundary.py':
+            raise RuntimeError('Unexpected retained test fixture binding: '+name)
+    sources={**retained,**bindings}
+    for name,digest in sources.items():
+        if (not isinstance(name,str) or Path(name).is_absolute() or '..' in Path(name).parts or
+                not isinstance(digest,str) or not re.fullmatch(r'sha256:[0-9a-f]{64}',digest)):
+            raise RuntimeError('Invalid canonical retained-source SHA-256 binding')
+        path=ROOT/name
+        if not path.is_file() or 'sha256:'+hashlib.sha256(path.read_bytes()).hexdigest()!=digest:
             raise RuntimeError('Retained source changed: '+name)
-    for name,methods in manifest['test_methods'].items():
-        current=method_fingerprints(ROOT/name)
-        if any(current.get(key)!=value for key,value in methods.items()):raise RuntimeError('Retained assertion changed: '+name)
-    return len(manifest['sha256'])
+    return len(sources)
+
+
+def preservation_contracts():
+    result=subprocess.run([sys.executable,'-m','unittest','discover','-s',str(ROOT/'tools'),
+        '-p','test_s27_preservation.py'],cwd=ROOT,text=True,capture_output=True)
+    count=re.search(r'Ran (\d+) tests?',result.stdout+result.stderr)
+    if result.returncode or count is None or int(count.group(1))!=4:
+        raise RuntimeError('Four portable source-preservation contracts must pass:\n'+result.stderr[-3000:])
+    return 4
 
 
 def receipts():
@@ -57,7 +71,7 @@ def main():
     args=parser.parse_args();stage='source-preflight'
     try:
         if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip():raise RuntimeError('Commit source before S27 verification')
-        retained=preserved();historical=receipts();before=image.candidate_context()[1]['digest']
+        retained=preserved();contracts=preservation_contracts();historical=receipts();before=image.candidate_context()[1]['digest']
         require_local_docker();stage='production-image'
         if args.image:selected=image.reuse_for_verification(args.image)
         elif args.host_dns:
@@ -69,7 +83,7 @@ def main():
             subprocess.run([sys.executable,str(ROOT/'tools/verify_delivery.py'),'--report',str(destination),
                 '--image',selected['image_id']],cwd=ROOT,check=True)
             delivery=json.loads(destination.read_text());suite=delivery['suite']
-            count=len(method_fingerprints(ROOT/'accounting/tests_fees.py'))
+            count=test_method_count(ROOT/'accounting/tests_fees.py')
             if suite['tests_run']!=696+count or suite['tests_passed']!=696+count or any(suite[k] for k in
                 ['known_failures_reproduced','unexpected_errors','unexpected_failures','unexpected_successes','skips']):
                 raise RuntimeError('Every retained 696 test and all new S27 contracts must pass')
@@ -85,7 +99,8 @@ def main():
             'verified_at':datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
             'source_commit':'git:'+subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             'suite':suite,'s27_test_methods':count,'image':delivery['image'],'application_context_digest':before,
-            'retained_source_files_checked':retained,'historical_receipts_unchanged':True,'owned_resources_removed':True,
+            'retained_source_files_checked':retained,'source_preservation_contracts_passed':contracts,
+            'historical_receipts_unchanged':True,'owned_resources_removed':True,
             'agent_tests_builds_docker_migrations_run':False,'docker_execution_by_operator':True,
             'local_demo_or_vm_changed':False,'human_accounts_or_mfa_changed':False,'automatic_generation':'Pending S28',
             'full_requirement_acceptance':'Pending','full_requirement_acceptances_pending':85,

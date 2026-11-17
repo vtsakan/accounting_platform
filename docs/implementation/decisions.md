@@ -2,6 +2,16 @@
 
 ## S27 selected — source Prepared, 2026-11-17
 
+Operator follow-up: S27 source applies successfully but the preflight stops at
+an AST hash comparison after all 326 canonical file checks. Replace the
+interpreter-dependent ast.dump comparison with exact-byte bindings for every
+old test file, sourced from the original published S27 preflight. Preserve the
+original retained manifest and AST reference map. All 23 test files are covered,
+including the exact authorised boundary fixture; application code is unchanged.
+Four new host guard contracts are supplied, unexecuted by the agent. Source
+status remains Prepared; full 738/36 and real Redis verification Pending.
+See evidence/S27-source-check-fix.json and recurring_fees.md.
+
 The user selected S27 after actual S26 verification (696/696, 36 finance cases
 and real Redis/recovery/singleton scheduler). Preserve that local receipt and
 all historical evidence. Implement catalogue and monthly configuration/preview

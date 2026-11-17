@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S26 Prepared — reliable background execution**. Next: **Operator S26 verification; S27 follows**.
+Updated 2026-11-17. Current step: **S26 Verified — reliable background execution**. Next: **S27 recurring fee schedules when selected**.
 
 
 
@@ -12,8 +12,7 @@ Updated 2026-11-17. Current step: **S26 Prepared — reliable background executi
 ## Current selected work — S26
 
 <!-- S26-RESULT -->
-Prepared source-only S26: same-image Redis/Celery worker and exactly-one scheduler definitions, durable DB outbox, fenced atomic client probe, retry/cancellation/fresh authority guards and private queue health. 35 S26 methods preserved; operator production delivery passed 696/696 and all 36 finance cases; real Redis gate Pending. Agent execution: static source checks only. Operator command: python3 tools/verify_s26.py --record. VM/deployment, future fee/mail/task adapters and all 85 full acceptances remain Pending.
-Operator follow-up 2026-11-17: production delivery passed 696/696 and all 36 financial cases; real-broker gate stopped at the root-mounted probe import. /app probe path correction Prepared; same immutable image eligible for guarded reuse; full real Redis gate remains Pending.
+Operator S26 production-image and real Redis gate Verified. The retained suite, scoped job effects, dispatch recovery, cancellation/revocation, singleton scheduler and restart checks passed. Full acceptance, VM deployment and feature-specific jobs remain Pending.
 <!-- /S26-RESULT -->
 
 ## Previous verified work — S25

@@ -1,0 +1,18 @@
+{
+  "step": "S27",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:30482053cdb4bcfee0bf92cfa1b06bfce9b92122",
+  "scope": "Correct one new S27 HTTP quote amount fixture to Greek decimal text",
+  "fixture_literal_changes": 1,
+  "all_assertions_unchanged": true,
+  "application_methods": 42,
+  "production_behaviour_and_24_migrations_unchanged": true,
+  "exact_retained_files": 327,
+  "new_application_image_required": true,
+  "target_suite": 738,
+  "financial_cases_retained": 36,
+  "agent_tests_builds_docker_migrations": false,
+  "operator_full_retry": "Pending",
+  "operator_command": "python3 tools/verify_s27.py --record --host-dns",
+  "full_requirement_acceptance": "Pending"
+}

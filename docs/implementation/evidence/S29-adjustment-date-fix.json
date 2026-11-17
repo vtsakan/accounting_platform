@@ -42,5 +42,6 @@
   "d05_real_migration_review": "Pending",
   "g2_release_acceptance": "Pending",
   "local_demo_or_vm_changed": false,
-  "human_accounts_or_mfa_changed": false
+  "human_accounts_or_mfa_changed": false,
+  "applied_source_commit": "git:8c59a431b6e68910f1e976bee478ca966477aac9"
 }

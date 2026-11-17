@@ -16,6 +16,7 @@ Updated 2026-11-17. Current step: **S29 Prepared — dashboards and financial re
 
 <!-- S29-RESULT -->
 Prepared source-only S29: real unpaid-obligation dashboard, filtered operating cash report, full selected-account opening/flows/transfers/adjustments/closing bridge, dated statements and annual fee/settlement/credit cohorts. 36 PG reporting/snapshot methods supplied; 808/36 and the retained S28 real-broker gate are unobserved targets. Agent tests/builds/Docker/migrations/native application verification unexecuted. No new migration. Browser/full acceptance, D05/G2 and VM rollout remain Pending.
+Operator follow-up 2026-11-17: all 808 tests ran with one error in the new signed-adjustment fixture. Use today's local date and matching report cutoff, retaining the same-day service rule and all assertions. Prepared source correction; fresh image and full 808/36 plus retained real-broker retry Pending. Agent runtime unexecuted.
 <!-- /S29-RESULT -->
 
 ## Previous verified work — S28

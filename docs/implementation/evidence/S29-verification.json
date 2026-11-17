@@ -2,9 +2,9 @@
   "step": "S29",
   "status": "Prepared",
   "scope": "Read-only dashboard, operating cash and full account bridge, dated client statements and annual fee/settlement/credit cohorts",
-  "prepared_at": "2026-11-17T18:32:12+02:00",
-  "source_commit": "git:884ae7a3b36e6c2d0f33ae61dcf9254ea28396f4",
-  "application_context_digest": "sha256:329345a3cdf2ae2c8e6da7bf02ad3414ed8eab828830fb7fd2992ed47e1a87f3",
+  "prepared_at": "2026-11-17",
+  "source_commit": "git:8c59a431b6e68910f1e976bee478ca966477aac9",
+  "application_context_digest": "sha256:94a1ed77bae390b0d508edeff42a34ab77ab107e33b1afae13e3223ed1b14465",
   "retained_operator_verified_suite": 772,
   "s29_test_methods_supplied": 36,
   "target_production_suite_unobserved": 808,
@@ -15,7 +15,7 @@
   "all_26_old_migrations_unchanged": true,
   "agent_tests_builds_docker_migrations_or_native_verification_run": false,
   "static_evidence": "docs/implementation/evidence/S29-static-checks.json",
-  "operator_runtime_results": "Pending",
+  "operator_runtime_results": "Prior full-production-delivery failed one fixture; corrected 808/36 and retained real-broker gate Pending",
   "operator_command": "python3 tools/verify_s29.py --record --host-dns",
   "retained_s28_real_broker_gate": "Pending on new S29 image",
   "previous_operator_verified_source": "git:9b24a52217545c5a2ecf13a5c1fadb1d9b9e1443",
@@ -26,5 +26,16 @@
   "greek_browser_acceptance": "Pending",
   "local_demo_or_vm_changed": false,
   "human_accounts_or_mfa_changed": false,
-  "applied_by_operator": true
+  "applied_by_operator": true,
+  "adjustment_date_followup": "Use current local date for the new signed-adjustment fixture and report end/as-of",
+  "latest_operator_failure": "808 tests ran with one error: historical fixture date rejected by the retained same-day adjustment rule",
+  "operator_observed_prior_image": "sha256:10200edb5e1473883f2ba7fa377ebde8d00f7bc183c3e7029efdb34963635f96",
+  "operator_observed_suite": {
+    "tests_run": 808,
+    "failures": 0,
+    "errors": 1,
+    "seconds": 229.062
+  },
+  "new_production_image_required": true,
+  "runtime_retry_result": "Pending"
 }

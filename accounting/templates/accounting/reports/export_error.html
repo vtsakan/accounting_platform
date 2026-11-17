@@ -1,0 +1,7 @@
+{% extends 'accounting/base.html' %}{% block title %}Η εξαγωγή δεν ολοκληρώθηκε{% endblock %}{% block content %}
+<h1>Η εξαγωγή δεν ολοκληρώθηκε</h1>
+<p role="alert">{{ export_error }}</p>
+{{ filter_form.non_field_errors }}
+{% for field in filter_form %}{% if field.errors %}<p>{{ field.label }}: {{ field.errors }}</p>{% endif %}{% endfor %}
+<a class="btn btn-primary" href="{{ back_url }}">Επιστροφή στην αναφορά και στα φίλτρα</a>
+{% endblock %}

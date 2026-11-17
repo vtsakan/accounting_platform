@@ -11,3 +11,7 @@ qrcode>=8.2,<9
 # S26: bounded JSON Celery transport; PostgreSQL retains durable job state.
 celery[redis]==5.7.0
 redis==8.1.0
+
+# S30: local Unicode PDF generation and production-gate PDF readback.
+reportlab==5.1.0
+pypdf==7.1.0

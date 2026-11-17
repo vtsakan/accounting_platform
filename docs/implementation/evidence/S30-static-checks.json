@@ -1,0 +1,40 @@
+{
+  "step": "S30",
+  "status": "Prepared",
+  "static_only": true,
+  "python_ast_files": 11,
+  "templates_compiled_without_setup_or_rendering": 5,
+  "template_compiler": "Django 5.2.19",
+  "retained_exact_source_files_checked": 381,
+  "all_26_migrations_unchanged": true,
+  "financial_service_selector_form_files_unchanged": 27,
+  "all_original_assertions_unchanged": true,
+  "boundary_fixture_only": true,
+  "route_inventory_entries": 73,
+  "operator_inventory_unchanged": true,
+  "existing_runtime_dependency_versions_unchanged": 28,
+  "maintenance_lock_unchanged": true,
+  "new_runtime_dependencies": {
+    "charset-normalizer": "3.5.2",
+    "pillow": "13.0.0",
+    "pypdf": "7.1.0",
+    "reportlab": "5.1.0"
+  },
+  "font_cmap_and_hash_checks": {
+    "DejaVuSans.ttf": {
+      "sha256": "sha256:57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+      "greek_and_euro_cmap": true
+    },
+    "DejaVuSans-Bold.ttf": {
+      "sha256": "sha256:a4c5bc453ca281d90ea079e596da7ae0dfeb5777497c29ec254e76d97ff6f890",
+      "greek_and_euro_cmap": true
+    }
+  },
+  "greek_euro_fonts_and_license_present": true,
+  "new_test_methods_supplied": 40,
+  "target_suite_unobserved": 848,
+  "financial_cases_retained": 36,
+  "agent_tests_builds_docker_migrations_app_or_pdf_rendering": false,
+  "operator_runtime_results": "Pending",
+  "static_secret_scan_unreviewed_findings": 0
+}

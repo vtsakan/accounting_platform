@@ -1,0 +1,6 @@
+{% load export_tags %}{% export_url 'pdf' as pdf_export %}{% export_url 'csv' as csv_export %}
+<nav class="d-flex flex-wrap gap-2 mb-3" aria-label="Λήψη οικονομικής αναφοράς">
+  <a class="btn btn-outline-primary" href="{{ pdf_export }}">Λήψη PDF</a>
+  <a class="btn btn-outline-primary" href="{{ csv_export }}">Λήψη CSV</a>
+</nav>
+<p class="text-muted">Η εξαγωγή περιλαμβάνει όλες τις σελίδες των πινάκων με τα επιλεγμένα φίλτρα και την ίδια ημερομηνία αναφοράς.</p>

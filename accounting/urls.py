@@ -10,8 +10,12 @@ from .office_access import office_write_guard
 from . import fee_views
 from . import fee_generation_views
 from . import report_views
+from . import export_views
 
 urlpatterns = [
+    path('report/export/<str:filetype>/', export_views.period, name='report-export'),
+    path('reports/clients/<int:pk>/export/<str:filetype>/', export_views.statement, name='client-statement-export'),
+    path('reports/fees/export/<str:filetype>/', export_views.annual, name='fees-overview-export'),
     path('reports/clients/<int:pk>/', report_views.statement, name='client-statement'),
     path('reports/fees/', report_views.annual, name='fees-overview'),
     path('fees/reconciliation/', fee_generation_views.reconciliation_view, name='fee-reconciliation'),

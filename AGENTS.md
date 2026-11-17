@@ -29,7 +29,51 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S29 — dashboard and financial reports, source only
+## Selected S30 — PDF/CSV exports, source only
+
+The user selected S30 after the actual S29 operator receipt at
+2026-11-17T21:24:53+02:00: 808/808, all 36 financial cases, 360 retained
+sources, four host contracts and the real scheduler/Redis/worker/ack-loss
+gate. Preserve that exact receipt and all previous evidence. Verified source
+is git:e40485f760d28e9149d1ed86e5f2b1f027db69d7; its immutable image is
+sha256:08367b193ad6458272e8b87bed16b994a3ddbe341cdd278f44ca3178c1a15448.
+Read report_exports.md and S30 in prompts.json. Implement only UR-REP-04,
+QR-01/07 and Greek export/UI content under UR-LOC-01. Stop after S30.
+
+Export the existing period report, fixed-counterparty statement and annual
+fee overview as real PDF and UTF-8 CSV. Call the unchanged S29 selectors in
+an outer read-only repeatable-read snapshot and materialise their exact
+unpaged source querysets, preserving every filter/as-of/cohort distinction.
+Do not recalculate debt or infer forecasts. Greek headings identify office,
+period, filters and reporting basis. Embed licensed Greek/euro fonts; quote
+CSV cells and protect untrusted text from spreadsheet formula interpretation.
+Keep money typed Decimal and identifiers/leading-zero AFMs as text.
+
+Downloads are synchronous authenticated attachments held only in memory,
+with no stored artifact, token, public link or queue. Recheck live membership
+and the expected office after rendering, before releasing bytes. No-store
+responses and bounded row/output limits; reject oversized scopes in Greek
+without partial totals. Add a typed provenance extension for separately
+labelled S59 estimates; S30 always exports posted actuals.
+
+ReportLab 5.1.0 and its required wheel-only dependencies are intentional S30
+runtime additions. pypdf 7.1.0 supports actual PDF text/font/structure readback
+inside the existing production-image test gate, which already ships tests.
+Keep every existing dependency version, maintenance lock, runtime/image pin,
+26 migrations, financial service/selector/form and prior assertion unchanged.
+Only the existing boundary URL adapter adds format/statement export keys.
+No model, migration, generic admin, worker/VM/account/MFA or cloud change.
+
+Supply meaningful operator-run export/reconciliation/Greek/PDF/CSV/denied-
+access contracts, the retained full suite/36 financial cases and unchanged
+real S28 broker gate on a fresh committed image. Agent checks are static
+AST/source/hash, template compilation without setup/rendering, font cmap/
+license inspection, dependency resolution and text scans only. No agent
+tests/builds/Docker/migrations/native app or PDF generation/verification.
+S30 Prepared until operator verification; browser/PDF visual acceptance,
+D05/G2, VM rollout and all 85 full acceptances remain Pending. S31 separate.
+
+## Historical S29 — dashboard and financial reports, source only
 
 The user selected S29 after the actual S28 receipt on 2026-11-17 at
 17:55:18 Europe/Athens: 772/772, all 36 financial cases, 343 retained files,

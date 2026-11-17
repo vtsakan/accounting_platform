@@ -4,6 +4,7 @@
 <p><a href="{% url 'entity-detail' entity.pk %}">Στοιχεία συναλλασσομένου</a> · <a href="{% url 'fees-overview' %}?entity={{ entity.pk }}">Δωδεκάμηνη εικόνα αμοιβών</a></p>
 {% include 'accounting/reports/filters.html' %}
 {% if report_ready %}<p>{{ report_office.name }} · Κινήσεις {% if report_start %}από {{ report_start|el_date }}{% else %}από την αρχική καταγραφή{% endif %} έως {{ report_end|el_date }}.</p>
+{% include 'accounting/reports/export_buttons.html' %}
 <p>Λειτουργικές εισπράξεις {{ total_income|euro }} · λειτουργικές πληρωμές {{ total_expense|euro }} · καθαρή ροή {{ net_for_period|euro }}.</p>
 {% include 'accounting/reports/balances.html' %}{% include 'accounting/reports/charge_rows.html' %}{% include 'accounting/reports/credit_rows.html' %}{% include 'accounting/reports/cash_rows.html' %}
 <section class="workspace-panel"><h2>Ιστορικό αντιστοιχίσεων στην περίοδο κινήσεων</h2><p>Θετικό ποσό: αντιστοίχιση. Αρνητικό ποσό: αποδέσμευση. Τα υπόλοιπα παραπάνω λαμβάνουν υπόψη όλα τα ενεργά γεγονότα έως την ημερομηνία αναφοράς.</p>

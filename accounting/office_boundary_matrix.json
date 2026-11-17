@@ -618,6 +618,30 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "report-export",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "client-statement-export",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "fees-overview-export",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

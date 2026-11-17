@@ -1,5 +1,34 @@
 # Decision register
 
+## S30 selected — authenticated PDF/CSV, source Prepared, 2026-11-17
+
+The user selects S30 after the actual S29 Verified receipt: 808/808, all 36
+financial cases, 360 retained sources, four host contracts and the real fee-
+worker gate. Preserve that receipt exactly. Export all pages of the existing
+period/statement/annual tables by calling unchanged S29 selectors within an
+outer read-only repeatable-read snapshot. Keep cash/debt/cohort scopes explicit.
+
+Use immediate authenticated in-memory attachments with no retained artifact,
+token, queue or public link. Recheck live office/finance authority after rendering
+before releasing bytes. Apply bounded row/output limits with Greek errors and
+no partial totals. Quote rectangular UTF-8 CSV, protect formula-like untrusted
+text and preserve typed money and leading-zero identifiers. Embed licensed local
+Greek/euro fonts in PDF; escaped text only, no user layout or remote assets.
+
+Pin ReportLab 5.1.0 with its required charset-normalizer/Pillow wheels and
+pypdf 7.1.0 for production-image PDF readback tests. Retain every old dependency
+version, maintenance lock, runtime/image pin, 26 migrations and all prior
+financial services/selectors/forms/assertions. Only the boundary URL adapter
+adds export keys. Typed provenance permits separately labelled S59 estimates;
+S30 never mixes them into posted cash. No model/VM/account/MFA/cloud change.
+
+Supply 40 meaningful operator-run contracts, full 848/36 target and retained
+actual S28 Redis/scheduler/worker/ack-loss gate. No agent runtime/application/PDF
+generation, tests/builds/Docker/migrations. Static source/template/font/dependency
+and text inspection only. Prepared until operator success; full acceptance,
+PDF visual/browser review, D05/G2 and VM remain Pending. Read report_exports.md.
+Stop after S30; S31 requires separate selection.
+
 ## S29 selected — source Prepared, 2026-11-17
 
 Operator follow-up: all 808 tests executed, with one error in the new signed

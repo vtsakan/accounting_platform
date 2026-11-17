@@ -11,6 +11,7 @@
 <div class="row"><div class="col-md-6"><h3>Εισπράξεις ανά κατηγορία</h3><table class="table"><thead><tr><th>Κατηγορία</th><th>Ποσό</th></tr></thead><tbody>{% for item in income_by_category %}<tr><td>{{ item.category__name|default:'Χωρίς κατηγορία' }}</td><td>{{ item.total_amount|euro }}</td></tr>{% empty %}<tr><td colspan="2">Δεν υπάρχουν εισπράξεις στην περίοδο.</td></tr>{% endfor %}</tbody></table></div><div class="col-md-6"><h3>Πληρωμές ανά κατηγορία</h3><table class="table"><thead><tr><th>Κατηγορία</th><th>Ποσό</th></tr></thead><tbody>{% for item in expense_by_category %}<tr><td>{{ item.category__name|default:'Χωρίς κατηγορία' }}</td><td>{{ item.total_amount|euro }}</td></tr>{% empty %}<tr><td colspan="2">Δεν υπάρχουν πληρωμές στην περίοδο.</td></tr>{% endfor %}</tbody></table></div></div></section>
 {% endif %}
 {% if report_ready %}
+{% include 'accounting/reports/export_buttons.html' %}
 {% include 'accounting/reports/cash_rows.html' %}
 <section class="workspace-panel"><h2>Συμφωνία επιλεγμένων ταμείων έως {{ cash_bridge.as_of|el_date }}</h2>
 <p>Αρχικό υπόλοιπο + όλες οι εισερχόμενες κινήσεις − όλες οι εξερχόμενες κινήσεις + διορθώσεις = τελικό υπόλοιπο. Εδώ περιλαμβάνονται και οι μεταφορές. Το ταμείο λαμβάνεται ολόκληρο: φίλτρα κατηγορίας, συναλλασσομένου, περιγραφής και κατεύθυνσης δεν επιμερίζουν το αρχικό του υπόλοιπο.</p>

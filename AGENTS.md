@@ -83,6 +83,26 @@ The operator runs them before Docker. Keep all application inputs, 24 migrations
 tests/builds/Docker/migrations or native application execution. Read
 evidence/S27-source-check-fix.json. S27 Prepared until the full operator retry.
 
+### S27 operator follow-up — Greek quote input fixture
+
+The latest operator log passes the portable source preflight and builds image
+sha256:3863daa8bd76fe1b82fb76ae76bbcd20364ebd2e912ece6c863e7a95ba68ca0d.
+It executes all 738 tests with one failure: the new catalogue quote HTTP
+contract submits total_amount='100.00' to the existing GreekMoneyField, which
+deliberately requires Greek decimal text. Correct only that new S27 HTTP
+fixture literal to '100,00'. Preserve every assertion, the 42 method count,
+all 327 retained sources, all 24 migrations and all production services/forms/
+locale rules. Do not change service/API decimal fixtures or relax the parser.
+No additional tests are needed for this fixture correction.
+
+The test file belongs to the immutable application image context, so a fresh
+committed image is required even though no production behaviour changes.
+Supply the source-only APPLY and the same full --record --host-dns command.
+Record the actual failed 738-test run, keep the financial/Redis completion
+Pending and preserve all historical receipts. No agent runtime/test/build/
+Docker/migration/native application execution. Static AST/source/hash checks
+only. Read evidence/S27-quote-input-fix.json. S27 remains Prepared until retry.
+
 ## Historical S26 — reliable background execution, source only
 
 The user selected continuation after the actual successful S25 rehearsal on

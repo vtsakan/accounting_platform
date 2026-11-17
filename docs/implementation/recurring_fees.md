@@ -106,7 +106,8 @@ cached image is validated and reused on retry; `--image sha256:...` also require
 the existing exact-context/source/nonroot/architecture guards.
 
 The gate runs the complete unchanged 696-test baseline plus 42 new S27 methods
-(**738 target, unobserved**), all 36 financial cases and the full existing
+(**738 total; latest operator run has one failure, corrected retry Pending**),
+all 36 financial cases and the full existing
 production lock/catalogue/secret/static/HTTP/readiness checks. The same image
 then runs the existing actual Redis regression in fresh isolated resources,
 including restricted-role migration and `makemigrations --check`, duplicate
@@ -165,6 +166,41 @@ python3 tools/verify_s27.py --record --host-dns
 The prior attempt stopped before building the S27 image; the normal new-image
 path remains required. Agent checks are static only; all runtime verification,
 S27 completion, D05/G2, VM rollout and full acceptance remain Pending.
+
+## Greek quote-input fixture correction — Prepared
+
+The latest operator retry passes the 327-source/four-host-contract preflight,
+proves DNS/HTTP access and builds image
+`sha256:3863daa8bd76fe1b82fb76ae76bbcd20364ebd2e912ece6c863e7a95ba68ca0d`.
+The temporary builder is removed. The suite runs 738 tests in 236.902 seconds
+with one failure: the new quote contract gets HTTP 200 instead of 302.
+
+Static source tracing identifies its `total_amount='100.00'` HTTP fixture.
+AgreementForm uses GreekMoneyField.to_python/parse_euro, whose existing
+deliberate Greek-input grammar rejects this decimal-point text. The retained
+S04 tests explicitly reject ambiguous decimal points, and the retained S22
+agreement form fixture uses `100,00`. The production input rule is correct.
+
+Change only that new S27 HTTP value to `100,00`. Keep its redirect, immutable
+amount/description and zero-charge assertions exactly unchanged. All 42 S27
+methods, all 327 retained files, every production service/form/locale source,
+all 24 migrations and the 738/36/Redis gate are retained. Service/API values
+continue using their existing canonical decimal representations.
+
+The corrected test file is embedded in the application image. Build a new
+committed-context image through the existing `--host-dns` option; the previous
+image contains the failing fixture and cannot validate the correction.
+Apply accounting-platform-S27-quote-input-fix.zip using
+APPLY_S27_QUOTE_INPUT_FIX.sh, then run:
+
+```bash
+python3 tools/verify_s27.py --record --host-dns
+```
+
+No tests/builds/Docker/migrations or native application checks were run by the
+agent. Static syntax/source-diff/hash checks only. The corrected full run and
+real Redis gate remain Pending. S27 stays Prepared; S28, D05/G2, VM rollout and
+all 85 full requirement acceptances remain Pending.
 
 Primary references:
 

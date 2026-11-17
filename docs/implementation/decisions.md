@@ -2,6 +2,17 @@
 
 ## S27 selected — source Prepared, 2026-11-17
 
+Latest operator follow-up: the portable preflight and host-DNS build succeed.
+The full suite executes 738 tests with one failure in the new catalogue quote
+contract. Its HTTP amount uses '100.00', whereas the existing GreekMoneyField
+and S04 negative contracts require Greek decimal text. Change only that S27
+fixture value to '100,00'; keep every assertion, the production parser and all
+old sources unchanged. The file is an application-image input, requiring a
+new committed image and the full 738/36 plus actual Redis retry. No agent tests,
+builds, Docker, migrations or native application execution. Status Prepared;
+the supplied failed run is evidence, not completion. See
+evidence/S27-quote-input-fix.json and recurring_fees.md.
+
 Operator follow-up: S27 source applies successfully but the preflight stops at
 an AST hash comparison after all 326 canonical file checks. Replace the
 interpreter-dependent ast.dump comparison with exact-byte bindings for every

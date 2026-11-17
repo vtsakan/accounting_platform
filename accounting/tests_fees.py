@@ -311,7 +311,7 @@ class FeeContracts(FeeFixtures, TestCase):
         price=self.price();client=self.client_for(self.member)
         response=client.post(reverse('service-agreement-add',args=[price.service_id]),{
             'price_version':price.pk,'entity':self.customer.pk,'agreement_type':'RECEIVABLE','description':price.description,
-            'total_amount':'100.00','start_date':self.period.isoformat(),'status':'ACTIVE',
+            'total_amount':'100,00','start_date':self.period.isoformat(),'status':'ACTIVE',
             'billing_mode':'MONTHLY','lifecycle':'ACTIVE','terms_revision':'0','reason':WHY})
         self.assertEqual(response.status_code,302)
         terms=Agreement.objects.order_by('-pk').first().terms_versions.first()

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S27 Prepared — price lists and monthly fee schedules**. Next: **Operator S27 verification; S28 follows**.
+Updated 2026-11-17. Current step: **S27 Verified — price lists and monthly fee schedules**. Next: **S28 when selected**.
 
 
 
@@ -13,8 +13,7 @@ Updated 2026-11-17. Current step: **S27 Prepared — price lists and monthly fee
 ## Current selected work — S27
 
 <!-- S27-RESULT -->
-Prepared source-only S27: owner-managed versioned service prices, scoped monthly schedules, prospective owner/MFA configuration changes and read-only period/price preview. Existing charge snapshots and canonical agreement/month sources are retained. New tests/builds/Docker/migrations were not run by the agent. Operator full PG17/production-image and real Redis regression gate Pending. S28 automatic generation, VM rollout and all full acceptances remain Pending.
-Latest operator follow-up 2026-11-17: portable source guard and host-DNS build pass; 738 tests ran with one failure in the new quote HTTP fixture. Correct only its amount to Greek 100,00; all assertions and production code remain unchanged. Prepared correction requires a new committed image and full 738/36 plus actual Redis retry. Agent runtime unexecuted.
+Operator S27 production-image/PG17 gate Verified: retained suite and all finance cases, catalogue/schedule scope, future-rate preview, concurrency and real Redis background regression passed. S28 generation, VM rollout and all full acceptances remain Pending.
 <!-- /S27-RESULT -->
 
 ## Previous verified work — S26

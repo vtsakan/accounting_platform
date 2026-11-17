@@ -18,8 +18,8 @@ import uuid
 
 @login_required
 def dashboard_view(request):
-    from .workspace_selectors import workspace_snapshot
-    return render(request, 'accounting/dashboard.html', workspace_snapshot(request.user))
+    from .report_views import overview
+    return overview(request)
 
 
 # accounting/views.py
@@ -79,63 +79,8 @@ def entity_detail_view(request, pk):
 
 @login_required
 def summary_report_view(request):
-    validate_filter_ids(request)
-    from .movement_forms import CashMovementFilterForm
-    from .movement_selectors import filtered_movements, operating_movements, operating_totals, operating_component
-    filter_form = CashMovementFilterForm(request.GET, user=request.user)
-    transactions = operating_movements(filtered_movements(request.user, filter_form,business_direction=True))
-    start_date_str = request.GET.get('start_date', '')
-    end_date_str = request.GET.get('end_date', '')
-    transaction_type = request.GET.get('transaction_type', '')
-    cash_account_id = request.GET.get('cash_account', '')
-    category_id = request.GET.get('category', '')
-
-    # Operating cash totals exclude explicit transfers before every aggregate.
-    # Cash balances/history continue to include both legs on their own dates.
-    totals = operating_totals(transactions)
-    net_for_period = totals['net_for_period']
-
-    income_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('INCOME'))).exclude(total_amount=0).order_by('-total_amount')
-    expense_by_category = transactions.values('category__name').annotate(total_amount=Sum(operating_component('EXPENSE'))).exclude(total_amount=0).order_by('-total_amount')
-
-
-    # --- FINAL CORRECTED AGREEMENT ANALYTICS ---
-    receivable_agreements = records(Agreement, request.user).filter(agreement_type='RECEIVABLE', status='ACTIVE')
-    total_receivable = receivable_agreements.annotate(
-        total_payments=legacy_settlement('transactions__')
-    ).aggregate(
-        total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
-    )['total']
-
-    payable_agreements = records(Agreement, request.user).filter(agreement_type='PAYABLE', status='ACTIVE')
-    total_payable = payable_agreements.annotate(
-        total_payments=legacy_settlement('transactions__')
-    ).aggregate(
-        total=Coalesce(Sum(F('total_amount') - F('total_payments'), output_field=DecimalField()), Value(0), output_field=DecimalField()) # <-- Final fix is here
-    )['total']
-    # --- END OF CORRECTION ---
-
-    context = {
-        'filter_form': filter_form,
-        'total_income': totals['total_income'],
-        'total_expense': totals['total_expense'],
-        'net_for_period': net_for_period,
-        'income_by_category': income_by_category,
-        'expense_by_category': expense_by_category,
-        'accounts_receivable': total_receivable,
-        'accounts_payable': total_payable,
-        'all_cash_accounts': records(CashAccount, request.user).all(),
-        'all_categories': records(Category, request.user).all(),
-        'start_date_str': start_date_str,
-        'end_date_str': end_date_str,
-        'selected_type': transaction_type,
-        'selected_cash_account_id': cash_account_id,
-        'selected_category_id': category_id,
-    }
-
-    from .agreement_selectors import obligation_totals
-    context.update(obligation_totals(request.user))
-    return render(request, 'accounting/summary_report.html', context)
+    from .report_views import period
+    return period(request)
 
 @login_required
 def edit_entity_view(request, pk):

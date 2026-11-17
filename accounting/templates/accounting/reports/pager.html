@@ -1,0 +1,5 @@
+{% load report_tags %}{% if page_obj.has_other_pages %}<nav aria-label="{{ page_label }}">
+{% if page_obj.has_previous %}<a href="{% report_page page_key page_obj.previous_page_number %}">Προηγούμενη</a>{% endif %}
+Σελίδα {{ page_obj.number }} από {{ page_obj.paginator.num_pages }} · {{ page_obj.paginator.count }} εγγραφές
+{% if page_obj.has_next %}<a href="{% report_page page_key page_obj.next_page_number %}">Επόμενη</a>{% endif %}
+</nav>{% endif %}

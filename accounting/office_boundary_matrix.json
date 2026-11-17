@@ -602,6 +602,22 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "client-statement",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "fees-overview",
+      "realm": "office-business",
+      "capability": "finance.read",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

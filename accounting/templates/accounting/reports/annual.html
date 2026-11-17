@@ -1,0 +1,15 @@
+{% extends 'accounting/base.html' %}{% load greek report_tags %}{% block title %}Δωδεκάμηνη εικόνα αμοιβών{% endblock %}{% block content %}
+<h1>Δωδεκάμηνη εικόνα αμοιβών και εξοφλήσεων</h1>
+{% include 'accounting/reports/filters.html' %}
+{% if report_ready %}<p>{{ report_office.name }} · {{ year }} · {% if report_entity %}{{ report_entity.name }} · {% endif %}Υπόλοιπα έως {{ report_as_of|el_date }}.</p>
+<p>Οι χρεώσεις ομαδοποιούνται στον μήνα ισχύος τους, οι εισπράξεις στον μήνα της κίνησης. Το αντιστοιχισμένο και ανεξόφλητο ποσό αφορούν τις χρεώσεις της κάθε γραμμής έως την ημερομηνία αναφοράς. Η αδιάθετη πίστωση αφορά τις αρχικές εισπράξεις του μήνα. Τα ποσά δεν συμψηφίζονται μεταξύ τους αυτόματα.</p>
+<p>Εμφανίζονται μόνο καταχωρισμένα ποσά. Οι προγραμματισμένες μελλοντικές αμοιβές προβάλλονται στα μηνιαία προγράμματα. Δεν εμφανίζονται εκτιμήσεις φορολογικού τζίρου ή κέρδους.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Μήνας</th><th>Αρχικές χρεώσεις</th><th>Αντιλογισμοί</th><th>Καθαρές χρεώσεις</th><th>Εισπράξεις μετά επιστροφές</th><th>Αντιστοιχισμένο</th><th>Ανεξόφλητο</th><th>Αδιάθετη πίστωση</th></tr></thead><tbody>
+{% for row in monthly_rows %}<tr><th><a href="{% report_page 'month' row.month %}">{{ row.period|date:'m/Y' }}</a></th><td>{{ row.gross|euro }}</td><td>{{ row.reversed|euro }}</td><td>{{ row.net|euro }}</td><td>{{ row.receipts|euro }}</td><td>{{ row.allocated|euro }}</td><td>{{ row.remaining|euro }}</td><td>{{ row.credit|euro }}</td></tr>{% endfor %}
+</tbody><tfoot><tr><th>Σύνολο έτους</th><td>{{ annual_totals.gross|euro }}</td><td>{{ annual_totals.reversed|euro }}</td><td>{{ annual_totals.net|euro }}</td><td>{{ annual_totals.receipts|euro }}</td><td>{{ annual_totals.allocated|euro }}</td><td>{{ annual_totals.remaining|euro }}</td><td>{{ annual_totals.credit|euro }}</td></tr></tfoot></table></div>
+<section class="workspace-panel"><h2>Συμφωνία με τα συνολικά υπόλοιπα της καρτέλας</h2><div class="table-responsive"><table class="table"><thead><tr><th>Βάση</th><th>Καθαρές χρεώσεις πελατών</th><th>Αντιστοιχισμένο</th><th>Ανεξόφλητο</th><th>Αδιάθετη πίστωση</th></tr></thead><tbody>
+<tr><th>Επιλεγμένο έτος</th><td>{{ annual_totals.net|euro }}</td><td>{{ annual_totals.allocated|euro }}</td><td>{{ annual_totals.remaining|euro }}</td><td>{{ annual_totals.credit|euro }}</td></tr>
+<tr><th>Εκτός έτους έως την ημερομηνία αναφοράς</th><td>{{ outside_year.net|euro }}</td><td>{{ outside_year.allocated|euro }}</td><td>{{ outside_year.remaining|euro }}</td><td>{{ outside_year.credit|euro }}</td></tr>
+<tr><th>Σύνολο καρτέλας</th><td>{{ snapshot_totals.receivable_charged|euro }}</td><td>{{ snapshot_totals.receivable_allocated|euro }}</td><td>{{ snapshot_totals.receivable_remaining|euro }}</td><td>{{ snapshot_totals.customer_credit|euro }}</td></tr>
+</tbody></table></div></section>
+<h2>Ανάλυση μήνα {{ selected_month }}/{{ year }}</h2>{% include 'accounting/reports/charge_rows.html' %}{% include 'accounting/reports/cash_rows.html' %}{% include 'accounting/reports/credit_rows.html' %}{% endif %}{% endblock %}

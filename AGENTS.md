@@ -29,7 +29,45 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S28 — recurring obligation generation, source only
+## Selected S29 — dashboard and financial reports, source only
+
+The user selected S29 after the actual S28 receipt on 2026-11-17 at
+17:55:18 Europe/Athens: 772/772, all 36 financial cases, 343 retained files,
+four host contracts and actual scheduler/worker/Redis/commit-before-ack recovery.
+Preserve S28-verification.json exactly. Verified source is
+git:9b24a52217545c5a2ecf13a5c1fadb1d9b9e1443; image is
+sha256:23fa49adebb0a3b06ff170bb2f81239fedc00a5f8278f5554cc32cbf298d1067.
+Read financial_reports.md and the S29 prompt. Implement UR-REP-01/02/03 and
+Greek copy under UR-LOC-01. No exports/S30 or task counters/S36.
+
+Deliver a real unpaid-obligation dashboard, filtered operating cash report,
+full selected-account opening/cash/transfer/adjustment/closing reconciliation,
+dated client/counterparty statement and a twelve-month charge/receipt/settlement/
+credit overview. Reuse all existing financial selectors; never derive debt
+from contract amounts or subtract unallocated credit automatically. Distinguish
+cash period, debt as-of, charge cohort and receipt cohort. Outside-year buckets
+reconcile monthly totals to the whole dated statement. Unknown openings stay
+unknown. Cancelled contracts retain posted debt; reversals/refunds/releases
+use retained effective dates. Keep tax turnover/forecasts outside office totals.
+
+Use shared typed office-owned forms and the same source querysets for aggregates
+and paged detail. Materialise money/rows in a read-only repeatable-read snapshot
+for normal top-level requests; nested callers retain their transaction context.
+Keep all financial write services, old selectors, 26 migrations, dependencies,
+worker settings and previous test methods/assertions unchanged. Only the S16
+URL fixture adds the new statement route. Legacy report probe aliases remain
+available but are not product debt totals. No generic model/admin change.
+
+Supply 36 PG reporting/snapshot contracts (808 is an unobserved target), four
+host source contracts and an optional verifier with the full retained 772 tests,
+all 36 finance cases and the unchanged S28 real-broker generation/ack-loss gate.
+No agent tests/builds/Docker/migrations/native application/browser/SSH/cloud/push.
+Static AST/source/hash, template compilation without rendering/setup and text
+scans only. No new migration. S29 Prepared until operator verification; VM,
+D05/G2, full Greek/browser acceptance and all 85 full acceptances remain Pending.
+Stop after S29; S30 requires separate user selection.
+
+## Historical S28 — recurring obligation generation, source only
 
 The user selected S28 after the actual S27 receipt on 2026-11-17 at
 16:52:17 Europe/Athens: 738/738, all 36 financial cases, 327 retained files,

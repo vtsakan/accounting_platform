@@ -1,0 +1,6 @@
+{% load greek %}
+<section class="workspace-panel"><h2>Αναλυτικές λειτουργικές κινήσεις</h2>
+<p>Οι εισπράξεις και πληρωμές εμφανίζονται με την αρχική επιχειρησιακή κατεύθυνση. Αντιλογισμοί και επιστροφές έχουν το αντίστοιχο πρόσημο. Οι εσωτερικές μεταφορές εξαιρούνται.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Εγγραφή</th><th>Ημερομηνία</th><th>Περιγραφή</th><th>Συναλλασσόμενος</th><th>Ταμείο</th><th>Λειτουργική είσπραξη</th><th>Λειτουργική πληρωμή</th></tr></thead><tbody>
+{% for tx in cash_page %}<tr><td>{{ tx.pk }}</td><td>{{ tx.transaction_date|el_date }}</td><td>{{ tx.description }} · {{ tx.get_posting_kind_display }}</td><td>{% if tx.entity %}<a href="{% url 'client-statement' tx.entity_id %}">{{ tx.entity.name }}</a>{% else %}Χωρίς σύνδεση{% endif %}</td><td><a href="{% url 'cash-account-detail' tx.cash_account_id %}">{{ tx.cash_account.name }}</a></td><td>{{ tx.report_income|euro }}</td><td>{{ tx.report_expense|euro }}</td></tr>{% empty %}<tr><td colspan="7">Δεν υπάρχουν κινήσεις για τα επιλεγμένα φίλτρα.</td></tr>{% endfor %}
+</tbody></table></div>{% include 'accounting/reports/pager.html' with page_obj=cash_page page_key='page' page_label='Σελίδες κινήσεων' %}</section>

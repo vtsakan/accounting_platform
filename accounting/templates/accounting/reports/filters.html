@@ -1,0 +1,6 @@
+<form method="get" class="card card-body mb-4" aria-label="Φίλτρα οικονομικής αναφοράς">
+  {{ filter_form.non_field_errors }}
+  <div class="row g-3">{% for field in filter_form.visible_fields %}<div class="col-md-4">{{ field.label_tag }}{{ field }}{{ field.errors }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}</div>{% endfor %}</div>
+  {% for field in filter_form.hidden_fields %}{{ field }}{{ field.errors }}{% endfor %}
+  <div class="mt-3"><button type="submit" class="btn btn-primary">Εφαρμογή φίλτρων</button></div>
+</form>

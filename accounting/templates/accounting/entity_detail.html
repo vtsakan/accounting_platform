@@ -23,6 +23,7 @@
     <dt class="col-sm-3">Δημιουργήθηκε</dt><dd class="col-sm-9">{{ entity.created_at|el_date }}</dd>
   </dl>
   <nav aria-label="Εργασίες συναλλασσομένου" class="d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-primary" href="{% url 'client-statement' entity.pk %}">Οικονομική καρτέλα</a>
     <a class="btn btn-primary" href="{% url 'entity-settlements' entity.pk %}">Εξοφλήσεις και αδιάθετα ποσά</a>
     <a class="btn btn-outline-primary" href="{% url 'transaction-list' %}?entity={{ entity.pk }}">Όλες οι κινήσεις</a>
     {% if not entity.is_archived %}

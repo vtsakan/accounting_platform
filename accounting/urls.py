@@ -9,8 +9,11 @@ from . import counterparty_views
 from .office_access import office_write_guard
 from . import fee_views
 from . import fee_generation_views
+from . import report_views
 
 urlpatterns = [
+    path('reports/clients/<int:pk>/', report_views.statement, name='client-statement'),
+    path('reports/fees/', report_views.annual, name='fees-overview'),
     path('fees/reconciliation/', fee_generation_views.reconciliation_view, name='fee-reconciliation'),
     path('fees/schedules/<uuid:key>/automation/', fee_generation_views.automation, name='fee-automation'),
     path('fees/services/', fee_views.catalogue_list, name='service-catalogue'),

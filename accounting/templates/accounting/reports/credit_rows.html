@@ -1,0 +1,5 @@
+{% load greek %}
+<section class="workspace-panel"><h2>Αρχικές κινήσεις και αδιάθετα ποσά έως {{ report_as_of|el_date }}</h2>
+<div class="table-responsive"><table class="table"><thead><tr><th>Κίνηση</th><th>Ημερομηνία</th><th>Συναλλασσόμενος</th><th>Κατεύθυνση</th><th>Αρχικό ποσό</th><th>Αντιστοιχισμένο</th><th>Επιστροφές</th><th>Διαθέσιμο</th></tr></thead><tbody>
+{% for tx in credit_page %}<tr><td>{{ tx.pk }}{% if tx.reversed_by_day %} · Αντιλογισμένη{% endif %}</td><td>{{ tx.transaction_date|el_date }}</td><td><a href="{% url 'client-statement' tx.entity_id %}">{{ tx.entity.name }}</a></td><td>{{ tx.get_transaction_type_display }}</td><td>{{ tx.amount|euro }}</td><td>{{ tx.allocated_total|euro }}</td><td>{{ tx.refunded_total|euro }}</td><td>{{ tx.available_credit|euro }}</td></tr>{% empty %}<tr><td colspan="8">Δεν υπάρχουν ελεγμένες αρχικές κινήσεις σε αυτό το εύρος.</td></tr>{% endfor %}
+</tbody></table></div>{% include 'accounting/reports/pager.html' with page_obj=credit_page page_key='credit_page' page_label='Σελίδες διαθέσιμων ποσών' %}</section>

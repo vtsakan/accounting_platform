@@ -184,7 +184,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
         kwargs={}
-        if name in {'entity-detail','edit-entity','archive-entity','restore-entity','entity-settlements'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
+        if name in {'entity-detail','edit-entity','archive-entity','restore-entity','entity-settlements','client-statement'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
         if name in {'agreement-detail','edit-agreement','agreement-charge-add','agreement-amend'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
         if name in {'cash-account-detail','cash-account-edit','cash-account-opening','cash-account-adjustment'}:kwargs={'pk':getattr(self,'cash_'+suffix).pk}
         if name in {'category-edit','category-retire'}:kwargs={'pk':getattr(self,'category_'+suffix).pk}

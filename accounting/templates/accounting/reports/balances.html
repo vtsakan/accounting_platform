@@ -1,0 +1,9 @@
+{% load greek %}
+<section class="workspace-panel" aria-labelledby="dated-balances"><h2 id="dated-balances">Χρεώσεις και διαθέσιμα ποσά έως {{ report_as_of|el_date }}</h2>
+<p>Αφορά {% if report_entity %}{{ report_entity.name }}{% else %}όλους τους συναλλασσομένους του γραφείου{% endif %}. Τα φίλτρα ταμείου, κατηγορίας, περιγραφής και κατεύθυνσης αφορούν μόνο τις κινήσεις. Η περίοδος κινήσεων δεν περιορίζει αυτό το υπόλοιπο.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Κατεύθυνση</th><th>Καθαρές χρεώσεις</th><th>Ενεργές αντιστοιχίσεις</th><th>Ανεξόφλητο</th><th>Αδιάθετο ποσό</th></tr></thead><tbody>
+<tr><th>Πελάτες</th><td>{{ posted_receivable_total|euro }}</td><td>{{ receivable_allocated|euro }}</td><td>{{ receivable_remaining|euro }}</td><td>{{ customer_credit|euro }}</td></tr>
+<tr><th>Προμηθευτές</th><td>{{ posted_payable_total|euro }}</td><td>{{ payable_allocated|euro }}</td><td>{{ payable_remaining|euro }}</td><td>{{ supplier_advance|euro }}</td></tr>
+</tbody></table></div><p>Οι όροι συμφωνίας δεν προστίθενται ως δεύτερη οφειλή. Ακυρωμένη συμφωνία διατηρεί τις ήδη καταχωρισμένες χρεώσεις της. Η αδιάθετη πίστωση δεν αφαιρείται αυτόματα από άλλες χρεώσεις.</p>
+{% if legacy_unreviewed_count %}<p class="alert alert-info">Υπάρχουν {{ legacy_unreviewed_count }} παλιές κινήσεις που χρειάζονται έλεγχο. Τα διαθέσιμα προς αντιστοίχιση ποσά αφορούν τις ελεγμένες αρχικές κινήσεις.</p>{% endif %}
+</section>

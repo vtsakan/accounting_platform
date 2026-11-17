@@ -1,5 +1,35 @@
 # Decision register
 
+## S29 selected — source Prepared, 2026-11-17
+
+The actual S28 operator receipt confirms 772/772, all 36 finance cases and real
+scheduler generation/ack-loss redelivery with one charge. Preserve it exactly.
+S29 is now selected. Use the existing cash, operating, settlement, reversal,
+refund and credit projections to build read-only office reports; no new ledger
+calculation or write service. Keep all 26 migrations and financial selectors.
+
+Cash period filters apply to operating movement detail and its aggregates.
+The dated obligation/credit scope shares office/entity and has a separately
+labelled as-of date. Category/account/direction/text filters cannot attribute
+an opening cash balance or net client debt. Full selected-account reconciliation
+therefore shows all legs/adjustments, including transfers, with the scope explicit.
+Unknown opening dates remain incomplete rather than a fabricated zero balance.
+
+The twelve-month table distinguishes charge month from cash receipt month;
+settlements/remaining amounts follow the charge cohort as of the selected day.
+Credit follows receipt cohorts. An outside-year bucket bridges all these values
+to the whole dated statement. Cancelled agreements retain posted debt; reversal
+and release dates preserve earlier snapshots. No automatic credit netting or
+client tax-turnover/forecast inference. Task counters remain S36 and exports S30.
+
+Use top-level PostgreSQL repeatable read/read-only requests and materialised
+paged money so concurrent commits do not split detail from aggregates. Nested
+callers retain their existing transaction. Supply 36 PG report/snapshot methods
+and four host source contracts; agent execution remains static only. Target
+808/36 and the retained real S28 worker gate are unobserved until the operator
+runs verify_s29.py. Source Prepared; full acceptance, D05/G2 and VM Pending.
+Read financial_reports.md. Stop after S29.
+
 ## S28 selected — source Prepared, 2026-11-17
 
 Operator follow-up: the new image builds and the suite runs all 772 tests, with

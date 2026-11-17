@@ -1,110 +1,20 @@
-{% extends 'accounting/base.html' %}
-{% load greek %}
-
-{% block title %}Συνοπτική αναφορά{% endblock %}
-
-{% block content %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Συνοπτική αναφορά</h1>
-    </div>
-
-    <div class="card bg-light mb-4">
-        <div class="card-body">
-            {% include 'accounting/movement_filters.html' %}
-        </div>
-    </div>
-
-    {% if not filter_form.errors %}
-    <p class="small text-muted">Τα λειτουργικά σύνολα περιόδου εξαιρούν τις αναγνωρισμένες εσωτερικές μεταφορές, ακόμη και με φίλτρο ενός μόνο ταμείου. Το ιστορικό κινήσεων και τα υπόλοιπα διατηρούν και τα δύο σκέλη. Τα ποσά χρεώσεων αφορούν όλες τις καταχωρισμένες υποχρεώσεις του γραφείου, ανεξάρτητα από τα φίλτρα κινήσεων.</p>
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2>Λειτουργικά σύνολα περιόδου</h2>
-        </div>
-        <div class="card-body">
-            <p class="fs-5"><strong>Συνολικά έσοδα:</strong> {{ total_income|euro }}</p>
-            <p class="fs-5"><strong>Συνολικά έξοδα:</strong> {{ total_expense|euro }}</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Έσοδα ανά κατηγορία</h3>
-            <table class="table table-striped table-hover">
-                <thead class="table-light">
-                    <tr><th>Κατηγορία</th><th>Σύνολο</th></tr>
-                </thead>
-                <tbody>
-                    {% for item in income_by_category %}
-                    <tr>
-                        <td>{{ item.category__name|default:"Χωρίς κατηγορία" }}</td>
-                        <td>{{ item.total_amount|euro }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="2" class="text-center">Δεν υπάρχουν έσοδα σε αυτή την περίοδο.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-6">
-            <h3>Έξοδα ανά κατηγορία</h3>
-            <table class="table table-striped table-hover">
-                <thead class="table-light">
-                    <tr><th>Κατηγορία</th><th>Σύνολο</th></tr>
-                </thead>
-                <tbody>
-                    {% for item in expense_by_category %}
-                    <tr>
-                        <td>{{ item.category__name|default:"Χωρίς κατηγορία" }}</td>
-                        <td>{{ item.total_amount|euro }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="2" class="text-center">Δεν υπάρχουν έξοδα σε αυτή την περίοδο.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-        <div class="card mb-4">
-        <div class="card-header">
-            <h2>Καταχωρισμένες χρεώσεις γραφείου</h2>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h4>Εισπρακτέες χρεώσεις</h4><p><strong>Ανεξόφλητο: {{ receivable_remaining|default:0|euro }}</strong> · Αντιστοιχισμένο: {{ receivable_allocated|default:0|euro }}</p>
-                    <p class="fs-5 text-success fw-bold">{{ posted_receivable_total|default:0|euro }}</p>
-                    <small class="text-muted">Ποσό χρεώσεων πελατών μετά τους αντιλογισμούς. Οι εισπράξεις μειώνουν το ανεξόφλητο μόνο μέσω ενεργών αντιστοιχίσεων.</small>
-                </div>
-                <div class="col-md-6">
-                    <h4>Πληρωτέες χρεώσεις</h4><p><strong>Ανεξόφλητο: {{ payable_remaining|default:0|euro }}</strong> · Αντιστοιχισμένο: {{ payable_allocated|default:0|euro }}</p>
-                    <p class="fs-5 text-danger fw-bold">{{ posted_payable_total|default:0|euro }}</p>
-                    <small class="text-muted">Ποσό υποχρεώσεων προς προμηθευτές μετά τους αντιλογισμούς. Οι όροι συμφωνιών δεν προστίθενται ως δεύτερη οφειλή.</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    <p>Αδιάθετη πίστωση πελατών: {{ customer_credit|default:0|euro }} · Αδιάθετες προκαταβολές προμηθευτών: {{ supplier_advance|default:0|euro }}. Υπόλοιπα χρεώσεων και αδιάθετα ποσά έως σήμερα, ανεξάρτητα από τα φίλτρα κινήσεων.</p>
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2>Σύνοψη κινήσεων περιόδου</h2>
-        </div>
-        <div class="card-body">
-            <p class="fs-5"><strong>Συνολικά έσοδα:</strong> <span class="text-success">{{ total_income|euro }}</span></p>
-            <p class="fs-5"><strong>Συνολικά έξοδα:</strong> <span class="text-danger">{{ total_expense|euro }}</span></p>
-            <hr>
-            <p class="fs-4 fw-bold">
-                Καθαρό αποτέλεσμα περιόδου:
-                {% if net_for_period >= 0 %}
-                    <span class="text-success">{{ net_for_period|euro }}</span>
-                {% else %}
-                    <span class="text-danger">{{ net_for_period|euro }}</span>
-                {% endif %}
-            </p>
-        </div>
-    </div>
-
-    <div class="row">
-        </div>
-    {% endif %}
-{% endblock %}
+{% extends 'accounting/base.html' %}{% load greek %}
+{% block title %}Οικονομική αναφορά περιόδου{% endblock %}{% block content %}
+<h1>Οικονομική αναφορά περιόδου</h1>
+<p>Λειτουργική ροή γραφείου, ταμειακή συμφωνία και υπόλοιπα καταχωρισμένων χρεώσεων. Δεν αποτελεί φορολογικό κύκλο εργασιών πελάτη ή φορολογικό κέρδος.</p>
+<p><a href="{% url 'fees-overview' %}">Δωδεκάμηνη εικόνα αμοιβών και εξοφλήσεων</a></p>
+{% include 'accounting/reports/filters.html' %}
+{% if not filter_form.errors %}
+<section class="workspace-panel"><h2>Λειτουργικές κινήσεις περιόδου</h2>
+{% if report_ready %}<p>{{ report_office.name }} · {% if report_entity %}{{ report_entity.name }} · {% endif %}{% if report_start %}Από {{ report_start|el_date }}{% else %}Από την αρχική καταγραφή{% endif %} έως {{ report_end|el_date }}. Οι εσωτερικές μεταφορές εξαιρούνται ακόμη και με φίλτρο ενός ταμείου.</p>{% endif %}
+<div class="stats-grid"><article class="stat-card"><span>Λειτουργικές εισπράξεις</span><strong class="stat-value">{{ total_income|default:0|euro }}</strong></article><article class="stat-card"><span>Λειτουργικές πληρωμές</span><strong class="stat-value">{{ total_expense|default:0|euro }}</strong></article><article class="stat-card"><span>Καθαρή λειτουργική ροή</span><strong class="stat-value">{{ net_for_period|default:0|euro }}</strong></article></div>
+<div class="row"><div class="col-md-6"><h3>Εισπράξεις ανά κατηγορία</h3><table class="table"><thead><tr><th>Κατηγορία</th><th>Ποσό</th></tr></thead><tbody>{% for item in income_by_category %}<tr><td>{{ item.category__name|default:'Χωρίς κατηγορία' }}</td><td>{{ item.total_amount|euro }}</td></tr>{% empty %}<tr><td colspan="2">Δεν υπάρχουν εισπράξεις στην περίοδο.</td></tr>{% endfor %}</tbody></table></div><div class="col-md-6"><h3>Πληρωμές ανά κατηγορία</h3><table class="table"><thead><tr><th>Κατηγορία</th><th>Ποσό</th></tr></thead><tbody>{% for item in expense_by_category %}<tr><td>{{ item.category__name|default:'Χωρίς κατηγορία' }}</td><td>{{ item.total_amount|euro }}</td></tr>{% empty %}<tr><td colspan="2">Δεν υπάρχουν πληρωμές στην περίοδο.</td></tr>{% endfor %}</tbody></table></div></div></section>
+{% endif %}
+{% if report_ready %}
+{% include 'accounting/reports/cash_rows.html' %}
+<section class="workspace-panel"><h2>Συμφωνία επιλεγμένων ταμείων έως {{ cash_bridge.as_of|el_date }}</h2>
+<p>Αρχικό υπόλοιπο + όλες οι εισερχόμενες κινήσεις − όλες οι εξερχόμενες κινήσεις + διορθώσεις = τελικό υπόλοιπο. Εδώ περιλαμβάνονται και οι μεταφορές. Το ταμείο λαμβάνεται ολόκληρο: φίλτρα κατηγορίας, συναλλασσομένου, περιγραφής και κατεύθυνσης δεν επιμερίζουν το αρχικό του υπόλοιπο.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Ταμείο</th><th>Υπόλοιπο έναρξης περιόδου</th><th>Εισερχόμενα</th><th>Εξερχόμενα</th><th>Διορθώσεις</th><th>Τελικό υπόλοιπο</th><th>Διαφορά συμφωνίας</th></tr></thead><tbody>{% for row in cash_bridge.rows %}<tr><th><a href="{% url 'cash-account-detail' row.account.pk %}">{{ row.account.name }}</a>{% if row.account.opening_date %}<small> · επιβεβαίωση {{ row.account.opening_date|el_date }}</small>{% endif %}</th>{% if row.known %}<td>{{ row.opening|euro }}</td><td>{{ row.inflow|euro }}</td><td>{{ row.outflow|euro }}</td><td>{{ row.adjustments|euro }}</td><td>{{ row.closing|euro }}</td><td>{{ row.difference|euro }}</td>{% else %}<td colspan="6">Αναμονή επιβεβαίωσης αρχικού υπολοίπου ή έναρξη μετά την ημερομηνία αναφοράς.</td>{% endif %}</tr>{% empty %}<tr><td colspan="7">Δεν υπάρχουν ταμεία.</td></tr>{% endfor %}</tbody></table></div>
+<p>Υποσύνολο επιβεβαιωμένων υπολοίπων: {{ cash_bridge.known_closing_total|euro }}. Ταμεία χωρίς διαθέσιμο αρχικό υπόλοιπο: {{ cash_bridge.unknown_count }}.</p></section>
+{% include 'accounting/reports/balances.html' %}{% include 'accounting/reports/charge_rows.html' %}{% include 'accounting/reports/credit_rows.html' %}
+{% endif %}{% endblock %}

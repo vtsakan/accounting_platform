@@ -14,7 +14,7 @@ Updated 2026-11-17. Current step: **S27 Prepared — price lists and monthly fee
 
 <!-- S27-RESULT -->
 Prepared source-only S27: owner-managed versioned service prices, scoped monthly schedules, prospective owner/MFA configuration changes and read-only period/price preview. Existing charge snapshots and canonical agreement/month sources are retained. New tests/builds/Docker/migrations were not run by the agent. Operator full PG17/production-image and real Redis regression gate Pending. S28 automatic generation, VM rollout and all full acceptances remain Pending.
-Operator follow-up 2026-11-17: S27 applied; source-preflight stopped at a nonportable AST fingerprint after all 326 exact-file checks. Prepared correction binds all 23 old test files to published source bytes (327 unique files), preserving the historical manifest and application. Four host contracts supplied, unexecuted by agent; complete 738/36 and Redis operator gate Pending.
+Latest operator follow-up 2026-11-17: portable source guard and host-DNS build pass; 738 tests ran with one failure in the new quote HTTP fixture. Correct only its amount to Greek 100,00; all assertions and production code remain unchanged. Prepared correction requires a new committed image and full 738/36 plus actual Redis retry. Agent runtime unexecuted.
 <!-- /S27-RESULT -->
 
 ## Previous verified work — S26

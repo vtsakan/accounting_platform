@@ -61,5 +61,6 @@
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "operator_command": "python3 tools/verify_s27.py --record --host-dns"
+  "operator_command": "python3 tools/verify_s27.py --record --host-dns",
+  "applied_source_commit": "git:5e8d755fc7a98b114d15d5e8c826f213cd0682ee"
 }

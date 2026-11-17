@@ -13,7 +13,7 @@
   ],
   "older_migrations_unchanged": 22,
   "automatic_generation": "Pending S28",
-  "runtime_results": "Not run; corrected full operator verification Pending",
+  "runtime_results": "Prior operator suite failed one fixture; corrected full 738/36 and real Redis retry Pending",
   "agent_tests_builds_docker_migrations_run": false,
   "static_checks_evidence": "docs/implementation/evidence/S27-static-checks.json",
   "previous_s26_operator_verified_source": "git:5e583cf2d4aae0e2597084b5389bc7614edfeaf6",
@@ -24,13 +24,23 @@
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
   "operator_command": "python3 tools/verify_s27.py --record --host-dns",
-  "source_commit": "git:18a96d5f689312612e0bc5682f0669663da3afaa",
+  "source_commit": "git:5e8d755fc7a98b114d15d5e8c826f213cd0682ee",
   "applied_by_operator": true,
   "source_preservation_followup": "Prepared portable exact-published-source checks; historical manifest unchanged",
-  "latest_operator_failure": "Source-preflight AST fingerprint after 326 exact-file checks; build/tests not started",
-  "operator_observed_retained_exact_files_passed": 326,
+  "latest_operator_failure": "738 tests ran; one new catalogue-quote fixture rejected decimal-point HTTP amount (200 instead of 302)",
+  "operator_observed_retained_exact_files_passed": 327,
   "unique_exact_retained_files": 327,
   "host_preservation_contracts_supplied": 4,
   "host_preservation_contracts_executed_by_agent": false,
-  "runtime_retry_result": "Pending"
+  "runtime_retry_result": "Pending",
+  "quote_input_followup": "Prepared single new S27 HTTP amount fixture corrected from 100.00 to 100,00; every assertion retained",
+  "operator_observed_host_preservation_contracts_passed": 4,
+  "operator_observed_prior_image": "sha256:3863daa8bd76fe1b82fb76ae76bbcd20364ebd2e912ece6c863e7a95ba68ca0d",
+  "operator_observed_suite": {
+    "tests_run": 738,
+    "failures": 1,
+    "errors_reported": 0,
+    "seconds": 236.902
+  },
+  "new_production_image_required": true
 }

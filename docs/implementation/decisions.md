@@ -844,3 +844,18 @@ and rerun every existing gate. The 35 new test methods, 696-test target and
 36 financial cases are preserved. Agent checks are static only; the full suite,
 real Redis proofs, S26 completion, D05/G2 and all full acceptances stay Pending.
 See evidence/S26-migration-fix.json and background_jobs.md.
+
+### S26 missing redelivery setting — Prepared, 2026-11-17
+
+The operator's new production image passes migrations and runs 696 tests, with
+two errors in existing S26 recovery tests. dispatch_job references a missing
+BACKGROUND_REDELIVERY_SECONDS after publishing. Declare the interval once as
+30 seconds in shared base settings; local, test, build and production inherit
+the same value. It delays reoffer of unclaimed queued/retry intents and does not
+change execution backoff, lease recovery, authority, fencing or attempt limits.
+
+Keep every service, all 35 S26 test bodies, all 22 migrations, financial case
+assertions and locks intact. Static reference/inheritance/hash checks do not
+establish runtime completion. Require a new committed-context image and every
+existing operator gate. S26 Prepared; real Redis/scheduler proofs, D05/G2, VM
+rollout and all 85 full acceptances remain Pending. See S26-redelivery-fix.json.

@@ -1,0 +1,79 @@
+{
+  "step": "S26",
+  "status": "Prepared",
+  "recorded_at": "2026-11-17",
+  "scope": "shared durable-dispatch redelivery interval",
+  "reference_base_commit": "git:7657597d4d9cedb4543446597a51078c6d137d31",
+  "operator_observed": {
+    "log_sha256": "sha256:0128d0455f3344a3d5c13003222768671c4d9e9bc1cb884ee99235f175a1da8a",
+    "last_applied_tracking_commit": "git:3130f93 (short identity supplied)",
+    "production_image": "sha256:43826b930dc405d61dcdb5d33d9283891d4fe3d5d20f5e9d433ec9221cc42292",
+    "production_build_passed": true,
+    "delivery_migrations_passed": true,
+    "retained_files_passed": 145,
+    "host_preservation_contracts_passed": 4,
+    "tests_run": 696,
+    "test_seconds": 197.845,
+    "errors": 2,
+    "missing_setting": "BACKGROUND_REDELIVERY_SECONDS",
+    "error_tests": [
+      "test_expired_claim_is_recovered_and_old_token_is_fenced",
+      "test_lost_dispatch_recovery_sends_only_opaque_id"
+    ],
+    "on_commit_dispatch_same_attribute_error_logged": true,
+    "full_financial_gate": "Not established by supplied log",
+    "real_redis_gate": "Not reached"
+  },
+  "correction": {
+    "file": "core/settings/base.py",
+    "setting": "BACKGROUND_REDELIVERY_SECONDS",
+    "value_seconds": 30,
+    "inheritance": {
+      "local": "inherits base without redelivery override",
+      "test": "inherits base without redelivery override",
+      "build": "inherits base without redelivery override",
+      "production": "inherits base without redelivery override"
+    },
+    "purpose": "Next eligible publish of an unclaimed queued/retry durable intent after a successful publish",
+    "execution_retry_seconds_unchanged": [
+      2,
+      4
+    ],
+    "running_lease_seconds_unchanged": 120
+  },
+  "base_settings_before_sha256": "sha256:800124cd4505bcd9545e8179f3eac4dc43a05bd722e0fa094cf3317f0341a8aa",
+  "base_settings_after_sha256": "sha256:29f2129f2b3430ccc9fdb21cbcd6ddb04a8920fcdee08dde4438ffc96a8ebaa3",
+  "static_checks": {
+    "application_python_ast_files": 144,
+    "job_setting_references": [
+      "BACKGROUND_JOBS_ENABLED",
+      "BACKGROUND_LEASE_SECONDS",
+      "BACKGROUND_REDELIVERY_SECONDS",
+      "CELERY_ACCEPT_CONTENT",
+      "CELERY_RESULT_BACKEND",
+      "CELERY_TASK_ACKS_LATE",
+      "CELERY_TASK_REJECT_ON_WORKER_LOST",
+      "CELERY_TASK_TIME_LIMIT"
+    ],
+    "missing_job_settings": [],
+    "four_profiles_inherit_shared_setting": true,
+    "retained_hashes_compared": 145,
+    "all_22_migrations_unchanged": true,
+    "all_35_s26_test_bodies_and_services_unchanged": true,
+    "verifier_and_four_host_contracts_unchanged": true,
+    "dependency_locks_and_recorded_preservation_hashes_unchanged": true
+  },
+  "new_runtime_test_methods": 0,
+  "target_production_tests": 696,
+  "target_financial_cases": 36,
+  "new_production_image_required": true,
+  "agent_tests_builds_docker_migrations_or_native_verification": false,
+  "operator_retry_result": "Pending",
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "full_requirement_acceptance": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "operator_command": "python3 ~/Downloads/S26_DNS_BUILD.py --verify"
+}

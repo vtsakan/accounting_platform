@@ -87,6 +87,20 @@ Read evidence/S26-migration-fix.json. Require a new committed-context image via
 the existing host-DNS helper, then the complete 696/36 and real Redis gate.
 Agent work remains static only; S26 Prepared and all full acceptances Pending.
 
+### S26 operator follow-up — missing redelivery interval, source only
+
+The 2026-11-17 operator run builds the corrected image and passes migrations,
+145 retained-file checks and four preservation contracts. It executes 696 tests
+but fails two S26 recovery contracts because BACKGROUND_REDELIVERY_SECONDS is
+read by dispatch_job without a base setting. Add the shared 30-second dispatch
+redelivery interval in core/settings/base.py; all four settings profiles inherit
+it. Keep service code, all 35 S26 methods, all 22 migrations, financial contracts,
+dependency locks and historical receipts unchanged. Statically audit referenced
+BACKGROUND_/CELERY_ settings without importing or executing the application.
+Read evidence/S26-redelivery-fix.json. Rebuild through the existing host-DNS
+helper and rerun the full gate. Agent tests/builds/Docker/migrations remain
+unexecuted; S26 Prepared, real Redis verification and all full acceptances Pending.
+
 ## Historical S25 — legacy rehearsal, source only
 
 The user now selects S25. Read legacy_migration.md and legacy_review_el.md.

@@ -77,6 +77,7 @@ DEFAULT_FROM_EMAIL = "Λογιστική πλατφόρμα <noreply@example.inv
 from core.config import boolean, env
 BACKGROUND_JOBS_ENABLED = boolean('BACKGROUND_JOBS_ENABLED', False)
 BACKGROUND_LEASE_SECONDS = 120
+BACKGROUND_REDELIVERY_SECONDS = 30
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', 'redis://redis:6379/0', secret=True)
 CELERY_RESULT_BACKEND = None
 CELERY_TASK_IGNORE_RESULT = True

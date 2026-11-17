@@ -68,6 +68,12 @@ and recovers expired 120-second claims with fresh fencing. A trusted operator ca
 also run `python manage.py background_jobs dispatch` after restoring the broker.
 Dispatch recovery survives a send/commit gap and even a completely empty Redis.
 
+After a successful publish, an unclaimed queued/retry intent becomes eligible
+for redelivery after 30 seconds (`BACKGROUND_REDELIVERY_SECONDS`, shared base
+settings). The ten-second recovery scan controls when that due intent is next
+observed. This interval is separate from the 2/4-second execution retry backoff
+and the 120-second running-claim lease; all guards and effect fencing remain.
+
 Only short DB-transaction adapters are supported here. Future HTTP/SMTP or other
 external side effects must supply durable intent/uncertain-outcome handling;
 an SMTP timeout is never an excuse to blindly resend. No arbitrary Python name,
@@ -216,6 +222,37 @@ The helper creates a temporary builder for the new source and removes only its
 own builder/cache afterward. Full operator verification, real Redis recovery,
 D05/G2, VM rollout and all 85 full acceptances remain Pending. See
 `evidence/S26-migration-fix.json` for observed evidence and static check scope.
+
+## Operator settings correction — Prepared, 2026-11-17
+
+The latest operator log builds the corrected production image, passes delivery
+migrations and the 145 retained-file/four host-contract preflight, then executes
+all 696 tests. Two existing S26 recovery tests error with a missing
+`BACKGROUND_REDELIVERY_SECONDS`; robust on-commit dispatch logs the same defect.
+The supplied log does not establish the complete 36-case finance gate or the
+real Redis/scheduler/recovery gate, and no new Verified receipt is inferred.
+
+The service already reads this interval after a successful send. Define the
+shared value as 30 seconds in `core/settings/base.py`, inherited by local, test,
+build and production. There is no test-only fallback and no changed authority,
+attempt, retry, lease or financial rule. All 35 S26 test bodies, all 22 migrations,
+services, dependency locks, source-preservation hashes and old receipts remain
+unchanged. The two existing failing tests remain mandatory regressions.
+
+Apply `accounting-platform-S26-redelivery-fix.zip` with
+`APPLY_S26_REDELIVERY_FIX.sh` from the current clean checkout, after the previous
+hash and migration fixes. APPLY performs Git/source/tracking operations only.
+The changed settings require a new image. Reuse the downloaded helper:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+python3 ~/Downloads/S26_DNS_BUILD.py --verify
+```
+
+Agent checks cover AST syntax, settings-reference coverage/inheritance and exact
+source/hash preservation only. Full operator retry, S26 completion, actual Redis
+proofs, D05/G2, VM rollout and all 85 full acceptances remain Pending. See
+`evidence/S26-redelivery-fix.json`. Stop after S26.
 
 ## Primary references
 

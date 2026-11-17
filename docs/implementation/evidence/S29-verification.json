@@ -3,7 +3,7 @@
   "status": "Prepared",
   "scope": "Read-only dashboard, operating cash and full account bridge, dated client statements and annual fee/settlement/credit cohorts",
   "prepared_at": "2026-11-17T18:32:12+02:00",
-  "source_commit": "git:02b87e13d9ebc2a95ac1eca115b01273cbecf663",
+  "source_commit": "git:884ae7a3b36e6c2d0f33ae61dcf9254ea28396f4",
   "application_context_digest": "sha256:329345a3cdf2ae2c8e6da7bf02ad3414ed8eab828830fb7fd2992ed47e1a87f3",
   "retained_operator_verified_suite": 772,
   "s29_test_methods_supplied": 36,
@@ -25,5 +25,6 @@
   "g2_release_acceptance": "Pending",
   "greek_browser_acceptance": "Pending",
   "local_demo_or_vm_changed": false,
-  "human_accounts_or_mfa_changed": false
+  "human_accounts_or_mfa_changed": false,
+  "applied_by_operator": true
 }

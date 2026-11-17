@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S28 Verified — recurring fee generation**. Next: **S29 when selected**.
+Updated 2026-11-17. Current step: **S29 Prepared — dashboards and financial reports**. Next: **Operator S29 verification; S30 follows**.
 
 
 
@@ -11,7 +11,14 @@ Updated 2026-11-17. Current step: **S28 Verified — recurring fee generation**.
 
 
 
-## Current selected work — S28
+
+## Current selected work — S29
+
+<!-- S29-RESULT -->
+Prepared source-only S29: real unpaid-obligation dashboard, filtered operating cash report, full selected-account opening/flows/transfers/adjustments/closing bridge, dated statements and annual fee/settlement/credit cohorts. 36 PG reporting/snapshot methods supplied; 808/36 and the retained S28 real-broker gate are unobserved targets. Agent tests/builds/Docker/migrations/native application verification unexecuted. No new migration. Browser/full acceptance, D05/G2 and VM rollout remain Pending.
+<!-- /S29-RESULT -->
+
+## Previous verified work — S28
 
 <!-- S28-RESULT -->
 Operator S28 production-image/PG17 gate Verified: retained suite and finance cases, scoped generation, retries/concurrency, actual scheduler-discovered charges, commit-before-ack worker loss/redelivery and zero-cash reconciliation passed. VM rollout, D05/G2 and all full acceptances remain Pending.

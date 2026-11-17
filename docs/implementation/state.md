@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-16. Current step: **S26 Prepared — reliable background execution**. Next: **Operator S26 verification; S27 follows**.
+Updated 2026-11-17. Current step: **S26 Prepared — reliable background execution**. Next: **Operator S26 verification; S27 follows**.
 
 
 
@@ -12,8 +12,8 @@ Updated 2026-11-16. Current step: **S26 Prepared — reliable background executi
 ## Current selected work — S26
 
 <!-- S26-RESULT -->
-Prepared source-only S26: same-image Redis/Celery worker and exactly-one scheduler definitions, durable DB outbox, fenced atomic client probe, retry/cancellation/fresh authority guards and private queue health. 35 new test methods supplied; expected 696 total is a target, not an observed result. Agent execution: static source checks only. Operator command: python3 tools/verify_s26.py --record. VM/deployment, future fee/mail/task adapters and all 85 full acceptances remain Pending.
-Operator follow-up: host-DNS production build, 145 retained-file checks and four preservation contracts passed; disposable delivery stopped compiling migration 0022. The CASE expression is now parenthesized, source-only Prepared; new image/full 696-test and 36-finance-case/real Redis verification remains Pending.
+Prepared source-only S26: same-image Redis/Celery worker and exactly-one scheduler definitions, durable DB outbox, fenced atomic client probe, retry/cancellation/fresh authority guards and private queue health. 35 S26 methods preserved; latest operator run executed 696 tests with two errors; corrected runtime retry Pending. Agent execution: static source checks only. Operator command: python3 tools/verify_s26.py --record. VM/deployment, future fee/mail/task adapters and all 85 full acceptances remain Pending.
+Operator follow-up 2026-11-17: migrations and 145/four preservation checks passed; 696 tests ran with two missing BACKGROUND_REDELIVERY_SECONDS errors. Shared 30-second setting correction Prepared; new image/full financial and real Redis gate remain Pending.
 <!-- /S26-RESULT -->
 
 ## Previous verified work — S25

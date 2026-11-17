@@ -75,5 +75,6 @@
   "g2_release_acceptance": "Pending",
   "full_requirement_acceptance": "Pending",
   "full_requirement_acceptances_pending": 85,
-  "operator_command": "python3 ~/Downloads/S26_DNS_BUILD.py --verify"
+  "operator_command": "python3 ~/Downloads/S26_DNS_BUILD.py --verify",
+  "applied_source_commit": "git:558f5567e9c5396e4b6166128bbdcc7b35da54a3"
 }

@@ -1,14 +1,14 @@
 {
   "step": "S26",
   "status": "Prepared",
-  "prepared_at": "2026-11-16",
+  "prepared_at": "2026-11-17",
   "scope": "private Redis and same-image Celery worker/singleton scheduler with durable guarded DB jobs",
   "previous_step": "S25 synthetic operator gate Verified; D05/G2 separate Pending",
   "tests_supplied": 35,
   "retained_production_test_count": 661,
   "target_production_test_count": 696,
   "target_financial_case_count": 36,
-  "runtime_test_results": "Prior image build and source preflight passed; application suite and real Redis gate not reached",
+  "runtime_test_results": "Operator suite ran 696 tests with two missing-setting errors; full corrected retry Pending",
   "migrations_added": [
     "0021_background_jobs",
     "0022_background_job_guards"
@@ -32,15 +32,21 @@
   "next_step": "S27 when selected",
   "static_text_scan": "Passed static text review; zero unreviewed findings. Operator gate reruns it against applied source.",
   "static_checks_evidence": "docs/implementation/evidence/S26-static-checks.json",
-  "source_commit": "git:8a67bc6b516059222f67510ab3c5a5fcc0d6025d",
+  "source_commit": "git:558f5567e9c5396e4b6166128bbdcc7b35da54a3",
   "preservation_followup": "Prepared canonical SHA-256 prefix correction",
   "host_preservation_contracts_supplied": 4,
   "host_preservation_contracts_executed_by_agent": false,
-  "latest_operator_failure": "Production build passed; disposable delivery migration 0022 failed with PL/pgSQL syntax error",
+  "latest_operator_failure": "696 tests executed; two S26 recovery errors from missing BACKGROUND_REDELIVERY_SECONDS",
   "runtime_retry_result": "Pending",
-  "migration_followup": "Prepared parenthesized CASE expression in 0022 attempt-counter guard",
+  "migration_followup": "Operator-confirmed: delivery migrations passed on 2026-11-17",
   "operator_observed_retained_files_passed": 145,
   "operator_observed_preservation_contracts_passed": 4,
-  "operator_observed_prior_image": "sha256:48ade7a34781a22b1bf7db83f3db9e142ed3ecdb9a02bcaea16f15a7e0928ce0",
-  "new_production_image_required": true
+  "operator_observed_prior_image": "sha256:43826b930dc405d61dcdb5d33d9283891d4fe3d5d20f5e9d433ec9221cc42292",
+  "new_production_image_required": true,
+  "redelivery_followup": "Prepared shared BACKGROUND_REDELIVERY_SECONDS=30",
+  "operator_observed_suite": {
+    "tests_run": 696,
+    "errors": 2,
+    "seconds": 197.845
+  }
 }

@@ -89,6 +89,29 @@ branch. Reuse the same context-guarded S30 image. No agent tests/builds/Docker/
 migrations/native app/SSH/cloud/push. S31 stays Prepared; technical retry,
 D05/G2 and all full acceptances Pending; actual release Blocked. No S32 work.
 
+### Latest S31 follow-up — supplementary historical evidence, source only
+
+The corrected complete APPLY again stops before source application, now at
+S26-hash-fix.json. The earlier 35-output correction omitted preparation/fix/
+provenance metadata from the local-history category. Their operator-local
+values must be preserved without requiring the agent's draft bytes.
+Read evidence/S31-history-fix.json. This supersedes the previous 556-source
+categorisation: 485 exact source/policy files, the same 35 operator outputs,
+71 additional explicitly enumerated historical metadata files, and one exact
+append-only scan-review file retain all original 592 protections.
+
+Keep s31_receipts.py and its twelve contracts byte-identical. Add a separate
+71-path supplementary binding with structural JSON/CSV validation, exclusive
+creation from actual pre-APPLY bytes, strict post-binding hashes, no runtime
+capture/rebind, and no new status/approval claim. Historical manifest values
+must never set current source/test expectations. Keep all 284 image inputs,
+26 migrations, financial services/selectors/forms, 848/36 and original twenty
+S31 host methods unchanged. Add eight stdlib operator contracts (40 total),
+unexecuted by the agent. Report all remaining immutable-source mismatches
+at once. Supply a complete source-only retry from the unchanged S30 branch.
+No agent tests/builds/Docker/migrations/native app/SSH/cloud/push, no S32.
+S31 Prepared; operator retry and full acceptance Pending; release Blocked.
+
 ## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at

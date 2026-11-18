@@ -35,12 +35,14 @@ def preserved(root, manifest):
     value = json.loads(Path(manifest).read_text())
     entries = value.get('sha256')
     require(isinstance(entries, dict) and entries, 'Invalid nonempty S31 preservation manifest')
+    mismatches = []
     for name, digest in entries.items():
         require(isinstance(name, str) and not Path(name).is_absolute() and '..' not in Path(name).parts
                 and isinstance(digest, str) and SHA.fullmatch(digest), 'Invalid retained source binding')
         path = Path(root) / name
-        require(path.is_file() and not path.is_symlink() and digest_bytes(path.read_bytes()) == digest,
-                'Retained source or historical receipt changed: ' + name)
+        if not path.is_file() or path.is_symlink() or digest_bytes(path.read_bytes()) != digest:
+            mismatches.append(name)
+    require(not mismatches, 'Retained source changed (all mismatches; no rebind):\n' + '\n'.join(mismatches))
     extensions = value.get('append_only_files', {})
     require(isinstance(extensions, dict), 'Invalid append-only source bindings')
     for name, row in extensions.items():
@@ -64,7 +66,16 @@ def preserved(root, manifest):
         validate_policy(policy)
         require(not set(policy.get('paths', ())) & set(entries), 'Receipt and immutable-source policies overlap')
         receipt_count = verify(root, policy)
-    return len(entries) + len(extensions) + receipt_count
+    historical = value.get('historical_evidence')
+    require(value.get('step') != 'S31' or isinstance(historical, dict), 'Published S31 supplementary-evidence policy required')
+    evidence_count = 0
+    if historical is not None:
+        from s31_evidence import validate_policy as validate_evidence, verify as verify_evidence
+        validate_evidence(historical)
+        require(not set(historical['paths']) & (set(entries) | set(policy['paths']) if policy is not None else set(entries)),
+                'Source, operator-result and supplementary-evidence policies must be disjoint')
+        evidence_count = verify_evidence(root, historical)
+    return len(entries) + len(extensions) + receipt_count + evidence_count
 
 
 def matrix(root):

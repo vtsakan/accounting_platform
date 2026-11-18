@@ -1,5 +1,24 @@
 # Decision register
 
+## S31 complete historical-evidence correction — Prepared, 2026-11-19
+
+The receipt-fix APPLY stops before source application at S26-hash-fix.json.
+The 35 primary verifier outputs were correctly distinguished, but preparation,
+fix and provenance records still had an invalid agent-workspace byte assumption.
+Preserve these as historical input data with no new approval or status claim.
+
+Keep the exact 35-output helper and its twelve methods unchanged. Add a separate
+71-path supplementary-evidence binding, structural checks and eight contracts.
+485 current source/policy files keep their published exact hashes; the two
+history groups plus the append-only scan record retain all original 592 paths.
+Capture before source/Git changes, create both new hash-only records exclusively,
+never rewrite old evidence, and reject later changes without rebind. Historical
+manifest contents never supply current source hashes. Source mismatch reporting
+lists every mismatching path together. All 284 image inputs, 26 migrations,
+848/36 and old 20+12 host methods stay exact. Forty host methods are supplied,
+not agent-run. Full source-only retry from S30. S31 Prepared, release Blocked;
+D05/G2/all full acceptance Pending. No S32 implementation or native execution.
+
 ## S31 historical operator-receipt correction — Prepared, 2026-11-19
 
 The original APPLY stopped before applying source at S25-verification.json.

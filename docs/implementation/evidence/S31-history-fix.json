@@ -1,0 +1,43 @@
+{
+  "step": "S31",
+  "status": "Prepared",
+  "scope": "source-only complete historical-evidence portability correction",
+  "prepared_at": "2026-11-19T01:13:21+02:00",
+  "source_commit": "Pending implementation commit",
+  "operator_observed_failure": {
+    "file": "docs/implementation/evidence/S26-hash-fix.json",
+    "message": "Διαφέρει διατηρούμενο αρχείο της βάσης S31: docs/implementation/evidence/S26-hash-fix.json",
+    "stage": "installer retained-file preflight",
+    "before_source_application_tests_Docker_or_migrations": true
+  },
+  "cause": "The previous correction classified primary verifier outputs, but supplementary preparation/fix/provenance records were still incorrectly required to equal the agent workspace bytes. The operator demonstrated this assumption false at S26-hash-fix.json.",
+  "actual_operator_metadata_field_differences": "Not collected; the corrected installer preserves exact existing bytes rather than inventing or replacing their values",
+  "preservation": {
+    "published_exact_source_files": 485,
+    "operator_results_old_inventory_unchanged": 35,
+    "supplementary_history_inventory": 71,
+    "exact_append_only_scan_review": 1,
+    "total_original_protections": 592,
+    "primary_binding": "docs/implementation/evidence/S31-operator-receipts.json",
+    "supplementary_binding": "docs/implementation/evidence/S31-historical-evidence.json",
+    "binding_creation": "Exclusive, once, from actual pre-APPLY bytes; no historical file writes or status promotion",
+    "runtime": "Both bindings required; hash changes, missing entries and policy changes fail without capture or refresh",
+    "historical_manifest_hashes_used_as_current_source_expectations": false,
+    "immutable_mismatch_diagnostics": "All mismatching source paths are reported together without any rebinding"
+  },
+  "prior_20_and_12_host_contracts_preserved_byte_for_byte": true,
+  "new_host_contracts_supplied_not_run": 8,
+  "host_contract_target_not_run": 40,
+  "application_inputs_unchanged": 284,
+  "accounting_migrations_unchanged": 26,
+  "application_suite_target_not_run": 848,
+  "financial_cases_target_not_run": 36,
+  "application_context_unchanged": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "agent_tests_builds_Docker_migrations_native_app_run": false,
+  "agent_operator_bindings_created": false,
+  "human_accounts_MFA_demo_VM_changed": false,
+  "S32_implementation_changes": false,
+  "source_status": "Prepared",
+  "release_decision": "Blocked",
+  "all_85_full_acceptances": "Pending"
+}

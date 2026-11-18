@@ -41,11 +41,11 @@ as a newly observed clean build.
 
 The operator command performs these checks in order:
 
-1. Exact SHA-256 checks for **556 unchanged source/static-evidence files**,
-   **35 enumerated actual local operator results** locked before APPLY, the
-   original scanner-review prefix plus two exact non-secret Docker-name
-   additions, all 42 R1 criteria and **32** stdlib host contracts (20 retained
-   plus 12 receipt contracts). No AST serialization across Python
+1. Exact SHA-256 checks for **485 unchanged source/policy files**,
+   **35 enumerated operator results** and **71 supplementary historical
+   metadata files** locked before APPLY, the original scanner-review prefix
+   plus two exact non-secret Docker-name additions, all 42 R1 criteria and
+   **40** stdlib host contracts (20 original, 12 receipt and eight history contracts). No AST serialization across Python
    versions and no silent re-hashing to accept changed source.
 2. The unchanged full production-image delivery gate: all **848/848** tests,
    **36/36** financial cases, deploy checks, image/static audit, current
@@ -148,21 +148,21 @@ DDL migration or a public cutover/image rollback. A selected real release must
 rehearse its exact starting image/schema, freeze, migration and post-write
 recovery behavior. Never discard new public writes by restoring an old snapshot.
 
-## Historical receipt correction
+## First receipt correction — previous inventory
 
 The first operator APPLY stopped at `S25-verification.json` before changing
 S31 source or running any tests. Its original manifest incorrectly pinned the
 agent's Prepared source template. The operator has a successful generated S25
 receipt; that file must remain exactly as recorded.
 
-The corrected complete installer retains all 592 protections as 556 exact
+The first receipt correction classified all 592 protections as 556 exact
 source/static-evidence bindings, 35 explicit operator-output bindings and one
 exact append-only scanner-review binding. It reads those actual JSON/CSV
 results before making any Git/source change, validates their step identity,
 and checks claimed S25/S30 Verified results against the known technical
 contracts. It never writes, converts or replaces a historical report.
 
-After the source patch it exclusively creates
+After its source patch it exclusively creates
 `evidence/S31-operator-receipts.json`, containing only the original SHA-256
 values, fixed path inventory, policy digest and pre-APPLY Git reference. This
 new S31 record is committed with the four existing S31 tracking files. An
@@ -177,6 +177,42 @@ S25 input, exact non-mutating capture, claimed-result conflicts, missing and
 malformed JSON/CSV/policy, exclusive/idempotent creation, symlinks and strict
 post-binding change rejection. The twenty original S31 methods, 848 application
 tests and 36 financial cases are unchanged. The agent did not run them.
+
+## Complete supplementary-history correction
+
+The first correction retained the 35 primary verifier outputs, but the next
+operator APPLY stopped at `S26-hash-fix.json`, still before source application.
+Supplementary preparation/fix/provenance documents also have operator-local
+history. The exact changed fields were not collected; the installer must not
+invent them, overwrite them, or claim an approval from a different draft.
+
+The current policy retains every original path as 485 published exact source/
+policy hashes, the unchanged 35-output inventory, 71 explicitly listed
+supplementary historical JSON/CSV documents, and the exact append-only scanner
+review. Code, migrations, tests, financial policy, dependency/runtime pins and
+operator tools remain in the source group. No source/test hash is taken from
+an operator-local historical manifest. The active hashes remain the published
+S31 source expectations, even if an old metadata record contains other hashes.
+
+A second exclusive S31 record, `evidence/S31-historical-evidence.json`, binds
+all 71 supplementary documents before any source/Git change. Both S31 binding
+records contain only exact original hashes, fixed inventory/policy digests and
+the pre-APPLY Git reference. Neither changes or promotes a historical status.
+The previous helper and twelve tests remain exact. Eight new supplied stdlib
+contracts cover local preparation stamps, complete inventories, exclusive/
+idempotent binding, changed/missing/malformed documents, policy/code-path
+rejection, symlinks, and the independence of current source hashes from old
+historical manifest values. All source mismatches are reported together.
+
+The existing Git-clean guard is retained: older history edits cannot be
+auto-committed. Only the four already generated S30 tracking changes may be
+committed automatically after their successful result is checked. Capture
+does not authorise a new uncommitted edit to historical records.
+
+The corrected complete bundle applies directly from the unchanged S30 branch;
+no older failed S31 ZIP must be applied first. This remains source-only and
+unexecuted by the agent. All previous history stays in the full secret scan
+and must match its captured bytes after APPLY and throughout verification.
 
 ## Human acceptance and first-office decision
 

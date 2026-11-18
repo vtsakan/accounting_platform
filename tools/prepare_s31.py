@@ -11,7 +11,8 @@ EVIDENCE = ['docs/implementation/evidence/S31-verification.json', 'docs/implemen
             'docs/implementation/evidence/S31-preserved-source.json', 'docs/implementation/finance_release_gate.md',
             'docs/implementation/r1_acceptance_matrix.json', 'docs/implementation/r1_review_el.md',
             'docs/implementation/r1_workload.json', 'docs/implementation/r1_cutover_el.md',
-            'docs/implementation/evidence/S31-operator-receipts.json', 'docs/implementation/evidence/S31-receipt-fix.json']
+            'docs/implementation/evidence/S31-operator-receipts.json', 'docs/implementation/evidence/S31-receipt-fix.json',
+            'docs/implementation/evidence/S31-historical-evidence.json', 'docs/implementation/evidence/S31-history-fix.json']
 
 
 def record_result(report):

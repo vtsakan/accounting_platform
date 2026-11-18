@@ -18,6 +18,7 @@ from r1_gate import BASE_BLOCKERS, digest_bytes, digest_object, matrix, pending_
 from s28_broker_gate import broker_gate
 from s31_rehearsal import rehearse
 from s31_receipts import BINDING
+from s31_evidence import BINDING as EVIDENCE_BINDING
 
 DOCS = ROOT / 'docs/implementation'
 
@@ -37,7 +38,12 @@ def host_contracts():
     count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
     require(result.returncode == 0 and count and int(count.group(1)) == 12,
             'Twelve operator-receipt contracts required:\n' + result.stderr[-3000:])
-    return 32
+    result = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT / 'tools'), '-p', 'test_s31_evidence.py'],
+                            cwd=ROOT, text=True, capture_output=True)
+    count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
+    require(result.returncode == 0 and count and int(count.group(1)) == 8,
+            'Eight supplementary-evidence contracts required:\n' + result.stderr[-3000:])
+    return 40
 
 
 def select_image(args):
@@ -134,6 +140,7 @@ def main():
                 'static_export_from_same_image_verified')},
             'retained_source_files_checked': retained, 'host_contracts_passed': contracts,
             'operator_receipt_binding_sha256': digest_bytes((ROOT / BINDING).read_bytes()),
+            'historical_evidence_binding_sha256': digest_bytes((ROOT / EVIDENCE_BINDING).read_bytes()),
             'r1_user_requirements': 33, 'r1_quality_requirements': 9, 'r1_acceptance_rows': len(rows),
             'matrix_sha256': digest_object(json.loads((DOCS / 'r1_acceptance_matrix.json').read_text())),
             'workload_sha256': digest_object(workload), 'rehearsal': rehearsal,

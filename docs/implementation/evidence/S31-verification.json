@@ -3,7 +3,7 @@
   "status": "Prepared",
   "technical_status": "Pending",
   "scope": "synthetic-isolated-finance-release-rehearsal",
-  "prepared_at": "2026-11-19T00:47:02+02:00",
+  "prepared_at": "2026-11-19T01:13:21+02:00",
   "source_commit": "git:4908871bcec78ff5c63dc333b08ec28199eb77b6",
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "release_decision": "Blocked",
@@ -20,7 +20,7 @@
   "r1_quality_requirements": 9,
   "r1_acceptance_rows": 42,
   "source_preservation_files": 592,
-  "host_contracts_supplied_not_run": 32,
+  "host_contracts_supplied_not_run": 40,
   "application_test_target_not_run": 848,
   "financial_case_target_not_run": 36,
   "full_requirement_acceptance": "Pending",
@@ -36,5 +36,7 @@
   "live_cutover_executed": false,
   "source_reference_note": "Corrected implementation reference; source-only APPLY records actual applied source and preserves operator outputs separately",
   "receipt_followup": "docs/implementation/evidence/S31-receipt-fix.json",
-  "operator_receipt_binding": "Created once from actual operator files during APPLY; never populated from agent templates"
+  "operator_receipt_binding": "Created once from actual operator files during APPLY; never populated from agent templates",
+  "history_followup": "docs/implementation/evidence/S31-history-fix.json",
+  "supplementary_history_binding": "Created once only during operator APPLY from actual existing historical evidence; no agent template substitution"
 }

@@ -3,7 +3,7 @@
   "status": "Prepared",
   "scope": "source-only complete historical-evidence portability correction",
   "prepared_at": "2026-11-19T01:13:21+02:00",
-  "source_commit": "Pending implementation commit",
+  "source_commit": "git:a68485266c205c21618f6c7995a92d72ed0cd9b3",
   "operator_observed_failure": {
     "file": "docs/implementation/evidence/S26-hash-fix.json",
     "message": "Διαφέρει διατηρούμενο αρχείο της βάσης S31: docs/implementation/evidence/S26-hash-fix.json",
@@ -39,5 +39,6 @@
   "S32_implementation_changes": false,
   "source_status": "Prepared",
   "release_decision": "Blocked",
-  "all_85_full_acceptances": "Pending"
+  "all_85_full_acceptances": "Pending",
+  "source_reference_note": "Complete historical-evidence correction implementation; operator APPLY records actual applied source and exclusively captures original local history"
 }

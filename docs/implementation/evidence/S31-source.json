@@ -2,7 +2,7 @@
   "step": "S31",
   "status": "Prepared",
   "scope": "source-only-R1-finance-release-gate",
-  "prepared_at": "2026-11-18T19:10:46+02:00",
+  "prepared_at": "2026-11-19T00:47:02+02:00",
   "source_commit": "git:25cf16122999585924c6de8a60f88771b5ba4b57",
   "reference_base_commit": "git:72705fc70b83a0994acfdfd0eb9ab7dc1fa3da4a",
   "previous_operator_receipt": "docs/implementation/evidence/S30-verification.json",
@@ -14,7 +14,7 @@
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "application_context_preserved": true,
   "effective_R1_acceptance_rows": 42,
-  "host_contracts_supplied": 20,
+  "host_contracts_supplied": 32,
   "operator_command": "python3 tools/verify_s31.py --record --host-dns",
   "operator_runtime_results": "Pending",
   "release_decision": "Blocked",
@@ -31,5 +31,7 @@
   "demo_VM_cloud_changed": false,
   "all_85_full_acceptances": "Pending",
   "next": "S31 technical and human gates; independent S32 source work when separately selected",
-  "source_reference_note": "Implementation commit; source-only APPLY records the actual applied operator source separately"
+  "source_reference_note": "Implementation commit; source-only APPLY records the actual applied operator source separately",
+  "receipt_followup": "docs/implementation/evidence/S31-receipt-fix.json",
+  "operator_receipt_binding": "Created once from actual operator files during APPLY; never populated from agent templates"
 }

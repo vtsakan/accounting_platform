@@ -1,5 +1,23 @@
 # Decision register
 
+## S31 historical operator-receipt correction — Prepared, 2026-11-19
+
+The original APPLY stopped before applying source at S25-verification.json.
+Its manifest had bound the agent Prepared template instead of retaining the
+operator successful result. Correct the distinction between immutable source
+and operator output; do not overwrite, promote or erase historical receipts.
+
+Only 35 explicitly enumerated verifier JSON/CSV outputs move to an exclusive
+pre-APPLY local SHA-256 binding. The old 556 source/static-evidence hashes and
+exact append-only scanner policy remain. Claimed S25/S30 Verified results are
+checked against known source/reconciliation/current-context contracts; other
+history retains its original status without a new acceptance claim. Runtime
+guards never create or rebind a missing/changed record. All 592 protections
+remain, along with 284 image inputs, 26 migrations, 848/36 and 20 old S31 host
+methods. Twelve new contracts are supplied, not run. Source-only complete
+retry from S30; no agent tests/Docker/migrations/native app. S31 Prepared,
+actual release Blocked, D05/G2/all full acceptances Pending; no S32 work.
+
 ## S31 selected — R1 technical rehearsal Prepared; release Blocked, 2026-11-18
 
 The actual S30 operator proof is 848/848, all 36 finance cases and real S28

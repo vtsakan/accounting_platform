@@ -41,9 +41,11 @@ as a newly observed clean build.
 
 The operator command performs these checks in order:
 
-1. Exact SHA-256 checks for **591 unchanged files**, the original scanner-review
-   file prefix plus two exact non-secret Docker-name additions, all 42 R1 criteria and
-   20 supplied stdlib host contracts. No AST serialization across Python
+1. Exact SHA-256 checks for **556 unchanged source/static-evidence files**,
+   **35 enumerated actual local operator results** locked before APPLY, the
+   original scanner-review prefix plus two exact non-secret Docker-name
+   additions, all 42 R1 criteria and **32** stdlib host contracts (20 retained
+   plus 12 receipt contracts). No AST serialization across Python
    versions and no silent re-hashing to accept changed source.
 2. The unchanged full production-image delivery gate: all **848/848** tests,
    **36/36** financial cases, deploy checks, image/static audit, current
@@ -145,6 +147,36 @@ not test the historical application image at schema20, a deliberately failing
 DDL migration or a public cutover/image rollback. A selected real release must
 rehearse its exact starting image/schema, freeze, migration and post-write
 recovery behavior. Never discard new public writes by restoring an old snapshot.
+
+## Historical receipt correction
+
+The first operator APPLY stopped at `S25-verification.json` before changing
+S31 source or running any tests. Its original manifest incorrectly pinned the
+agent's Prepared source template. The operator has a successful generated S25
+receipt; that file must remain exactly as recorded.
+
+The corrected complete installer retains all 592 protections as 556 exact
+source/static-evidence bindings, 35 explicit operator-output bindings and one
+exact append-only scanner-review binding. It reads those actual JSON/CSV
+results before making any Git/source change, validates their step identity,
+and checks claimed S25/S30 Verified results against the known technical
+contracts. It never writes, converts or replaces a historical report.
+
+After the source patch it exclusively creates
+`evidence/S31-operator-receipts.json`, containing only the original SHA-256
+values, fixed path inventory, policy digest and pre-APPLY Git reference. This
+new S31 record is committed with the four existing S31 tracking files. An
+already present binding is checked and left unchanged. Runtime guards require
+it and reject any modified receipt or policy; missing bindings are not created
+by the verifier. Existing Prepared/failed history is preserved with its actual
+status and is not promoted. All old evidence remains in the current secret
+scan and before/after preservation checks.
+
+The new twelve operator-run stdlib contracts cover successful versus Prepared
+S25 input, exact non-mutating capture, claimed-result conflicts, missing and
+malformed JSON/CSV/policy, exclusive/idempotent creation, symlinks and strict
+post-binding change rejection. The twenty original S31 methods, 848 application
+tests and 36 financial cases are unchanged. The agent did not run them.
 
 ## Human acceptance and first-office decision
 

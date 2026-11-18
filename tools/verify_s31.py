@@ -17,6 +17,7 @@ import operations_common as common
 from r1_gate import BASE_BLOCKERS, digest_bytes, digest_object, matrix, pending_review, preserved, profile, require, technical_valid
 from s28_broker_gate import broker_gate
 from s31_rehearsal import rehearse
+from s31_receipts import BINDING
 
 DOCS = ROOT / 'docs/implementation'
 
@@ -31,7 +32,12 @@ def host_contracts():
                             cwd=ROOT, text=True, capture_output=True)
     count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
     require(result.returncode == 0 and count and int(count.group(1)) == 20, 'Twenty S31 host contracts required:\n' + result.stderr[-3000:])
-    return 20
+    result = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT / 'tools'), '-p', 'test_s31_receipts.py'],
+                            cwd=ROOT, text=True, capture_output=True)
+    count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
+    require(result.returncode == 0 and count and int(count.group(1)) == 12,
+            'Twelve operator-receipt contracts required:\n' + result.stderr[-3000:])
+    return 32
 
 
 def select_image(args):
@@ -83,6 +89,7 @@ def main():
         require(not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip(), 'Commit source before S31 verification')
         source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
         retained = preserved(ROOT, DOCS / 'evidence/S31-preserved-source.json')
+        require(retained == 592, 'Every original S31 source/receipt binding must remain protected')
         rows = matrix(ROOT); workload = profile(json.loads((DOCS / 'r1_workload.json').read_text()))
         contracts = host_contracts(); historical = receipts()
         context = image.candidate_context()[1]
@@ -126,6 +133,7 @@ def main():
                 'container_uid', 'image_private_file_audit_passed', 'untracked_source_canary_excluded',
                 'static_export_from_same_image_verified')},
             'retained_source_files_checked': retained, 'host_contracts_passed': contracts,
+            'operator_receipt_binding_sha256': digest_bytes((ROOT / BINDING).read_bytes()),
             'r1_user_requirements': 33, 'r1_quality_requirements': 9, 'r1_acceptance_rows': len(rows),
             'matrix_sha256': digest_object(json.loads((DOCS / 'r1_acceptance_matrix.json').read_text())),
             'workload_sha256': digest_object(workload), 'rehearsal': rehearsal,

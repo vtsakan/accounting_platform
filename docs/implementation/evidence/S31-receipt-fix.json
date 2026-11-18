@@ -1,0 +1,39 @@
+{
+  "step": "S31",
+  "status": "Prepared",
+  "scope": "source-only correction for historical operator-receipt preservation",
+  "prepared_at": "2026-11-19T00:47:02+02:00",
+  "source_commit": "Pending implementation commit",
+  "operator_failure": {
+    "stage": "installer retained-file preflight",
+    "file": "docs/implementation/evidence/S25-verification.json",
+    "message": "Διαφέρει διατηρούμενο αρχείο της βάσης S31: docs/implementation/evidence/S25-verification.json",
+    "before_S31_source_application": true,
+    "before_tests_builds_Docker_migrations": true
+  },
+  "cause": "The original source manifest pinned the agent Prepared S25 receipt instead of preserving the operator-generated Verified result. Operator output JSON/CSV is not immutable source metadata.",
+  "corrected_policy": {
+    "immutable_source_files": 556,
+    "explicit_local_operator_outputs": 35,
+    "append_only_metadata_files": 1,
+    "total_original_bindings": 592,
+    "capture": "Read exact local historical bytes before any S31 action; never replace old results or change their status",
+    "binding_file": "docs/implementation/evidence/S31-operator-receipts.json",
+    "runtime": "Strict fixed path set, schema/provenance and exact SHA-256 checks; no missing-binding fallback or runtime rebind",
+    "claimed_verified_S25": "Validate known source/plan/review identities, 61 tests, 184 financial checks, PG pair and restore/rollback flags",
+    "claimed_verified_S30": "Validate 848/36, no failures/skips, original application context and broker/cleanup evidence"
+  },
+  "old_20_host_contracts_preserved": true,
+  "new_host_contracts_supplied_not_run": 12,
+  "host_contracts_target_not_run": 32,
+  "application_context_unchanged": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_input_files_unchanged": 284,
+  "original_migrations_unchanged": 26,
+  "application_suite_target_not_rerun": 848,
+  "financial_case_target_not_rerun": 36,
+  "agent_tests_builds_docker_migrations_native_app_run": false,
+  "operator_retry_required": "Apply corrected complete S31 bundle from the unchanged S30 branch, then python3 tools/verify_s31.py --record --host-dns",
+  "live_release_decision": "Blocked",
+  "all_85_full_acceptances": "Pending",
+  "S32_implementation_changes": false
+}

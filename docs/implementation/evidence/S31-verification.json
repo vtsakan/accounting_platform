@@ -3,7 +3,7 @@
   "status": "Prepared",
   "technical_status": "Pending",
   "scope": "synthetic-isolated-finance-release-rehearsal",
-  "prepared_at": "2026-11-18T19:10:46+02:00",
+  "prepared_at": "2026-11-19T00:47:02+02:00",
   "source_commit": "git:25cf16122999585924c6de8a60f88771b5ba4b57",
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "release_decision": "Blocked",
@@ -20,7 +20,7 @@
   "r1_quality_requirements": 9,
   "r1_acceptance_rows": 42,
   "source_preservation_files": 592,
-  "host_contracts_supplied_not_run": 20,
+  "host_contracts_supplied_not_run": 32,
   "application_test_target_not_run": 848,
   "financial_case_target_not_run": 36,
   "full_requirement_acceptance": "Pending",
@@ -34,5 +34,7 @@
   "human_accounts_or_mfa_changed": false,
   "real_client_data_imported": false,
   "live_cutover_executed": false,
-  "source_reference_note": "Implementation commit; source-only APPLY records the actual applied operator source separately"
+  "source_reference_note": "Implementation commit; source-only APPLY records the actual applied operator source separately",
+  "receipt_followup": "docs/implementation/evidence/S31-receipt-fix.json",
+  "operator_receipt_binding": "Created once from actual operator files during APPLY; never populated from agent templates"
 }

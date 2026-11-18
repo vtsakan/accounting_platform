@@ -56,7 +56,15 @@ def preserved(root, manifest):
         require(len(data) > boundary and digest_bytes(data[:boundary]) == row['original_sha256']
                 and digest_bytes(data[boundary:]) == row['suffix_sha256'] and digest_bytes(data) == row['after_sha256'],
                 'Historical scanner reviews or exact published additions changed')
-    return len(entries) + len(extensions)
+    policy = value.get('operator_receipts')
+    require(value.get('step') != 'S31' or isinstance(policy, dict), 'Published S31 operator-receipt policy required')
+    receipt_count = 0
+    if policy is not None:
+        from s31_receipts import validate_policy, verify
+        validate_policy(policy)
+        require(not set(policy.get('paths', ())) & set(entries), 'Receipt and immutable-source policies overlap')
+        receipt_count = verify(root, policy)
+    return len(entries) + len(extensions) + receipt_count
 
 
 def matrix(root):

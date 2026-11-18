@@ -10,7 +10,8 @@ DOCS = ROOT / 'docs/implementation'
 EVIDENCE = ['docs/implementation/evidence/S31-verification.json', 'docs/implementation/evidence/S31-source.json',
             'docs/implementation/evidence/S31-preserved-source.json', 'docs/implementation/finance_release_gate.md',
             'docs/implementation/r1_acceptance_matrix.json', 'docs/implementation/r1_review_el.md',
-            'docs/implementation/r1_workload.json', 'docs/implementation/r1_cutover_el.md']
+            'docs/implementation/r1_workload.json', 'docs/implementation/r1_cutover_el.md',
+            'docs/implementation/evidence/S31-operator-receipts.json', 'docs/implementation/evidence/S31-receipt-fix.json']
 
 
 def record_result(report):

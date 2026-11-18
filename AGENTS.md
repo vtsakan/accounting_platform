@@ -67,6 +67,28 @@ S17 policy approval is not R1 application acceptance. All 85 full acceptance
 statuses remain Pending. Source-only APPLY performs Git/files only. Stop S31;
 S32 independent source work requires separate selection and cannot unblock live use.
 
+### S31 operator follow-up — actual historical receipts, source only
+
+The operator APPLY stops before any S31 patch/test/Docker work because the
+manifest pins the agent Prepared S25-verification.json while the operator has
+the successful generated S25 result already reported in this conversation.
+Read evidence/S31-receipt-fix.json. Never replace the local receipt with the
+agent template or re-hash a changed financial source to make a guard pass.
+
+Classify only the 35 enumerated historical operator JSON/CSV outputs separately
+from 556 exact old source/static-evidence files and one exact append-only scan
+review. Capture their actual bytes before APPLY, validate receipt identity and
+claimed S25/S30 Verified results, then exclusively create an S31 hash-only
+binding. Keep every original byte/status; runtime verification must require
+that binding and reject changes without capturing or refreshing hashes.
+Preserve all 592 original protections, 284 image inputs, 26 migrations, old
+848/36, every old source assertion and all twenty original S31 host methods.
+Supply twelve additional stdlib operator contracts (32 total), unexecuted by
+the agent, and a corrected complete source-only ZIP for the unchanged S30
+branch. Reuse the same context-guarded S30 image. No agent tests/builds/Docker/
+migrations/native app/SSH/cloud/push. S31 stays Prepared; technical retry,
+D05/G2 and all full acceptances Pending; actual release Blocked. No S32 work.
+
 ## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at

@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S29 Verified — dashboards and financial reports**. Next: **S30 when selected**.
+Updated 2026-11-17. Current step: **S30 Prepared — PDF and CSV report exports**. Next: **Operator S30 verification; S31 follows**.
 
 
 
@@ -12,7 +12,14 @@ Updated 2026-11-17. Current step: **S29 Verified — dashboards and financial re
 
 
 
-## Current selected work — S29
+
+## Current selected work — S30
+
+<!-- S30-RESULT -->
+Prepared source-only S30: authenticated in-memory PDF/CSV period reports, dated statements and annual overviews from unchanged S29 selectors and complete unpaged querysets. Greek/euro fonts, typed exact money, CSV text protection, private/no-store downloads, live authority after rendering and S59 provenance extension supplied. 40 operator-run methods; 848/36 and retained real S28 broker gate are unobserved targets. No new migration. Agent tests/builds/Docker/migrations/native PDF/app verification unexecuted. PDF visual/browser/full acceptance, D05/G2 and VM rollout remain Pending.
+<!-- /S30-RESULT -->
+
+## Previous verified work — S29
 
 <!-- S29-RESULT -->
 Operator S29 production-image/PG17 gate Verified: retained suite/financial cases, scoped read-only reports, cash bridges, dated statements, annual cohorts/pagination and concurrent report snapshots passed; retained S28 real scheduler/Redis/ack-loss regression passed. Browser/full acceptance, D05/G2 and VM rollout remain Pending.

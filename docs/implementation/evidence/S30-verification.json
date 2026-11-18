@@ -3,7 +3,7 @@
   "status": "Prepared",
   "scope": "Authenticated immediate PDF/CSV period reports, client statements and annual overviews from exact S29 selectors and unpaged querysets",
   "prepared_at": "2026-11-17T19:57:50+02:00",
-  "source_commit": "git:cd5ebeaabe127277b9638de219ef5111415f9bb8",
+  "source_commit": "git:4181b6947ef2153ad3f217692f4b3f17cee7ccdf",
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "retained_operator_verified_suite": 808,
   "s30_test_methods_supplied": 40,
@@ -26,5 +26,6 @@
   "d05_real_migration_review": "Pending",
   "g2_release_acceptance": "Pending",
   "local_demo_or_vm_changed": false,
-  "human_accounts_or_mfa_changed": false
+  "human_accounts_or_mfa_changed": false,
+  "applied_by_operator": true
 }

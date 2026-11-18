@@ -3,7 +3,7 @@
   "status": "Prepared",
   "scope": "source-only correction for historical operator-receipt preservation",
   "prepared_at": "2026-11-19T00:47:02+02:00",
-  "source_commit": "Pending implementation commit",
+  "source_commit": "git:4908871bcec78ff5c63dc333b08ec28199eb77b6",
   "operator_failure": {
     "stage": "installer retained-file preflight",
     "file": "docs/implementation/evidence/S25-verification.json",
@@ -35,5 +35,6 @@
   "operator_retry_required": "Apply corrected complete S31 bundle from the unchanged S30 branch, then python3 tools/verify_s31.py --record --host-dns",
   "live_release_decision": "Blocked",
   "all_85_full_acceptances": "Pending",
-  "S32_implementation_changes": false
+  "S32_implementation_changes": false,
+  "source_reference_note": "Corrected implementation reference; source-only APPLY records actual applied source and preserves operator outputs separately"
 }

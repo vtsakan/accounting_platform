@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "step": "S31",
+  "status": "Blocked",
+  "live_cutover_executed": false,
+  "environment": null,
+  "office": null,
+  "release_window": null,
+  "freeze_owner": null,
+  "restore_owner": null,
+  "accountant_acceptance": "Pending",
+  "product_owner_acceptance": "Pending",
+  "g2_release_acceptance": "Pending",
+  "D05_real_mapping_reconciliation_or_new_office_scope": "Pending",
+  "D06_accepted_workload_and_targets": "Pending",
+  "D07_accepted_recovery_key_custody_and_retention": "Pending",
+  "current_real_backup_and_off_VM_restore": "Pending",
+  "Greek_browser_email_PDF_visual_and_HTTPS_MFA": "Pending",
+  "documents": "Empty media must be observed for R1; S38 required before documents",
+  "reason": "No real first-office environment/window, named application acceptance, actual dataset/recovery approvals or live cutover authorisation supplied",
+  "synthetic_rehearsal_is_cutover_approval": false
+}

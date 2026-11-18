@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "approval": "Pending",
+  "scope": "local-synthetic-only",
+  "proposed_on": "2026-11-18",
+  "model": "closed-loop-barrier-50-distinct-sessions-one-synthetic-accountant",
+  "synthetic_envelope": {
+    "sessions": 50,
+    "cycles_per_session": 3,
+    "clients": 200,
+    "charges": 200,
+    "ordinary_movements": 2000,
+    "window_days": 365,
+    "request_timeout_seconds": 45,
+    "web_workers": 2,
+    "web_memory_mib": 1024,
+    "database_memory_mib": 1024,
+    "web_cpus": 2,
+    "database_cpus": 2
+  },
+  "proposed_p95_seconds": {
+    "list": 2,
+    "detail": 2,
+    "annual_report": 10
+  },
+  "proposed_recovery": {
+    "rpo_seconds": 86400,
+    "rto_seconds": 28800
+  },
+  "proposed_monthly_availability_percent": 99.5,
+  "proposed_availability_excludes": "explicitly agreed maintenance",
+  "measurement": "150 attempts per operation, 450 total, plus three excluded warmups; nearest-rank p95; every error/timeout retained",
+  "dataset_notes": "200 synthetic additional clients and one charge per client; 2000 ordinary income movements through real services; complete finance cycle already present. Rolling 365-day period ends today; movement dates never precede approved synthetic account opening 2026-01-15.",
+  "outside_scope": [
+    "TLS and WAN latency",
+    "external-service completion",
+    "open-loop arrival load",
+    "50 distinct accountants",
+    "mixed office write traffic during benchmark",
+    "worker resource contention during benchmark",
+    "accepted production dataset/VM sizing"
+  ],
+  "actual_workload_and_budget_approval": "Pending D06",
+  "actual_recovery_key_custody_retention_and_owners": "Pending D07"
+}

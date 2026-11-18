@@ -1,0 +1,857 @@
+{
+  "schema": 1,
+  "baseline": "ACC-URS-001 v0.1 + CR-001",
+  "baseline_user_requirements": 32,
+  "effective_R1_user_requirements": 33,
+  "R1_quality_requirements": 9,
+  "acceptance_rows": 42,
+  "release_decision": "Blocked",
+  "candidate_evidence_scope": "Existing operator technical receipts and unexecuted S31 procedures; no automatic acceptance",
+  "requirements": [
+    {
+      "requirement_id": "UR-OFF-01",
+      "acceptance_test_id": "AT-OFF-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall associate each active accountant with exactly one office.",
+      "acceptance_check": "Accept several accountants in one office; reject a second simultaneous office membership for the same accountant.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συνδέστε δύο συνθετικούς λογιστές στο γραφείο Α. Επιχειρήστε δεύτερη ενεργή ένταξη του ίδιου χρήστη στο Β και επιβεβαιώστε απόρριψη χωρίς μεταφορά δεδομένων.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-02",
+      "acceptance_test_id": "AT-OFF-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The office owner shall be able to maintain the office identity and contact details.",
+      "acceptance_check": "Save and reload the office name, AFM and contacts; another office cannot read or change them.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ως υπεύθυνος αλλάξτε επωνυμία, ΑΦΜ και στοιχεία επικοινωνίας. Επαναφορτώστε. Από το γραφείο Β δοκιμάστε απευθείας ανάγνωση και POST στο Α.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-03",
+      "acceptance_test_id": "AT-OFF-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The office owner shall be able to invite, approve and deactivate accountants in that office.",
+      "acceptance_check": "An accepted invitation creates one membership; an already affiliated accountant is rejected; deactivation blocks the next authenticated request.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δοκιμάστε πρόσκληση, αποδοχή, έγκριση, ήδη ενταγμένο λογιστή και απενεργοποίηση. Η επόμενη προστατευμένη αίτηση της παλιάς συνεδρίας πρέπει να αποκλειστεί. Καμία πραγματική αποστολή email χωρίς χωριστή ρητή εντολή.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-04",
+      "acceptance_test_id": "AT-OFF-04",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall enforce the approved role and permission matrix for each office operation.",
+      "acceptance_check": "Run allowed and denied cases for owner and accountant; direct requests cannot bypass a hidden or disabled control.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Με υπεύθυνο και απλό λογιστή ελέγξτε κάθε δηλωμένη διαδρομή του office_boundary_matrix.json, μέσω οθόνης και απευθείας αιτήματος. Επιβεβαιώστε την αποδεκτή πολιτική ρόλων και τις διορθώσεις με πρόσφατο MFA.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-05",
+      "acceptance_test_id": "AT-OFF-05",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall restrict every office operation to the authenticated accountant's office.",
+      "acceptance_check": "Office B cannot list, open, export, edit or link Office A records, including through forms, admin screens and queued jobs.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Χρησιμοποιήστε δύο γραφεία και ξένα IDs σε λίστα, καρτέλα, POST, επιλογές φόρμας, admin, αναφορά, PDF/CSV και πραγματική εργασία worker. Καταγράψτε απορρίψεις χωρίς αποκάλυψη ξένων ονομάτων ή ποσών.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-06",
+      "acceptance_test_id": "AT-OFF-06",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to sign in, sign out and recover their own account access.",
+      "acceptance_check": "Anonymous access is rejected; logout invalidates the session; a recovery token is single use and expires under the configured policy.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ελέγξτε σύνδεση, αποσύνδεση και ανάκτηση με ληγμένο και ήδη χρησιμοποιημένο token. Δοκιμάστε παλιά συνεδρία μετά από αλλαγή κωδικού. Επιβεβαιώστε την πραγματική οδό email μόνο με εξουσιοδοτημένο δοκιμαστικό παραλήπτη και ρητή εντολή.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-OFF-07",
+      "acceptance_test_id": "AT-OFF-07",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall block accountant access when an active office profile is missing.",
+      "acceptance_check": "An authenticated user with no profile or an inactive office receives no office records and cannot create business records.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_offices.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δοκιμάστε ενεργό χρήστη χωρίς προφίλ, ανενεργό προφίλ και ανενεργό γραφείο. Ελέγξτε την επόμενη αίτηση και την αδυναμία δημιουργίας ή ανάγνωσης εγγραφών.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CRM-01",
+      "acceptance_test_id": "AT-CRM-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to maintain client and supplier identity and contact records.",
+      "acceptance_check": "Create, edit and reload name, AFM, tax office, address, phone and email; invalid required fields produce field errors.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_counterparties.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε και αλλάξτε συνθετικό πελάτη και προμηθευτή με ελληνικό όνομα, ΑΦΜ, ΔΟΥ, διεύθυνση, τηλέφωνο και email. Επαναφορτώστε και ελέγξτε τα ελληνικά σφάλματα υποχρεωτικών πεδίων.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CRM-02",
+      "acceptance_test_id": "AT-CRM-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to classify a record as an individual or business and assign client and supplier roles.",
+      "acceptance_check": "A business can hold both commercial roles; searches can filter each role without duplicating its identity record.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_counterparties.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε επιχείρηση με ταυτόχρονο ρόλο πελάτη και προμηθευτή, και φυσικό πρόσωπο. Αναζητήστε ανά ρόλο και ελέγξτε ότι διατηρείται μία ταυτότητα.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CRM-03",
+      "acceptance_test_id": "AT-CRM-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to find and open the consolidated record for a client or supplier.",
+      "acceptance_check": "Search by AFM or name and open contacts, agreements, payments and enabled linked modules from one record.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_counterparties.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Αναζητήστε με ΑΦΜ και ελληνικό όνομα. Ανοίξτε τη συγκεντρωτική καρτέλα και τις συμφωνίες, κινήσεις και διαθέσιμες ενότητες με το ίδιο πεδίο γραφείου.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CRM-06",
+      "acceptance_test_id": "AT-CRM-06",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall prevent duplicate nonempty AFMs within an office while allowing the same AFM in different offices.",
+      "acceptance_check": "Equivalent normalized AFMs in Office A are rejected; the same AFM in Office B creates an independent record.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_counterparties.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δοκιμάστε ισοδύναμες κανονικοποιημένες τιμές έγκυρου ΑΦΜ στο ίδιο γραφείο και την ίδια τιμή στο άλλο. Η πρώτη διπλοεγγραφή απορρίπτεται και η δεύτερη παραμένει ανεξάρτητη.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CRM-07",
+      "acceptance_test_id": "AT-CRM-07",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to archive an inactive client or supplier without losing its financial history.",
+      "acceptance_check": "Archived records remain in historical reports and cannot be selected for new work unless explicitly restored.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_counterparties.py",
+        "accounting/tests_boundary.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Αρχειοθετήστε συνθετικό συναλλασσόμενο με ιστορικό. Επιβεβαιώστε ότι οι παλιές αναφορές παραμένουν, νέες επιλογές τον αποκλείουν και η ρητή επαναφορά τον ενεργοποιεί.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-01",
+      "acceptance_test_id": "AT-CSH-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to maintain cash accounts with an opening balance and effective date.",
+      "acceptance_check": "Two offices can use the same account name; a used account can be deactivated but cannot be deleted with its history.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε ομώνυμα ταμεία σε δύο γραφεία, επιβεβαιώστε ποσό και ημερομηνία έναρξης με την προβλεπόμενη απόδειξη υπευθύνου. Χρησιμοποιημένο ταμείο απενεργοποιείται αλλά δεν διαγράφεται.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-02",
+      "acceptance_test_id": "AT-CSH-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to record a positive income or expense movement.",
+      "acceptance_check": "Save date, amount, account, description, remarks and optional category and counterparty; reject zero, negative and invalid amounts.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Καταχωρίστε συνθετική είσπραξη και πληρωμή με ημερομηνία, θετικό ποσό, ταμείο, περιγραφή, παρατηρήσεις και προαιρετικές συνδέσεις. Ελέγξτε απόρριψη μηδενικού, αρνητικού και μη έγκυρου ποσού.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-03",
+      "acceptance_test_id": "AT-CSH-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall calculate each cash account balance from its approved opening balance and posted movements.",
+      "acceptance_check": "Opening 100 and income 50 display 150 with no expenses; an empty account displays 100 rather than a blank value.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Με επιβεβαιωμένη έναρξη 100,00 και είσπραξη 50,00 ελέγξτε υπόλοιπο 150,00. Χωρίς κινήσεις εμφανίζεται 100,00. Μη ελεγμένη ημερομηνία έναρξης εμφανίζεται άγνωστη.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-04",
+      "acceptance_test_id": "AT-CSH-04",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to transfer money between two different cash accounts in their office.",
+      "acceptance_check": "A 1000 transfer reduces one balance and increases the other by 1000; both legs commit together and operating totals remain unchanged.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Μεταφέρετε 1.000,00 μεταξύ δύο ιδίων ταμείων. Συμφωνήστε και τα δύο σκέλη και μηδενική λειτουργική επίδραση. Αποτυχημένη και ταυτόχρονη επανάληψη δεν αφήνουν μισή ή διπλή μεταφορά.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-05",
+      "acceptance_test_id": "AT-CSH-05",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to maintain a hierarchy of movement categories.",
+      "acceptance_check": "Prevent self-parenting, category cycles and cross-office parents; changing a label preserves previously posted amounts.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε ιεραρχία κατηγοριών. Δοκιμάστε εαυτό ως γονέα, κύκλο και ξένο γραφείο. Αλλαγή ονόματος δεν αλλάζει ποσά παλιών κινήσεων.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-06",
+      "acceptance_test_id": "AT-CSH-06",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to filter and page through their office's cash movements.",
+      "acceptance_check": "Combine dates, direction, account, category, counterparty and description; invalid filters show a validation message instead of a server error.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συνδυάστε ημερομηνίες, κατεύθυνση, ταμείο, κατηγορία, συναλλασσόμενο και περιγραφή σε πολλές σελίδες. Συμφωνήστε τα σύνολα όλου του πεδίου και ελέγξτε μη έγκυρα και επαναλαμβανόμενα φίλτρα.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-CSH-07",
+      "acceptance_test_id": "AT-CSH-07",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to correct a posted movement through a linked reversal and replacement when needed.",
+      "acceptance_check": "Retain original amount, reason and actor; a corrected receipt updates allocations and a corrected transfer reverses both legs.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ως υπεύθυνος με κωδικό και πρόσφατο MFA διορθώστε είσπραξη με αντιστοιχίσεις και συνδεδεμένη επιστροφή. Ελέγξτε αποδεσμεύσεις, αρχική εγγραφή, αιτία και νέα ξεχωριστή αντιστοίχιση. Διορθώστε επίσης και τα δύο σκέλη μεταφοράς.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-AGR-01",
+      "acceptance_test_id": "AT-AGR-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to maintain receivable and payable agreements for an eligible counterparty.",
+      "acceptance_check": "Save direction, counterparty, description, positive agreed amount, start date and status; an ineligible role or office is rejected.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Καταχωρίστε εισπρακτέα και πληρωτέα συμφωνία με επιλέξιμο συναλλασσόμενο, θετικό ποσό, έναρξη και κατάσταση. Ακατάλληλος ρόλος και ξένο γραφείο απορρίπτονται.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-AGR-02",
+      "acceptance_test_id": "AT-AGR-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall allocate a settlement only to obligations for the same counterparty and office.",
+      "acceptance_check": "A receipt for Client B cannot settle Client A's agreement; a payable cannot be settled by a normal client receipt.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Επιχειρήστε αντιστοίχιση είσπραξης του Β σε χρέωση του Α, ξένο γραφείο και λάθος κατεύθυνση. Επιβεβαιώστε μηδενικές οικονομικές εγγραφές μετά από κάθε απόρριψη.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-AGR-03",
+      "acceptance_test_id": "AT-AGR-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to record partial settlement and inspect the remaining amount of an agreement.",
+      "acceptance_check": "An obligation of 100 with a receipt of 25 displays 75 outstanding; the receipt and its allocation are visible together.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε χρέωση 100,00 και ρητή αντιστοίχιση 25,00. Ελέγξτε εμφανές ανεξόφλητο 75,00 και σύνδεση της είσπραξης με την αντιστοίχιση.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-AGR-04",
+      "acceptance_test_id": "AT-AGR-04",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall keep agreement settlement status consistent with effective allocations.",
+      "acceptance_check": "Full settlement closes the agreement; reversing a settlement reopens an unpaid balance; cancelled status is never overwritten automatically.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Εξοφλήστε πλήρως μία χρέωση, αποδεσμεύστε ή αντιλογίστε την πληρωμή και ελέγξτε επανεμφάνιση χρέους. Ακυρωμένη συμφωνία δεν επανενεργοποιείται από υπολογισμό εξόφλησης.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-AGR-05",
+      "acceptance_test_id": "AT-AGR-05",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to change or cancel agreement terms with a retained history.",
+      "acceptance_check": "A change records actor, reason and effective date; cancellation stops future charges and preserves or explicitly reverses existing obligations.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Αλλάξτε μελλοντικά όρους και ακυρώστε συμφωνία με υπεύθυνο, αιτία και MFA. Ελέγξτε παλιές εκδόσεις, διατήρηση ήδη καταχωρισμένου χρέους και διακοπή μελλοντικής παραγωγής.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-BIL-01",
+      "acceptance_test_id": "AT-BIL-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The office owner shall be able to maintain a service price list.",
+      "acceptance_check": "A changed service price applies to new charges; previously posted charges retain their original description and amount.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_fees.py",
+        "accounting/tests_fee_generation.py",
+        "accounting/tests_settlements.py",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ο υπεύθυνος δημιουργεί τιμή υπηρεσίας και νεότερη έκδοση. Νέα ρητά επιβεβαιωμένη συμφωνία χρησιμοποιεί τη νέα τιμή, ενώ παλιά χρέωση διατηρεί ποσό και περιγραφή.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-BIL-02",
+      "acceptance_test_id": "AT-BIL-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to define a client's recurring monthly fee schedule.",
+      "acceptance_check": "Set amount, effective start and optional end date; a new rate applies only from its stated effective period.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_fees.py",
+        "accounting/tests_fee_generation.py",
+        "accounting/tests_settlements.py",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ορίστε ποσό, αρχή, προαιρετικό τέλος, ημέρα λήξης και ελεγμένο πρώτο μερικό μήνα. Μελλοντική μεταβολή εφαρμόζεται μόνο από τον δηλωμένο μήνα και εμφανίζεται στην προεπισκόπηση.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-BIL-03",
+      "acceptance_test_id": "AT-BIL-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall create one charge for each due recurring fee occurrence.",
+      "acceptance_check": "Running or retrying a period twice creates one charge; fee generation does not create cash income or duplicate an agreement obligation.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_fees.py",
+        "accounting/tests_fee_generation.py",
+        "accounting/tests_settlements.py",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Με συνθετική ρητή συναίνεση ενεργοποιήστε το απομονωμένο πρόγραμμα. Επαναλάβετε ίδιο μήνα, ταυτόχρονη εκτέλεση και απώλεια worker μετά το commit. Ελέγξτε μία κανονική χρέωση, μηδενική νέα ταμειακή κίνηση και ανάκληση συναίνεσης.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-BIL-04",
+      "acceptance_test_id": "AT-BIL-04",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised accountants shall be able to allocate receipts across charges and retain any unallocated client credit.",
+      "acceptance_check": "Allocate a 120 receipt to two charges totalling 100 and retain 20 credit; allocations cannot exceed the receipt or unpaid charge.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_fees.py",
+        "accounting/tests_fee_generation.py",
+        "accounting/tests_settlements.py",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Δημιουργήστε είσπραξη 120,00 και δύο χρεώσεις συνολικού ποσού 100,00. Αντιστοιχίστε ρητά και ελέγξτε πίστωση 20,00. Ταυτόχρονη υπεραντιστοίχιση ή λάθος συναλλασσόμενος απορρίπτονται.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-REP-01",
+      "acceptance_test_id": "AT-REP-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to inspect an office dashboard with cash balances and unpaid client obligations.",
+      "acceptance_check": "Reconcile the displayed totals to detail records; enabled task counters are added in R2 and reflect the same filtered office scope.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_reports.py",
+        "accounting/tests_exports.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συμφωνήστε την επισκόπηση με όλα τα επιβεβαιωμένα ταμεία και τις πραγματικές ανεξόφλητες χρεώσεις. Άγνωστα αρχικά υπόλοιπα και αδιάθετη πίστωση μένουν διακριτά. Μετρητές εργασιών R2 δεν αποτελούν προϋπόθεση R1.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-REP-02",
+      "acceptance_test_id": "AT-REP-02",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to produce a financial report for a chosen period and supported filters.",
+      "acceptance_check": "Reconcile income, expenses and net to posted cash movements; exclude transfers and label outstanding obligations with a separate as-of date.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_reports.py",
+        "accounting/tests_exports.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συμφωνήστε έσοδα, έξοδα και καθαρή ροή για συνδυασμένα φίλτρα με τις αναλυτικές κινήσεις. Μεταφορές δεν είναι λειτουργικό αποτέλεσμα. Ελέγξτε χωριστή ημερομηνία χρεών και πλήρη συμφωνία ταμείων.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-REP-03",
+      "acceptance_test_id": "AT-REP-03",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Accountants shall be able to inspect a twelve-month client fees and settlement overview.",
+      "acceptance_check": "Distinguish charges, receipts and remaining obligations per month; unallocated credit is separate and agrees with the client's statement.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_reports.py",
+        "accounting/tests_exports.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συμφωνήστε τους 12 μήνες, διαφορετικές ημερομηνίες χρέωσης, είσπραξης και αντιστοίχισης, την πίστωση και τις εκτός έτους εγγραφές με τη συνολική καρτέλα.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-REP-04",
+      "acceptance_test_id": "AT-REP-04",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authorised users shall be able to export permitted reports and client statements as PDF and structured data.",
+      "acceptance_check": "PDF and CSV totals match the displayed scope and dates; R3 forecast exports include estimate labels, source dates and rule version.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_reports.py",
+        "accounting/tests_exports.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Κατεβάστε PDF και CSV από περίοδο, καρτέλα και ετήσια εικόνα με πολλά φύλλα αναλυτικών γραμμών. Συμφωνήστε φίλτρα, ημερομηνίες και σύνολα, ελληνικά και ευρώ, μηδενικά ΑΦΜ και προστασία τύπων CSV. Ελέγξτε ανάκληση μέλους πριν τη λήψη. Οι εκτιμήσεις R3 παραμένουν εκτός R1.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "UR-LOC-01",
+      "acceptance_test_id": "AT-LOC-01",
+      "type": "User",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "The system shall present all product-authored user-facing content in Greek across the staff application and client portal, including authentication, navigation, forms, validation, help, errors, notifications, user-visible email and generated report headings.",
+      "acceptance_check": "AT-LOC-01: exercise implemented journeys in Greek, including success, empty, denied, invalid and failed states; an English browser preference must not switch product copy to English. Inspect Greek email subjects/bodies and human-facing PDF/export headings at each release.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_authentication.py",
+        "accounting/tests_exports.py",
+        "core/tests/test_s04.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Με γλώσσα browser English ελέγξτε όλες τις υλοποιημένες διαδρομές σε 375/768/1440 px: πλοήγηση, ετικέτες, προσβασιμότητα, κενά, μη έγκυρα και απαγορευμένα/ληγμένα/αποτυχημένα αποτελέσματα, auth/admin, πρότυπα email και πραγματικά PDF/CSV. Κρατήστε ιδιωτικές παρατηρήσεις και οπτικά τεκμήρια. Η πύλη R2 ελέγχεται όταν υλοποιηθεί.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-01",
+      "acceptance_test_id": "QT-01",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Office isolation. The software shall validate office ownership for every business record reference and file operation.",
+      "acceptance_check": "Automated two-office tests cover list, detail, mutation, dropdowns, exports, admin and workers; every cross-office case is denied before data is returned. Verification: Test.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_boundary.py",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Εκτελέστε όλο το ενημερωμένο πλέγμα δύο γραφείων και επιθεωρήστε τα πραγματικά αποτελέσματα για οθόνες, φόρμες, admin, exports και worker. Για αρχεία η επέκταση S38 παραμένει χωριστή.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-02",
+      "acceptance_test_id": "QT-02",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Authentication and secrets. The software shall protect account authentication and service secrets under the approved security configuration.",
+      "acceptance_check": "Require MFA for owners and platform administrators; use HTTPS, masked secrets and key-separated credential encryption; automated scans find no committed secrets or secret-bearing logs. Verification: Test and inspection.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_authentication.py",
+        "tools/scan_secrets.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Στο επιλεγμένο περιβάλλον ελέγξτε δημόσιο HTTPS/CSRF, σύνδεση υπευθύνου και διαχειριστή με MFA, έλλειψη/λήξη πρόσφατου MFA, ανάκτηση και αλλαγή κωδικού. Επιθεωρήστε τρέχον scan και ασφαλή logs. Συνθετική loopback HTTP μέτρηση δεν αποδεικνύει TLS.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-03",
+      "acceptance_test_id": "QT-03",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Financial integrity. The software shall preserve exact monetary values and atomic financial operations under concurrent requests.",
+      "acceptance_check": "Use fixed decimal amounts; concurrent allocation cannot over-settle a charge, and a failed transfer leaves neither leg; financial rounding follows the approved policy. Verification: Test.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/regression_cases.json",
+        "accounting/tests_finance_posting.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_corrections.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ελέγξτε τις 36 οικονομικές περιπτώσεις, πραγματικά PostgreSQL races αντιστοιχίσεων/μεταφορών/διορθώσεων, ατομική αποτυχία και την αποδεκτή πολιτική D08. Επιθεωρήστε τον πλήρη συνθετικό κύκλο και τα ακριβή δεκαδικά σύνολα.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-04",
+      "acceptance_test_id": "QT-04",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Audit history. The software shall retain an attributable audit history for business changes and protected retrievals.",
+      "acceptance_check": "Record office, actor, time, operation, reference and approved before/after fields; posted financial originals cannot be edited or deleted through ordinary interfaces and secrets are excluded. Verification: Test and inspection.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "accounting/tests_finance_posting.py",
+        "accounting/tests_corrections.py",
+        "accounting/tests_staff.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Συνδέστε κάθε οικονομική αλλαγή και προστατευμένη ενέργεια με γραφείο, actor, χρόνο, αιτία και αναφορά. Επιβεβαιώστε αμετάβλητα αρχικά, απορρίψεις UPDATE/DELETE και ότι κανένα μυστικό δεν εμφανίζεται σε audit ή logs.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-05",
+      "acceptance_test_id": "QT-05",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Response time. The software shall meet the proposed response targets under the workload defined in section 5.",
+      "acceptance_check": "At 50 concurrent sessions, list and detail p95 is at most 2 seconds and a one-year financial report p95 is at most 10 seconds, excluding external-service completion. Verification: Performance test.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "tools/s31_runtime_probe.py",
+        "docs/implementation/r1_workload.json",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Εγκρίνετε πρώτα πραγματικό όγκο πελατών/κινήσεων, μείγμα και πόρους. Μετρήστε 50 συνεδρίες, p95 λίστας/καρτέλας ≤2 s και ετήσιας αναφοράς ≤10 s, μαζί με ουρές, σφάλματα και πόρους. Η τοπική συνθετική πρόταση και το αρχικό VM δεν αρκούν για αποδοχή δυναμικότητας.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-07",
+      "acceptance_test_id": "QT-07",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Greek locale. The interface shall support Greek business text and the agreed local date and money conventions.",
+      "acceptance_check": "Round-trip Greek names, AFMs and euro values; display dates as day/month/year and deadlines in Europe/Athens, with consistent daylight-saving behaviour. Verification: Test and demonstration.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "core/tests/test_s04.py",
+        "accounting/tests_exports.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ελέγξτε εισαγωγή/επαναφόρτωση ελληνικών ονομάτων, ΑΦΜ με αρχικά μηδενικά, ακριβή ευρώ, ημέρα/μήνα/έτος και αλλαγή θερινής ώρας Europe/Athens. Επιθεωρήστε πραγματική οθόνη και exports.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-09",
+      "acceptance_test_id": "QT-09",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Backup and recovery. The service shall recover office data within the proposed recovery objectives.",
+      "acceptance_check": "Demonstrate an encrypted restore with RPO at most 24 hours and RTO at most 8 hours before live migration; include documents and required encryption-key recovery material. Verification: Recovery demonstration.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "tools/s31_rehearsal.py",
+        "docs/implementation/evidence/S10-verification.json",
+        "docs/implementation/evidence/S25-verification.json",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Εγκρίνετε το πραγματικό dataset και RPO≤24 h/RTO≤8 h. Επαναφέρετε κρυπτογραφημένο αντίγραφο εκτός VM με ανεξάρτητο κλειδί και το απαιτούμενο signing/MFA υλικό. Συγκρίνετε όλες τις εγγραφές και πραγματική πρόσβαση. Πριν από έγγραφα απαιτείται S38 και δοκιμή αυτών· στο R1 το media πρέπει να είναι ελεγμένα κενό.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-12",
+      "acceptance_test_id": "QT-12",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Operational readiness. The service shall provide the approved availability and failure-observation arrangements.",
+      "acceptance_check": "Target 99.5 percent monthly availability outside agreed maintenance; record health and queue failures without secrets; the release runbook identifies an incident owner and restore procedure. Verification: Inspection and operational test.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "docs/implementation/evidence/S10-verification.json",
+        "tools/s28_broker_gate.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Ορίστε ονομαστικά υπεύθυνο συμβάντων, επαναφοράς και φύλακα κλειδιού. Εγκρίνετε διαθεσιμότητα 99,5%/μήνα και παράθυρα συντήρησης. Ελέγξτε πραγματική ειδοποίηση βλάβης, βάση, ουρά, ηλικία backup και διαδικασία escalation χωρίς μυστικά.",
+      "human_review_required": true,
+      "source_step": "S31"
+    },
+    {
+      "requirement_id": "QR-14",
+      "acceptance_test_id": "QT-14",
+      "type": "Quality",
+      "priority": "Must",
+      "release": "R1",
+      "statement": "Reproducible delivery. The application shall be buildable and migratable from the controlled source and dependency definitions.",
+      "acceptance_check": "A clean environment installs only declared app dependencies, passes migrations and regression checks on PostgreSQL, and contains no local-machine wheel references or bundled sessions. Verification: Build and migration test.",
+      "acceptance_status": "Pending",
+      "candidate_evidence": [
+        "tools/s31_rehearsal.py",
+        "tools/verify_delivery.py",
+        "tools/image.py",
+        "docs/implementation/evidence/S30-verification.json"
+      ],
+      "candidate_evidence_is_full_acceptance": false,
+      "manual_procedure_el": "Επιθεωρήστε τα ακριβή Git/image/context/lock/pin bindings, περιορισμένο ρόλο PostgreSQL και μετάβαση 20→26 με παλιά δεδομένα. Ελέγξτε πλήρη σουίτα, scan, καθαρισμό και επαναφορά. Ξεχωρίστε αμετάβλητη ήδη χτισμένη εικόνα από νέα εκτέλεση build και πραγματικό rollout.",
+      "human_review_required": true,
+      "source_step": "S31"
+    }
+  ]
+}

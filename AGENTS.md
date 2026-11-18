@@ -29,7 +29,45 @@ explicit preference supersedes the historical agent-run verification workflow.
 Preserve existing accounts, MFA, volumes, all prior migrations and historical
 receipts. The S20 apply helper performs Git/source operations only.
 
-## Selected S30 — PDF/CSV exports, source only
+## Selected S31 — finance release gate, source only
+
+The user selected S31 after the actual S30 operator receipt at
+2026-11-18T18:29:21+02:00: 848/848, all 36 financial cases, 40 export
+methods, 381 retained files, four host contracts and the real S28 fee-worker
+commit-before-ack gate. Preserve that exact receipt and all previous evidence.
+Read finance_release_gate.md and the S31 prompt. The effective R1 baseline is
+33 Must user requirements (32 original plus UR-LOC-01) and nine QR: 42 rows.
+
+Only operator tools, acceptance/recovery/load procedures, docs and tracking
+change. Preserve all 284 S30 application inputs, all 26 migrations, every old
+test/assertion, financial service/form/selector, locks, runtime/image pins,
+historical receipts, accounts/MFA, demo/VM/cloud/key configuration. Reuse the
+exact S30 immutable image only through its unchanged context guard. No agent
+tests/builds/Docker/migrations/native application/PDF/browser/SSH/cloud/push.
+Static syntax/AST/source/hash and secret text scans are permitted. The only
+append to existing security metadata is two precisely bound non-secret Docker
+container-name reviews from the actual S30 receipt; preserve every old review
+byte and the receipt itself. Read evidence/S31-static-secret-review.json.
+
+Supply an operator-only full 848/36 and unchanged real S28 broker regression,
+a real synthetic billing/collection/refund/correction/report/export cycle,
+50 distinct HTTP sessions and a 365-day financial report, restricted-role
+20→26 clone migration with old-column/row checks, encrypted baseline/current
+PG17.11 recovery and MFA key proof, all-table reconciliation and owned cleanup.
+The synthetic workload and proposed p95/RPO/RTO are unapproved candidates;
+measure and report failures, never reduce targets or infer VM capacity.
+
+S31 source stays Prepared and actual release Blocked even after technical
+Verified. Accountant/product-owner full application review, D05 real ownership/
+opening/exception reconciliation or approved new-office scope, accepted D06/
+D07 workload/recovery/owners/retention, Greek visual/browser/email/HTTPS/MFA,
+authorised real first-office/window/backup/cutover and G2 remain Pending.
+No live deploy command is authorised or supplied for an unknown target.
+S17 policy approval is not R1 application acceptance. All 85 full acceptance
+statuses remain Pending. Source-only APPLY performs Git/files only. Stop S31;
+S32 independent source work requires separate selection and cannot unblock live use.
+
+## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at
 2026-11-17T21:24:53+02:00: 808/808, all 36 financial cases, 360 retained

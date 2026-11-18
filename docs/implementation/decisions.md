@@ -1,5 +1,43 @@
 # Decision register
 
+## S31 selected — R1 technical rehearsal Prepared; release Blocked, 2026-11-18
+
+The actual S30 operator proof is 848/848, all 36 finance cases and real S28
+scheduler/worker/Redis/commit-before-ack recovery. Its exact receipt and all
+previous files are retained. S31 adds operator tools and acceptance records
+without changing the 284-input application context or 26 migration files.
+
+The effective R1 gate includes 33 UR (32 baseline plus Greek frontend) and
+nine QR. Forty-two Pending rows carry original criteria, candidate bindings
+and Greek manual procedures. No acceptance or named reviewer is invented.
+
+A fixed explicitly unapproved synthetic profile measures 50 distinct sessions,
+150 HTTP attempts for each of list/detail/rolling-year financial report,
+errors and nearest-rank p95. Two sync workers and capped local containers are
+measurement conditions, not an approved VM size, workload or service target.
+
+The only additional existing file change appends two exact scanner reviews
+for public random Docker container names in the actual S30 receipt. Its old
+review bytes and the receipt are preserved; see S31-static-secret-review.json.
+
+The operator pathway uses generated isolated resources, a restricted role,
+genuine 20→26 clone migrations and exact old-column/row preservation. It
+exercises real services/authenticated views and actual PDF/CSV, then age-
+encrypted baseline/current recovery from decrypted bytes to a fresh local
+PG17.11 cluster, including signing/MFA material and wrong-key denial. The
+age private identity remains outside Git/containers. Candidate rejection
+after forward migration rehearses a pre-public-exposure fallback; it does
+not demonstrate old-image/public rollback or a failed-DDL release path.
+
+Technical Verified is distinct from S31 completion: source remains Prepared,
+real release Blocked. S17 approves financial policy only; D05, D06/D07 real
+dataset/targets/owners, accountant/product-owner application acceptance,
+Greek visual/HTTPS, authorised first-office cutover and G2 remain Pending.
+Document recovery requires S38; the R1 rehearsal enforces empty media.
+All 85 full acceptances remain Pending. No agent tests/builds/Docker/
+migrations/native app/PDF/browser/SSH/cloud/push. Stop S31; independent S32
+source work can be separately selected while live use remains blocked.
+
 ## S30 selected — authenticated PDF/CSV, source Prepared, 2026-11-17
 
 The user selects S30 after the actual S29 Verified receipt: 808/808, all 36

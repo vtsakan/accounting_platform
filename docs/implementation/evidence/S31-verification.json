@@ -4,7 +4,7 @@
   "technical_status": "Pending",
   "scope": "synthetic-isolated-finance-release-rehearsal",
   "prepared_at": "2026-11-18T19:10:46+02:00",
-  "source_commit": "Pending implementation commit",
+  "source_commit": "git:25cf16122999585924c6de8a60f88771b5ba4b57",
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "release_decision": "Blocked",
   "release_blockers": [
@@ -33,5 +33,6 @@
   "local_demo_or_vm_changed": false,
   "human_accounts_or_mfa_changed": false,
   "real_client_data_imported": false,
-  "live_cutover_executed": false
+  "live_cutover_executed": false,
+  "source_reference_note": "Implementation commit; source-only APPLY records the actual applied operator source separately"
 }

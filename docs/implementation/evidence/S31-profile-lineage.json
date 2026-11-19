@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "step": "S31",
+  "scope": "original-operator-S31-failure-retained-before-explicit-profile-retry",
+  "archive_path": "docs/implementation/evidence/S31-initial-failure.json",
+  "archive_sha256": "sha256:f73324dc566f5441e4985f27723b8525de41f881ddcea7cfb1392ce697f964cc",
+  "initial_canonical_sha256": "sha256:3687f5aba1d8714b1819c1451066dc889dc139823afbff683e2398737f11ed47",
+  "original_report_source": "git:323903f39d4cab952008b3c2fdd88c3f31cf78ab",
+  "captured_from_git": "git:5026ed07275ac4e68b0412cbede11344780c838b"
+}

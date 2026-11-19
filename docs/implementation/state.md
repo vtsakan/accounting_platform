@@ -20,6 +20,23 @@ Updated 2026-11-19. Current step: **S31 Prepared — finance release gate; relea
 S31 source Prepared; actual release Blocked. Technical rehearsal: Failed. Effective R1 matrix includes 33 Must user requirements (32 baseline plus Greek frontend) and nine quality requirements. Operator-only retained 848/36 and real S28 broker gate, current synthetic billing/collection/correction/reporting cycle, 50 distinct HTTP sessions and encrypted PG17 baseline20/current26 recovery supplied. Human accountant/product-owner application acceptance, agreed workload/recovery/operational owners, D05 real dataset mapping/reconciliation, Greek visual/HTTPS review, authorised first-office cutover and G2 remain Pending. All 85 full acceptance statuses remain Pending. No application/image/migration/dependency/demo/VM/account/MFA change. S32 independent source work requires separate selection; live use remains blocked.
 <!-- /S31-RESULT -->
 
+<!-- S31-WORKERS4-PROFILE -->
+### S31 explicit workers4 retry Prepared
+
+Operator 2/4/2 comparison Observed on 2026-11-19 at 11:36:54 Europe/Athens:
+four-worker p95 1.673/1.712/1.872 s; both two-worker controls failed list/detail.
+All 1,350 HTTP requests passed; 39 business tables unchanged, recovery/cleanup
+passed. Four-worker CPU throttling was observed; real VM capacity remains Pending.
+
+Separate workers4 profile Prepared with original caps, dataset and 2/2/10 s
+targets. Legacy two-worker file remains exact. The initial formal Failed report
+is retained byte for byte in S31-initial-failure.json with an exclusive binding.
+Full retry Pending: `python3 tools/verify_s31.py --record --host-dns --profile workers4`.
+This must repeat 848/36, real Redis, migration/cycle/load/encrypted recovery and
+48 host contracts. No agent native execution; source Prepared, release Blocked,
+all 85 full acceptances Pending. See [procedure](s31_workers4_el.md).
+<!-- /S31-WORKERS4-PROFILE -->
+
 <!-- S31-WORKER-COMPARISON -->
 ### S31 performance follow-up
 

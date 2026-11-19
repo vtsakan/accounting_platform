@@ -1,0 +1,14 @@
+{
+  "step": "S31A",
+  "status": "Prepared",
+  "scope": "existing-synthetic-preview-and-GitHub-update",
+  "source_commit": "git:4b38ebbf16c6710fd7ca45ad5fbdd00f6f1d9dad",
+  "prepared_source_commit": "git:9f55145c700ba35895ecdf41adff2ba94394a332",
+  "preflight_sha256": "sha256:c512d1e5c50a3bef9e221c7b2b47438e75a30edd682797d0d65b1c57cb612589",
+  "operator_s31_report_sha256": "sha256:6efa8da5313cd4c8aa46dfd6ce96b110dabe0d81559de199e6ccfea478b548e3",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "original_protections_checked": 592,
+  "vm_or_github_changed": false,
+  "operator_deployment": "Pending",
+  "real_client_release": "Blocked"
+}

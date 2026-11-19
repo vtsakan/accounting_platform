@@ -1,5 +1,15 @@
 # S31 — R1 finance release gate
 
+Current operator checkpoint: **workers4 technical Verified** at
+2026-11-19T12:29:37+02:00. Full 848/36, 48 host contracts, real broker,
+cycle/migration and encrypted restore passed; p95 1.627/1.608/1.767 s met the
+unchanged targets. Recovery matched 51 tables/7,593 rows in 7.561 s. See
+[the actual completion record](evidence/S31-workers4-operator-completion.json).
+Source remains **Prepared**, real release **Blocked**, all 85 full acceptances
+**Pending**. Named R1/D05/D06/D07/G2 and real first-office decisions remain.
+Earlier preparation/failure checkpoints below are historical; no new technical
+rerun is needed without a relevant change.
+
 Source status **Prepared**. Actual release decision **Blocked**. The supplied
 2026-11-19 operator S31 run passed 848/848, all 36 financial cases, 40 host
 contracts, the real S28 broker gate, the complete financial cycle and encrypted

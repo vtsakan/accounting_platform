@@ -1,5 +1,108 @@
 # Decision register
 
+## S31A receipt ordering correction — Prepared, 2026-11-19
+
+The actual supplied APPLY log passes package checksums, then stops at
+image.committed_context's global tracked-clean guard. That call preceded
+the installer's existing commit of the four whitelisted verify_s31 --record
+files. No source patch, image build/publication, GitHub push or VM action
+was reached. Keep all operator files; do not replace the successful S31 report,
+stash/reset unrelated work or relax the image guard.
+
+Audit candidate application inputs before any commit, against the same exact
+S31 context/284 paths. Require the same receipt, 592 retained protections,
+four actual history/lineage bindings and only the four known pending records.
+Commit only those validated records, then require unchanged clean committed
+context equal to the earlier input audit. The release checkpoint likewise
+uses the input audit for its pre-commit pass and the original clean guard
+afterwards. Candidate auditing never returns a release commit or image identity.
+Preserve all VM/clone/restore/runtime code and the 20 original S31A test methods.
+Two additional real-Git source-only contracts exercise dirty report recording
+and denied dirty application source; supplied, not agent-executed. A complete
+corrected ZIP retries from the untouched operator source; no runtime rerun or
+new full image build is required. Source Prepared; actual preview/GitHub
+execution and all human R1/D05/D06/D07/G2/full acceptance remain Pending.
+
+## S31A existing preview and GitHub update — selected, Prepared, 2026-11-19
+
+The user explicitly requests the latest VM version and GitHub update. This
+selects the already inventoried synthetic preview, not a new real-client office.
+GitHub main was inspected through the authenticated connector: its head is
+8776216da1bb39cf4d24c00f31b216e9fd856ccd, the actual S24A VM completion;
+the actual operator S31 source 39a088ab36970ebe839624b28521adaf9f72d9fb is
+not published there. The agent environment lacks gcloud, Docker, operator
+private configs and the four real operator-only history/lineage files. The
+complete laptop-operated package therefore publishes the actual operator
+history and performs the authorised VM work. No direct VM/push outcome is claimed.
+
+Keep the exact S31-proved S30 image/context, all 284 image inputs, 26 migrations,
+592 original protections, actual S31 receipt and initial failure. Deliver the
+previously undelivered operator-success documentation cumulatively from f652d74,
+excluding operator-generated current receipt/state/CSV files from the patch.
+Capture/commit only the four known dirty verify_s31 records; never overwrite
+an operator receipt/binding or push agent placeholders. Publication uses a fresh
+main fetch/ancestry check, current source/history secret scan and ordinary branch/
+main fast-forward pushes. Conflicting remote work or branch protection stops it.
+
+The existing e2-medium remains unchanged. Stage/pull/static work precedes the
+maintenance window. Freeze actual current rows after stopping public writers,
+take an encrypted GCS backup, create a distinct clone and migrate only it
+20→26 as the restricted role. Compare all retained columns/people/passwords/
+MFA/sessions/finance; new tables remain empty and existing MFA seeds decrypt
+without writes. Keep the DB container/start time and runtime material. Require
+both exact off-VM encrypted source/clone restores with the existing independently
+recovered age key before activation. Pause/resume proven S10 timers; preserve
+their original code_commit, owners, recipient and retention.
+
+A separate override supplies four web workers (1 GiB/2 CPU cap) plus the
+existing bounded Redis/worker/singleton scheduler profile. The old DB's 768-MiB
+cap remains unchanged; do not infer S31 synthetic 1-GiB DB performance or D06
+capacity on this 4-GB shared-core VM. Require free-memory/disk preflight,
+private ports, actual process/service counts, secure settings, queue health,
+public HTTPS/Greek/CSRF and exact-image static checks. No load dataset, financial
+posting, bootstrap/reset, resize, secret rotation or volume deletion is supplied.
+Empty media is required until document recovery is implemented.
+
+Before activation the candidate has restart:no and a boot hold. A failure can
+return to the untouched original only before jobs/public writes may begin.
+After that irreversible marker, retain the current clone/backup binding and
+resume that release; never automatically rewind data. Keep journals, backups,
+original and failed clones. Record only observed preview success; browser/MFA
+login, R1/D05/D06/D07/G2 and all 85 full acceptances remain Pending. Twenty new
+stdlib guard contracts are supplied for the operator, not run by the agent.
+See s31a_preview_upgrade_el.md. No S32 work is selected.
+
+## S31 full workers4 operator gate — technical Verified, 2026-11-19
+
+The complete supplied operator result at 12:29:37 Europe/Athens verifies the
+explicit workers4 synthetic profile on source
+git:39a088ab36970ebe839624b28521adaf9f72d9fb. All 848 application tests,
+36 financial cases, 48 host contracts, 592 original protections and the real
+S28 broker/commit-before-ack gate passed. The complete finance cycle, restricted
+clone migration and encrypted baseline/current recovery passed. The preserved
+S30 image/context and all 26 migrations remain unchanged.
+
+All 450 HTTP requests succeeded at 50 sessions; p95 list/detail/year was
+1.627/1.608/1.767 s against unchanged 2/2/10 s. Four actual sync workers and
+two-CPU/1-GiB caps were checked before/after load and recovery. Restore matched
+51 tables/7,593 rows in 7.561 s, including password/MFA/signing-key and real HTTP
+proof. Initial Failed evidence, old history, owned resources and plaintext
+cleanup were retained. See evidence/S31-workers4-operator-completion.json and
+the exact current S31-verification.json. The supplied archive/binding hashes
+are recorded without inventing their operator-only provenance contents.
+
+No new implementation or native rerun is required by this successful result.
+The agent only parsed/validated supplied JSON and recorded tracking. This
+completion record was not separately applied to the operator's source; a future
+selected-step delivery must include these documentation changes cumulatively
+from the published profile source, while preserving actual operator tracking
+and lineage bytes. Do not assume agent-only documentation is already installed.
+
+Technical Verified does not accept the real dataset, capacity/RPO/RTO or release.
+Source stays Prepared, actual release Blocked; all 85 full acceptances and named
+R1/D05/D06/D07/G2/Greek visual/HTTPS/first-office decisions remain Pending. No
+demo/VM, human account/MFA or live client data changed. S32 is not selected.
+
 ## S31 observed four-worker result — explicit versioned full retry Prepared, 2026-11-19
 
 The supplied 11:36:54 Europe/Athens comparison completed 2/4/2 on the same

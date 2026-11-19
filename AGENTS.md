@@ -1,5 +1,55 @@
 # Accounting platform implementation instructions
 
+## S31A follow-up — pending operator records before the clean image guard
+
+The supplied operator retry stops in APPLY's committed_context before its
+own commit of the known verify_s31 --record outputs. No build/push/VM operation
+was reached. Preserve that actual failure. First audit the unchanged 284
+application bytes with candidate_context, validate the exact successful S31
+receipt/592 protections/four bindings and reject all dirty/untracked paths
+outside the same four enumerated records. Then commit only those known records
+and invoke the unchanged clean-only committed_context guard, checking the same
+digest and file count. Apply this ordering in both installer and publication
+checkpoint. Never weaken image.py, old guards, financial code/assertions,
+historical receipts or VM/clone/recovery code. Preserve the original 20 new
+S31A guard methods; supply two more real-Git source-only contracts, unexecuted
+by the agent, for pending reports and denied application edits. Supply a complete
+cumulative retry from the still-unapplied S31 workers4 source. Preview/GitHub
+execution remains Pending operator; all 85 full acceptances stay Pending.
+
+## Selected S31A — update the existing preview and GitHub
+
+On 2026-11-19 the user explicitly requested the latest VM version and GitHub
+update. This authorises the existing synthetic preview update and ordinary
+GitHub publication, superseding earlier S31 no-SSH/no-cloud/no-push scope for
+this selected work. Keep the operator-execution preference: the agent supplies
+the complete package and performs static checks; the laptop operator executes
+the guards, image publication, VM clone migration/recovery and push.
+
+Read s31a_preview_upgrade_el.md. The only VM is accounting-514109 /
+accounting-preview / europe-west1-b, existing instance and retained disk,
+totalaccounting.duckdns.org. Reuse the exact successful S31/S30 cached image
+and context, all 284 application inputs and 26 migrations. No rebuild,
+new VM, machine resize, secret rotation, bootstrap/account/MFA reset,
+financial import or volume deletion. Preserve all 592 old protections and the
+operator's actual receipts, four local history/lineage files and initial failure.
+Publish the actual operator Git history, never the agent's Prepared placeholders.
+
+Use an untouched retained original database and a new 20→26 clone. Require
+restricted-role migrations, all old columns/rows/passwords/MFA/sessions,
+read-only existing MFA decryption, unchanged DB process and pinned material,
+encrypted before/after GCS backups and both exact off-VM restores before
+activation. Add four web workers, Redis, one worker process and exactly one
+scheduler with bounded memory on this existing 4-GB shared-CPU preview. Actual
+VM workload acceptance remains Pending; local S31 performance is not VM sizing.
+Before activation a reboot cannot start the candidate. Once jobs/public writes
+may begin, automatic rollback to the original database is forbidden.
+
+Source/GitHub/preview completion are separate from R1 business acceptance.
+Preserve all 85 Pending full acceptances and S31 real release Blocked. Empty
+media remains required until document recovery. Supply operator-only stdlib
+guards and resume/status commands. Stop after this preview update; no S32.
+
 Work on the accounting-office platform described by ACC-URS-001 and ACC-IMP-001. Apply this instruction block and the selected step S01 to S64. Read the current repository, its applicable instructions, docs/implementation/state.md, decisions.md and traceability.csv before changing anything. Use actual files and observed results as the source of truth. Preserve unrelated work and existing migration/table identities. Implement only the selected step and its necessary supporting changes.
 
 Keep Django and PostgreSQL as the modular application, with templates and Bootstrap initially. The planning baseline uses Python 3.12, supported Django 5.2 LTS, PostgreSQL 17 and Docker Compose. Check official support/compatibility when locking versions; record a justified change rather than silently changing the stack. Deploy through Caddy and Gunicorn on one Google Cloud VM with a reserved static IPv4 address and an initial DuckDNS hostname. Use private Cloud Storage and workload identity. Add Redis, a worker and exactly one scheduler when S26 introduces them.
@@ -226,6 +276,33 @@ Source Prepared, new formal retry Pending, actual prior technical Failed,
 release Blocked; all D05/D06/D07/G2/human inputs and 85 full acceptances Pending.
 No agent tests/builds/Docker/migrations/native app/PDF/browser/SSH/cloud/push.
 Only static syntax/AST/JSON/source/hash/archive/text scans. No S32 work.
+
+### S31 current operator checkpoint — workers4 technical Verified
+
+The user supplied the complete successful full-gate output at
+2026-11-19T12:29:37+02:00. Read S31-verification.json and
+evidence/S31-workers4-operator-completion.json. Actual operator source is
+git:39a088ab36970ebe839624b28521adaf9f72d9fb, with the published profile
+implementation from git:f652d7428571f248458c6468f50aa499273e9b76.
+
+All 848 application tests, 36 financial cases, 48 host contracts, 592 original
+protections, real S28 broker/commit-before-ack, complete cycle/migration and
+encrypted recovery passed. At 50 sessions, 450 successful HTTP requests yielded
+p95 1.627/1.608/1.767 s against unchanged 2/2/10 s. Actual four sync workers,
+same image/two-CPU/1-GiB caps and recovered runtime were proven. Restore matched
+51 tables/7,593 rows in 7.561 s; initial failure/history and cleanup were retained.
+
+This is operator evidence, not agent runtime execution. Do not rerun passing
+tests without a relevant change. Keep all application inputs/migrations/operator
+code and historical evidence unchanged. The operator's exclusive initial-failure
+archive and lineage binding exist on their machine; only their actual hashes
+are supplied here. Never fabricate binding contents or captured Git provenance.
+
+Source remains Prepared, isolated workers4 technical status Verified, actual
+release Blocked and all 85 full acceptances Pending. Named R1 application review,
+D05/D06/D07/G2, Greek visual/HTTPS/real recovery and authorised first-office
+decisions remain. No live deployment or automatic human approval. Stop S31;
+S32 independent source work requires separate user selection.
 
 ## Historical S30 — PDF/CSV exports, source only
 

@@ -1,0 +1,19 @@
+{
+  "step": "S31A",
+  "status": "Prepared",
+  "prepared_on": "2026-11-19",
+  "reported_apply_outcome": "Stopped before source apply, build, push or VM",
+  "reported_error": "Commit tracked changes before building the production image; the build uses committed files only.",
+  "cause": "Clean-only committed_context called before recording known dirty operator result files",
+  "fix": "Audit unchanged candidate inputs; validate and commit only the existing four records; then require clean committed context; same ordering before publication",
+  "application_inputs_unchanged": 284,
+  "migrations_unchanged": 26,
+  "original_source_protections_unchanged": 592,
+  "old_s31a_guard_methods_retained": 20,
+  "additional_operator_guards_supplied_not_run": 2,
+  "vm_clone_restore_runtime_image_guard_code": "Byte-identical",
+  "agent_native_execution": false,
+  "actual_github_and_vm_execution": "Pending operator retry",
+  "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
+  "full_acceptances_pending": 85
+}

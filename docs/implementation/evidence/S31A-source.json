@@ -1,0 +1,27 @@
+{
+  "step": "S31A",
+  "status": "Prepared",
+  "prepared_on": "2026-11-19",
+  "scope": "existing-synthetic-preview-and-GitHub-update",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image_inputs_unchanged": 284,
+  "migrations_unchanged": 26,
+  "original_protections_unchanged": 592,
+  "actual_operator_receipts_required": true,
+  "agent_native_execution": false,
+  "vm_deployment": "Pending operator",
+  "github_publication": "Pending operator",
+  "guard_contracts_supplied_not_run": 22,
+  "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
+  "full_acceptances_pending": 85,
+  "sha256": {
+    "compose.preview-s31.yml": "sha256:728771cf740a009a63d0f57e74e4a704fb1078cf856b2a2be618df63bc849ab1",
+    "compose.preview-s31-hold.yml": "sha256:50e1951b21ecbd53b0e24e20144abd320abf0091485078fd7d81425306e7b869",
+    "tools/preview_s31_host.py": "sha256:73e31219a598014dde4052b74fd9036d93c0e15daf0f220d2d1e501b7a3e94d4",
+    "tools/preview_s31_migrate.py": "sha256:7f47c5df5f2f9cf128c49a3b2e802014cdfa80a3825ad9c3c8ec788d9e4652f3",
+    "tools/preview_s31_policy.py": "sha256:6fbf5e3a99c82c1fdc80ddb26695f50fce63476deeb273f860cb168629980b5c",
+    "tools/preview_s31_release.py": "sha256:85922be7831bef31a6193217752098c5c06beb746a3a7004c9d16e8114cded6b",
+    "tools/test_preview_s31.py": "sha256:f90fb444677a130c62885c5464dd0d92019c1d5054f2704bc5f49de0544b10c6"
+  },
+  "follow_up": "Record only validated pending S31 outputs before unchanged clean committed-context guard"
+}

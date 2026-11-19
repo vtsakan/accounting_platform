@@ -1,0 +1,4 @@
+# Before public activation a reboot must leave the candidate stopped.
+services:
+  web:
+    restart: "no"

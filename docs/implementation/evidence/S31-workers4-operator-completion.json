@@ -1,0 +1,84 @@
+{
+  "step": "S31",
+  "status": "Prepared",
+  "technical_status": "Verified",
+  "scope": "synthetic-isolated-finance-release-rehearsal",
+  "checked_at": "2026-11-19T12:29:37+02:00",
+  "operator_source_commit": "git:39a088ab36970ebe839624b28521adaf9f72d9fb",
+  "workload_profile": "workers4",
+  "report_object_sha256": "sha256:6efa8da5313cd4c8aa46dfd6ce96b110dabe0d81559de199e6ccfea478b548e3",
+  "supplied_console_sha256": "sha256:a3fe675865f254fbe84d5eaa1bb67c8064dc9a9cb8b272083b0c0f4088e09ec2",
+  "evidence_origin": "Complete user-supplied operator console result; parsed and checked as JSON only by agent",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+  "production_tests_passed": 848,
+  "financial_cases_passed": 36,
+  "host_contracts_passed": 48,
+  "retained_source_files_checked": 592,
+  "performance": {
+    "operations": {
+      "list": {
+        "attempts": 150,
+        "p95_seconds": 1.6274405679996562,
+        "max_seconds": 1.741045626000414,
+        "target_seconds": 2,
+        "target_met": true
+      },
+      "detail": {
+        "attempts": 150,
+        "p95_seconds": 1.6076965770007519,
+        "max_seconds": 1.7109851389996038,
+        "target_seconds": 2,
+        "target_met": true
+      },
+      "annual_report": {
+        "attempts": 150,
+        "p95_seconds": 1.7667768290011736,
+        "max_seconds": 1.8028806879992771,
+        "target_seconds": 10,
+        "target_met": true
+      }
+    },
+    "errors": 0,
+    "thresholds_passed": true,
+    "sessions": 50,
+    "requests": 450
+  },
+  "recovery": {
+    "all_public_tables_matched": true,
+    "tables_checked": 51,
+    "rows_checked": 7593,
+    "synthetic_rto_seconds": 7.561,
+    "required_synthetic_key_material_recovered": true,
+    "wrong_signing_key_denied": true,
+    "restored_http_200": true,
+    "restored_financial_totals_matched": true
+  },
+  "operator_lineage": {
+    "archive_path": "docs/implementation/evidence/S31-initial-failure.json",
+    "archive_sha256": "sha256:f73324dc566f5441e4985f27723b8525de41f881ddcea7cfb1392ce697f964cc",
+    "binding_path": "docs/implementation/evidence/S31-profile-lineage.json",
+    "binding_sha256": "sha256:d1503fabded0ca0c8d535c0df1b5a0d36231eea83c8ed197b6c419c109651c19",
+    "initial_failure_preserved": true,
+    "binding_contents_not_supplied_to_agent": true,
+    "agent_reconstructed_binding": false
+  },
+  "release_decision": "Blocked",
+  "release_blockers": [
+    "Named accountant and product-owner application acceptance of all 42 R1 checks is Pending",
+    "D06 workload/dataset, p95, availability and budget approval is Pending",
+    "D07 operational responsibilities, accepted real-data recovery/key custody and retention are Pending",
+    "D05 real ownership/opening/exception mapping and reconciled totals or explicitly approved new-office scope are Pending",
+    "Greek browser/email/PDF visual review and actual HTTPS/privileged-MFA review are Pending",
+    "A named authorised first-office environment, freeze/window, current backup and controlled live cutover are Pending",
+    "G2 release acceptance is Pending; a synthetic gate never authorises live use"
+  ],
+  "workload_approval": "Pending D06",
+  "all_85_full_acceptances": "Pending",
+  "agent_native_execution": false,
+  "local_demo_or_vm_changed": false,
+  "human_accounts_or_mfa_changed": false,
+  "real_client_data_imported": false,
+  "live_cutover_executed": false,
+  "next": "Named R1 acceptance and D05/D06/D07/G2 decisions; no further native repetition without a relevant change; no S32 selection inferred"
+}

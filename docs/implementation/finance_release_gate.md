@@ -1,10 +1,14 @@
 # S31 — R1 finance release gate
 
-Source status **Prepared**. Actual release decision **Blocked**. No new native
-result is claimed in this delivery. The last supplied operator result remains
-S30 Verified, 2026-11-18T18:29:21+02:00: 848/848, all 36 financial cases,
-40 export contracts and the actual scheduler/Redis/worker commit-before-ack gate.
-Its receipt is preserved byte for byte.
+Source status **Prepared**. Actual release decision **Blocked**. The supplied
+2026-11-19 operator S31 run passed 848/848, all 36 financial cases, 40 host
+contracts, the real S28 broker gate, the complete financial cycle and encrypted
+recovery. Technical status is **Failed**: list/detail p95 exceed two seconds
+at fifty sessions. The report target and recovery targets passed. See
+[the exact operator summary](evidence/S31-operator-completion.json) and
+[the diagnostic procedure](s31_performance_el.md). The actual Failed receipt,
+all older receipts and both local-history bindings remain unchanged. New
+diagnostic execution is Pending; no agent runtime result is claimed.
 
 The effective R1 baseline has **33 Must user requirements**, including the
 32 original requirements and CR-001/UR-LOC-01, plus **nine quality requirements**:

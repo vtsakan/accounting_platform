@@ -1,0 +1,87 @@
+{
+  "step": "S31",
+  "status": "Prepared",
+  "technical_status": "Failed",
+  "release_decision": "Blocked",
+  "scope": "actual-operator-output-recording",
+  "operator_checked_at": "2026-11-19T09:28:04+02:00",
+  "operator_source_commit": "git:323903f39d4cab952008b3c2fdd88c3f31cf78ab",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+  "observed_receipt_sha256": "sha256:3687f5aba1d8714b1819c1451066dc889dc139823afbff683e2398737f11ed47",
+  "supplied_console_file_sha256": "sha256:a969547a601e47211fa3a32ecfbf929a4142e1cb491322b11535fba19cbd0f2b",
+  "evidence_origin": "User-supplied complete console output on 2026-11-19; parsed as data, no agent native execution",
+  "operator_apply_completed": true,
+  "historical_files_retained": 106,
+  "original_protections_checked": 592,
+  "host_contracts_passed": 40,
+  "tests_passed": 848,
+  "financial_cases_passed": 36,
+  "real_redis_commit_before_ack": {
+    "task_deliveries": 2,
+    "charge_count": 1,
+    "committed_receipt_survived_child_sigkill": true
+  },
+  "financial_cycle_passed": true,
+  "migration": {
+    "source_migrations": 20,
+    "target_migrations": 26,
+    "old_tables_checked": 41,
+    "original_columns_rows_passwords_mfa_sessions_preserved": true,
+    "new_business_tables_empty": true,
+    "mode": "clone-only; original database retained; no backward migration"
+  },
+  "performance": {
+    "operations": {
+      "list": {
+        "attempts": 150,
+        "p95_seconds": 2.613222578999739,
+        "max_seconds": 2.7054628589999083,
+        "target_seconds": 2,
+        "target_met": false
+      },
+      "detail": {
+        "attempts": 150,
+        "p95_seconds": 2.6956580339997345,
+        "max_seconds": 2.772041050000098,
+        "target_seconds": 2,
+        "target_met": false
+      },
+      "annual_report": {
+        "attempts": 150,
+        "p95_seconds": 2.7540532670000175,
+        "max_seconds": 2.851177044999986,
+        "target_seconds": 10,
+        "target_met": true
+      }
+    },
+    "errors": 0,
+    "thresholds_passed": false,
+    "timing_scope": "loopback HTTP through production Gunicorn; queueing and complete body read included; TLS excluded",
+    "arrival_model": "closed-loop-barrier-50-distinct-sessions-one-synthetic-accountant",
+    "duration_seconds": 22.436969128999863,
+    "sessions": 50,
+    "requests": 450
+  },
+  "recovery": {
+    "all_public_tables_matched": true,
+    "tables_checked": 51,
+    "rows_checked": 7593,
+    "synthetic_rto_seconds": 7.397,
+    "proposed_targets_met_in_this_rehearsal": true,
+    "required_synthetic_key_material_recovered": true,
+    "wrong_signing_key_denied": true,
+    "restored_http_200": true,
+    "restored_financial_totals_matched": true
+  },
+  "owned_resources_removed": true,
+  "plaintext_removed": true,
+  "cause_of_latency": "Not established; original resource snapshot was collected after benchmark",
+  "next": "Operator-only unchanged-envelope diagnosis before any tuning or formal technical retry",
+  "d05_real_migration_review": "Pending",
+  "g2_release_acceptance": "Pending",
+  "all_85_full_acceptances": "Pending",
+  "agent_tests_builds_docker_migrations_run": false,
+  "local_demo_or_vm_changed": false,
+  "live_cutover_executed": false
+}

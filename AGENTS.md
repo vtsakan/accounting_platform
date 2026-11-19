@@ -112,6 +112,46 @@ at once. Supply a complete source-only retry from the unchanged S30 branch.
 No agent tests/builds/Docker/migrations/native app/SSH/cloud/push, no S32.
 S31 Prepared; operator retry and full acceptance Pending; release Blocked.
 
+### S31 actual latency failure — diagnostic follow-up, source only
+
+The supplied 2026-11-19 operator log confirms successful S31 APPLY, all 106
+historical files and both exclusive bindings retained, 848/848, 36/36 finance
+cases, 40 host contracts, real S28 broker recovery, 20-to-26 clone migration,
+the complete financial cycle and encrypted baseline/current recovery. The
+actual S31 technical result is Failed: list p95 2.613222578999739 seconds and
+detail p95 2.6956580339997345 seconds exceed the unchanged two-second target.
+The 365-day report is 2.7540532670000175 seconds against ten; HTTP errors zero,
+450 attempts. Recovery passed: 51 public tables, 7,593 rows and 7.397 seconds.
+Read evidence/S31-operator-completion.json and S31-performance-diagnostics.json.
+
+Keep the actual Failed receipt, historical receipts/bindings and all 592
+protected paths. Do not change targets, sessions, dataset, two sync
+workers, resource caps, application inputs, services, tests or dependencies.
+The old CPU sample was taken after the load; it does not identify a bottleneck.
+Supply a separate operator-only diagnostic using the unchanged isolated S31
+rehearsal and immutable S30 image. Collect all 151 per-operation Gunicorn
+durations including one warmup (not paired with client samples), CPU/throttling counter deltas over the
+benchmark, and subsequent single-session HTTP and instrumented in-process
+SQL/application profiles. Do not subtract unpaired p95 distributions to claim
+queue time. Never save SQL/parameters, cookies, bodies or profile locals.
+
+The only existing source-policy extension in this follow-up appends one exact
+review for the public rehearsal.nonce in the supplied actual Failed receipt.
+Read evidence/S31-performance-secret-review.json. Preserve all 195,117 old
+scanner-review bytes (including both previous S30 reviews); the S31 append-only
+manifest fixes that entire prior prefix and the one published suffix. All 485
+retained source hashes, both historical binding policies and all existing guard
+code/tests stay exact. No wildcard exclusion, receipt rewrite or financial
+source rebind. The previous two-review-only scope is extended solely for this
+newly observed non-secret identifier; no other review change is authorised.
+
+New operator diagnostic tools/docs accompany that exact review. The diagnostic does not repeat
+848/36 or real Redis and cannot mark the formal gate Verified. Keep its output
+in ignored private/s31, preserve the actual official Failed record and all 85
+Pending acceptances, and remove only its owned synthetic resources/plaintext.
+No agent tests/builds/Docker/migrations/native app/SSH/cloud/push. Static AST,
+source/hash/archive checks and secret text scans only. Release Blocked; no S32.
+
 ## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at

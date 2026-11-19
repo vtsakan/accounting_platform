@@ -1,5 +1,44 @@
 # Decision register
 
+## S31 actual performance failure — preserve result and diagnose, 2026-11-19
+
+The operator successfully applied the complete history correction. The actual
+S31 run passed 848/848, 36 financial cases, all 40 host contracts, real S28
+Redis/ack-loss recovery, the complete synthetic financial cycle, old-row/key
+migration reconciliation and encrypted recovery (51 tables, 7,593 rows, 7.397 s).
+All 106 old historical files and both exclusive bindings were preserved.
+
+The formal technical status remains **Failed**. List p95 is 2.613222578999739 s
+and detail p95 2.6956580339997345 s, both above 2 s; the rolling-year report
+passes at 2.7540532670000175 s against 10 s. All 450 requests succeeded. The
+resource snapshot was collected after load, so it cannot establish the cause.
+
+Do not tune acceptance limits, workload, worker count or resource caps to make
+this result pass. Add an independent operator-only diagnostic that preserves
+the complete official report and uses the unchanged owned synthetic rehearsal,
+image, dataset and fifty-session measurement. Collect Gunicorn service-log
+timings and cgroup CPU/throttling deltas, followed by single-session HTTP and
+instrumented in-process SQL/application profiles. These are different timing
+boundaries; unpaired p95 values cannot be subtracted to derive queue latency.
+Do not save SQL, parameters, request bodies, session material or stack locals.
+
+Recording the complete actual result exposed one heuristic scan finding:
+the public 20-hex rehearsal.nonce. Review only that exact generated resource
+identifier, bound to the actual receipt and source generator. Preserve every
+one of the 195,117 preceding scanner-review bytes, including both earlier S30
+container-name reviews. The existing S31 append-only policy now fixes that
+entire prior prefix and one exact new row. All 485 published source hashes,
+35+71 historical policies, every old guard/test and 592 protected paths remain;
+no financial source rebind, receipt rewrite or broad scan exception is added.
+See evidence/S31-performance-secret-review.json. This specifically extends the
+previous two-review-only scope for the newly supplied result.
+
+The diagnostic reuses the existing fresh-clone/cycle/encrypted-recovery/cleanup
+procedures. It does not repeat the already observed 848/36 or real-broker gate,
+write a new official S31 result, approve VM capacity, or change application
+source. Diagnostics are Prepared, not agent-run. S31 remains Prepared with
+technical Failed, release Blocked and all 85 full acceptances Pending. No S32.
+
 ## S31 complete historical-evidence correction — Prepared, 2026-11-19
 
 The receipt-fix APPLY stops before source application at S26-hash-fix.json.

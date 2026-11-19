@@ -2,7 +2,7 @@
   "schema": 1,
   "step": "S31",
   "base_commit": "git:72705fc70b83a0994acfdfd0eb9ab7dc1fa3da4a",
-  "scope": "485 exact retained application/operator/source/policy files; 35 fixed operator-result files and 71 fixed supplementary historical-evidence files captured locally before APPLY without rewriting or new acceptance; one exact append-only scanner review; all original 592 paths remain protected",
+  "scope": "485 exact retained source/policy files; unchanged exclusive 35-output and 71-metadata historical bindings; one scanner review file with every previous byte fixed plus one exact published non-secret S31 rehearsal identifier; original 592 paths protected",
   "sha256": {
     ".dockerignore": "sha256:b1e4f81e4f83b2998c14d55324e3379f9a1c2f5136c94d73f0ec29fece9b1e32",
     ".env.example": "sha256:9cfe1de9d8760c98dc934ed3766365fca2d53d898ae227dfb5c613c02838ba1b",
@@ -492,10 +492,10 @@
   },
   "append_only_files": {
     "docs/security/secret_scan_allowlist.csv": {
-      "original_bytes": 194635,
-      "original_sha256": "sha256:c46e356b8e50ad7350295d495ba92a8d501e4c84086424ee28c6e504137430bf",
-      "suffix_sha256": "sha256:3fdcaf28eeda399d4ac5fdc206cb23ce23f3f024a5597efe337c9214b7f1d047",
-      "after_sha256": "sha256:4630b008987dd02e800058b18c842f862936154327a312898e8032037f88a53b"
+      "original_bytes": 195117,
+      "original_sha256": "sha256:4630b008987dd02e800058b18c842f862936154327a312898e8032037f88a53b",
+      "suffix_sha256": "sha256:75466d0966360a7501a2e755c579a9a557c47d59fd35b036b933e81a64ad0c7c",
+      "after_sha256": "sha256:bb11d52d375e9e400ca01508b899df14400b1dab7296acf5fa2817aa6221ea68"
     }
   },
   "operator_receipts": {

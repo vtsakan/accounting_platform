@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "step": "S31",
+  "status": "Prepared",
+  "scope": "operator-only-performance-diagnostics",
+  "release_decision": "Blocked",
+  "prepared_at": "2026-11-19T09:43:36+02:00",
+  "observed_operator_source_commit": "git:323903f39d4cab952008b3c2fdd88c3f31cf78ab",
+  "observed_failed_receipt_sha256": "sha256:3687f5aba1d8714b1819c1451066dc889dc139823afbff683e2398737f11ed47",
+  "observed_official_technical_status": "Failed",
+  "observed_receipt_reference": "docs/implementation/evidence/S31-verification.json",
+  "observed_summary": "docs/implementation/evidence/S31-operator-completion.json",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+  "operator_source_sha256": {
+    "tools/diagnose_s31.py": "sha256:01e12cf98b9db13fcd14cf39bceed708713e4162bd2e6ff4f7990ddd88952916",
+    "tools/s31_performance_probe.py": "sha256:812bbb2d525b2ae44defe0a5236968aac2bb6c6b6b10b028fc9890bb5f4a2a84"
+  },
+  "unchanged_source": {
+    "published_files": 485,
+    "original_protections": 592,
+    "historical_files": 106,
+    "application_inputs": 284,
+    "migrations": 26,
+    "old_application_tests": 848,
+    "financial_cases": 36,
+    "host_contracts": 40
+  },
+  "synthetic_envelope": {
+    "sessions": 50,
+    "cycles_per_session": 3,
+    "clients": 200,
+    "charges": 200,
+    "ordinary_movements": 2000,
+    "window_days": 365,
+    "request_timeout_seconds": 45,
+    "web_workers": 2,
+    "web_memory_mib": 1024,
+    "database_memory_mib": 1024,
+    "web_cpus": 2,
+    "database_cpus": 2
+  },
+  "targets_unchanged": {
+    "list_p95_seconds": 2,
+    "detail_p95_seconds": 2,
+    "annual_report_p95_seconds": 10
+  },
+  "diagnostic_command": "python3 tools/diagnose_s31.py",
+  "official_receipt_or_bindings_written_by_diagnostic": false,
+  "full_848_suite_and_real_broker_rerun_by_diagnostic": false,
+  "new_host_tests_supplied": 0,
+  "additional_observations": [
+    "all 151 Gunicorn timings per operation including one warmup; no assumed per-request pairing and no omitted log entries",
+    "cgroup-v2 CPU/throttling deltas over unchanged benchmark probe",
+    "10 subsequent single-session real HTTP samples per operation",
+    "one subsequent instrumented in-process SQL/application profile per operation"
+  ],
+  "diagnostic_native_execution": "Pending operator; source only",
+  "agent_native_execution": false,
+  "all_85_full_acceptances": "Pending",
+  "next_step": "Remain S31; diagnose measured failure before changing performance conditions or rerunning formal gate",
+  "retained_application_and_runtime_conditions_unchanged": true,
+  "additional_exact_scanner_review": "docs/implementation/evidence/S31-performance-secret-review.json",
+  "scanner_review_transition": {
+    "original_bytes": 195117,
+    "original_sha256": "sha256:4630b008987dd02e800058b18c842f862936154327a312898e8032037f88a53b",
+    "suffix_sha256": "sha256:75466d0966360a7501a2e755c579a9a557c47d59fd35b036b933e81a64ad0c7c",
+    "after_sha256": "sha256:bb11d52d375e9e400ca01508b899df14400b1dab7296acf5fa2817aa6221ea68"
+  }
+}

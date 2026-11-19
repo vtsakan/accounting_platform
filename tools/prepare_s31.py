@@ -12,7 +12,10 @@ EVIDENCE = ['docs/implementation/evidence/S31-verification.json', 'docs/implemen
             'docs/implementation/r1_acceptance_matrix.json', 'docs/implementation/r1_review_el.md',
             'docs/implementation/r1_workload.json', 'docs/implementation/r1_cutover_el.md',
             'docs/implementation/evidence/S31-operator-receipts.json', 'docs/implementation/evidence/S31-receipt-fix.json',
-            'docs/implementation/evidence/S31-historical-evidence.json', 'docs/implementation/evidence/S31-history-fix.json']
+            'docs/implementation/evidence/S31-historical-evidence.json', 'docs/implementation/evidence/S31-history-fix.json',
+            'docs/implementation/evidence/S31-initial-failure.json', 'docs/implementation/evidence/S31-profile-lineage.json',
+            'docs/implementation/evidence/S31-worker-comparison-observed.json', 'docs/implementation/evidence/S31-profile-source.json',
+            'docs/implementation/r1_workload_workers4.json', 'docs/implementation/s31_workers4_el.md']
 
 
 def record_result(report):
@@ -26,7 +29,8 @@ def record_result(report):
         at = text.index('\n## ')
         text = text[:at] + '\n\n## Current selected work — S31\n\n<!-- S31-RESULT -->\n<!-- /S31-RESULT -->\n' + text[at:]
     technical = report.get('technical_status', 'Pending')
-    summary = ('S31 source Prepared; actual release Blocked. Technical rehearsal: ' + technical + '. '
+    selected = report.get('workload_profile', 'legacy')
+    summary = ('S31 source Prepared; actual release Blocked. Technical rehearsal: ' + technical + '; selected synthetic profile ' + selected + '. '
                'Effective R1 matrix includes 33 Must user requirements (32 baseline plus Greek frontend) and nine quality requirements. '
                'Operator-only retained 848/36 and real S28 broker gate, current synthetic billing/collection/correction/reporting cycle, '
                '50 distinct HTTP sessions and encrypted PG17 baseline20/current26 recovery supplied. '

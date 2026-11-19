@@ -102,6 +102,9 @@ def matrix(root):
 
 
 def profile(value):
+    if isinstance(value, dict) and value.get('schema') == 2:
+        from s31_profiles import candidate_profile
+        return candidate_profile(value)
     require(isinstance(value, dict) and value.get('schema') == 1 and value.get('approval') == 'Pending',
             'S31 uses an explicitly unapproved synthetic workload')
     expected = {'sessions': 50, 'cycles_per_session': 3, 'clients': 200, 'charges': 200,

@@ -1,0 +1,68 @@
+{
+  "step": "S31",
+  "status": "Prepared",
+  "scope": "explicit-workers4-full-synthetic-retry-source",
+  "prepared_at": "2026-11-19T12:06:48+02:00",
+  "reference_base_commit": "git:94ad5fb4d663b041c3c2e6b7a7426025ddb27bae",
+  "prior_formal_source_commit": "git:323903f39d4cab952008b3c2fdd88c3f31cf78ab",
+  "prior_formal_technical_status": "Failed",
+  "new_full_retry_status": "Pending operator",
+  "release_decision": "Blocked",
+  "observed_comparison_reference": "docs/implementation/evidence/S31-worker-comparison-observed.json",
+  "observed_comparison_checked_at": "2026-11-19T11:36:54+02:00",
+  "operator_source_sha256": {
+    "tools/r1_gate.py": "sha256:f8b9abc5613be67bfb435645dc87d995dba8342c04288b54fa20b7eb2ff2375e",
+    "tools/s31_rehearsal.py": "sha256:92eb1903731cfbd05602e004f43d23839aa49a7a33fb37adb13aa0ae4fce530d",
+    "tools/verify_s31.py": "sha256:ea4d78246ca94f559c84e0ef23de60ad1d53fc43b587577fa7f1d68dba1f156e",
+    "tools/prepare_s31.py": "sha256:b5ae0669d63a6456bfcd9903b5f2005935d5985db7cc8516ec9a219fd2b58a66",
+    "tools/s31_profiles.py": "sha256:27b43d4f466d89d640682918d241d24c90613274989a5c68116b0857c9e5570f",
+    "tools/s31_runtime_policy.py": "sha256:e3ac362196829cfbb56d6d693bc1dcd3fe880085cd338a81e349c8ecbccd6f8b",
+    "tools/test_s31_profiles.py": "sha256:0668602c02ab8905148a8fc3c0d92b1f89f4aad76c3999c8f687488979b7e17f"
+  },
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+  "legacy_default_and_file_unchanged": true,
+  "explicit_candidate": "workers4",
+  "candidate_workload_file": "docs/implementation/r1_workload_workers4.json",
+  "candidate_file_sha256": "sha256:9653d120d59d61466a3d2f4df94c7e16cfa5a82ca44f44413f99d63c9ade0d9e",
+  "fixed_caps": {
+    "web_cpus": 2,
+    "database_cpus": 2,
+    "web_memory_mib": 1024,
+    "database_memory_mib": 1024
+  },
+  "targets_unchanged": {
+    "list": 2,
+    "detail": 2,
+    "annual_report": 10
+  },
+  "sessions_unchanged": 50,
+  "requests_per_operation": 150,
+  "full_operator_checks_required": {
+    "production_tests": 848,
+    "financial_cases": 36,
+    "retained_host_contracts": 40,
+    "new_profile_host_contracts": 8,
+    "total_host_contracts": 48,
+    "real_S28_broker": true,
+    "full_cycle_migration_encrypted_recovery": true
+  },
+  "application_inputs_preserved": 284,
+  "migrations_preserved": 26,
+  "original_source_hashes_preserved": 485,
+  "historical_files_preserved": 106,
+  "original_protected_paths": 592,
+  "lineage_policy": {
+    "initial_failure_canonical_sha256": "sha256:3687f5aba1d8714b1819c1451066dc889dc139823afbff683e2398737f11ed47",
+    "archive": "docs/implementation/evidence/S31-initial-failure.json",
+    "binding": "docs/implementation/evidence/S31-profile-lineage.json",
+    "created_only_by_operator_APPLY_from_existing_actual_bytes": true,
+    "runtime_capture_or_rebind": false,
+    "agent_lineage_files_created": false
+  },
+  "public_run_id_format": "run:<20-hex internal nonce>; no scan exclusions",
+  "all_85_full_acceptances": "Pending",
+  "workload_approval": "Pending D06",
+  "agent_native_execution": false,
+  "next": "Operator full explicit workers4 verification; named R1/D05/D06/D07/G2/real cutover inputs remain Pending; no S32"
+}

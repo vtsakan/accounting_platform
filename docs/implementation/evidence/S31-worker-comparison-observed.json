@@ -1,0 +1,430 @@
+{
+  "step": "S31",
+  "status": "Observed",
+  "scope": "supplied fixed 2/4/2 synthetic comparison; not formal gate verification",
+  "checked_at": "2026-11-19T11:36:54+02:00",
+  "supplied_console_sha256": "sha256:d3cb2de5a4d07a6386eae0369a120bd517932a21e62de5d76894584102f4b64c",
+  "operator_result_sha256": "sha256:343f2d46e1f6a59a7ae248fa611c0449c3c1c28a044db0cc0a9cc1720fed2178",
+  "operator_result": {
+    "step": "S31",
+    "scope": "exploratory-sync-worker-comparison",
+    "status": "Observed",
+    "checked_at": "2026-11-19T11:36:54+02:00",
+    "official_technical_status": "Failed",
+    "official_receipt_unchanged": true,
+    "release_decision": "Blocked",
+    "trials": [
+      {
+        "condition": "control_before",
+        "web_workers": 2,
+        "effective_runtime": {
+          "image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+          "nano_cpus": 2000000000,
+          "cpu_quota": 0,
+          "cpu_period": 0,
+          "memory_bytes": 1073741824,
+          "entrypoint": [
+            "gunicorn"
+          ],
+          "command": [
+            "core.wsgi:application",
+            "--config",
+            "gunicorn.conf.py"
+          ],
+          "configured_workers": 2,
+          "live_worker_children": 2,
+          "effective_cpu_limit": 2.0,
+          "worker_class": "sync",
+          "scope": "fresh owned comparison web only"
+        },
+        "operations": {
+          "list": {
+            "attempts": 150,
+            "p95_seconds": 2.7657945200007816,
+            "max_seconds": 2.8309167589995923,
+            "target_seconds": 2,
+            "target_met": false
+          },
+          "detail": {
+            "attempts": 150,
+            "p95_seconds": 2.807325882000441,
+            "max_seconds": 2.9082155790001707,
+            "target_seconds": 2,
+            "target_met": false
+          },
+          "annual_report": {
+            "attempts": 150,
+            "p95_seconds": 2.902221021000514,
+            "max_seconds": 3.029755238998405,
+            "target_seconds": 10,
+            "target_met": true
+          }
+        },
+        "errors": 0,
+        "thresholds_passed": false,
+        "duration_seconds": 21.887000332999378,
+        "requests": 450,
+        "gunicorn_logged_seconds": {
+          "list": {
+            "samples": 151,
+            "p50_seconds": 0.046221,
+            "p95_seconds": 0.060641,
+            "max_seconds": 0.152269,
+            "warmup_included": 1
+          },
+          "detail": {
+            "samples": 151,
+            "p50_seconds": 0.054161,
+            "p95_seconds": 0.062316,
+            "max_seconds": 0.081884,
+            "warmup_included": 1
+          },
+          "annual_report": {
+            "samples": 151,
+            "p50_seconds": 0.185403,
+            "p95_seconds": 0.204233,
+            "max_seconds": 0.225603,
+            "warmup_included": 1
+          }
+        },
+        "cgroup_intervals": {
+          "db": {
+            "availability": "Observed",
+            "interval_seconds": 23.70271639049861,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 0.7731760232909949,
+            "usage_usec": 18326372,
+            "nr_periods": 232,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "memory_before_bytes": 140718080,
+            "memory_after_bytes": 140394496,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          },
+          "web": {
+            "availability": "Observed",
+            "interval_seconds": 23.708501265500672,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 1.1193458710364235,
+            "usage_usec": 26538013,
+            "nr_periods": 237,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "memory_before_bytes": 122798080,
+            "memory_after_bytes": 143769600,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          }
+        }
+      },
+      {
+        "condition": "candidate_four",
+        "web_workers": 4,
+        "effective_runtime": {
+          "image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+          "nano_cpus": 2000000000,
+          "cpu_quota": 0,
+          "cpu_period": 0,
+          "memory_bytes": 1073741824,
+          "entrypoint": [
+            "gunicorn"
+          ],
+          "command": [
+            "core.wsgi:application",
+            "--config",
+            "gunicorn.conf.py"
+          ],
+          "configured_workers": 4,
+          "live_worker_children": 4,
+          "effective_cpu_limit": 2.0,
+          "worker_class": "sync",
+          "scope": "fresh owned comparison web only"
+        },
+        "operations": {
+          "list": {
+            "attempts": 150,
+            "p95_seconds": 1.672842247000517,
+            "max_seconds": 1.7384748399999808,
+            "target_seconds": 2,
+            "target_met": true
+          },
+          "detail": {
+            "attempts": 150,
+            "p95_seconds": 1.712273801000265,
+            "max_seconds": 1.7564942720000545,
+            "target_seconds": 2,
+            "target_met": true
+          },
+          "annual_report": {
+            "attempts": 150,
+            "p95_seconds": 1.8720144690014422,
+            "max_seconds": 1.9418840850012202,
+            "target_seconds": 10,
+            "target_met": true
+          }
+        },
+        "errors": 0,
+        "thresholds_passed": true,
+        "duration_seconds": 14.808342342999822,
+        "requests": 450,
+        "gunicorn_logged_seconds": {
+          "list": {
+            "samples": 151,
+            "p50_seconds": 0.068598,
+            "p95_seconds": 0.094599,
+            "max_seconds": 0.261272,
+            "warmup_included": 1
+          },
+          "detail": {
+            "samples": 151,
+            "p50_seconds": 0.082744,
+            "p95_seconds": 0.101904,
+            "max_seconds": 0.258199,
+            "warmup_included": 1
+          },
+          "annual_report": {
+            "samples": 151,
+            "p50_seconds": 0.237313,
+            "p95_seconds": 0.281544,
+            "max_seconds": 0.307782,
+            "warmup_included": 1
+          }
+        },
+        "cgroup_intervals": {
+          "db": {
+            "availability": "Observed",
+            "interval_seconds": 16.50023773849898,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 1.205805595975003,
+            "usage_usec": 19896079,
+            "nr_periods": 160,
+            "nr_throttled": 7,
+            "throttled_usec": 118362,
+            "memory_before_bytes": 139829248,
+            "memory_after_bytes": 142798848,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          },
+          "web": {
+            "availability": "Observed",
+            "interval_seconds": 16.510748815500847,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 1.8439263015992093,
+            "usage_usec": 30444604,
+            "nr_periods": 165,
+            "nr_throttled": 131,
+            "throttled_usec": 10329432,
+            "memory_before_bytes": 199401472,
+            "memory_after_bytes": 250789888,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          }
+        }
+      },
+      {
+        "condition": "control_after",
+        "web_workers": 2,
+        "effective_runtime": {
+          "image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+          "nano_cpus": 2000000000,
+          "cpu_quota": 0,
+          "cpu_period": 0,
+          "memory_bytes": 1073741824,
+          "entrypoint": [
+            "gunicorn"
+          ],
+          "command": [
+            "core.wsgi:application",
+            "--config",
+            "gunicorn.conf.py"
+          ],
+          "configured_workers": 2,
+          "live_worker_children": 2,
+          "effective_cpu_limit": 2.0,
+          "worker_class": "sync",
+          "scope": "fresh owned comparison web only"
+        },
+        "operations": {
+          "list": {
+            "attempts": 150,
+            "p95_seconds": 2.680160969001008,
+            "max_seconds": 2.743028545000925,
+            "target_seconds": 2,
+            "target_met": false
+          },
+          "detail": {
+            "attempts": 150,
+            "p95_seconds": 2.692412112000966,
+            "max_seconds": 2.7689170989997365,
+            "target_seconds": 2,
+            "target_met": false
+          },
+          "annual_report": {
+            "attempts": 150,
+            "p95_seconds": 2.8135129370002687,
+            "max_seconds": 2.889396440999917,
+            "target_seconds": 10,
+            "target_met": true
+          }
+        },
+        "errors": 0,
+        "thresholds_passed": false,
+        "duration_seconds": 22.33631738999975,
+        "requests": 450,
+        "gunicorn_logged_seconds": {
+          "list": {
+            "samples": 151,
+            "p50_seconds": 0.047122,
+            "p95_seconds": 0.056676,
+            "max_seconds": 0.065913,
+            "warmup_included": 1
+          },
+          "detail": {
+            "samples": 151,
+            "p50_seconds": 0.054963,
+            "p95_seconds": 0.066023,
+            "max_seconds": 0.077428,
+            "warmup_included": 1
+          },
+          "annual_report": {
+            "samples": 151,
+            "p50_seconds": 0.189148,
+            "p95_seconds": 0.210593,
+            "max_seconds": 0.315296,
+            "warmup_included": 1
+          }
+        },
+        "cgroup_intervals": {
+          "db": {
+            "availability": "Observed",
+            "interval_seconds": 24.0838037024987,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 0.7821973735006619,
+            "usage_usec": 18838288,
+            "nr_periods": 235,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "memory_before_bytes": 139816960,
+            "memory_after_bytes": 141074432,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          },
+          "web": {
+            "availability": "Observed",
+            "interval_seconds": 24.08445154850051,
+            "cpu_max": "200000 100000",
+            "average_cpu_equivalents": 1.1248355373775027,
+            "usage_usec": 27091047,
+            "nr_periods": 241,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "memory_before_bytes": 124735488,
+            "memory_after_bytes": 143659008,
+            "memory_limit": "1073741824",
+            "memory_event_deltas": {
+              "low": 0,
+              "high": 0,
+              "max": 0,
+              "oom": 0,
+              "oom_kill": 0,
+              "oom_group_kill": 0,
+              "sock_throttled": 0
+            },
+            "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+          }
+        }
+      }
+    ],
+    "p95_ratios": {
+      "list": {
+        "candidate_to_control_before": 0.6048324396130643,
+        "candidate_to_control_after": 0.6241573794815933,
+        "control_after_to_before": 0.9690383539411491
+      },
+      "detail": {
+        "candidate_to_control_before": 0.6099305435036045,
+        "candidate_to_control_after": 0.6359627463299907,
+        "control_after_to_before": 0.9590664658006892
+      },
+      "annual_report": {
+        "candidate_to_control_before": 0.6450282233694532,
+        "candidate_to_control_after": 0.665365509567324,
+        "control_after_to_before": 0.9694344147608496
+      }
+    },
+    "candidate_meets_original_timing_thresholds_in_this_comparison": true,
+    "measured_http_requests": 1350,
+    "business_tables_unchanged": 39,
+    "finished_with_two_sync_workers": true,
+    "automatic_runtime_profile_promotion": false,
+    "recovery_targets_met": true,
+    "host_before": {
+      "logical_cpus": 20,
+      "affinity_cpus": 20,
+      "load_average": [
+        1.02001953125,
+        0.73291015625,
+        0.69140625
+      ]
+    },
+    "host_load_average_after": [
+      2.57861328125,
+      1.42724609375,
+      0.95751953125
+    ],
+    "owned_resources_removed": true,
+    "plaintext_removed": true
+  },
+  "inference": "Four sync workers improved timings under this unchanged-cap synthetic comparison; controls returned to slow timings. One sequence is not an accepted production workload or capacity.",
+  "next": "Explicit separate workers4 synthetic profile and full 848/36/broker/migration/recovery S31 retry",
+  "official_technical_status": "Failed",
+  "release_decision": "Blocked",
+  "all_85_full_acceptances": "Pending",
+  "agent_native_execution": false
+}

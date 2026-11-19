@@ -15,6 +15,14 @@ and [the separate fixed 2/4/2 comparison](s31_workers_el.md). That experiment is
 Prepared and Pending operator; no agent runtime result is claimed. Its four-worker
 middle condition cannot promote the original formal two-worker profile or receipt.
 
+The subsequent operator 2/4/2 result at 2026-11-19T11:36:54+02:00 is
+Observed: four workers meet all timing targets (1.673/1.712/1.872 s), and both
+two-worker controls still fail list/detail. All 1,350 requests, 39 business-table
+comparisons and recovery/cleanup passed. A separate fixed schema-2 profile and
+[explicit full workers4 retry](s31_workers4_el.md) are Prepared. The original
+JSON/default remains legacy; D06 approval and the formal retry remain Pending.
+The initial Failed receipt is exclusively retained before any new current result.
+
 The effective R1 baseline has **33 Must user requirements**, including the
 32 original requirements and CR-001/UR-LOC-01, plus **nine quality requirements**:
 42 checks. [The matrix](r1_acceptance_matrix.json) retains the exact original

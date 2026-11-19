@@ -184,6 +184,49 @@ No automatic candidate promotion or formal Verified, VM/deploy/workload approval
 No agent tests/builds/Docker/migrations/native app/browser/SSH/cloud/push; static
 AST/JSON/source/hash/archive and text scans only. Stop S31; no S32.
 
+### S31 measured workers4 candidate — explicit full retry, source only
+
+The supplied operator 2/4/2 comparison at 2026-11-19T11:36:54+02:00 is Observed:
+four-worker p95 1.673/1.712/1.872 s meets unchanged 2/2/10 s targets; controls
+at two workers fail again (list/detail about 2.68–2.81 s). All 1,350 HTTP
+requests succeeded, 39 business tables stayed unchanged, recovery/cleanup
+passed, actual CPU/memory caps remained two CPU/1 GiB per service. Four-worker
+web CPU averaged 1.84 with throttling in 131/165 periods; do not infer capacity
+margin, accepted real workload or absence of contention. Record the actual
+comparison separately; no automatic formal Verified or live promotion.
+
+Prepare an explicitly selected `--profile workers4` full S31 retry. Preserve
+the original r1_workload.json and default legacy selection byte for byte.
+The new schema-2 candidate is an exact published copy with only web_workers=4
+plus version/provenance fields; every target/load/CPU/memory/approval remains.
+The measured candidate is sufficient to prepare this separate technical retry;
+it does not authorise production tuning. This extends the earlier temporary-
+trial-only rule solely for the named, explicit synthetic profile. No live change.
+
+Change only current S31 operator helpers/verifier/docs. Keep every application
+input (284), 26 migrations, old 848/36, real S28 gate, all 40 old host test
+methods, 485 protected source hashes, 106 historical files, both history bindings,
+592 protections and exact scanner metadata unchanged. Supply eight additional
+stdlib profile/lineage/resource denial contracts (48 total), unrun by the agent.
+Pin both original/new profile file and canonical digests. Prove actual selected
+worker counts, image and fixed caps before/after HTTP and recovery. Full retry
+must execute retained 848/36, all 48 host contracts, real broker and original
+cycle/migration/encrypted restore/cleanup; never substitute the comparison.
+
+Before APPLY changes Git/source, capture the actual initial Failed report.
+Exclusively create S31-initial-failure.json from those exact local bytes and a
+hash-only S31-profile-lineage.json after source apply. Preserve current Failed
+through APPLY. Runtime verifies that archive/binding without creating or rebinding;
+only a completed operator --record may replace the current result. Keep a private
+full copy of each new attempt beside its review template. Qualify public run IDs
+as run:<nonce>; internal raw ownership nonces remain unchanged, no scanner bypass.
+
+Record prepared retry in S31/QR-05 tracking without accepting any requirement.
+Source Prepared, new formal retry Pending, actual prior technical Failed,
+release Blocked; all D05/D06/D07/G2/human inputs and 85 full acceptances Pending.
+No agent tests/builds/Docker/migrations/native app/PDF/browser/SSH/cloud/push.
+Only static syntax/AST/JSON/source/hash/archive/text scans. No S32 work.
+
 ## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at

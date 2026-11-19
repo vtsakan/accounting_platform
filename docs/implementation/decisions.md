@@ -1,5 +1,46 @@
 # Decision register
 
+## S31 observed four-worker result — explicit versioned full retry Prepared, 2026-11-19
+
+The supplied 11:36:54 Europe/Athens comparison completed 2/4/2 on the same
+financial dataset and image. Four workers measured p95 1.673/1.712/1.872 s
+against unchanged 2/2/10 s targets; both two-worker controls failed list/detail
+again. All 1,350 requests succeeded, all 39 business tables matched, actual
+two-CPU/1-GiB caps and recovery/cleanup were retained. See
+evidence/S31-worker-comparison-observed.json. Web CPU averaged 1.84 cores with
+131/165 quota periods throttled at four workers; this is no capacity-margin
+or accepted-VM claim. One sequence does not provide statistical certainty.
+
+Prepare a separate explicitly selected schema-2 workers4 synthetic profile.
+The legacy JSON/default stays exact. Only worker count differs in the envelope;
+version/provenance fields bind the original profile and supplied observation.
+Both complete profile payloads and file digests are fixed; arbitrary workloads,
+weaker targets, increased CPU/RAM or fabricated approvals are rejected. This
+extends the earlier trial-only rule for this named technical retry, without
+promoting the live environment or the original failed result.
+
+The operator must repeat 848/36, all 40 retained plus eight new host contracts,
+real S28 broker/ack-loss, the complete finance cycle, clone migration and
+encrypted recovery. Verify actual selected worker count/image/resource limits
+before/after HTTP and restore. Keep 284 image inputs, 26 migrations, old tests,
+485 source hashes, 106 historical files, both historical bindings, all 592
+protections and scanner metadata unchanged. No application/default/dependency
+or VM/account/MFA/real-data change; no agent native execution.
+
+APPLY captures the original Failed report before any Git change and exclusively
+archives its exact operator-local bytes plus a hash-only provenance binding.
+No agent template is copied into historical evidence. The original current
+report survives APPLY; runtime only verifies lineage. Each new completed attempt
+also gets a private full copy, before an optional current --record update.
+Public resource IDs are qualified run:<nonce>, preserving internal nonces and
+paths and scanning every file with the same rules. The old result is unchanged.
+
+The workers4 full retry is Pending operator. Even a future technical Verified
+keeps source Prepared, release Blocked, workload approval Pending D06 and all
+85 full acceptances Pending. Human R1/D05/D07/G2/Greek visual/HTTPS/first-office
+inputs remain required. Older diagnostic protocols keep their old source
+bindings; do not refresh their hashes to accept a changed verifier. No S32.
+
 ## S31 observed worker diagnosis — fixed 2/4/2 experiment Prepared, 2026-11-19
 
 The supplied operator diagnostic at 11:02:52 Europe/Athens completed with

@@ -19,6 +19,7 @@ from s28_broker_gate import broker_gate
 from s31_rehearsal import rehearse
 from s31_receipts import BINDING
 from s31_evidence import BINDING as EVIDENCE_BINDING
+from s31_profiles import ARCHIVE, LINEAGE, load_workload, validate_rehearsal, verify_lineage
 
 DOCS = ROOT / 'docs/implementation'
 
@@ -43,7 +44,12 @@ def host_contracts():
     count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
     require(result.returncode == 0 and count and int(count.group(1)) == 8,
             'Eight supplementary-evidence contracts required:\n' + result.stderr[-3000:])
-    return 40
+    result = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT / 'tools'), '-p', 'test_s31_profiles.py'],
+                            cwd=ROOT, text=True, capture_output=True)
+    count = re.search(r'Ran (\d+) tests?', result.stdout + result.stderr)
+    require(result.returncode == 0 and count and int(count.group(1)) == 8,
+            'Eight profile/lineage contracts required:\n' + result.stderr[-3000:])
+    return 48
 
 
 def select_image(args):
@@ -72,12 +78,16 @@ def broker_resource_labels(proof):
 
 
 def private_review(report):
-    directory = ROOT / 'private/s31' / report['rehearsal']['nonce']
+    run_id = report['rehearsal']['nonce']
+    require(re.fullmatch(r'run:[0-9a-f]{20}', run_id) is not None, 'Qualified public rehearsal ID required')
+    directory = ROOT / 'private/s31' / run_id.removeprefix('run:')
     directory.mkdir(parents=True, mode=0o700, exist_ok=False)
     template = pending_review(report['source_commit'], report['application_context_digest'], digest_object(report),
                               report['matrix_sha256'], report['workload_sha256'])
     path = directory / 'R1-review.json'
     path.write_text(json.dumps(template, ensure_ascii=False, indent=2) + '\n'); path.chmod(0o600)
+    technical = directory / 'technical-result.json'
+    technical.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n'); technical.chmod(0o600)
     # Review references contain names/observations; this directory stays ignored.
     ignored = subprocess.run(['git', 'check-ignore', '--quiet', str(path.relative_to(ROOT))], cwd=ROOT)
     require(ignored.returncode == 0, 'Private named reviews must stay ignored by Git')
@@ -87,6 +97,8 @@ def private_review(report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--record', action='store_true')
+    parser.add_argument('--profile', choices=('legacy', 'workers4'), default='legacy',
+                        help='Explicit synthetic runtime selection; production workload approval remains Pending')
     selection = parser.add_mutually_exclusive_group()
     selection.add_argument('--image'); selection.add_argument('--host-dns', action='store_true')
     parser.add_argument('--identity', default=str(Path.home() / '.config/totalaccounting/recovered-backup-age.key'))
@@ -94,9 +106,19 @@ def main():
     try:
         require(not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip(), 'Commit source before S31 verification')
         source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+        publication = json.loads((DOCS / 'evidence/S31-profile-source.json').read_text())
+        expected_tools = {'tools/r1_gate.py', 'tools/s31_rehearsal.py', 'tools/verify_s31.py', 'tools/prepare_s31.py',
+                          'tools/s31_profiles.py', 'tools/s31_runtime_policy.py', 'tools/test_s31_profiles.py'}
+        require(set(publication['operator_source_sha256']) == expected_tools, 'Published profile operator source inventory required')
+        for name, digest in publication['operator_source_sha256'].items():
+            require(digest_bytes((ROOT / name).read_bytes()) == digest, 'Profile operator source changed: ' + name)
         retained = preserved(ROOT, DOCS / 'evidence/S31-preserved-source.json')
         require(retained == 592, 'Every original S31 source/receipt binding must remain protected')
-        rows = matrix(ROOT); workload = profile(json.loads((DOCS / 'r1_workload.json').read_text()))
+        rows = matrix(ROOT)
+        _, selected_workload = load_workload(ROOT, args.profile)
+        workload = profile(selected_workload)
+        lineage = verify_lineage(ROOT)
+        lineage_hashes = {name: digest_bytes((ROOT / name).read_bytes()) for name in (ARCHIVE, LINEAGE)}
         contracts = host_contracts(); historical = receipts()
         context = image.candidate_context()[1]
         require(context['file_count'] == 284 and context['digest'] == json.loads((DOCS / 'evidence/S30-verification.json').read_text())['application_context_digest'],
@@ -120,6 +142,9 @@ def main():
             broker = broker_resource_labels(broker_gate(Path(directory), selected['image_id']))
         stage = 'synthetic-migration-cycle-http-load-and-encrypted-recovery'
         rehearsal = rehearse(selected['image_id'], context['digest'], args.identity, workload)
+        validate_rehearsal(rehearsal, workload, selected['image_id'])
+        require(verify_lineage(ROOT) == lineage and lineage_hashes == {name: digest_bytes((ROOT / name).read_bytes()) for name in lineage_hashes},
+                'Initial Failed evidence changed during the selected-profile retry')
         preserved(ROOT, DOCS / 'evidence/S31-preserved-source.json')
         require(historical == receipts(), 'Historical evidence changed')
         require(image.candidate_context()[1]['digest'] == context['digest']
@@ -127,6 +152,9 @@ def main():
                 and not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip(),
                 'Source changed during verification')
         passed = rehearsal['performance']['thresholds_passed'] and rehearsal['recovery']['proposed_targets_met_in_this_rehearsal']
+        # Qualify the public resource ID; internal ownership nonces and paths
+        # remain unchanged. No scanner rule or historical result is rewritten.
+        rehearsal = {**rehearsal, 'nonce': 'run:' + rehearsal['nonce']}
         report = {'step': 'S31', 'status': 'Prepared', 'technical_status': 'Verified' if passed else 'Failed',
             'scope': 'synthetic-isolated-finance-release-rehearsal',
             'checked_at': datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
@@ -143,6 +171,9 @@ def main():
             'historical_evidence_binding_sha256': digest_bytes((ROOT / EVIDENCE_BINDING).read_bytes()),
             'r1_user_requirements': 33, 'r1_quality_requirements': 9, 'r1_acceptance_rows': len(rows),
             'matrix_sha256': digest_object(json.loads((DOCS / 'r1_acceptance_matrix.json').read_text())),
+            'workload_profile': args.profile, 'workload_approval': 'Pending D06',
+            'initial_failed_receipt_archive': ARCHIVE, 'initial_failed_receipt_sha256': lineage['archive_sha256'],
+            'initial_failure_lineage_sha256': lineage_hashes[LINEAGE], 'initial_failure_preserved': True,
             'workload_sha256': digest_object(workload), 'rehearsal': rehearsal,
             'release_decision': 'Blocked', 'release_blockers': BASE_BLOCKERS + ([] if passed else ['Synthetic performance/recovery targets did not pass']),
             'full_requirement_acceptance': 'Pending', 'full_requirement_acceptances_pending': 85,

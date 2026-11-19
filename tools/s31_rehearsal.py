@@ -15,6 +15,8 @@ import operations_common as common
 import operations_pg as pg
 from r1_gate import digest_object, profile, require
 from verify_s05 import HIDDEN_VALUES, redact
+from s31_profiles import identify, load_workload
+from s31_runtime_policy import runtime_proof
 
 LABEL = 'com.docker.compose.project'
 
@@ -26,6 +28,9 @@ class Rehearsal:
         self.project = 'accounting-s31-' + self.nonce
         self.identity = common.identity_file(identity)
         self.workload = profile(workload)
+        self.profile_id = identify(self.workload)
+        self.workload_path, published_workload = load_workload(ROOT, self.profile_id)
+        require(published_workload == self.workload, 'Selected workload must match its published file')
         self.image_id = image_id
         require(re.fullmatch(r'sha256:[0-9a-f]{64}', image_id), 'Immutable application image required')
         self.recipient = common.run(['age-keygen', '-y', self.identity]).decode().strip()
@@ -40,7 +45,8 @@ class Rehearsal:
             'AUTH_MAIL_MODE': 'disabled', 'AUTH_MAIL_LIVE_ENABLED': 'false', 'AUTH_STAFF_MAIL_LIVE_ENABLED': 'false',
             'DB_NAME': self.dbname('base'), 'DB_USER': 's31_app', 'DB_PASSWORD': self.password, 'DB_HOST': 'db', 'DB_PORT': '5432',
             'S31_VERIFY_ID': self.nonce, 'S31_OWNER_PASSWORD': self.owner_password,
-            'BACKGROUND_JOBS_ENABLED': 'false', 'FEE_AUTOMATION_ENABLED': 'false', 'GUNICORN_WORKERS': '2'}
+            'BACKGROUND_JOBS_ENABLED': 'false', 'FEE_AUTOMATION_ENABLED': 'false',
+            'GUNICORN_WORKERS': str(self.workload['synthetic_envelope']['web_workers'])}
         self.pg_image = json.loads((ROOT / 'docker/image-pins.json').read_text())['postgresql']['reference']
         envelope = workload['synthetic_envelope']
         database = {'image': self.pg_image, 'platform': 'linux/amd64', 'networks': ['private'],
@@ -51,7 +57,7 @@ class Rehearsal:
         application = {'image': image_id, 'platform': 'linux/amd64', 'networks': ['private'],
             'read_only': True, 'tmpfs': ['/tmp:rw,nosuid,size=128m,mode=1777'], 'cap_drop': ['ALL'],
             'security_opt': ['no-new-privileges:true'], 'healthcheck': {'disable': True},
-            'volumes': [str(ROOT / 'tools') + ':/opt/s31/tools:ro', str(ROOT / 'docs/implementation/r1_workload.json') + ':/opt/s31/workload.json:ro'],
+            'volumes': [str(ROOT / 'tools') + ':/opt/s31/tools:ro', str(self.workload_path) + ':/opt/s31/workload.json:ro'],
             'mem_limit': str(envelope['web_memory_mib']) + 'm', 'cpus': envelope['web_cpus']}
         self.definition = {'services': {
             'db': {**database, 'volumes': ['source_database:/var/lib/postgresql/data']},
@@ -234,7 +240,9 @@ class Rehearsal:
         self.stage = 'seed-unapproved-workload'; dataset = self.probe('seed-load')
         self.stage = 'production-http-50-session-benchmark'
         self.compose('up', '--detach', 'web'); self.ready('web')
+        web_runtime = runtime_proof(self, 'web')
         measured = self.probe('benchmark', running='web')
+        require(runtime_proof(self, 'web') == web_runtime, 'Selected web runtime changed during measurement')
         ids = [self.container(service) for service in ('db', 'web')]
         stats = common.run(['docker', 'stats', '--no-stream', '--format', '{{json .}}', *ids], environment=self.environment).decode()
         raw_stats = list(map(json.loads, stats.splitlines()))
@@ -264,7 +272,9 @@ class Rehearsal:
         self.stage = 'restore-current26-data-and-keys'
         restored = self.restore('restore_db', 'restored', recovered_dump, current_manifest['tables'])
         self.compose('up', '--detach', 'restored_web'); self.ready('restored_web')
+        restored_runtime = runtime_proof(self, 'restored_web')
         key_proof = self.probe('recovered', running='restored_web')
+        require(runtime_proof(self, 'restored_web') == restored_runtime, 'Recovered runtime changed during key/HTTP proof')
         rto = time.monotonic() - began
         # This is snapshot age in the rehearsal, not a demonstrated production
         # backup cadence, accepted RPO or recovery service-level commitment.
@@ -274,6 +284,7 @@ class Rehearsal:
         pg.verify_tables(self.pg_command('db', 'candidate', 'psql'), current['tables'], environment=self.environment)
         return {'nonce': self.nonce, 'migration': migration, 'cycle': cycle, 'dataset': dataset, 'performance': measured,
             'runtime': {'application_image': self.image_id, 'postgresql_image': self.pg_image, 'versions': versions,
+                        'workload_profile': self.profile_id, 'effective_web': web_runtime, 'effective_restored_web': restored_runtime,
                         'container_limits': self.workload['synthetic_envelope'], 'resource_sample': resources,
                         'vm_capacity_inferred': False, 'external_services': 'disabled; actual Redis regression runs separately'},
             'recovery': {'all_public_tables_matched': restored['all_public_tables_match'],

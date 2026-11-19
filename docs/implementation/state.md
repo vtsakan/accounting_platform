@@ -20,6 +20,22 @@ Updated 2026-11-19. Current step: **S31 Prepared — finance release gate; relea
 S31 source Prepared; actual release Blocked. Technical rehearsal: Failed. Effective R1 matrix includes 33 Must user requirements (32 baseline plus Greek frontend) and nine quality requirements. Operator-only retained 848/36 and real S28 broker gate, current synthetic billing/collection/correction/reporting cycle, 50 distinct HTTP sessions and encrypted PG17 baseline20/current26 recovery supplied. Human accountant/product-owner application acceptance, agreed workload/recovery/operational owners, D05 real dataset mapping/reconciliation, Greek visual/HTTPS review, authorised first-office cutover and G2 remain Pending. All 85 full acceptance statuses remain Pending. No application/image/migration/dependency/demo/VM/account/MFA change. S32 independent source work requires separate selection; live use remains blocked.
 <!-- /S31-RESULT -->
 
+<!-- S31-WORKER-COMPARISON -->
+### S31 performance follow-up
+
+Operator diagnosis Observed at 2026-11-19T11:02:52+02:00: 450 HTTP requests,
+zero errors; concurrent list/detail p95 2.904/3.038 s versus Gunicorn logged
+0.062/0.074 s; no cgroup CPU throttling. This supports a worker-queue hypothesis,
+not a measured queue duration or accepted VM capacity. Formal S31 remains
+technical Failed, source Prepared and release Blocked; all 85 acceptances Pending.
+
+Prepared operator-only 2 → 4 → 2 sync-worker comparison: same immutable image,
+financial dataset, 50 sessions, CPU/memory caps and p95 targets. Candidate four
+is exploratory only. Original two-worker workload/receipt stays unchanged.
+See [procedure](s31_workers_el.md); run `python3 tools/compare_s31_workers.py`.
+Agent runtime not executed; comparison results and formal retry Pending.
+<!-- /S31-WORKER-COMPARISON -->
+
 ## Previous verified work — S30
 
 <!-- S30-RESULT -->

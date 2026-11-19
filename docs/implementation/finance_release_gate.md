@@ -7,8 +7,13 @@ recovery. Technical status is **Failed**: list/detail p95 exceed two seconds
 at fifty sessions. The report target and recovery targets passed. See
 [the exact operator summary](evidence/S31-operator-completion.json) and
 [the diagnostic procedure](s31_performance_el.md). The actual Failed receipt,
-all older receipts and both local-history bindings remain unchanged. New
-diagnostic execution is Pending; no agent runtime result is claimed.
+all older receipts and both local-history bindings remain unchanged. The
+operator diagnostic is now Observed at 2026-11-19T11:02:52+02:00: low Gunicorn
+service times, high concurrent HTTP times and zero CPU quota throttling support
+a worker-queue hypothesis. See [the supplied observation](evidence/S31-performance-observed.json)
+and [the separate fixed 2/4/2 comparison](s31_workers_el.md). That experiment is
+Prepared and Pending operator; no agent runtime result is claimed. Its four-worker
+middle condition cannot promote the original formal two-worker profile or receipt.
 
 The effective R1 baseline has **33 Must user requirements**, including the
 32 original requirements and CR-001/UR-LOC-01, plus **nine quality requirements**:

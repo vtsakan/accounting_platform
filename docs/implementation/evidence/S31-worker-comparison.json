@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "step": "S31",
+  "status": "Prepared",
+  "scope": "operator-only-exploratory-sync-worker-comparison",
+  "prepared_at": "2026-11-19T11:17:08+02:00",
+  "release_decision": "Blocked",
+  "official_technical_status": "Failed",
+  "observed_failed_receipt_sha256": "sha256:3687f5aba1d8714b1819c1451066dc889dc139823afbff683e2398737f11ed47",
+  "observed_diagnosis_reference": "docs/implementation/evidence/S31-performance-observed.json",
+  "observed_diagnosis_sha256": "sha256:5917bc977f310adb076231ce9f2f985aa0fd8f7a40a06b276a17bb960564fd7c",
+  "comparison_sequence": [
+    [
+      "control_before",
+      2
+    ],
+    [
+      "candidate_four",
+      4
+    ],
+    [
+      "control_after",
+      2
+    ]
+  ],
+  "operator_command": "python3 tools/compare_s31_workers.py",
+  "operator_native_execution": "Pending",
+  "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
+  "application_image": "sha256:6795deceab7250e41f1465e792cde0efe818d89060e134ef7588ae2df04959eb",
+  "operator_source_sha256": {
+    "tools/compare_s31_workers.py": "sha256:89f8ad00305f12ce162b0d1dd094ea18a1e0f55cab9b15f9bb90ca7b6051c2e5",
+    "tools/prepare_s31_worker_comparison.py": "sha256:8813b071cd9f6e8260df74dfe6a50eee802237843f02ceb8a6fc8d535852f5d1"
+  },
+  "unchanged_guard_sha256": {
+    "tools/r1_gate.py": "sha256:e95bfe75b4ec065c4103ee7d7b56992193dd251c613d578fb7429e501c9c8ee7",
+    "tools/verify_s31.py": "sha256:61f7caf1083ae19ba88e53c4968b3de8a1768c9980ec5704d94e0262e1d16588",
+    "tools/s31_rehearsal.py": "sha256:7a334c47cfb8c074e09ae9c3d1d8530060e9aa057d9f051624a1316448974c4b",
+    "tools/s31_runtime_probe.py": "sha256:f6097ade6936a441f9d65837d708172e8012b49cbb3f0694fb10fb2a5a17bfe6",
+    "tools/prepare_s31.py": "sha256:67d39bbcc8c156188aff72ca3154dadb50dd95cbd5f6f0fcc2e4d6829d16b769",
+    "tools/s31_receipts.py": "sha256:3210cd5fe539ce1ff7b1afe0d1d008aef2470cc5f73beabfde7219ec092cda3d",
+    "tools/s31_evidence.py": "sha256:c96e1286bb989fe297f9c5ba26734678bbf60484f6ea395d97dba5d5ad628147",
+    "tools/test_s31.py": "sha256:a65d1046b22d66e8acad786acd8b46f4f42202a151affa725fe75a91d73f3832",
+    "tools/test_s31_receipts.py": "sha256:46892438092056df5eb6d793cfb5ceb40b7efce9ebe6ff58ed34fcad24e2e861",
+    "tools/test_s31_evidence.py": "sha256:79f038f5434b8c9ce8dad8c247b3e589e967c8b74ca5d51ffa3b5be8fe3f16ec",
+    "tools/diagnose_s31.py": "sha256:01e12cf98b9db13fcd14cf39bceed708713e4162bd2e6ff4f7990ddd88952916",
+    "tools/s31_performance_probe.py": "sha256:812bbb2d525b2ae44defe0a5236968aac2bb6c6b6b10b028fc9890bb5f4a2a84",
+    "docs/implementation/r1_workload.json": "sha256:1f5e01ceaa9bf13889b2b4e8f49b1fc0c608e394f592653b16a70ab5ab467bda",
+    "docs/implementation/r1_acceptance_matrix.json": "sha256:a7e87d9f1899a214cfef0d62fa8f2050a22d3fb1bfc23e3f7028a13fc20d3160",
+    "docs/implementation/evidence/S31-preserved-source.json": "sha256:3a19e0dda70e18c3b0fa4c760b65a21b503548d46d18e1d8b356a1b8eda03f64",
+    "docs/implementation/evidence/S31-performance-diagnostics.json": "sha256:d5e8d728af84376c2eb6652d376ebca88661a1a7fe530e2a804a2df3a20be638",
+    "docs/implementation/evidence/S31-performance-secret-review.json": "sha256:76bf965ea1a522dedada4e19c6978dca5bf03bda5a5fba0b1790e73c7a800a79",
+    "docs/security/secret_scan_allowlist.csv": "sha256:bb11d52d375e9e400ca01508b899df14400b1dab7296acf5fa2817aa6221ea68"
+  },
+  "conditions": {
+    "sessions_per_condition": 50,
+    "measured_requests_per_condition": 450,
+    "total_measured_requests": 1350,
+    "excluded_client_warmups_per_condition": 3,
+    "recreate_web_for_each_condition": true,
+    "same_database_and_financial_dataset": true,
+    "web_cpus": 2,
+    "web_memory_mib": 1024,
+    "database_cpus": 2,
+    "database_memory_mib": 1024,
+    "worker_class": "sync",
+    "target_p95_seconds": {
+      "list": 2,
+      "detail": 2,
+      "annual_report": 10
+    }
+  },
+  "original_two_worker_profile_and_formal_verifier_unchanged": true,
+  "automatic_runtime_profile_promotion": false,
+  "formal_result_written": false,
+  "original_historical_bindings_rewritten": false,
+  "source_protections": {
+    "retained_published_hashes": 485,
+    "protected_paths": 592,
+    "historical_files": 106,
+    "application_inputs": 284,
+    "migrations": 26,
+    "old_application_tests": 848,
+    "financial_cases": 36,
+    "old_host_contracts": 40
+  },
+  "new_host_tests_supplied": 0,
+  "full_848_suite_and_real_broker_rerun_by_comparison": false,
+  "agent_tests_builds_docker_migrations_run": false,
+  "all_85_full_acceptances": "Pending",
+  "local_demo_or_vm_changed": false,
+  "official_documentation": [
+    {
+      "url": "https://gunicorn.org/design/",
+      "checked_on": "2026-11-19",
+      "use": "Primary documentation for one-request sync workers and tuning worker count under load; no fixed capacity claim"
+    }
+  ],
+  "next": "Remain S31; observe bounded comparison before any reviewed runtime-profile change/full formal retry"
+}

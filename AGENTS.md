@@ -152,6 +152,38 @@ Pending acceptances, and remove only its owned synthetic resources/plaintext.
 No agent tests/builds/Docker/migrations/native app/SSH/cloud/push. Static AST,
 source/hash/archive checks and secret text scans only. Release Blocked; no S32.
 
+### S31 observed diagnosis — bounded worker comparison, source only
+
+The user supplied successful diagnostic output at 2026-11-19T11:02:52+02:00.
+Read evidence/S31-performance-observed.json. Concurrent list/detail p95 is
+2.904/3.038 s; Gunicorn logged p95 is 0.062/0.074 s and subsequent single-session
+HTTP is 0.052/0.065 s. All 450 requests succeeded; cgroup CPU throttling and
+memory event deltas are zero, web/DB interval averages about 1.13/0.77 CPU.
+Recovery and owned/plaintext cleanup passed. Formal technical Failed remains.
+
+This supports worker-queue contention as an inference, not a paired queue-time
+measurement or a proven sole cause. Prepare a separate fixed 2 → 4 → 2 sync
+worker experiment on one fresh nonce-owned synthetic database/image/dataset.
+Only the temporary owned web service's GUNICORN_WORKERS may change, only to
+four in the middle condition; keep two CPU, 1 GiB, 50 sessions, 450 attempts
+per condition, original targets, all other services and full original profile.
+Recreate the web in every condition, verify actual process counts and resource
+limits, compare all accounting business tables before/after each run, retain
+both controls/all failures, then finish at two workers before encrypted recovery.
+The earlier two-worker-only diagnostic rule remains for the formal gate and
+original diagnostic; this separate exploratory experiment is the sole extension.
+
+Keep every previous operator/diagnostic tool, 485 source hashes, 106 historical
+files, both exclusive bindings, exact scanner prefix/suffix, all 592 protections,
+284 image inputs, 26 migrations, 848/36, 40 old contracts and the formal Failed
+receipt unchanged. No new scanner review or app/runtime-default/dependency change.
+Record the supplied observation separately and the new experiment Prepared;
+update only the S31 follow-up note, S31 step source/evidence and QR-05 notes/
+evidence/date while keeping every acceptance criterion and all 85 statuses.
+No automatic candidate promotion or formal Verified, VM/deploy/workload approval.
+No agent tests/builds/Docker/migrations/native app/browser/SSH/cloud/push; static
+AST/JSON/source/hash/archive and text scans only. Stop S31; no S32.
+
 ## Historical S30 — PDF/CSV exports, source only
 
 The user selected S30 after the actual S29 operator receipt at

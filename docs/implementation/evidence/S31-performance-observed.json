@@ -1,0 +1,398 @@
+{
+  "step": "S31",
+  "status": "Observed",
+  "scope": "recording supplied operator performance diagnosis",
+  "checked_at": "2026-11-19T11:02:52+02:00",
+  "supplied_console_sha256": "sha256:467d93bac6609bb2ffa0ebbbcf116163bc5781473b2f1481c63b76c6a20afd2f",
+  "operator_result_sha256": "sha256:a664753f68c85676eb21600e18e6973ceae00a2695b5840b72b02ccad873703b",
+  "evidence_origin": "User-supplied complete S31-PERFORMANCE-RESULT console output; not agent native execution",
+  "operator_source_commit": "Not included in supplied summary; do not infer an operator Git commit",
+  "operator_result": {
+    "step": "S31",
+    "scope": "performance-diagnostics-only",
+    "status": "Observed",
+    "checked_at": "2026-11-19T11:02:52+02:00",
+    "official_technical_status": "Failed",
+    "official_receipt_unchanged": true,
+    "release_decision": "Blocked",
+    "performance": {
+      "operations": {
+        "list": {
+          "attempts": 150,
+          "p95_seconds": 2.903549844000736,
+          "max_seconds": 3.080625409998902,
+          "target_seconds": 2,
+          "target_met": false
+        },
+        "detail": {
+          "attempts": 150,
+          "p95_seconds": 3.0375264960002823,
+          "max_seconds": 3.1905710480004927,
+          "target_seconds": 2,
+          "target_met": false
+        },
+        "annual_report": {
+          "attempts": 150,
+          "p95_seconds": 3.056817721000698,
+          "max_seconds": 3.2881827059991338,
+          "target_seconds": 10,
+          "target_met": true
+        }
+      },
+      "errors": 0,
+      "thresholds_passed": false,
+      "duration_seconds": 24.349927768998896,
+      "requests": 450
+    },
+    "diagnostics": {
+      "gunicorn_logged_seconds": {
+        "list": {
+          "samples": 151,
+          "p50_seconds": 0.052045,
+          "p95_seconds": 0.061783,
+          "max_seconds": 0.221676,
+          "warmup_included": 1
+        },
+        "detail": {
+          "samples": 151,
+          "p50_seconds": 0.060865,
+          "p95_seconds": 0.073951,
+          "max_seconds": 0.083867,
+          "warmup_included": 1
+        },
+        "annual_report": {
+          "samples": 151,
+          "p50_seconds": 0.206637,
+          "p95_seconds": 0.233841,
+          "max_seconds": 0.26336,
+          "warmup_included": 1
+        }
+      },
+      "cgroup_intervals": {
+        "db": {
+          "availability": "Observed",
+          "interval_seconds": 26.466851185999985,
+          "cpu_max": "200000 100000",
+          "average_cpu_equivalents": 0.7716700357163527,
+          "usage_usec": 20423676,
+          "nr_periods": 263,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "memory_before_bytes": 139849728,
+          "memory_after_bytes": 140091392,
+          "memory_limit": "1073741824",
+          "memory_event_deltas": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+        },
+        "web": {
+          "availability": "Observed",
+          "interval_seconds": 26.472732173000622,
+          "cpu_max": "200000 100000",
+          "average_cpu_equivalents": 1.1302628986106842,
+          "usage_usec": 29921147,
+          "nr_periods": 265,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "memory_before_bytes": 124100608,
+          "memory_after_bytes": 146305024,
+          "memory_limit": "1073741824",
+          "memory_event_deltas": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0,
+            "sock_throttled": 0
+          },
+          "scope": "entire unchanged benchmark probe, including fixture reads, 50 session creation and three warmups; web includes load generator"
+        }
+      },
+      "single_session_http_after_load": {
+        "list": {
+          "samples": 10,
+          "p95_seconds": 0.05208370499894954,
+          "max_seconds": 0.05208370499894954
+        },
+        "detail": {
+          "samples": 10,
+          "p95_seconds": 0.06468553599916049,
+          "max_seconds": 0.06468553599916049
+        },
+        "annual_report": {
+          "samples": 10,
+          "p95_seconds": 0.22485084800064215,
+          "max_seconds": 0.22485084800064215
+        }
+      },
+      "instrumented_in_process_after_load": {
+        "list": {
+          "requests": 1,
+          "elapsed_seconds": 0.1167169529999228,
+          "sql": {
+            "executions": 19,
+            "elapsed_seconds": 0.010297894998075208,
+            "by_verb": {
+              "SELECT": 18,
+              "UPDATE": 1
+            }
+          },
+          "application_hotspots": [
+            {
+              "source": "accounting/auth_middleware.py",
+              "line": 17,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 1.173e-06,
+              "cumulative_seconds": 0.106645946
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 95,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 7.63e-07,
+              "cumulative_seconds": 0.10664244
+            },
+            {
+              "source": "accounting/views.py",
+              "line": 31,
+              "function": "transaction_list_view",
+              "calls": 1,
+              "own_seconds": 9.805e-06,
+              "cumulative_seconds": 0.09538018200000001
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 25,
+              "function": "wrapped",
+              "calls": 1,
+              "own_seconds": 4.4550000000000005e-06,
+              "cumulative_seconds": 0.093967374
+            },
+            {
+              "source": "accounting/movement_views.py",
+              "line": 51,
+              "function": "movement_list",
+              "calls": 1,
+              "own_seconds": 2.4618e-05,
+              "cumulative_seconds": 0.09162734700000001
+            },
+            {
+              "source": "accounting/membership.py",
+              "line": 66,
+              "function": "require_office_profile",
+              "calls": 6,
+              "own_seconds": 8.4663e-05,
+              "cumulative_seconds": 0.012290822000000002
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 12,
+              "function": "require_capability",
+              "calls": 5,
+              "own_seconds": 9.029000000000001e-06,
+              "cumulative_seconds": 0.009624638000000001
+            },
+            {
+              "source": "accounting/middleware.py",
+              "line": 17,
+              "function": "process_view",
+              "calls": 1,
+              "own_seconds": 8.717e-06,
+              "cumulative_seconds": 0.004942219
+            }
+          ],
+          "scope": "instrumented Django test client with real production settings/middleware/database; excludes Gunicorn, socket and worker queue; cumulative functions overlap"
+        },
+        "detail": {
+          "requests": 1,
+          "elapsed_seconds": 0.09308338499977253,
+          "sql": {
+            "executions": 26,
+            "elapsed_seconds": 0.01325659999747586,
+            "by_verb": {
+              "SELECT": 25,
+              "UPDATE": 1
+            }
+          },
+          "application_hotspots": [
+            {
+              "source": "accounting/auth_middleware.py",
+              "line": 17,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 2.0720000000000002e-06,
+              "cumulative_seconds": 0.089225071
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 95,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 1.1630000000000001e-06,
+              "cumulative_seconds": 0.08922078600000001
+            },
+            {
+              "source": "accounting/views.py",
+              "line": 75,
+              "function": "entity_detail_view",
+              "calls": 1,
+              "own_seconds": 2.171e-06,
+              "cumulative_seconds": 0.08019912500000001
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 25,
+              "function": "wrapped",
+              "calls": 1,
+              "own_seconds": 6.044e-06,
+              "cumulative_seconds": 0.080186281
+            },
+            {
+              "source": "accounting/counterparty_views.py",
+              "line": 107,
+              "function": "detail",
+              "calls": 1,
+              "own_seconds": 0.000135103,
+              "cumulative_seconds": 0.078512027
+            },
+            {
+              "source": "accounting/settlement_selectors.py",
+              "line": 83,
+              "function": "settlement_totals",
+              "calls": 1,
+              "own_seconds": 7.3779e-05,
+              "cumulative_seconds": 0.030489345
+            },
+            {
+              "source": "accounting/membership.py",
+              "line": 66,
+              "function": "require_office_profile",
+              "calls": 8,
+              "own_seconds": 0.000102619,
+              "cumulative_seconds": 0.013888693
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 12,
+              "function": "require_capability",
+              "calls": 7,
+              "own_seconds": 1.2035e-05,
+              "cumulative_seconds": 0.012032736
+            }
+          ],
+          "scope": "instrumented Django test client with real production settings/middleware/database; excludes Gunicorn, socket and worker queue; cumulative functions overlap"
+        },
+        "annual_report": {
+          "requests": 1,
+          "elapsed_seconds": 0.3404404370012344,
+          "sql": {
+            "executions": 53,
+            "elapsed_seconds": 0.10089718099152378,
+            "by_verb": {
+              "SELECT": 51,
+              "SET": 1,
+              "UPDATE": 1
+            }
+          },
+          "application_hotspots": [
+            {
+              "source": "accounting/auth_middleware.py",
+              "line": 17,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 2.4270000000000002e-06,
+              "cumulative_seconds": 0.336140131
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 95,
+              "function": "__call__",
+              "calls": 1,
+              "own_seconds": 1.04e-06,
+              "cumulative_seconds": 0.33613534700000003
+            },
+            {
+              "source": "accounting/views.py",
+              "line": 80,
+              "function": "summary_report_view",
+              "calls": 1,
+              "own_seconds": 4.453e-06,
+              "cumulative_seconds": 0.324764161
+            },
+            {
+              "source": "accounting/capabilities.py",
+              "line": 25,
+              "function": "wrapped",
+              "calls": 1,
+              "own_seconds": 3.609e-06,
+              "cumulative_seconds": 0.324746682
+            },
+            {
+              "source": "accounting/report_views.py",
+              "line": 19,
+              "function": "period",
+              "calls": 1,
+              "own_seconds": 1.5581000000000002e-05,
+              "cumulative_seconds": 0.322782395
+            },
+            {
+              "source": "accounting/report_selectors.py",
+              "line": 104,
+              "function": "period_report",
+              "calls": 1,
+              "own_seconds": 0.000421029,
+              "cumulative_seconds": 0.24747169000000002
+            },
+            {
+              "source": "accounting/settlement_selectors.py",
+              "line": 83,
+              "function": "settlement_totals",
+              "calls": 1,
+              "own_seconds": 7.409e-05,
+              "cumulative_seconds": 0.077219198
+            },
+            {
+              "source": "accounting/report_selectors.py",
+              "line": 51,
+              "function": "cash_bridge",
+              "calls": 1,
+              "own_seconds": 0.00016147400000000002,
+              "cumulative_seconds": 0.056153285000000004
+            }
+          ],
+          "scope": "instrumented Django test client with real production settings/middleware/database; excludes Gunicorn, socket and worker queue; cumulative functions overlap"
+        }
+      },
+      "profiled_payloads_or_sql_saved": false,
+      "profiles_affect_original_450_samples": false,
+      "limitations": [
+        "Client and Gunicorn distributions are not paired; do not subtract their p95 values to claim queue time",
+        "All 151 Gunicorn entries per operation are retained, including one warmup; the unchanged client gate uses 150 measured attempts",
+        "Client time includes scheduling, connection, socket/worker waiting and full body read; Gunicorn log time has another boundary",
+        "Cgroup averages include the in-container load generator and are not peak utilisation or a VM capacity acceptance",
+        "Sequential HTTP and instrumented in-process profiles are explanatory only; the original 50-session gate is unchanged"
+      ]
+    },
+    "recovery_targets_met": true,
+    "owned_resources_removed": true,
+    "plaintext_removed": true
+  },
+  "inference": {
+    "hypothesis": "Queue/concurrency contention before sync-worker service is a plausible major contributor",
+    "basis": "High concurrent client times, low logged Gunicorn and subsequent single-session times, two sync workers and no observed CPU quota throttling",
+    "not_proven": "No paired queue durations, sole-cause claim or absence of host contention; one instrumented request is not a SQL performance distribution"
+  },
+  "next": "Separate fixed 2/4/2 comparison; no automatic runtime or formal-gate promotion",
+  "all_85_full_acceptances": "Pending",
+  "agent_native_execution": false
+}

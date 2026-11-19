@@ -1,5 +1,40 @@
 # Decision register
 
+## S31 observed worker diagnosis — fixed 2/4/2 experiment Prepared, 2026-11-19
+
+The supplied operator diagnostic at 11:02:52 Europe/Athens completed with
+450 HTTP requests and zero errors. Concurrent p95 is 2.904 s list, 3.038 s
+detail and 3.057 s rolling-year report. Gunicorn logged p95 is 0.062/0.074/0.234 s;
+subsequent single-session HTTP p95 is 0.052/0.065/0.225 s. CPU quota throttling
+and memory events were zero; interval web/DB use averaged about 1.13/0.77 CPU.
+Recovery and cleanup passed; the exact official Failed receipt was preserved.
+See evidence/S31-performance-observed.json for the supplied result and input hash.
+
+Worker queuing is a supported hypothesis, not an exactly measured queue duration
+or a proven exclusive cause. Do not subtract unpaired p95 clocks, diagnose SQL
+from overlapping cumulative profiles, or infer absence of host contention from
+cgroup quota counters. Gunicorn's official design describes sync workers as
+one request at a time and recommends measuring worker counts under load:
+https://gunicorn.org/design/ (checked 2026-11-19).
+
+Prepare one separate bounded experiment: recreate the fresh owned web with
+two workers, then four, then two. Keep the same database/financial rows, image,
+two CPU/1 GiB caps, sync class, original three warmups and 450 measured requests
+per condition, fifty sessions and timing targets. Inspect actual live worker
+counts and resource caps; compare every accounting business table before/after
+each trial (synthetic authentication/session bookkeeping is separate). Retain
+both controls and every error. The final inherited recovery runs at two workers.
+
+This specifically extends the previous diagnostic's fixed-worker rule only for
+the temporary middle trial. The original r1_workload.json, formal verifier and
+diagnostic code remain byte-identical. Neither a successful comparison nor a
+candidate timing pass promotes the runtime profile, official S31 result or
+live release. A future reviewed runtime-profile change/full S31 retry remains
+separate. No app/dependency/default/VM/account/MFA/real-data change; no 848/36 or
+real Redis rerun in this tool. Source Prepared, experiment Pending operator,
+formal technical Failed, release Blocked and all 85 full acceptances Pending.
+No agent native execution; no S32 work.
+
 ## S31 actual performance failure — preserve result and diagnose, 2026-11-19
 
 The operator successfully applied the complete history correction. The actual

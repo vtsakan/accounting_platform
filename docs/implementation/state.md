@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-17. Current step: **S30 Prepared — PDF and CSV report exports**. Next: **Operator S30 verification; S31 follows**.
+Updated 2026-11-18. Current step: **S30 Verified — PDF and CSV report exports**. Next: **S31 when selected**.
 
 
 
@@ -16,7 +16,7 @@ Updated 2026-11-17. Current step: **S30 Prepared — PDF and CSV report exports*
 ## Current selected work — S30
 
 <!-- S30-RESULT -->
-Prepared source-only S30: authenticated in-memory PDF/CSV period reports, dated statements and annual overviews from unchanged S29 selectors and complete unpaged querysets. Greek/euro fonts, typed exact money, CSV text protection, private/no-store downloads, live authority after rendering and S59 provenance extension supplied. 40 operator-run methods; 848/36 and retained real S28 broker gate are unobserved targets. No new migration. Agent tests/builds/Docker/migrations/native PDF/app verification unexecuted. PDF visual/browser/full acceptance, D05/G2 and VM rollout remain Pending.
+Operator S30 production-image/PG17 gate Verified: full retained suite/36 finance cases, screen/PDF/CSV reconciliation, Greek Unicode font/text readback, complete pagination, formula-safe CSV, live download authority and concurrent snapshot/revocation contracts passed. Retained real S28 scheduler/Redis/ack-loss gate passed. PDF visual/browser/full acceptance, D05/G2 and VM rollout remain Pending.
 <!-- /S30-RESULT -->
 
 ## Previous verified work — S29

@@ -4,7 +4,7 @@
   "technical_status": "Pending",
   "scope": "synthetic-isolated-finance-release-rehearsal",
   "prepared_at": "2026-11-19T01:13:21+02:00",
-  "source_commit": "git:a68485266c205c21618f6c7995a92d72ed0cd9b3",
+  "source_commit": "git:ca3ba9227c7e39168ddaf22d9f94259ad368782f",
   "application_context_digest": "sha256:a3dbff49144c7072f8308ab50ca96f4c9ddb36c56eb873593b216dce2111329c",
   "release_decision": "Blocked",
   "release_blockers": [
@@ -38,5 +38,7 @@
   "receipt_followup": "docs/implementation/evidence/S31-receipt-fix.json",
   "operator_receipt_binding": "Created once from actual operator files during APPLY; never populated from agent templates",
   "history_followup": "docs/implementation/evidence/S31-history-fix.json",
-  "supplementary_history_binding": "Created once only during operator APPLY from actual existing historical evidence; no agent template substitution"
+  "supplementary_history_binding": "Created once only during operator APPLY from actual existing historical evidence; no agent template substitution",
+  "applied_by_operator": true,
+  "operator_command": "python3 tools/verify_s31.py --record --host-dns"
 }

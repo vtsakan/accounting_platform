@@ -1,6 +1,6 @@
 # Implementation state
 
-Updated 2026-11-18. Current step: **S30 Verified — PDF and CSV report exports**. Next: **S31 when selected**.
+Updated 2026-11-19. Current step: **S31 Prepared — finance release gate; release Blocked**. Next: **operator S31 rehearsal and named R1 acceptance; S32 source work when selected**.
 
 
 
@@ -13,7 +13,14 @@ Updated 2026-11-18. Current step: **S30 Verified — PDF and CSV report exports*
 
 
 
-## Current selected work — S30
+
+## Current selected work — S31
+
+<!-- S31-RESULT -->
+S31 source Prepared; actual release Blocked. Technical rehearsal: Pending. Effective R1 matrix includes 33 Must user requirements (32 baseline plus Greek frontend) and nine quality requirements. Operator-only retained 848/36 and real S28 broker gate, current synthetic billing/collection/correction/reporting cycle, 50 distinct HTTP sessions and encrypted PG17 baseline20/current26 recovery supplied. Human accountant/product-owner application acceptance, agreed workload/recovery/operational owners, D05 real dataset mapping/reconciliation, Greek visual/HTTPS review, authorised first-office cutover and G2 remain Pending. All 85 full acceptance statuses remain Pending. No application/image/migration/dependency/demo/VM/account/MFA change. S32 independent source work requires separate selection; live use remains blocked.
+<!-- /S31-RESULT -->
+
+## Previous verified work — S30
 
 <!-- S30-RESULT -->
 Operator S30 production-image/PG17 gate Verified: full retained suite/36 finance cases, screen/PDF/CSV reconciliation, Greek Unicode font/text readback, complete pagination, formula-safe CSV, live download authority and concurrent snapshot/revocation contracts passed. Retained real S28 scheduler/Redis/ack-loss gate passed. PDF visual/browser/full acceptance, D05/G2 and VM rollout remain Pending.

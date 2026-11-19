@@ -3,7 +3,7 @@
 <!-- S31A-PREVIEW -->
 ## Current preview update — S31A
 
-Existing synthetic VM update: **Prepared**. Application source remains the exact S30 image; the operator S31 workers4 gate passed 848/36. Source/history goes to GitHub by ordinary fast-forward only. The selected VM retains its original database and migrates a separate clone 20→26; both encrypted snapshots must restore off-VM before activation. Four web workers, one worker process and one scheduler are bounded preview settings, not an accepted shared-CPU workload. Accounts/MFA, pinned keys, disk, certificate data and backup policy are retained. Browser login/MFA and real R1/D05/D06/D07/G2/full acceptance remain Pending. See [the update procedure](s31a_preview_upgrade_el.md).
+Existing synthetic VM update: **Verified**. Application source remains the exact S30 image; the operator S31 workers4 gate passed 848/36. Source/history goes to GitHub by ordinary fast-forward only. The selected VM retains its original database and migrates a separate clone 20→26; both encrypted snapshots must restore off-VM before activation. Four web workers, one worker process and one scheduler are bounded preview settings, not an accepted shared-CPU workload. Accounts/MFA, pinned keys, disk, certificate data and backup policy are retained. Browser login/MFA and real R1/D05/D06/D07/G2/full acceptance remain Pending. See [the update procedure](s31a_preview_upgrade_el.md).
 <!-- /S31A-PREVIEW -->
 
 Updated 2026-11-19. Current step: **S31 Prepared — finance release gate; release Blocked**. Next: **operator S31 rehearsal and named R1 acceptance; S32 source work when selected**.

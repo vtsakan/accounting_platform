@@ -3,7 +3,7 @@
   "status": "Prepared",
   "requested_at": "2026-11-20",
   "base_commit": "git:60a7d52db3250cfe35faed0c8321ee2e54323920",
-  "implementation_reference_commit": "Pending source binding",
+  "implementation_reference_commit": "git:afdb080e2c0ce883fe05f40247dfd81c25b21dd4",
   "application_inputs": 287,
   "application_context_digest": "sha256:337b2f09354837bda7bdce366c5fcacbfbeba9c4bcbdc4b41d8d643ad3ada760",
   "baseline_operator_suite_passed": 848,

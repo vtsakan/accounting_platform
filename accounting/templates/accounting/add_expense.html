@@ -1,5 +1,5 @@
 {% extends 'accounting/base.html' %}
-{% load greek %}
+{% load greek static %}
 
 {% block title %}Νέο έξοδο{% endblock %}
 
@@ -11,8 +11,8 @@
                     <h2 class="mb-0">Καταχώρηση εξόδου</h2>
                 </div>
                 <div class="card-body">
-                    <p class="small text-muted">Η κατηγορία, ο συναλλασσόμενος και η σύνδεση με υφιστάμενη συμφωνία είναι προαιρετικά. Κάθε νέα φόρμα έχει δική της ταυτότητα καταχώρισης· η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.</p>
-                    <form method="post">
+                    <p class="small text-muted">Επιλέξτε προμηθευτή και «Αφορά συμφωνία» για αυτόματη εξόφληση. Εμφανίζονται μόνο οι συμφωνίες του προμηθευτή και η περιγραφή μπορεί να μείνει κενή. Η κατηγορία και η σύνδεση με συμφωνία είναι προαιρετικά.</p>
+                    <form method="post" data-cash-entry data-direction="{{ cash_direction|default:'EXPENSE' }}" data-agreement-url="{% url 'cash-agreement-options' %}">
                         {% csrf_token %}
                         {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
 
@@ -29,6 +29,7 @@
                                 {% endif %}
                             </div>
                         {% endif %}{% endfor %}
+                        <p class="form-text" role="status" aria-live="polite" data-agreement-status></p>
 
                         <hr>
                         <button type="submit" class="btn btn-danger">Αποθήκευση εξόδου</button>
@@ -38,4 +39,5 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'accounting/workspace/cash-entry.js' %}" defer></script>
 {% endblock %}

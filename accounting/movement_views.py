@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.core.paginator import EmptyPage, Paginator
 from django.db import DatabaseError
-from django.db.models import F, Q
+from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -12,11 +13,14 @@ from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.debug import sensitive_post_parameters
 from .capabilities import office_view, require_capability
 from .forms import ExpenseForm, IncomeForm
-from .finance_services import fingerprint, legacy_settlement, post_cash, submission_key
-from .models import Agreement, FinanceCommand, Transaction
+from .finance_services import fingerprint, submission_key
+from .cash_entry_selectors import receipt_agreements
+from .cash_entry_services import post_agreement_cash
+from .models import Entity, FinanceCommand, Transaction
 from .movement_forms import CashMovementFilterForm
 from .movement_selectors import filtered_movements, movement_totals
-from .office_access import records, validate_filter_ids
+from .office_access import record, records, validate_filter_ids
+from core.locale import format_euro
 
 
 def existing_submission(form, user, direction):
@@ -76,9 +80,7 @@ def movement_list(request):
 def posting(request, direction):
     validate_filter_ids(request)
     form_class = IncomeForm if direction == 'INCOME' else ExpenseForm
-    kind = 'RECEIVABLE' if direction == 'INCOME' else 'PAYABLE'
-    agreements = records(Agreement, request.user).filter(agreement_type=kind, status='ACTIVE', entity__is_archived=False).annotate(
-        total_payments=legacy_settlement('transactions__')).annotate(remaining_balance=F('total_amount') - F('total_payments'))
+    agreements = receipt_agreements(request.user, direction)
     form = form_class(request.POST if request.method == 'POST' else None, user=request.user, agreements_queryset=agreements,
                       initial={'transaction_date': timezone.localdate()})
     if request.method == 'POST':
@@ -86,7 +88,11 @@ def posting(request, direction):
         if form.is_valid():
             data = form.cleaned_data
             try:
-                post_cash(request.user, idempotency_key=submission_key(request, data), transaction_type=direction,
+                # Preserve the exact tokenless S20 payload: the new presentation
+                # checkbox must not change a legacy receipt's retry identity.
+                original_fields = ('transaction_date', 'amount', 'cash_account', 'description', 'remarks', 'category', 'entity', 'agreement', 'posting_key')
+                identity = submission_key(request, {name: data[name] for name in original_fields})
+                entry, allocated, replayed = post_agreement_cash(request.user, idempotency_key=identity, transaction_type=direction,
                           **{name: data[name] for name in ('transaction_date', 'amount', 'cash_account', 'description', 'remarks', 'category', 'entity', 'agreement')})
             except ValidationError as error:
                 form.add_error(None, error)
@@ -95,16 +101,24 @@ def posting(request, direction):
                     raise
                 form.add_error(None, 'Η καταχώρηση δεν ολοκληρώθηκε. Ελέγξτε τα στοιχεία και επαναλάβετε με την ίδια ταυτότητα καταχώρισης.')
             else:
-                messages.success(request, 'Η κίνηση καταχωρίστηκε. Η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.')
+                if replayed:
+                    messages.success(request, 'Η ίδια κίνηση είναι ήδη καταχωρισμένη. Δεν προστέθηκε δεύτερη κίνηση ή αντιστοίχιση.')
+                elif data.get('agreement'):
+                    messages.success(request, 'Η κίνηση καταχωρίστηκε. Αντιστοιχίστηκαν ' + format_euro(allocated) +
+                        ' στη συμφωνία. Αδιάθετο ποσό: ' + format_euro(entry.amount - allocated) + '.')
+                else:
+                    messages.success(request, 'Η κίνηση καταχωρίστηκε. Η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.')
                 return redirect('transaction-list')
     elif request.GET.get('entity_id'):
         # Reuse the scoped, role-appropriate field instead of trusting a URL ID.
         try:
             form.initial['entity'] = form.fields['entity'].clean(request.GET['entity_id'])
+            form.scope_agreements(form.initial['entity'])
         except ValidationError as error:
             form.cleaned_data = {}
             form.add_error('entity', error)
-    return render(request, 'accounting/add_income.html' if direction == 'INCOME' else 'accounting/add_expense.html', {'form': form})
+    return render(request, 'accounting/add_income.html' if direction == 'INCOME' else 'accounting/add_expense.html',
+                  {'form': form, 'cash_direction': direction})
 
 
 @office_view('finance.write')
@@ -121,3 +135,22 @@ def income(request):
 @require_http_methods(['GET', 'POST'])
 def expense(request):
     return posting(request, 'EXPENSE')
+
+
+@office_view('finance.write')
+@never_cache
+@require_GET
+def agreement_options(request):
+    """Read-only dependent choices; office context is exclusively the actor's."""
+    direction = request.GET.get('direction', 'INCOME')
+    if direction not in {'INCOME', 'EXPENSE'} or any(len(request.GET.getlist(name)) > 1 for name in ('direction', 'entity_id')):
+        return JsonResponse({'error': 'Ελέγξτε τον συναλλασσόμενο και την κατεύθυνση.'}, status=400)
+    value = request.GET.get('entity_id')
+    if not value:
+        return JsonResponse({'options': []})
+    party = record(Entity, request.user, value)
+    if party.is_archived or not (party.is_customer if direction == 'INCOME' else party.is_supplier):
+        return JsonResponse({'error': 'Ο συναλλασσόμενος δεν είναι διαθέσιμος για αυτή την κίνηση.'}, status=400)
+    rows = receipt_agreements(request.user, direction).filter(entity=party)
+    options = [{'value': str(row.pk), 'label': row.description + ' — Ανεξόφλητο σήμερα: ' + format_euro(row.remaining_balance)} for row in rows]
+    return JsonResponse({'entity_id': str(party.pk), 'options': options}, json_dumps_params={'ensure_ascii': False})

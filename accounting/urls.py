@@ -11,6 +11,7 @@ from . import fee_views
 from . import fee_generation_views
 from . import report_views
 from . import export_views
+from . import movement_views
 
 urlpatterns = [
     path('report/export/<str:filetype>/', export_views.period, name='report-export'),
@@ -73,6 +74,7 @@ urlpatterns = [
     path('auth/security/', auth_views.security_settings, name='security-settings'),
     path('', views.dashboard_view, name='dashboard'),
     path('transactions/', views.transaction_list_view, name='transaction-list'),
+    path('cash/agreements/options/', movement_views.agreement_options, name='cash-agreement-options'),
     path('customers/', views.customer_list_view, name='customer-list'),
     path('suppliers/', views.supplier_list_view, name='supplier-list'),
     path('expense/add/', views.add_expense_view, name='add-expense'),

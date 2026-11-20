@@ -642,6 +642,14 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "cash-agreement-options",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

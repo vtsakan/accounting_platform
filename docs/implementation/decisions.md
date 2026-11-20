@@ -1,5 +1,35 @@
 # Decision register
 
+## CR-003 — selected agreement receipt also settles debt, Prepared, 2026-11-21
+
+The product owner asks for automatic debt reduction when a new receipt/payment
+selects an agreement, no required description in that case, and only the chosen
+party's agreements in the dependent dropdown. The explicit selection authorises
+FIFO allocations within that agreement only: due date, effective date, stable
+charge ID. Excess remains credit/advance. Without an agreement the existing
+description rule stays; old cash and credit are never automatically consumed.
+
+Use one outer atomic transaction and the unchanged locked post_cash/allocate_cash
+services, preserving their records and SQL guards. The capacity query reuses
+accounting_s23_used_at at every affected allocation/release date, excluding
+reversed sources. A later release cannot inflate earlier capacity. A completed
+cash-command replay returns without new allocations, including old cash-only
+entries and owner corrections. Blank descriptions use effective terms on first
+posting and the original stored text on retry. All original test assertions,
+financial services,26 migrations and dependency locks are preserved.
+
+Prior CR002 operator result is observed Verified at 2026-11-21T00:21:31+02:00,
+source git:ee73318b2b1af1c02e419ff9c7d1d8d029764b80,878/878,36 finance,30 new
+methods,659 source bindings and the real monthly-worker gate. Keep its full
+actual receipt and genuine Git lineage. Source-only installer may commit only
+the validated exact --record outputs, before checking clean committed context,
+then exclusively bind that receipt. Runtime cannot capture or refresh hashes.
+
+Source Prepared; new operator/runtime/browser/accountant acceptance and VM/GitHub
+rollout Pending. No agent runtime/push/deploy or S32 is selected. All85 full
+requirement acceptance statuses remain Pending. See the CR-003 requirement,
+implementation guide and tests_cash_agreement_entry.py.
+
 ## CR-002 — automatic charge on new agreement, selected 2026-11-20
 
 The product owner requests implementation of the accountant's feedback that

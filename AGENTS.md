@@ -1,5 +1,44 @@
 # Accounting platform implementation instructions
 
+## Selected CR-003 — agreement-scoped cash settlement, 2026-11-21
+
+The user explicitly requests one-step receipts/payments against a selected
+agreement, automatic reduction of posted unpaid charges, optional description
+when agreement terms supply it, and party-dependent agreement choices. This
+authorises the new composition flow, superseding earlier no-auto-allocation
+creation/posting UI scope only for a new explicitly selected agreement receipt.
+It does not authorise retrospective allocations or consumption of older credit.
+Read CR-003-Agreement-cash-settlement.md and cash_agreement_settlement_el.md.
+
+The actual CR002 operator gate is Verified at 2026-11-21T00:21:31+02:00,
+source git:ee73318b2b1af1c02e419ff9c7d1d8d029764b80, 878/878, all36 finance,
+30 new methods,659 bindings and real monthly worker. Preserve its genuine
+CR002-verification.json and image/context exactly. Agent preparation reference
+14547573babeb4cd6f38648e2a5eb4011fe5010b has identical application bytes but
+is NOT the operator's Git lineage; use content guards and Git3way on their
+actual branch, never reconstruct operator commits or replace actual receipts.
+
+Compose unchanged post_cash and allocate_cash in one office/user-locked atomic
+service. FIFO oldest due/effective/id only within the selected agreement. Use
+the retained SQL used-at guard at all historical change points; excess remains
+credit/advance. Replays of old cash-only entries or owner-released/corrected
+allocations never add effects. Preserve legacy tokenless payload identity and
+generate blank descriptions from effective terms/original retry text. Server
+forms and the private GET lookup scope office, party and direction afresh.
+
+Keep all26 migrations, dependencies, original finance/settlement/correction/
+charge services, old test bodies/assertions and36 financial cases exact. Add
+the finance.write GET route to the existing boundary matrix. Supply new PG
+atomicity/history/retry/access/concurrency and HTTP/dependent-choice contracts.
+
+APPLY performs Git/files only. Validate/preserve and, if needed, commit only
+the two exact CR002 --record outputs BEFORE the unchanged clean image guard.
+Exclusively bind the actual old receipt; runtime never captures/rebinds it.
+Do not mistake this agent's separate documentation closeout for installed
+operator metadata. Source Prepared, operator gate/browser/VM rollout Pending;
+all85 full acceptances Pending. No agent tests/builds/Docker/migrations/native
+app/SSH/cloud/push. Static syntax/source/hash/archive/text scans only. No S32.
+
 ## Selected CR-002 — automatic initial agreement charge, 2026-11-20
 
 The user explicitly selects implementation of the accountant's feedback:

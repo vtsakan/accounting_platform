@@ -1,5 +1,16 @@
 # Implementation state
 
+## Current selected change — CR-003, 2026-11-21
+
+<!-- CR003-RESULT -->
+CR-003 source Prepared: one new agreement-scoped receipt/payment and FIFO allocations save atomically; description can come from the agreement and choices are scoped to the selected party. Actual prior CR002 operator gate Verified: 878/878,36 finance and real worker. New operator runtime gate, browser/accountant acceptance and VM/GitHub rollout remain Pending. All85 full requirement acceptances remain Pending.
+<!-- /CR003-RESULT -->
+
+The actual successful CR002 source is `ee73318b2b1af1c02e419ff9c7d1d8d029764b80`.
+Its full actual operator report is retained and exclusively bound for this
+new change; it is never replaced by an agent template. The CR002 preparation
+notes below are historical. See [the CR-003 procedure](cash_agreement_settlement_el.md).
+
 ## Current selected change — CR-002, 2026-11-20
 
 <!-- CR002-RESULT -->

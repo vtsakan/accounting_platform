@@ -9,6 +9,7 @@ from core.locale import GreekMoneyField, format_euro
 from django.core.exceptions import PermissionDenied
 from .membership import require_office_profile, DENIED
 from .office_access import records, save_for_user
+from .cash_entry_forms import AgreementCashFormMixin
 
 
 class GreekFormMixin:
@@ -99,7 +100,8 @@ class AgreementChoiceField(forms.ModelChoiceField):
         # Fallback for when the balance isn't calculated
         return f"{obj.description} (Σύνολο: {format_euro(obj.total_amount)})"
 
-class ExpenseForm(GreekFormMixin, forms.Form):
+class ExpenseForm(AgreementCashFormMixin, GreekFormMixin, forms.Form):
+    cash_direction = 'EXPENSE'
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
@@ -107,6 +109,7 @@ class ExpenseForm(GreekFormMixin, forms.Form):
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
     category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), required=False, label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_supplier=True, is_archived=False), required=False, label="Προμηθευτής")
+    settle_agreement = forms.BooleanField(required=False, label='Αφορά συμφωνία — αυτόματη εξόφληση', widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),
@@ -114,14 +117,8 @@ class ExpenseForm(GreekFormMixin, forms.Form):
         label=_("Agreement (Payable)"),
         widget=forms.Select(attrs=bootstrap_select_attrs)
     )
-    def __init__(self, *args, **kwargs):
-        agreements_queryset = kwargs.pop('agreements_queryset', None)
-        super().__init__(*args, **kwargs)
-        if agreements_queryset is not None:
-            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id, entity__is_archived=False)
-                                                 if self.office_id else Agreement.objects.none())
-
-class IncomeForm(GreekFormMixin, forms.Form):
+class IncomeForm(AgreementCashFormMixin, GreekFormMixin, forms.Form):
+    cash_direction = 'INCOME'
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
@@ -129,19 +126,13 @@ class IncomeForm(GreekFormMixin, forms.Form):
     cash_account = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=CashAccount.objects.filter(is_active=True,opening_date__isnull=False), label="Ταμείο")
     category = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Category.objects.filter(is_active=True), required=False, label="Κατηγορία")
     entity = forms.ModelChoiceField(widget=forms.Select(attrs=bootstrap_select_attrs), queryset=Entity.objects.filter(is_customer=True, is_archived=False), required=False, label="Πελάτης")
+    settle_agreement = forms.BooleanField(required=False, label='Αφορά συμφωνία — αυτόματη εξόφληση', widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     agreement = AgreementChoiceField( # Use our new custom field
         queryset=Agreement.objects.none(),
         required=False,
         label=_("Agreement (Receivable)"),
         widget=forms.Select(attrs=bootstrap_select_attrs)
     )
-
-    def __init__(self, *args, **kwargs):
-        agreements_queryset = kwargs.pop('agreements_queryset', None)
-        super().__init__(*args, **kwargs)
-        if agreements_queryset is not None:
-            self.fields['agreement'].queryset = (agreements_queryset.filter(office_id=self.office_id, entity__is_archived=False)
-                                                 if self.office_id else Agreement.objects.none())
 
 class EntityForm(GreekFormMixin, forms.ModelForm):
     vat_number = forms.CharField(label="Α.Φ.Μ.", max_length=64, required=False, widget=forms.TextInput(attrs=bootstrap_form_attrs))

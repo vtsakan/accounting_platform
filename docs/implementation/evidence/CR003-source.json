@@ -4,7 +4,7 @@
   "requested_at": "2026-11-21",
   "content_preparation_reference": "git:14547573babeb4cd6f38648e2a5eb4011fe5010b",
   "actual_baseline_operator_source": "git:ee73318b2b1af1c02e419ff9c7d1d8d029764b80",
-  "implementation_reference_commit": "Pending source binding",
+  "implementation_reference_commit": "git:8e57a9f0e4bbaebeb67d629d00e18a307f8440e4",
   "application_inputs": 292,
   "application_context_digest": "sha256:de928a2467826d60f2797c923ba46ee4c4cd908c6961cde1452e31e3fc8a22b0",
   "baseline_operator_suite_passed": 878,

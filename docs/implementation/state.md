@@ -3,7 +3,7 @@
 ## Current selected change — CR-002, 2026-11-20
 
 <!-- CR002-RESULT -->
-CR-002 source Prepared: new active agreement creation atomically saves reviewed terms and the initial charge, including catalogue creation. The first monthly occurrence shares the existing canonical source with later scheduling. Source checks only; operator production/PG17/real-worker verification, Greek browser/accountant acceptance and VM/GitHub rollout remain Pending. All 85 full requirement acceptances remain Pending.
+CR-002 source Prepared; operator technical gate Verified: 878 tests, 36 financial cases and retained real monthly-worker/ack-loss gate passed. VM/GitHub rollout and accountant/browser acceptance remain Pending. All 85 full acceptances remain Pending.
 <!-- /CR002-RESULT -->
 
 This is the product owner's selected accountant-feedback change, based on actual

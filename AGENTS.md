@@ -1,5 +1,40 @@
 # Accounting platform implementation instructions
 
+## Selected CR-002 — automatic initial agreement charge, 2026-11-20
+
+The user explicitly selects implementation of the accountant's feedback:
+saving a new agreement should automatically create its charge. This authorises
+the creation workflow change after S31A, not S32 or an unrequested live rollout.
+Start from the actual published operator history at
+60a7d52db3250cfe35faed0c8321ee2e54323920. Read
+docs/requirements/CR-002-Automatic-agreement-charge.md and
+docs/implementation/automatic_agreement_charge_el.md.
+
+Compose the unchanged save_terms/post_charge services atomically, under the
+existing office/actor locks. New active ONE_OFF agreements charge once; MONTHLY
+agreements charge the first calendar occurrence only, including catalogue
+creation. Preserve explicit first-partial-month amounts, canonical sources,
+fresh authority, closed periods and all later scheduler consent. Bind repeated
+form submissions to the retained immutable initial charge/snapshot, including
+after amendment or reversal. No cash, auto-allocation, retrospective existing
+agreement posting or model-save side effects. Keep all 26 migrations/schema,
+old financial services, dependency/runtime pins and actual historical receipts.
+
+Only the two old HTTP tests which expressly required terms-only new agreement
+creation are superseded by CR-002. Update them to require the charge while
+retaining zero cash, immutable reviewed terms, amount, office and Greek checks.
+Every other existing test body and all 36 financial cases remain unchanged.
+Supply further meaningful operator-run atomicity/replay/concurrency/access
+contracts. New verification uses current-source delivery and the retained real
+S28 worker gate; do not rebind frozen historical S31/source manifests.
+
+The user execution preference remains: agent static syntax/source/hash/text
+checks only, no tests/builds/Docker/migrations/native app/SSH/cloud/push. Deliver
+a complete Git/files-only installer and optional operator verifier. Source
+Prepared, runtime/browser/VM rollout Pending, all 85 full acceptances Pending.
+The historical S31A/S31 application-preservation limits below remain historical
+for those completed scopes; they do not block this explicitly selected change.
+
 ## S31A follow-up — pending operator records before the clean image guard
 
 The supplied operator retry stops in APPLY's committed_context before its

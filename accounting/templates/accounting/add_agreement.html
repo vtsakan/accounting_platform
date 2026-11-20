@@ -11,7 +11,8 @@
                     <h2 class="mb-0">Νέα συμφωνία</h2>
                 </div>
                 <div class="card-body">
-                    <p>Η αποθήκευση όρων δεν δημιουργεί χρέωση ή κίνηση ταμείου. Η χρέωση καταχωρίζεται χωριστά, μετά τον έλεγχο των όρων.</p>
+                    <p>Με την αποθήκευση δημιουργείται ενεργή συμφωνία και καταχωρίζεται αυτόματα η εφάπαξ ή η πρώτη μηνιαία χρέωση. Το ανεξόφλητο ενημερώνεται αμέσως. Η ημερομηνία χρέωσης είναι η ημερομηνία έναρξης.</p>
+                    <p class="form-text">Η είσπραξη ή πληρωμή καταχωρίζεται όταν μετακινηθούν χρήματα. Για τους επόμενους μήνες χρησιμοποιήστε το μηνιαίο πρόγραμμα χρεώσεων.</p>
                     <form method="post">
                         {% csrf_token %}
                         {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
@@ -31,7 +32,7 @@
                         {% endif %}{% endfor %}
 
                         <hr>
-                        <button type="submit" class="btn btn-primary">Αποθήκευση συμφωνίας</button>
+                        <button type="submit" class="btn btn-primary">Αποθήκευση συμφωνίας και χρέωσης</button>
                         <a href="{% url 'agreement-list' %}" class="btn btn-secondary">Ακύρωση</a>
                     </form>
                 </div>

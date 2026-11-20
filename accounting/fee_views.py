@@ -63,14 +63,14 @@ def price_edit(request, key=None):
 @require_http_methods(['GET','POST'])
 def agreement_from_service(request, key):
     """Copy a current immutable quote into a reviewed agreement, never cash."""
-    from .forms import AgreementForm
+    from .agreement_creation_forms import AgreementCreationForm
     service = get_object_or_404(catalogue(request.user), pk=key)
     price = price_on(service)
     if price is None or not price.is_active:
         return render(request, 'accounting/fees/unavailable.html', status=409)
     initial = {'description':price.description, 'total_amount':price.amount, 'start_date':timezone.localdate(),
         'agreement_type':'RECEIVABLE', 'billing_mode':'MONTHLY', 'lifecycle':'ACTIVE', 'status':'ACTIVE'}
-    form = AgreementForm(request.POST if request.method == 'POST' else None, user=request.user, initial=initial)
+    form = AgreementCreationForm(request.POST if request.method == 'POST' else None, user=request.user, initial=initial)
     form.fields['reason'].max_length = 350
     if request.method == 'POST' and form.is_valid():
         try:
@@ -88,6 +88,7 @@ def agreement_from_service(request, key):
         except (ValidationError, DatabaseError) as error:
             failed(form, error)
         else:
+            messages.success(request, 'Η συμφωνία και η πρώτη μηνιαία χρέωση καταχωρίστηκαν. Συνεχίστε με το πρόγραμμα των επόμενων μηνών.')
             return redirect('fee-schedule-add')
     return render(request, 'accounting/fees/agreement.html', {'form':form, 'service':service, 'price':price})
 

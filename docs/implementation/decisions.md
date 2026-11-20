@@ -1,5 +1,34 @@
 # Decision register
 
+## CR-002 — automatic charge on new agreement, selected 2026-11-20
+
+The product owner requests implementation of the accountant's feedback that
+creating an agreement should also charge it. The explicit save action now
+confirms both reviewed active terms and one initial obligation atomically.
+ONE_OFF posts the agreed amount once; MONTHLY posts only its first calendar
+occurrence, with an explicitly declared partial amount when applicable.
+The initial charge uses the selected start date and an explicit deadline or
+that same date when the deadline is blank. Starts later than today are rejected
+for this immediate-posting workflow. Subsequent monthly generation retains its
+existing schedule/owner-consent/environment gates.
+
+The existing Charge request key and immutable terms/amount/dates/actor/reason
+bind repeated creation submissions without adding schema or a transient-cache
+guarantee. The office mutex serialises concurrent requests; payload conflicts
+are denied. Charge failure rolls back new terms/master/audit. Retained source
+uniqueness prevents a later manual/worker occurrence from charging the same
+month again, including after a reversal. Edits and historical rows never trigger
+new automatic charges. No cash, invoice, VAT, proration or implicit allocation.
+
+This explicitly supersedes the two S22/S27 HTTP expectations that a newly
+created active agreement has zero charges; it preserves the separate-record
+financial model and all other assertions. Original bound D08 policy/review
+and all historical receipts remain unchanged. Source Prepared; new operator
+verification and accountant/browser acceptance Pending. No agent runtime,
+cloud, GitHub push or VM rollout is performed. Full acceptance statuses remain
+Pending. Evidence: CR-002 requirement, implementation guide, source lock and
+accounting/tests_agreement_creation.py.
+
 ## S31A receipt ordering correction — Prepared, 2026-11-19
 
 The actual supplied APPLY log passes package checksums, then stops at

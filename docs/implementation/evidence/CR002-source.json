@@ -1,0 +1,34 @@
+{
+  "change": "CR-002",
+  "status": "Prepared",
+  "requested_at": "2026-11-20",
+  "base_commit": "git:60a7d52db3250cfe35faed0c8321ee2e54323920",
+  "implementation_reference_commit": "Pending source binding",
+  "application_inputs": 287,
+  "application_context_digest": "sha256:337b2f09354837bda7bdce366c5fcacbfbeba9c4bcbdc4b41d8d643ad3ada760",
+  "baseline_operator_suite_passed": 848,
+  "new_pg_test_methods": 30,
+  "target_suite_count": 878,
+  "target_suite_observed": false,
+  "new_migrations": 0,
+  "old_migrations_preserved": 26,
+  "selected_behavior": "new active agreement plus initial charge in one atomic action",
+  "existing_agreements_backfilled": false,
+  "cash_generated": false,
+  "auto_allocation_added": false,
+  "monthly_recurrence_opt_in_unchanged": true,
+  "agent_runtime_execution": false,
+  "operator_verification": "Pending",
+  "vm_github_rollout": "Pending",
+  "full_requirement_acceptances_pending": 85,
+  "superseded_tests": [
+    "AgreementChargeTests.test_new_greek_agreement_saves_terms_only_without_charge_or_cash",
+    "FeeContracts.test_catalogue_quote_creates_reviewed_terms_without_charges"
+  ],
+  "all_other_old_test_methods_and_assertions_unchanged": true,
+  "static_checks": {
+    "python_ast": "Passed",
+    "changed_template_compilation_without_setup_or_rendering": 2,
+    "git_diff_whitespace": "Passed"
+  }
+}

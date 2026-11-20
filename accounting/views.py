@@ -1,6 +1,9 @@
 from .finance_services import legacy_settlement, submission_key, post_transfer
 from . import counterparty_views
 from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.db import DatabaseError
+from .agreement_creation_forms import AgreementCreationForm
 from .office_access import records, record, save_for_user, validate_filter_ids
 from .membership import require_office_profile
 # accounting/views.py
@@ -118,14 +121,19 @@ def agreement_detail_view(request, pk):
 def add_agreement_view(request):
     validate_filter_ids(request)
     if request.method == 'POST':
-        form = AgreementForm(request.POST, user=request.user)
+        form = AgreementCreationForm(request.POST, user=request.user)
         if form.is_valid():
             try:
-                form.save()
+                agreement = form.save()
             except ValidationError as error:
                 form.add_error(None, error)
+            except DatabaseError as error:
+                if getattr(error.__cause__, 'sqlstate', None) not in {'23505', '23514', '40001', '40P01'}:
+                    raise
+                form.add_error(None, 'Η συμφωνία και η χρέωση δεν ολοκληρώθηκαν. Επαναλάβετε την ίδια υποβολή.')
             else:
-                return redirect('agreement-list')
+                messages.success(request, 'Η συμφωνία και η αρχική χρέωση καταχωρίστηκαν. Το ανεξόφλητο ενημερώθηκε.')
+                return redirect('agreement-detail', pk=agreement.pk)
     else:
         # --- THIS IS THE 'GET' REQUEST PART - START OF CHANGES ---
         initial_data = {}
@@ -139,7 +147,7 @@ def add_agreement_view(request):
             initial_data['agreement_type'] = agreement_type
 
         # Pass the initial_data to the form
-        form = AgreementForm(user=request.user, initial=initial_data)
+        form = AgreementCreationForm(user=request.user, initial=initial_data)
         # --- END OF CHANGES ---
 
     return render(request, 'accounting/add_agreement.html', {'form': form})

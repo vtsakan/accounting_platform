@@ -1,5 +1,19 @@
 # Implementation state
 
+## Current selected change — CR-002, 2026-11-20
+
+<!-- CR002-RESULT -->
+CR-002 source Prepared: new active agreement creation atomically saves reviewed terms and the initial charge, including catalogue creation. The first monthly occurrence shares the existing canonical source with later scheduling. Source checks only; operator production/PG17/real-worker verification, Greek browser/accountant acceptance and VM/GitHub rollout remain Pending. All 85 full requirement acceptances remain Pending.
+<!-- /CR002-RESULT -->
+
+This is the product owner's selected accountant-feedback change, based on actual
+GitHub main `60a7d52db3250cfe35faed0c8321ee2e54323920`. It is separate from S32.
+No schema or migration change; existing agreements/cash/accounts/MFA and actual
+S31/S31A receipts remain intact. Two terms-only HTTP expectations are explicitly
+superseded; all other existing tests and 36 financial cases are retained.
+See [the change procedure](automatic_agreement_charge_el.md). The historical
+S31/S31A results below describe their exact earlier application image.
+
 <!-- S31A-PREVIEW -->
 ## Current preview update — S31A
 

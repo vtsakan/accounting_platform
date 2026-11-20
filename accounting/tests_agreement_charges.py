@@ -54,16 +54,17 @@ class AgreementChargeTests(ChargeSupport, TestCase):
         self.assertEqual((terms.entity_id, terms.direction, terms.agreed_amount), (self.customer.pk, 'RECEIVABLE', Decimal('100.00')))
         self.assertEqual(Charge.objects.count(), 0)
 
-    def test_new_greek_agreement_saves_terms_only_without_charge_or_cash(self):
-        response = self.client.post(reverse('add-agreement'), self.form_data(), HTTP_ACCEPT_LANGUAGE='en')
+    def test_new_greek_agreement_saves_terms_and_charge_without_cash(self):
+        # CR-002 explicitly replaces the former terms-only creation behaviour.
+        response = self.client.post(reverse('add-agreement'), self.form_data() | {'creation_key': str(uuid.uuid4())}, HTTP_ACCEPT_LANGUAGE='en')
         self.assertEqual(response.status_code, 302)
         agreement = Agreement.objects.get(description='ΔΟΚΙΜΑΣΤΙΚΟΙ ΟΡΟΙ S22')
         terms = agreement.terms_versions.get()
         self.assertEqual((terms.billing_mode, terms.lifecycle, terms.actor_id), ('ONE_OFF', 'ACTIVE', self.member.pk))
-        self.assertEqual((Charge.objects.count(), Transaction.objects.count(), FinanceCommand.objects.count()), (0, 0, 0))
+        self.assertEqual((Charge.objects.count(), Transaction.objects.count(), FinanceCommand.objects.count()), (1, 0, 0))
         response = self.client.get(reverse('agreement-detail', args=[agreement.pk]))
-        self.assertEqual(response.context['charge_total'], Decimal('0.00'))
-        self.assertEqual(response.context['settlement_label'], 'Χωρίς χρεώσεις')
+        self.assertEqual(response.context['charge_total'], Decimal('100.00'))
+        self.assertEqual(response.context['settlement_label'], 'Χρεώσεις χωρίς αντιστοιχίσεις')
         self.assertContains(response, 'Συμφωνημένο ποσό')
         self.assertEqual(response['Content-Language'], 'el')
 

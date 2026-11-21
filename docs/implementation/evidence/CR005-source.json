@@ -1,7 +1,7 @@
 {
   "change": "CR-005",
   "status": "Prepared",
-  "implementation_reference_commit": "git:8cfc8de1d660b54720ba6ab36e10b88a14d4bb99",
+  "implementation_reference_commit": "git:4f4b74ef62f9ef6bae73aa7a51a8b29c96f9084c",
   "actual_prior_operator_commit": "git:35a66ae24a40eb2bc8365a2e9530d08385513992",
   "prior_application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
   "application_context_digest": "sha256:ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24",
@@ -33,10 +33,13 @@
   "operator_gate": "Pending",
   "github_and_vm": "Pending CR005 operator gate and separately bound deployment",
   "full_requirement_acceptances_pending": 85,
-  "source_bindings": 718,
+  "source_bindings": 721,
   "expected_suite": 1020,
   "fixture_adaptation": "Only historical archived-open fixtures and new route capability support; all33 original assertion ASTs retained",
   "requirements": "docs/requirements/CR-005-Counterparty-archive-delete.md",
   "operator_command": "python3 tools/verify_cr005.py --record --host-dns",
-  "source_lock_sha256": "sha256:d883761b0aa6d88cca1bdae8e19c46a7ac221f46872f9aaae7a70f26aaac8638"
+  "source_lock_sha256": "sha256:007ccf2992703d84920c2135679e7b8aa939fafb42c5f548421709c70f6c8c53",
+  "assertion_dump_policy": "Python 3.12 representation; show_empty=True explicitly on Python 3.13+; original33 baseline digests unchanged",
+  "initial_failure": "docs/implementation/evidence/CR005-initial-preflight-failure.json",
+  "correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json"
 }

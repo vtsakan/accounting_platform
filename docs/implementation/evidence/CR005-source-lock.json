@@ -1,7 +1,7 @@
 {
   "change": "CR-005",
   "status": "Prepared",
-  "implementation_reference_commit": "git:8cfc8de1d660b54720ba6ab36e10b88a14d4bb99",
+  "implementation_reference_commit": "git:4f4b74ef62f9ef6bae73aa7a51a8b29c96f9084c",
   "actual_prior_operator_commit": "git:35a66ae24a40eb2bc8365a2e9530d08385513992",
   "prior_application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
   "application_context_digest": "sha256:ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24",
@@ -565,7 +565,6 @@
     "docs/requirements/CR-003-Agreement-cash-settlement.md": "sha256:a5baa06ff19f6b30cd7b44aa5090e3098766cc46f105d2149bbb180404b125be",
     "docs/requirements/CR-004-Counterparty-card-journal.md": "sha256:db491373f803dd77033aa543ca6d02814ba24084721860f67418d3e98859ede7",
     "docs/security/README.md": "sha256:56546e3eb26cf24c6bd700e0019f082903daf979c1e94e705ec62aa9a2bfad79",
-    "docs/security/secret_scan_allowlist.csv": "sha256:bb11d52d375e9e400ca01508b899df14400b1dab7296acf5fa2817aa6221ea68",
     "gunicorn.conf.py": "sha256:6ff7e4c6d918f9ed5819acbdfe4711abb56a9553b3f6fb273dc804d0a0b946aa",
     "infrastructure/Caddyfile": "sha256:f2a5cd80a5df5cdb5fe4f1933303e1543acbd4c9873ba337610f875f98abb975",
     "infrastructure/bootstrap_docker.sh": "sha256:8a30ac5fe0898002663b3d464580890665094cdd5005fa70639c31d3a18ea53f",
@@ -752,7 +751,8 @@
     "accounting/tests_finance_posting.py": "sha256:3ff7d8b367586085ab694cc20fef12b6512691b6862017cc482912d07f951ab5",
     "accounting/tests_reports.py": "sha256:be17f5d5a1f696730d7d3f2a6e8e00714fcbc707676c234ade62e58bbc35cbc8",
     "accounting/tests_settlements.py": "sha256:b5bf31e6f3957bacf0a15a115c5ff82fb6e5a750f3c53c63ef53d71ce822c5ee",
-    "accounting/urls.py": "sha256:9d5c64141b897591aa9a11a625275031cbaebea0d02c29a86252b5b5badb7d3f"
+    "accounting/urls.py": "sha256:9d5c64141b897591aa9a11a625275031cbaebea0d02c29a86252b5b5badb7d3f",
+    "docs/security/secret_scan_allowlist.csv": "sha256:7ed1e9403da97277021e7541e8fd403a5d15d5a7bc69eb77b8166cdc72f9cf6d"
   },
   "added_files": {
     "accounting/counterparty_retirement_models.py": "sha256:2a1bb8d03e713bc53e104ff12c0eb3ab492c64dede55ce6d97c1a579bac5973d",
@@ -764,11 +764,14 @@
     "accounting/templates/accounting/entity_delete.html": "sha256:527a5f11eaa437016c6433b25659a709a8b432d845e74d26d835ed658ae38119",
     "accounting/tests_counterparty_retirement.py": "sha256:44ba7978d9343dfad29af7968ce6bdf8263a6beebe11c75c72e1c9fa0e0a3152",
     "accounting/tests_cr005_support.py": "sha256:02ca20ae04eb366ae3004e31f01ea11c7bc314c22f3c74c513487f2bf7ab7cd8",
-    "docs/implementation/counterparty_archive_delete_el.md": "sha256:258d556b9c08baa696f6fcc0a86f9f915d56db2d3c5254ab824296be916f17a1",
+    "docs/implementation/counterparty_archive_delete_el.md": "sha256:618a55868cb28319998cd8a2d67bb27be5e19fea424f9b55f2252b41423040b0",
     "docs/implementation/evidence/CR005-prior-completion.json": "sha256:039d1f5242603a7160bd64578de6d053edfcad8b7806ee55bbef91c7d8a661f6",
     "docs/requirements/CR-005-Counterparty-archive-delete.md": "sha256:eeebcaac52360fbb6cca26d66c123fb4de050aa5ac4f5849e978d7ec40e6613c",
     "tools/cr005_receipts.py": "sha256:dc59e2c58978b6772e65c52b60d76553162f0d579bb51b72d4cef6992b46af7d",
-    "tools/verify_cr005.py": "sha256:054e78ceeae727dabfa52052b92e8b9e61ee8bf5238e9c02573058972ef7980d"
+    "tools/verify_cr005.py": "sha256:f1c959b14169e6114b4ac447c81a85bc41d5e79009106416932a425997ef6604",
+    "docs/implementation/evidence/CR005-initial-source-lock.json": "sha256:d883761b0aa6d88cca1bdae8e19c46a7ac221f46872f9aaae7a70f26aaac8638",
+    "docs/implementation/evidence/CR005-initial-preflight-failure.json": "sha256:e16b75ae6805669fe7d35a3f7fcf2c893cafa988f6413aeabf741c772473c8a6",
+    "docs/implementation/evidence/CR005-assertion-portability-fix.json": "sha256:26a5f6fe9ed13fa116a7cd971ece13911654118cd9e2124964e99c3c7a50e67d"
   },
   "mutable_tracking": [
     "AGENTS.md",
@@ -791,5 +794,9 @@
   "agent_runtime_executed": false,
   "operator_gate": "Pending",
   "github_and_vm": "Pending CR005 operator gate and separately bound deployment",
-  "full_requirement_acceptances_pending": 85
+  "full_requirement_acceptances_pending": 85,
+  "source_bindings": 721,
+  "assertion_dump_policy": "Python 3.12 representation; show_empty=True explicitly on Python 3.13+; original33 baseline digests unchanged",
+  "initial_failure": "docs/implementation/evidence/CR005-initial-preflight-failure.json",
+  "correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json"
 }

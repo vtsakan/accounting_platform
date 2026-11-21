@@ -1,0 +1,47 @@
+{
+  "change": "CR006",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:7180f0563da33362eafe4310c5c5811f96e30bc4",
+  "actual_prior_operator_commit": "git:4a817c401d6a9205e62586dc6ab2e70e15866dfa",
+  "prior_application_context_digest": "sha256:5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684",
+  "application_context_digest": "sha256:638e6b2c7cccd48fa6d572cec57aeddb51be18ea4af3ea35cf764d16db4daa1c",
+  "application_inputs": 334,
+  "retained_test_count": 1020,
+  "new_test_methods": 65,
+  "expected_suite": 1085,
+  "test_files": [
+    "accounting/tests_client_tasks.py"
+  ],
+  "mutable_tracking": [
+    "AGENTS.md",
+    "docs/implementation/state.md",
+    "docs/implementation/decisions.md",
+    "docs/implementation/traceability.csv"
+  ],
+  "actual_operator_receipts_bound_separately": [
+    "docs/implementation/evidence/CR002-verification.json",
+    "docs/implementation/evidence/CR003-operator-baseline.json",
+    "docs/implementation/evidence/CR003-verification.json",
+    "docs/implementation/evidence/CR004-VM-operator-baseline.json",
+    "docs/implementation/evidence/CR004-VM-verification.json",
+    "docs/implementation/evidence/CR004-operator-baseline.json",
+    "docs/implementation/evidence/CR004-verification.json",
+    "docs/implementation/evidence/CR005-VM-operator-baseline.json",
+    "docs/implementation/evidence/CR005-VM-verification.json",
+    "docs/implementation/evidence/CR005-operator-baseline.json",
+    "docs/implementation/evidence/CR005-verification.json"
+  ],
+  "original_migrations_preserved": 30,
+  "new_migrations": 2,
+  "source_bindings": 756,
+  "original_assertion_files": 34,
+  "fixture_adaptation": "Only new route fixture seeding, key routing and owner-only tasks.office role expectation; original assertions unchanged",
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "operator_gate": "Pending",
+  "github_and_vm": "Pending new successful operator gate and separately bound rollout",
+  "full_requirement_acceptances_pending": 85,
+  "requirements": "docs/requirements/CR-006-Manual-client-tasks.md",
+  "operator_command": "python3 tools/verify_cr006.py --record --host-dns",
+  "source_lock_sha256": "sha256:112fc8ee8b9ca1745fa66c9fc700115375bc62f9c75ca6386d41538b893358c4"
+}

@@ -1,0 +1,58 @@
+{
+  "change": "CR007",
+  "status": "Prepared",
+  "implementation_reference_commit": "git:220161f0166c65e091b67c18f0dc9f509a5d9fac",
+  "actual_prior_operator_commit": "git:12ed590084dd777a6d09ab8d9ee8337abf12da66",
+  "actual_prior_delivery_tests_passed": 1085,
+  "actual_prior_financial_cases_passed": 36,
+  "actual_prior_full_cr006_status": "Pending: broker failed at restricted-database",
+  "prior_application_context_digest": "sha256:638e6b2c7cccd48fa6d572cec57aeddb51be18ea4af3ea35cf764d16db4daa1c",
+  "application_context_digest": "sha256:dfbb2fb64a321b8f413ff47dca9c2950da647c90c77a803ee4c8f904013f0cbc",
+  "application_inputs": 351,
+  "retained_test_count": 1085,
+  "new_test_methods": 55,
+  "expected_suite": 1140,
+  "test_files": [
+    "accounting/tests_entity_profile.py"
+  ],
+  "mutable_tracking": [
+    "AGENTS.md",
+    "docs/implementation/state.md",
+    "docs/implementation/decisions.md",
+    "docs/implementation/traceability.csv"
+  ],
+  "actual_operator_receipts_bound_separately": [
+    "docs/implementation/evidence/CR005-verification.json",
+    "docs/implementation/evidence/CR004-verification.json",
+    "docs/implementation/evidence/CR003-verification.json",
+    "docs/implementation/evidence/CR002-verification.json",
+    "docs/implementation/evidence/CR003-operator-baseline.json",
+    "docs/implementation/evidence/CR004-operator-baseline.json",
+    "docs/implementation/evidence/CR004-VM-verification.json",
+    "docs/implementation/evidence/CR004-VM-operator-baseline.json",
+    "docs/implementation/evidence/CR005-operator-baseline.json",
+    "docs/implementation/evidence/CR005-VM-verification.json",
+    "docs/implementation/evidence/CR005-VM-operator-baseline.json",
+    "docs/implementation/evidence/CR006-operator-baseline.json"
+  ],
+  "original_30_migrations_unchanged": true,
+  "0032_unchanged": true,
+  "0031_change": "two UUID serialize=False metadata only, no SQL schema change",
+  "new_migrations": 2,
+  "source_bindings": 780,
+  "original_assertion_files": 35,
+  "fixture_adaptation": "Only four old HTTP fixture clients supply new required state/category and boundary new-route keys; original assertions unchanged",
+  "credential_roles": [
+    "owner",
+    "accountant"
+  ],
+  "inactive_separate_from_archive": true,
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "operator_gate": "Pending",
+  "vm_github_hold_by_user": true,
+  "full_requirement_acceptances_pending": 85,
+  "requirements": "docs/requirements/CR-007-Entity-fiscal-profile.md",
+  "operator_command": "python3 tools/verify_cr007.py --record --host-dns",
+  "source_lock_sha256": "sha256:40f5edebcaae671c82cf0a5f70f01a9dc2d961f5db0d1b495be149f6a6c445af"
+}

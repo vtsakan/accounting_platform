@@ -1,0 +1,84 @@
+{
+  "step": "CR004-VM",
+  "status": "Verified",
+  "verified_at": "2026-11-21T10:19:05+00:00",
+  "scope": "existing-preview-only",
+  "hostname": "totalaccounting.duckdns.org",
+  "application_commit": "git:edacf958f5dc427575b45725502b9048d2ca41bf",
+  "deployment_commit": "git:a3bd1652951f706296bd46bcf9d68e5db8035fdb",
+  "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:30597a05f45393d8d66ccc0f3924a2bdc38b007fab5c9f1755e22dfd652426a1",
+  "application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
+  "cr004_operator_report_sha256": "sha256:c4a6f83a2e392a15e96adcc6cde93c4b2d7eaa06d804f593c4fdd1496d377a46",
+  "production_suite_previously_passed": 965,
+  "financial_cases_previously_passed": 36,
+  "production_suite_rerun": false,
+  "source_migrations": 26,
+  "target_migrations": 28,
+  "original_database_retained_unmigrated": true,
+  "original_columns_rows_passwords_mfa_sessions_preserved": true,
+  "database_container_restarted": false,
+  "accounts_mfa_or_keys_reset": false,
+  "existing_durable_queue_retained": true,
+  "automatic_financial_posting_during_migration": false,
+  "runtime": {
+    "web_workers": 4,
+    "worker_concurrency": 1,
+    "scheduler_containers": 1,
+    "observed_memory_caps_mib": {
+      "web": 1024,
+      "redis": 192,
+      "worker": 512,
+      "scheduler": 192,
+      "caddy": 256,
+      "db": 768
+    },
+    "web_cpu_cap": 2,
+    "broker": true,
+    "worker_healthy": true,
+    "scheduler_healthy": true,
+    "internal_ports_private": true,
+    "same_database_container_and_start_time": true,
+    "pinned_signing_and_database_material_retained": true,
+    "durable_queue_storage_retained": true,
+    "production_settings": {
+      "debug": false,
+      "hosts": [
+        "totalaccounting.duckdns.org"
+      ],
+      "origins": [
+        "https://totalaccounting.duckdns.org"
+      ],
+      "secure_cookies": true,
+      "proxy": [
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+      ],
+      "media": "/app/media",
+      "uid": 10001
+    },
+    "vm_capacity_acceptance": "Pending D06; preview health only, no 50-session VM load claim"
+  },
+  "off_vm_source_restore_tables": 51,
+  "off_vm_target_restore_tables": 52,
+  "off_vm_source_restore_seconds": 3.509,
+  "off_vm_target_restore_seconds": 3.935,
+  "off_vm_all_public_tables_match": true,
+  "separate_recovered_key_used": true,
+  "plaintext_removed": true,
+  "public_checks": {
+    "public_https_readiness": true,
+    "greek_login": true,
+    "same_origin_form_post": true,
+    "null_foreign_origin_denied": true,
+    "missing_csrf_denied": true,
+    "certificate_chain_and_hostname_verified": true,
+    "actual_browser_mfa_acceptance": "Pending operator login",
+    "material_login": true,
+    "immutable_image_static_assets_verified": 4
+  },
+  "actual_browser_login_mfa": "Pending operator login with the existing account",
+  "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
+  "full_requirement_acceptances_pending": 85,
+  "document_recovery": "Pending S38; media verified empty",
+  "agent_native_execution": false
+}

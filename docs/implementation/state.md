@@ -1,5 +1,17 @@
 # Implementation state
 
+## CR005 source-preflight correction — 2026-11-21
+
+The operator's initial APPLY stopped at the retained assertion digest for
+accounting/tests_agreement_charges.py, after applying the source commits but
+before the Docker gate or VM update. The default AST text differs on Python
+3.13+; explicitly retaining empty lists preserves all33 frozen original
+assertion digests. Tooling-only correction Prepared. All317 application inputs,
+30 migrations,55 new methods and the1020/36 gate remain unchanged. The retry
+preserves actual prior receipts and any existing exclusive CR005 binding.
+Operator runtime verification and CR005 VM/GitHub rollout remain Pending.
+All85 full acceptances remain Pending.
+
 ## Current selected change — CR-005, 2026-11-21
 
 <!-- CR005-RESULT -->

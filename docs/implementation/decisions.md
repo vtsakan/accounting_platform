@@ -1462,3 +1462,17 @@ assertions stay exact. Old archived-open compatibility contracts use explicitly
 historical disposable-test fixtures; new policy contracts use the real service.
 Actual CR004/VM/main35a66ae completion is retained, never reconstructed. New
 source Prepared; operator verification/browser/VM/GitHub and all85 Pending.
+
+## CR005 retained assertion portability — 2026-11-21
+
+The actual initial APPLY failed its source-only check on the first frozen
+assertion file, before runtime. Preserve that failure and initial source lock.
+Python3.13+ defaults ast.dump to hiding optional empty lists. Explicitly
+request show_empty=True on those hosts; Python3.12 retains its original call.
+Do not replace any of the33 expected baseline digests. Static comparison on
+3.12/3.13 and the official3.14 dump implementation confirms equal baseline
+representations. No application, migration, assertion or runtime gate change.
+The installer first recognises exact initial or corrected source, checks all
+frozen bytes and preserves actual receipts/bindings, then applies the selected
+Git patch and invokes only the corrected source verifier. No agent tests or
+runtime execution; actual new verification and deployment remain Pending.

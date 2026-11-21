@@ -1,5 +1,25 @@
 # Accounting platform implementation instructions
 
+## CR005 source-preflight portability correction — 2026-11-21
+
+The operator applied the initial CR005 patch but its source-only preflight
+stopped at the retained assertions in accounting/tests_agreement_charges.py.
+No Docker, runtime gate or VM update was reached. Preserve this actual failure
+and the exact initial source lock. Python 3.13+ omits optional empty AST lists
+by default; explicitly request show_empty=True there to retain Python 3.12's
+representation. Keep all33 original expected assertion digests unchanged.
+
+This correction changes tooling/docs only: all317 application inputs, context
+ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24,
+all30 migrations, all55 new test methods and the1020/36 gate remain exact.
+Retry supports both an exact initial CR005 already applied and fresh CR004.
+Check frozen source bytes BEFORE applying the correction; never invoke the
+broken old verifier first. Preserve all seven actual receipts and any existing
+exclusive CR005 binding. Never recapture an existing binding. APPLY is Git/files
+only. Agent static AST/source/hash/Git/archive/text checks only; no tests,
+Docker/build/migrations/app/browser/SSH/cloud/push. New operator verification,
+VM/GitHub rollout and all85 full acceptances remain Pending.
+
 
 ## Selected CR005 — visible archive, open-contract veto and owner deletion
 

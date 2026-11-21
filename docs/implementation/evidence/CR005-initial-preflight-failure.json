@@ -1,0 +1,16 @@
+{
+  "change": "CR-005",
+  "status": "Failed",
+  "observed_on": "2026-11-21",
+  "source": "Actual operator console supplied by user; no runtime result reconstructed",
+  "stage": "APPLY source-preflight after initial source commits",
+  "diagnostic": {
+    "stage": "source-preflight",
+    "error": "RuntimeError"
+  },
+  "message": "Άλλαξαν αρχικές δοκιμαστικές απαιτήσεις: accounting/tests_agreement_charges.py",
+  "apply_message": "Δεν ήταν δυνατή η ανάγνωση ή εφαρμογή της προετοιμασίας.",
+  "docker_or_runtime_reached": false,
+  "vm_changed": false,
+  "initial_source_lock_sha256": "sha256:d883761b0aa6d88cca1bdae8e19c46a7ac221f46872f9aaae7a70f26aaac8638"
+}

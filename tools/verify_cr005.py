@@ -22,6 +22,16 @@ DOCS = ROOT / 'docs/implementation'
 MANIFEST = DOCS / 'evidence/CR005-source-lock.json'
 
 
+def retained_assertion_dump(node):
+    """Keep the original Python 3.12 assertion representation on newer hosts."""
+    options = {'include_attributes': False}
+    # Python 3.13 changed dump's default to omit empty optional lists.
+    # Explicitly retain them; the 33 frozen baseline digests stay unchanged.
+    if sys.version_info >= (3, 13):
+        options['show_empty'] = True
+    return ast.dump(node, **options)
+
+
 def source_check():
     policy = json.loads(MANIFEST.read_text())
     expected = {}
@@ -49,7 +59,7 @@ def source_check():
         raise RuntimeError('Η αλλαγή δεν εγκρίνει τις 85 πλήρεις αποδοχές απαιτήσεων.')
     for name, expected_assertions in policy['retained_assertions'].items():
         tree = ast.parse((ROOT/name).read_text())
-        assertions = [ast.dump(node,include_attributes=False) for node in ast.walk(tree)
+        assertions = [retained_assertion_dump(node) for node in ast.walk(tree)
             if isinstance(node,ast.Assert) or isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute)
             and node.func.attr.startswith('assert')]
         observed = 'sha256:'+hashlib.sha256(json.dumps(assertions,separators=(',',':')).encode()).hexdigest()

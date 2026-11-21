@@ -31,9 +31,9 @@
 ```bash
 bash <<'SH'
 set -euo pipefail
-unzip -o ~/Downloads/accounting-platform-CR005-archive-delete.zip \
-  -d ~/Downloads/accounting-platform-CR005-archive-delete
-bash ~/Downloads/accounting-platform-CR005-archive-delete/APPLY_CR005.sh
+unzip -o ~/Downloads/accounting-platform-CR005-assertion-fix.zip \
+  -d ~/Downloads/accounting-platform-CR005-assertion-fix
+bash ~/Downloads/accounting-platform-CR005-assertion-fix/APPLY_CR005.sh
 cd ~/accountant_cloud/accounting_v5/accounting-platform
 export PATH="$HOME/.local/bin:$PATH"
 python3 tools/verify_cr005.py --record --host-dns
@@ -43,6 +43,11 @@ SH
 Το APPLY εκτελεί μόνο Git/αρχεία και δεσμεύει αποκλειστικά τις επτά πραγματικές
 αναφορές/δεσμεύσεις που διατηρήθηκαν από το επιτυχές CR004 και την αναβάθμιση
 VM. Δεν ανακατασκευάζει το ιστορικό Git ούτε ανανεώνει παλιές δεσμεύσεις.
+
+Το διορθωμένο πακέτο καλύπτει και την αρχική εφαρμογή που σταμάτησε με
+«Άλλαξαν αρχικές δοκιμαστικές απαιτήσεις». Διατηρεί όλα τα αρχικά αποτυπώματα
+και διορθώνει τη σύγκριση στις νεότερες Python, χωρίς αλλαγή των δοκιμών.
+Αναγνωρίζει τα ήδη εφαρμοσμένα αρχεία και προσθέτει μόνο τη διόρθωση.
 
 Ο έλεγχος χρησιμοποιεί νέα παραγωγική εικόνα, απομονωμένη PostgreSQL 17,
 ολόκληρη τη σουίτα, τις 36 οικονομικές περιπτώσεις και τον πραγματικό worker

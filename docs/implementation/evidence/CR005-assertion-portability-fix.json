@@ -1,0 +1,43 @@
+{
+  "change": "CR-005",
+  "correction": "retained-assertion-dump-portability",
+  "status": "Prepared",
+  "initial_failure": "docs/implementation/evidence/CR005-initial-preflight-failure.json",
+  "initial_source_lock": "docs/implementation/evidence/CR005-initial-source-lock.json",
+  "initial_source_lock_sha256": "sha256:d883761b0aa6d88cca1bdae8e19c46a7ac221f46872f9aaae7a70f26aaac8638",
+  "preserved_original_assertion_files": 33,
+  "original_assertion_digests_replaced": false,
+  "application_inputs_unchanged": 317,
+  "application_context_digest": "sha256:ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24",
+  "all_migrations_unchanged": 30,
+  "new_test_methods_unchanged": 55,
+  "expected_suite": 1020,
+  "financial_cases_unchanged": 36,
+  "static_ast_digest_comparison": {
+    "python_3_12_14": {
+      "frozen_files_matched": 33
+    },
+    "python_3_13_5": {
+      "old_default_mismatches": 29,
+      "explicit_show_empty_matches": 33
+    },
+    "cpython_3_14_dump_on_3_12_parsed_nodes": {
+      "frozen_files_matched": 33,
+      "limitation": "Static formatter comparison; no Python 3.14 interpreter available",
+      "official_source": "https://github.com/python/cpython/blob/3.14/Lib/ast.py",
+      "retrieved_blob": "2f11683ecf7c681d4c76cb0c234587370aea08d5"
+    }
+  },
+  "installer_paths": [
+    "exact initial CR005 already applied",
+    "fresh actual CR004",
+    "corrected CR005 idempotent"
+  ],
+  "actual_prior_receipts_preserved": 7,
+  "existing_cr005_binding": "Preserved byte-for-byte if present; exclusively created only if absent",
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "operator_gate": "Pending",
+  "github_and_vm": "Pending",
+  "full_requirement_acceptances_pending": 85
+}

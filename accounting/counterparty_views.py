@@ -37,7 +37,7 @@ class SearchForm(forms.Form):
             ProfileSearchMixin.add_profile_filters(self,user)
             self.fields['status'].label='Αρχειοθέτηση'
         for name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control' if name == 'q' else 'form-select'
+            field.widget.attrs['class'] = 'form-check-input' if isinstance(field,forms.BooleanField) else 'form-control' if name == 'q' else 'form-select'
 
 
 class ArchiveForm(forms.Form):

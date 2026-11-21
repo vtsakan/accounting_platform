@@ -33,11 +33,13 @@ def tags(value):
     if not isinstance(value, (list, tuple)) or len(value) > 25:
         raise ValidationError('Προσθέστε έως 25 ετικέτες, χωρισμένες με κόμμα.')
     result = []
+    seen = set()
     for item in value:
         if not isinstance(item,str):raise ValidationError('Κάθε ετικέτα πρέπει να είναι κείμενο.')
-        item = text(unicodedata.normalize('NFKC', item), 40).casefold()
-        if item and item not in result:
+        item = text(unicodedata.normalize('NFKC', item), 40).lower()
+        if item and item.casefold() not in seen:
             result.append(item)
+            seen.add(item.casefold())
     return result
 
 

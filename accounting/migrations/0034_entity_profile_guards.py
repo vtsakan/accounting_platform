@@ -46,8 +46,8 @@ BEGIN
  FOR item IN SELECT * FROM jsonb_array_elements(value) LOOP
   IF jsonb_typeof(item)<>'string' THEN RETURN false; END IF;
   label:=item#>>'{}';
-  IF char_length(label) NOT BETWEEN 1 AND 40 OR label<>btrim(label) OR label ~ '[[:cntrl:]]' OR lower(label)=ANY(labels) THEN RETURN false; END IF;
-  labels:=array_append(labels,lower(label));
+  IF char_length(label) NOT BETWEEN 1 AND 40 OR label<>btrim(label) OR label ~ '[[:cntrl:]]' OR replace(lower(label),'ς','σ')=ANY(labels) THEN RETURN false; END IF;
+  labels:=array_append(labels,replace(lower(label),'ς','σ'));
  END LOOP;
  RETURN true;
 END $$;

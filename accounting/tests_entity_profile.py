@@ -89,7 +89,7 @@ class ProfileSyntaxContracts(SimpleTestCase):
             with self.assertRaises(ValidationError):amka(value)
 
     def test_tags_are_bounded_normalised_and_deduplicated(self):
-        self.assertEqual(tags(' ΕΠΙΔΟΤΟΥΜΕΝΟΣ, ανήλικα τέκνα; επιδοτουμενοσ '),['επιδοτουμενοσ','ανήλικα τέκνα'])
+        self.assertEqual(tags(' ΕΠΙΔΟΤΟΥΜΕΝΟΣ, ανήλικα τέκνα; επιδοτουμενοσ '),['επιδοτουμενος','ανήλικα τέκνα'])
         for value in (['x']*26,['x'*41],[1]):
             with self.assertRaises(ValidationError):tags(value)
 

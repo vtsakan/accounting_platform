@@ -3,7 +3,7 @@
 ## Current selected change — CR-004, 2026-11-21
 
 <!-- CR004-RESULT -->
-CR-004 source Prepared: richer client/supplier overview, green/red financial entries, blue notes with server time and accountant, and a paged list/monthly journal with all retained events. Actual prior CR003 operator gate Verified: 917/917,36 finance and real worker. Initial operator run962 tests ended with3errors; ordinary fixture schema restoration correction Prepared with3 further contracts (48 new total, target965). Initial failure retained; all28 migrations unchanged. Agent static checks only; new runtime, accountant/browser acceptance and VM/GitHub rollout Pending. All85 full requirement acceptances Pending.
+CR-004 source Prepared; operator technical gate Verified: 965 tests, 36 financial cases, notes/calendar contracts and retained real monthly-worker/ack-loss gate passed. VM/GitHub rollout and accountant/browser acceptance remain Pending. All 85 full acceptances remain Pending.
 <!-- /CR004-RESULT -->
 
 Actual successful CR003 source: `bd541fb269343838e217c916cd7a83013baeb0c9`,

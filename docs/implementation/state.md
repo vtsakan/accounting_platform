@@ -1,5 +1,12 @@
 # Implementation state
 
+<!-- CR004-PREVIEW -->
+## Existing preview update — CR004
+
+Status: **Prepared**. Actual CR004 operator gate Verified965/965,36 finance and real worker at2026-11-21T10:07:53+02:00. Retain its cached308input image and actual reports. Update GitHub by ordinary fast-forward and the existing preview through a CURRENT26→28 clone, retaining all current data/accounts/MFA/keys and durable queue. Both encrypted off-VM restores precede activation. Operator VM/GitHub execution and human browser acceptance Pending; all85 full acceptances Pending. See [procedure](cr004_preview_upgrade_el.md).
+<!-- /CR004-PREVIEW -->
+
+
 ## Current selected change — CR-004, 2026-11-21
 
 <!-- CR004-RESULT -->

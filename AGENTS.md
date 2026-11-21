@@ -1,5 +1,42 @@
 # Accounting platform implementation instructions
 
+## Selected CR004 VM/GitHub update —965-test gate Verified, 2026-11-21
+
+The user explicitly requests the latest existing VM and GitHub once checks
+pass. Their supplied console confirms CR004 Verified at2026-11-21T10:07:53+02:00,
+965/965,36 finance,48newmethods,695bindings and real-worker/commit-before-ack.
+Actual application source isedacf958f5dc427575b45725502b9048d2ca41bf,
+contextb72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9,
+image2c9844e107af9690a4487ce17ef87a2ae6744ca05689008e06ca8b9e9d4f3d2d.
+Read evidence/CR004-operator-completion.json and cr004_preview_upgrade_el.md.
+Earlier failure stays retained; its correction gate now has actual proof.
+
+This authorises the selected existing accounting-preview VM/GitHub update,
+not real-client release or S32. Keep agent execution static/Git/files only;
+the operator executes cloud/Docker/push. Reuse the exact passed308input image
+without rebuilding or rerunning965. Preserve all695 old source bindings,
+all28migrations, original assertions, app bytes, historical actual receipts,
+accounts, MFA, keys, hostname, instance, disk and bounded resources. Bind the
+actual five receipt/history files exclusively; runtime may not recapture.
+Save only exact CR004 --record outputs before the clean-context guard.
+
+Start from the CURRENT S31A26-migration database and clone26→28; never rewind
+to an old snapshot. Stop existing worker/scheduler and HTTP writers, retain
+Redis/scheduler volumes and queued intents, compare unchanged job code. Require
+restricted migration, all original rows/passwords/MFA/sessions and same DB
+container/process/material, encrypted before/after backups and both exact
+off-VM restores using the existing independent key before activation. Never
+restart/delete the DB or delete/flush queues. Candidate web cannot auto-start
+on reboot. After jobs/HTTP may write, never auto-rollback the DB. Before then,
+restore the exact source wrapper and all original services on abort. Public
+proof includes the new journal CSS as a fourth immutable static asset.
+
+Supply separate preview_cr004 tools; historical release scripts stay exact.
+Ordinary fast-forward GitHub publication only; private ops files remain outside
+Git. Full accountant/browser/workload/recovery/policy acceptance and all85 full
+requirements remain Pending. No agent tests/build/Docker/migration/app/browser/
+SSH/cloud/push; static AST/hash/source/text/SQL/template inspection only.
+
 ## CR-004 operator failure — restore ordinary fixture schema, 2026-11-21
 
 The actual operator run applied CR004 and ran962 tests, ending with3errors.

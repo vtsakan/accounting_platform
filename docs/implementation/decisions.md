@@ -1,5 +1,25 @@
 # Decision register
 
+## CR004 current-preview/GitHub upgrade — authorised, Prepared
+
+The actual CR004 operator gate now passes965/965 and all36 finance cases,
+48newmethods,695bindings and the real monthly-worker gate. Preserve the full
+actual report and earlier failed run; the observed summary is not a replacement
+receipt or manufactured operator Git lineage. The user now selects the current
+preview update and ordinary GitHub publication. Preserve the308 verified app
+inputs and exact cached image; deployment tooling does not rerun the suite or
+rebuild. Save only the two known recorder outputs before the clean-only guard.
+
+Clone the CURRENT26-migration database to a distinct28-migration target. Retain
+all current accounts, data, MFA, sessions, pinned material and durable queues.
+Stop source job/HTTP writers and require no running leases before the freeze.
+Retain matching job code and volumes, with one scheduler after promotion. Both
+encrypted source/target backups must restore off-VM with the existing independent
+key before activation. Source DB/process remains unchanged. Restore source boot
+wrapper/services on pre-activation abort; after jobs or HTTP can write, retain
+and resume the new DB. Add fourth immutable public journal-CSS proof. R1/G2,
+browser/VM workload acceptance and all85 full requirement acceptances stay Pending.
+
 ## CR-004 schema-fixture retry — initial technical Failed, correction Prepared
 
 The supplied console ran962 tests and reported3errors. Two visible errors are

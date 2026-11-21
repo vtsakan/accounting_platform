@@ -85,6 +85,19 @@ WITH scope AS (SELECT %s::uuid AS office_id, %s::bigint AS entity_id), journal A
 MONTHS = ('Ιανουάριος', 'Φεβρουάριος', 'Μάρτιος', 'Απρίλιος', 'Μάιος', 'Ιούνιος',
     'Ιούλιος', 'Αύγουστος', 'Σεπτέμβριος', 'Οκτώβριος', 'Νοέμβριος', 'Δεκέμβριος')
 
+TASK_ARM = """
+ UNION ALL
+ SELECT 'task:'||t.id::text||':'||a.id::text, 'task',
+  (a.created_at AT TIME ZONE 'Europe/Athens')::date, a.created_at, 'TASK',
+  CASE a.action WHEN 'CREATE' THEN 'Νέα εργασία' WHEN 'UPDATE' THEN 'Αλλαγή εργασίας'
+   WHEN 'COMPLETE' THEN 'Ολοκλήρωση εργασίας' ELSE 'Εκ νέου άνοιγμα εργασίας' END,
+  a.after->>'body', NULL::numeric, a.actor_label, NULL::bigint, NULL::bigint,
+  'Υπεύθυνος: '||(a.after->>'assignee_label')||' · Λήξη: '||to_char((a.after->>'due_date')::date,'DD/MM/YYYY'), ''
+ FROM accounting_clienttaskactivity a JOIN accounting_clienttask t ON t.id=a.task_id AND t.office_id=a.office_id
+ JOIN scope s ON t.office_id=s.office_id AND t.entity_id=s.entity_id
+ WHERE a.action<>'NOTE'
+"""
+
 
 def month_bounds(month):
     year, number = map(int, month.split('-'))
@@ -94,11 +107,13 @@ def month_bounds(month):
 
 
 def decorate_event(row, entity_id):
-    row['tone'] = 'blue' if row['kind'] == 'note' or not row['direction'] else (
+    row['tone'] = 'purple' if row['kind'] == 'task' else 'blue' if row['kind'] == 'note' or not row['direction'] else (
         'green' if row['direction'] == 'RECEIVABLE' else 'red')
     row['direction_label'] = {'RECEIVABLE': 'Εισπρακτέα / έσοδο', 'PAYABLE': 'Πληρωτέα / έξοδο'}.get(row['direction'], '')
     row['anchor'] = row['event_id'].replace(':', '-')
-    if row['agreement_id']:
+    if row['kind'] == 'task':
+        row['url'] = reverse('task-detail', args=[row['event_id'].split(':')[1]])
+    elif row['agreement_id']:
         row['url'] = reverse('agreement-detail', args=[row['agreement_id']])
     elif row['cash_id']:
         row['url'] = reverse('cash-allocation-add', args=[row['cash_id']])
@@ -113,6 +128,9 @@ class JournalRows:
         self.entity = entity
         self.values = values or {}
         self.empty = empty
+        from .client_task_selectors import tasks_installed
+        self.tasks = tasks_installed()
+        self.sql = EVENTS_SQL.rsplit(')', 1)[0] + TASK_ARM + ')\n' if self.tasks else EVENTS_SQL
 
     def where(self, *, month=None):
         predicates = ['TRUE']
@@ -140,7 +158,7 @@ class JournalRows:
     def count(self):
         where, params = self.where()
         with connection.cursor() as cursor:
-            cursor.execute(EVENTS_SQL + ' SELECT count(*) FROM journal WHERE ' + where, params)
+            cursor.execute(self.sql + ' SELECT count(*) FROM journal WHERE ' + where, params)
             return cursor.fetchone()[0]
 
     def __getitem__(self, key):
@@ -151,21 +169,34 @@ class JournalRows:
             raise ValueError('Journal pages must contain at most 100 events')
         where, params = self.where()
         with connection.cursor() as cursor:
-            cursor.execute(EVENTS_SQL + ' SELECT * FROM journal WHERE ' + where +
+            cursor.execute(self.sql + ' SELECT * FROM journal WHERE ' + where +
                 ' ORDER BY event_day DESC, recorded_at DESC, event_id DESC LIMIT %s OFFSET %s',
                 params + [stop - start, start])
             names = [column[0] for column in cursor.description]
-            return [decorate_event(dict(zip(names, row)), self.entity.pk) for row in cursor.fetchall()]
+            rows = [decorate_event(dict(zip(names, row)), self.entity.pk) for row in cursor.fetchall()]
+        if self.tasks:
+            from .models import ClientTask
+            notes = [r['event_id'].split(':')[1] for r in rows if r['kind'] == 'note']
+            linked = {str(note): key for note, key in ClientTask.objects.filter(office_id=self.entity.office_id,
+                entity=self.entity, source_note_id__in=notes).values_list('source_note_id', 'pk')}
+            for row in rows:
+                if row['kind'] == 'note':
+                    key = row['event_id'].split(':')[1]
+                    row['task_url'] = reverse('task-detail', args=[linked[key]]) if key in linked else ''
+                    row['convert_url'] = reverse('note-to-task', args=[self.entity.pk, key]) if not self.entity.is_archived else ''
+        return rows
 
     def calendar(self, month):
         where, params = self.where(month=month)
         with connection.cursor() as cursor:
-            cursor.execute(EVENTS_SQL + """ SELECT event_day,
+            cursor.execute(self.sql + """ SELECT event_day,
                 count(*) FILTER (WHERE kind<>'note' AND direction='RECEIVABLE') AS green,
                 count(*) FILTER (WHERE kind<>'note' AND direction='PAYABLE') AS red,
-                count(*) FILTER (WHERE kind='note' OR direction='') AS blue
+                count(*) FILTER (WHERE kind='note' OR direction='') AS blue,
+                count(*) FILTER (WHERE kind='task') AS purple
                 FROM journal WHERE """ + where + ' GROUP BY event_day ORDER BY event_day', params)
-            counts = {row[0]: dict(zip(('green', 'red', 'blue'), row[1:])) for row in cursor.fetchall()}
+            counts = {row[0]: {name: value for name, value in zip(('green', 'red', 'blue', 'purple'), row[1:])
+                if name != 'purple' or value} for row in cursor.fetchall()}
         first, last = month_bounds(month)
         weeks = []
         for days in calendar.Calendar(firstweekday=0).monthdayscalendar(first.year, first.month):

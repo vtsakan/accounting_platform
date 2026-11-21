@@ -10,7 +10,7 @@ from .counterparty_note_services import note_text
 KINDS = [('', 'Όλες οι εγγραφές'), ('agreement', 'Συμφωνίες και αλλαγές όρων'),
     ('charge', 'Χρεώσεις'), ('cash', 'Εισπράξεις και πληρωμές'),
     ('allocation', 'Αντιστοιχίσεις'), ('release', 'Αποδεσμεύσεις'),
-    ('correction', 'Αντιλογισμοί χρεώσεων'), ('note', 'Σημειώσεις')]
+    ('correction', 'Αντιλογισμοί χρεώσεων'), ('note', 'Σημειώσεις'), ('task', 'Εργασίες')]
 
 
 class NoteForm(forms.Form):
@@ -40,7 +40,7 @@ class JournalForm(forms.Form):
         widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}))
     kind = forms.ChoiceField(required=False, label='Είδος εγγραφής', choices=KINDS)
     direction = forms.ChoiceField(required=False, label='Κατεύθυνση', choices=[('', 'Όλες οι κατευθύνσεις'),
-        ('RECEIVABLE', 'Εισπρακτέα / έσοδα'), ('PAYABLE', 'Πληρωτέα / έξοδα'), ('NOTE', 'Σημειώσεις')])
+        ('RECEIVABLE', 'Εισπρακτέα / έσοδα'), ('PAYABLE', 'Πληρωτέα / έξοδα'), ('NOTE', 'Σημειώσεις'), ('TASK', 'Εργασίες')])
     q = forms.CharField(required=False, label='Αναζήτηση στο ιστορικό', max_length=100)
 
     def __init__(self, data=None, **kwargs):

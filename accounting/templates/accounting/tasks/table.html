@@ -1,0 +1,11 @@
+{% load greek %}
+<div class="task-table-wrap"><table class="task-table">
+<caption class="visually-hidden">Εργασίες ταξινομημένες ανά ημερομηνία λήξης</caption>
+<thead><tr><th scope="col">Εργασία / πελάτης</th><th scope="col">Υπεύθυνος</th><th scope="col">Λήξη</th><th scope="col">Προθεσμία</th><th scope="col">Κατάσταση</th></tr></thead>
+<tbody>{% for task in tasks %}<tr>
+<td><a class="task-title" href="{% url 'task-detail' task.pk %}">{{ task.body|truncatechars:140 }}</a><br><a class="task-client" href="{% url 'entity-detail' task.entity_id %}">{{ task.entity.name }}</a></td>
+<td>{{ task.assignee.username }}{% if not task.assignee.is_active %}<small>Μη ενεργός λογαριασμός</small>{% endif %}</td>
+<td>{{ task.due_date|el_date }}</td>
+<td>{% if task.status == 'DONE' %}<span class="task-pill task-pill--done">Ολοκληρώθηκε</span>{% elif task.days_left < 0 %}<span class="task-pill task-pill--late">Καθυστέρηση {{ task.overdue_days }} ημέρ{{ task.overdue_days|pluralize:'ας,ών' }}</span>{% elif task.days_left == 0 %}<span class="task-pill task-pill--today">Λήγει σήμερα</span>{% elif task.days_left == 1 %}<span class="task-pill">Λήγει αύριο</span>{% else %}<span class="task-pill">Απομένουν {{ task.days_left }} ημέρες</span>{% endif %}</td>
+<td>{{ task.get_status_display }}</td>
+</tr>{% empty %}<tr><td colspan="5" class="task-empty">Δεν υπάρχουν εργασίες σε αυτή την προβολή.</td></tr>{% endfor %}</tbody></table></div>

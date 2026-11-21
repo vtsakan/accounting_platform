@@ -1,0 +1,37 @@
+{
+  "change": "CR006",
+  "status": "Observed",
+  "source": "Actual successful CR005/VM operator output and exact GitHub4a817c4 blobs; not agent verification",
+  "github_main": "git:4a817c401d6a9205e62586dc6ab2e70e15866dfa",
+  "application_source": "git:7b5fcb0047cc48488721be63db73e96a8b7674b3",
+  "application_context_digest": "sha256:5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684",
+  "application_inputs": 317,
+  "app_gate_verified_at": "2026-11-21T16:03:32+02:00",
+  "tests_passed": 1020,
+  "financial_cases_passed": 36,
+  "new_methods_previously_passed": 55,
+  "vm_verified_at": "2026-11-21T14:40:37+00:00",
+  "deployed_image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:335827d3ce5b075f772fea1036e414e48a45ec235aecf57370df4967501dca85",
+  "current_migrations": 30,
+  "off_vm_restore_tables": [
+    52,
+    53
+  ],
+  "off_vm_all_tables_match": true,
+  "actual_receipt_files": {
+    "docs/implementation/evidence/CR005-verification.json": "sha256:a80df898d1f26378bc4685841c7753ffd249b95e0495addf0c7c3cd5af082274",
+    "docs/implementation/evidence/CR004-verification.json": "sha256:a0a2731f76ed5a56e8e2a3bfd4bd970cdf7bb5d7da2531a24ea4ab47fe216cc4",
+    "docs/implementation/evidence/CR003-verification.json": "sha256:1f8feac780aa893a9bf8dd7c970ed0a32a553b97b5ce598c217431d590421706",
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891",
+    "docs/implementation/evidence/CR003-operator-baseline.json": "sha256:d0077c3bcfb36803475e47a0bfc9098753bfd9277648ca7153d0220278c18088",
+    "docs/implementation/evidence/CR004-operator-baseline.json": "sha256:dfec50f4305696f4e950e6d44ba66a25bdc4babadf435834bfb729f8b5cb933a",
+    "docs/implementation/evidence/CR004-VM-verification.json": "sha256:4ef12db035b7f93e42730a38ca39fa18fd2a747db5f34d915e74322f5feafa4e",
+    "docs/implementation/evidence/CR004-VM-operator-baseline.json": "sha256:1593e2378a3c7e6adb5c71405bbfa73b968680fb2810d20eb6c32304efd35eaa",
+    "docs/implementation/evidence/CR005-operator-baseline.json": "sha256:63129cd558fbe5af29723c29d7e5588ee6c414bcd7627495cecbe800d4ccad14",
+    "docs/implementation/evidence/CR005-VM-verification.json": "sha256:b141e22eec872577f965ef7539a4ee275563098b6b527cf7bd47468b492c2a01",
+    "docs/implementation/evidence/CR005-VM-operator-baseline.json": "sha256:f020550f933e561c948d248b841268e7604df01fdfa93947c9ee519ddf84e208"
+  },
+  "agent_native_execution": false,
+  "new_CR006_operator_gate": "Pending",
+  "new_CR006_VM_GitHub": "Pending"
+}

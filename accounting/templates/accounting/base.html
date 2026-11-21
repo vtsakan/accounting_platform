@@ -9,6 +9,8 @@
     <link rel="icon" type="image/svg+xml" href="{% static 'accounting/workspace/mark.svg' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'accounting/workspace/workspace.css' %}">
+    <link rel="stylesheet" href="{% static 'accounting/workspace/client-tasks.css' %}">
+    <script src="{% static 'accounting/workspace/client-tasks.js' %}" defer></script>
     {% block page_styles %}{% endblock %}
     <script src="{% static 'accounting/workspace/workspace.js' %}" defer></script>
 </head>
@@ -27,6 +29,7 @@
             <nav aria-label="Κύρια πλοήγηση" class="workspace-nav">
                 <p class="nav-group-label">Η καθημερινότητά σας</p>
                 {% include 'accounting/includes/nav_link.html' with destination='dashboard' label='Επισκόπηση' icon='grid' %}
+                {% include 'accounting/includes/nav_link.html' with destination='task-list' label='Οι εργασίες μου' icon='calendar' %}
                 {% include 'accounting/includes/nav_link.html' with destination='transaction-list' label='Κινήσεις' icon='activity' %}
                 {% include 'accounting/includes/nav_link.html' with destination='cash-account-list' label='Ταμεία' icon='wallet' %}
                 {% include 'accounting/includes/nav_link.html' with destination='agreement-list' label='Συμφωνίες' icon='document' %}

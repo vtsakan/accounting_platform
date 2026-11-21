@@ -1,0 +1,5 @@
+<section class="task-panel" aria-labelledby="tasks-heading" id="client-tasks">
+<div class="task-panel-heading"><div><h2 id="tasks-heading">Εργασίες πελάτη</h2><p>Ανοιχτές: {{ task_totals.open }} · Εκπρόθεσμες: {{ task_totals.overdue }} · Σύνολο: {{ task_totals.total }}</p></div>{% if not entity.is_archived %}<a class="btn btn-outline-primary" href="?new_task=1#new-note">Νέα εργασία</a>{% endif %}</div>
+{% include 'accounting/tasks/table.html' with tasks=task_page.object_list %}
+{% if task_page.has_other_pages %}<nav class="task-pagination" aria-label="Σελίδες εργασιών πελάτη">{% if task_page.has_previous %}<a href="?task_page={{ task_page.previous_page_number }}#client-tasks">Προηγούμενη</a>{% endif %}<span>Σελίδα {{ task_page.number }} από {{ task_page.paginator.num_pages }}</span>{% if task_page.has_next %}<a href="?task_page={{ task_page.next_page_number }}#client-tasks">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>

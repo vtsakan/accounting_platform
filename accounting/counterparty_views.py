@@ -128,10 +128,11 @@ def detail_snapshot(request, key):
     movement_page = Paginator(movements, 10).get_page(request.GET.get('movement_page'))
     events = entity.workspace_events.filter(office_id=entity.office_id).select_related('actor').order_by('-occurred_at', '-pk')[:10]
     from .settlement_selectors import settlement_totals
-    from .counterparty_journal_forms import NoteForm
+    from .client_task_forms import note_form
+    from .client_task_selectors import client_tasks
     from .counterparty_journal_selectors import card_summary
     context = card_summary(request.user, entity, agreements, movements)
-    return render(request, 'accounting/entity_detail.html', {**context, 'note_form': NoteForm(), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
+    return render(request, 'accounting/entity_detail.html', {**context, **client_tasks(request.user, entity, request.GET.get('task_page')), 'note_form': note_form(request.user, as_task=request.GET.get('new_task') == '1'), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,
         'workspace_events': events,
@@ -153,8 +154,11 @@ def archive(request, key, *, restore=False):
             return redirect('entity-detail', pk=saved.pk)
     from .counterparty_retirement_selectors import archive_blockers
     blockers = [] if restore or entity.is_archived else archive_blockers(entity)
+    from .client_task_selectors import open_client_tasks
+    task_blockers = open_client_tasks(entity) if not restore and not entity.is_archived else []
     return render(request, 'accounting/entity_archive.html', {'entity': entity, 'form': form,
-        'restore': restore, 'archive_blockers': blockers[:20], 'archive_blocker_count': len(blockers)})
+        'restore': restore, 'archive_blockers': blockers[:20], 'archive_blocker_count': len(blockers),
+        'task_blockers': task_blockers[:20], 'task_blocker_count': task_blockers.count() if hasattr(task_blockers, 'count') and not isinstance(task_blockers, list) else 0})
 
 
 @office_view('clients.write')

@@ -355,6 +355,7 @@ from .fee_models import ServiceItem, ServicePrice, FeeSchedule, FeeScheduleVersi
 from .fee_generation_models import FeeAutomationVersion, FeeGenerationRun
 
 from .counterparty_note_models import CounterpartyNote
+from .client_task_models import ClientTask, ClientTaskActivity
 
 from .counterparty_retirement_models import CounterpartyDeletion
 

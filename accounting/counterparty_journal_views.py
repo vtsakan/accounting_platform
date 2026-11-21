@@ -7,7 +7,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .capabilities import office_view
-from .counterparty_journal_forms import JournalForm, NoteForm
+from .counterparty_journal_forms import JournalForm
+from .client_task_forms import note_form
 from .counterparty_journal_selectors import journal_page
 from .counterparty_note_services import add_note
 from .counterparty_views import form_error
@@ -46,7 +47,7 @@ def journal(request, pk):
     form = JournalForm(request.GET)
     with read_snapshot(request.user):
         context = journal_page(request.user, pk, form, request.GET.get('page'))
-        context.update(filter_form=form, note_form=NoteForm())
+        context.update(filter_form=form, note_form=note_form(request.user))
         return render(request, 'accounting/journal/page.html', journal_links(request, context))
 
 
@@ -55,13 +56,23 @@ def journal(request, pk):
 @require_http_methods(['GET', 'POST'])
 def note_add(request, pk):
     entity = record(Entity, request.user, pk)
-    form = NoteForm(request.POST if request.method == 'POST' else None)
+    form = note_form(request.user, request.POST if request.method == 'POST' else None)
     if request.method == 'POST' and form.is_valid():
         try:
-            note, replay = add_note(request.user, entity.pk, **form.cleaned_data)
+            values = dict(form.cleaned_data)
+            values.pop('recorded_on', None)
+            if 'as_task' in values:
+                from .client_task_services import add_work_note
+                note, task, replay = add_work_note(request.user, entity.pk, **values)
+            else:
+                note, replay = add_note(request.user, entity.pk, **values)
+                task = None
         except ValidationError as error:
             form_error(form, error)
         else:
+            if task is not None:
+                messages.success(request, 'Η σημείωση και η εργασία αποθηκεύτηκαν μαζί.')
+                return redirect('task-detail', key=task.pk)
             messages.success(request, 'Η σημείωση είχε ήδη αποθηκευτεί.' if replay else 'Η σημείωση αποθηκεύτηκε με ημερομηνία και λογιστή.')
             return redirect(reverse('entity-journal', args=[entity.pk]) + '?kind=note#journal-top')
     return render(request, 'accounting/journal/note_form.html', {'entity': entity, 'form': form},

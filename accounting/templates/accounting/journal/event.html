@@ -7,6 +7,7 @@
   {% if event.title %}<h3 class="client-event-title">{% if event.url %}<a href="{{ event.url }}">{{ event.title }}</a>{% else %}{{ event.title }}{% endif %}</h3>{% endif %}
   {% if event.kind == 'note' %}<div class="client-note-text">{{ event.body|linebreaksbr }}</div>{% elif event.body %}<details class="client-event-remarks"><summary>Παρατηρήσεις κίνησης</summary><div class="client-note-text">{{ event.body|linebreaksbr }}</div></details>{% endif %}
   {% if event.detail %}<p class="client-event-detail">{{ event.detail }}</p>{% endif %}
+  {% if event.kind == 'note' %}{% if event.task_url %}<p><a href="{{ event.task_url }}">Προβολή συνδεδεμένης εργασίας →</a></p>{% elif event.convert_url %}<p><a href="{{ event.convert_url }}">Να γίνει εργασία →</a></p>{% endif %}{% endif %}
   <footer class="client-event-meta">
     <span>Ημερομηνία: <time datetime="{{ event.event_day|date:'Y-m-d' }}">{{ event.event_day|el_date }}</time></span>
     <span>{% timezone 'Europe/Athens' %}Καταχωρίστηκε {{ event.recorded_at|date:'d/m/Y H:i' }}{% endtimezone %} · Λογιστής: {{ event.actor_label }}</span>

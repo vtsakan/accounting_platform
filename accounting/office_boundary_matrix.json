@@ -676,6 +676,64 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "task-list",
+      "realm": "office-business",
+      "capability": "tasks.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "office-task-list",
+      "realm": "office-business",
+      "capability": "tasks.office",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "task-detail",
+      "realm": "office-business",
+      "capability": "tasks.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "task-edit",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "task-complete",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "task-reopen",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "note-to-task",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [

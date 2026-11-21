@@ -1,5 +1,42 @@
 # Accounting platform implementation instructions
 
+## Selected CR006 — manual note-linked tasks
+
+The owner approves new/existing note conversion to manual tasks, free text,
+server registration/author, required deadline and active same-office assignee
+defaulting to self. Personal home shows assigned open tasks, overdue first,
+by Athens calendar days. Only the owner gets the office overview. Client card
+and journal retain agreements, notes and tasks. Creator, current assignee OR
+active owner may edit, reassign, complete and reopen. Open tasks BLOCK archive,
+as explicitly selected in the follow-up answer. Keep completed work/history.
+Original note text/time/author never change when converted or task text edited.
+
+Actual CR005 and VM/GitHub are Verified1020/36,30 migrations and both52/53-table
+off-VM restores; current main4a817c401d6a9205e62586dc6ab2e70e15866dfa,
+app7b5fcb0047cc48488721be63db73e96a8b7674b3/context5e2e. Preserve all11 genuine
+prior receipt/binding files; never reconstruct operator Git lineage here.
+
+Add only0031/0032. Keep all30 old migrations, financial/note services, dependency
+pins and original1020 assertions exact. Only necessary old boundary adaptation:
+seed task-route fixtures, resolve new keys, recognise owner-only tasks.office;
+preserve every original assertion. Historical pre31 reads may show no tasks;
+partial31/32 fails closed using actual catalogs, never a bypass/feature flag.
+
+Serialize office/user/entity/note/task writes with fresh actor/assignee checks.
+Bind nonce/actor/payload for note-only/task composition, conversion, edits and
+status changes. SQL supplies clock/labels and immutable atomic activity. Replay
+never creates, reopens or reapplies changed intent. SQL also vetoes archive and
+deletion with open tasks. Escape text, retain read-only GET/CSRF/existing MFA.
+Task completion has no financial effects. Greek UI throughout.
+
+This selected CR supersedes the earlier317-input/tooling-only preservation
+limit only for this task feature. No recurrence, notifications, billing,
+portal or unrelated S32 changes. All85 full acceptances remain Pending.
+Supply Git/files-only APPLY and an operator current-image PG17/full-suite/
+real-worker verifier. Agent STATIC AST/hash/SQL grammar/template compilation/
+text/Git/archive checks only; NO tests, Docker/build, migrations, app/browser,
+SSH/cloud/push by the agent. New source Prepared; VM rollout follows its gate.
+
 ## Selected CR005 existing VM/GitHub update — actual1020/36 Verified
 
 The product owner requests the updated application and GitHub once checks

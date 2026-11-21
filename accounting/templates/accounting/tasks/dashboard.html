@@ -1,0 +1,6 @@
+<section class="task-panel" aria-labelledby="my-tasks-heading">
+<div class="task-panel-heading"><div><span class="task-eyebrow">Η καθημερινότητά σας</span><h2 id="my-tasks-heading">Οι ανοιχτές εργασίες μου</h2><p>Ανοιχτές: {{ my_task_totals.total }} · Εκπρόθεσμες: {{ my_task_totals.overdue }} · Λήγουν σήμερα: {{ my_task_totals.due_today }}</p></div>
+<div class="client-actions"><a class="btn btn-outline-primary" href="{% url 'task-list' %}">Όλες οι εργασίες μου</a>{% if task_owner %}<a class="btn btn-outline-secondary" href="{% url 'office-task-list' %}">Όλες οι εργασίες γραφείου</a>{% endif %}</div></div>
+{% include 'accounting/tasks/table.html' with tasks=my_tasks %}
+{% if my_task_totals.total > 8 %}<p class="task-footer"><a href="{% url 'task-list' %}">Προβολή και των {{ my_task_totals.total }} ανοιχτών εργασιών →</a></p>{% endif %}
+</section>

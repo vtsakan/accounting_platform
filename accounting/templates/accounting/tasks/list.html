@@ -1,0 +1,8 @@
+{% extends 'accounting/base.html' %}
+{% block title %}{% if office_tasks %}Εργασίες γραφείου{% else %}Οι εργασίες μου{% endif %}{% endblock %}
+{% block content %}
+<header class="task-panel-heading"><div><h1>{% if office_tasks %}Όλες οι εργασίες γραφείου{% else %}Οι εργασίες μου{% endif %}</h1><p>Οι εκπρόθεσμες εμφανίζονται πρώτες και ακολουθούν οι πλησιέστερες προθεσμίες.</p></div><div class="client-actions">{% if office_tasks %}<a class="btn btn-outline-primary" href="{% url 'task-list' %}">Οι εργασίες μου</a>{% elif task_owner %}<a class="btn btn-outline-primary" href="{% url 'office-task-list' %}">Όλες οι εργασίες γραφείου</a>{% endif %}<a class="btn btn-outline-secondary" href="{% url 'counterparty-list' %}">Νέα εργασία από καρτέλα πελάτη</a></div></header>
+<form method="get" class="task-filters"><label for="{{ filter_form.status.id_for_label }}">Κατάσταση</label>{{ filter_form.status }}{{ filter_form.status.errors }}<button type="submit" class="btn btn-primary">Προβολή</button></form>
+<section class="task-panel"><p>Σύνολο εργασιών: {{ task_totals.total }} · Εκπρόθεσμες: {{ task_totals.overdue }}</p>{% include 'accounting/tasks/table.html' with tasks=task_page.object_list %}
+{% if task_page.has_other_pages %}<nav class="task-pagination" aria-label="Σελίδες εργασιών">{% if task_page.has_previous %}<a href="?{{ task_page_query }}&amp;page={{ task_page.previous_page_number }}">Προηγούμενη</a>{% endif %}<span>Σελίδα {{ task_page.number }} από {{ task_page.paginator.num_pages }}</span>{% if task_page.has_next %}<a href="?{{ task_page_query }}&amp;page={{ task_page.next_page_number }}">Επόμενη</a>{% endif %}</nav>{% endif %}</section>
+{% endblock %}

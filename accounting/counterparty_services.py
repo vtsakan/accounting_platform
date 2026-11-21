@@ -90,6 +90,10 @@ def archive_counterparty(user, key, *, version, archive):
     if type(archive) is not bool or archive == entity.is_archived:
         raise ValidationError("Η κατάσταση αρχειοθέτησης έχει ήδη αλλάξει. Ανανεώστε τη σελίδα.")
     if archive:
+        from .client_task_selectors import open_client_tasks
+        from .client_task_services import OPEN_TASKS
+        if open_client_tasks(entity).exists():
+            raise ValidationError(OPEN_TASKS)
         from .counterparty_retirement_selectors import OPEN_AGREEMENT, archive_blockers
         if archive_blockers(entity):
             raise ValidationError(OPEN_AGREEMENT)

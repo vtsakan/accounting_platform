@@ -1,0 +1,8 @@
+{% extends 'accounting/base.html' %}{% load greek tz %}
+{% block title %}{% if task %}Επεξεργασία εργασίας{% else %}Η σημείωση γίνεται εργασία{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if task %}Επεξεργασία εργασίας{% else %}Η σημείωση γίνεται εργασία{% endif %}</h1><p><a href="{% url 'entity-detail' entity.pk %}">{{ entity.name }}</a></p>
+<section class="task-panel"><p>Ημερομηνία καταγραφής εργασίας: {% if task %}{{ task.created_at|localtime|date:'d/m/Y' }}{% else %}{{ task_today|el_date }}{% endif %}. Ο χρήστης και η ώρα καταγράφονται αυτόματα.</p>
+{% if entity.is_archived %}<p role="alert">Επαναφέρετε τον πελάτη πριν δημιουργήσετε ή αλλάξετε εργασία.</p>{% else %}<form method="post">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}{% if field.is_hidden %}{{ field }}{{ field.errors }}{% else %}<div class="mb-3"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endif %}{% endfor %}<button class="btn btn-primary" type="submit">Αποθήκευση εργασίας</button></form>{% endif %}
+<details class="task-source"><summary>Αρχική σημείωση · {{ source_note.created_at|localtime|date:'d/m/Y H:i' }} · {{ source_note.actor_label }}</summary><div class="task-text">{{ source_note.body|linebreaksbr }}</div></details><p>Το αρχικό κείμενο της σημείωσης διατηρείται. Οι αλλαγές στην εργασία καταγράφονται στο δικό της ιστορικό.</p></section>
+{% endblock %}

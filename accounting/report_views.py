@@ -13,7 +13,8 @@ from .report_selectors import period_report,annual_report,dashboard_report
 @never_cache
 @require_GET
 def overview(request):
-    return render(request,'accounting/dashboard.html',dashboard_report(request.user))
+    from .client_task_selectors import dashboard_tasks
+    return render(request,'accounting/dashboard.html',{**dashboard_report(request.user), **dashboard_tasks(request.user)})
 
 
 @office_view('finance.read')

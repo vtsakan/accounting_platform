@@ -181,6 +181,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         cls.seed()
         from .fee_test_support import seed_fee_routes
         seed_fee_routes(cls)
+        from .tests_client_tasks import seed_task_routes
+        seed_task_routes(cls)
 
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
@@ -197,6 +199,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
         if name in {'service-price-edit','service-agreement-add'}:kwargs={'key':getattr(self,'service_'+suffix).pk}
         if name in {'fee-schedule-detail','fee-schedule-change','fee-automation'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
+        if name in {'task-detail','task-edit','task-complete','task-reopen'}:kwargs={'key':getattr(self,'task_'+suffix).pk}
+        if name=='note-to-task':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'note_key':getattr(self,'task_note_'+suffix).pk}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):
@@ -227,7 +231,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
                 with self.subTest(persona=persona,route=name):
                     if persona in {'anonymous','inactive-user'}:expected=302
                     elif persona not in {'owner','accountant'}:expected=403
-                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release','finance.reverse','finance.refund','finance.amend','finance.close','clients.delete'}:expected=403
+                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release','finance.reverse','finance.refund','finance.amend','finance.close','clients.delete','tasks.office'}:expected=403
                     elif row['methods']==['POST']:expected=405
                     else:expected=200
                     response=client.get(self.url(name))

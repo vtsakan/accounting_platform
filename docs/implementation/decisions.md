@@ -1503,3 +1503,22 @@ Preserve nine real receipt/binding files; only exact recorder outputs may be
 committed before the unchanged clean-context guard. Both off-VM restores and
 all-original-row comparison precede activation. Never rewind after possible
 public/job writes. Operator deployment and all85 full acceptances stay Pending.
+
+## CR006 approved task workflow — 2026-11-21
+
+The owner selects manual tasks from new AND old retained client notes. Due
+date is required; actual registration/author are server facts. Default assignee
+is self; choices are active same-office members. Dashboard is assigned/open,
+oldest overdue first by Athens date; owner alone has all-office overview.
+Creator/current assignee/owner may edit, reassign, complete and reopen. Keep
+original notes and every task transition. The owner explicitly chooses that
+open tasks block client archive. Client deletion may retain only closed hidden
+history under existing nonfinancial owner policy. No task action posts money.
+
+Use additive0031/0032 and immutable SQL-generated activity/nonce binding.
+Plain-note/task intents are distinct; repeat or changed requests cannot add
+duplicate work or restore an older state. Preserve previous financial/note
+services,30 migrations and all old assertions. Only new-route fixture/key and
+owner-capability expectations adapt in the old boundary matrix. Pre31 schema
+reads remain compatible; partial31/32 is an error. Actual prior CR005/VM/main
+4a817c4 is Verified; new runtime/VM/GitHub and all85 full acceptances Pending.

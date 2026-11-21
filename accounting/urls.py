@@ -13,9 +13,17 @@ from . import report_views
 from . import export_views
 from . import movement_views
 from . import counterparty_journal_views
+from . import client_task_views
 from . import counterparty_retirement_views
 
 urlpatterns = [
+    path('tasks/', client_task_views.personal, name='task-list'),
+    path('tasks/office/', client_task_views.office_tasks, name='office-task-list'),
+    path('tasks/<uuid:key>/', client_task_views.detail, name='task-detail'),
+    path('tasks/<uuid:key>/edit/', client_task_views.edit, name='task-edit'),
+    path('tasks/<uuid:key>/complete/', client_task_views.complete, name='task-complete'),
+    path('tasks/<uuid:key>/reopen/', client_task_views.reopen, name='task-reopen'),
+    path('entity/<int:pk>/notes/<uuid:note_key>/task/', client_task_views.from_note, name='note-to-task'),
     path('entity/<int:pk>/delete/', counterparty_retirement_views.delete, name='delete-entity'),
     path('entity/<int:pk>/journal/', counterparty_journal_views.journal, name='entity-journal'),
     path('entity/<int:pk>/notes/add/', counterparty_journal_views.note_add, name='entity-note-add'),

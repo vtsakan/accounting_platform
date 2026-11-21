@@ -1,5 +1,22 @@
 # Implementation state
 
+## Current selected change — CR006 manual client tasks, 2026-11-21
+
+<!-- CR006-RESULT -->
+CR006 source Prepared: note-linked manual tasks and old-note conversion,
+self-default same-office assignment, personal overdue-first workspace and
+owner-only office overview. Creator/assignee/owner can edit, reassign, complete
+and reopen with immutable activity. Original notes stay exact. Open tasks block
+archive. Add0031/0032, retain all30 old migrations and prior assertions. New
+operator PG17/HTTP/SQL/race/full-suite/real-worker gate, VM/GitHub rollout and
+all85 full requirement acceptances remain Pending.
+<!-- /CR006-RESULT -->
+
+Actual prior CR005 and preview/GitHub are Verified1020/36, main
+`4a817c401d6a9205e62586dc6ab2e70e15866dfa`,30 migrations and both off-VM
+restores. Older Prepared notes below are historical. All real receipts and
+bindings stay untouched. See [procedure](client_tasks_el.md).
+
 <!-- CR005-PREVIEW -->
 ## Existing preview update — CR005
 

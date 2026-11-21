@@ -45,7 +45,8 @@ def broker_gate(directory, image_id):
         if checked and result.returncode:
             # Retain only a bounded redacted diagnostic, never the resolved Compose.
             from verify_s05 import redact
-            raise RuntimeError('S26 Docker operation failed: '+redact(result.stderr[-2500:]))
+            diagnostic=redact(result.stdout[-2500:]+'\n'+result.stderr[-2500:])
+            raise RuntimeError('S28 Docker operation failed at '+stage+': '+diagnostic)
         return result
 
     def manage(*args):
@@ -77,10 +78,12 @@ def broker_gate(directory, image_id):
     try:
         print('[S28] Απομονωμένη ουρά και βάση: '+project,flush=True)
         compose('up','--detach','--wait','--wait-timeout','180','db','redis')
-        stage='restricted-database'
+        stage='create-restricted-database'
         sql="\\getenv pass S26_APP_PASSWORD\nCREATE ROLE s26_app LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD :'pass';\nCREATE DATABASE s26_"+identity+" OWNER s26_app;\n"
         compose('exec','-T','db','psql','-U','postgres','-v','ON_ERROR_STOP=1',stdin=sql)
+        stage='migrate-restricted-role'
         manage('migrate','--noinput')
+        stage='migration-state-check'
         manage('makemigrations','--check','--dry-run')
         stage='start-worker-scheduler'
         compose('up','--detach','worker','scheduler')

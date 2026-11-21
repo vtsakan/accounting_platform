@@ -38,6 +38,8 @@ A = "00000000-0000-4000-8000-00000000000a"
 B = "00000000-0000-4000-8000-00000000000b"
 
 
+from .tests_entity_profile_support import EntityProfileFixtureClient as Client
+
 class StaffFixtures:
     fixtures = ["s11_offices"]
 
@@ -114,6 +116,7 @@ from contextlib import nullcontext as _null_context
 
 
 class OfficeSettingsTests(StaffFixtures, TestCase):
+    client_class = Client
     def test_owner_revoked_while_waiting_for_identity_lock_cannot_change_settings(self):
         from .office_services import lock_request_state
         change_membership(user_id=self.member.pk, office_id=A, role="owner", is_active=True)
@@ -235,6 +238,7 @@ class OfficeSettingsTests(StaffFixtures, TestCase):
 
 
 class InvitationTests(StaffFixtures, TestCase):
+    client_class = Client
     def test_existing_recipient_credentials_are_rechecked_after_waiting_for_user_lock(self):
         from django.contrib.auth.hashers import make_password
         from .office_services import lock_users
@@ -396,6 +400,7 @@ class InvitationTests(StaffFixtures, TestCase):
 
 
 class MembershipAndHandoverTests(StaffFixtures, TestCase):
+    client_class = Client
     def test_deactivation_revokes_next_request_and_explicit_reactivation_restores_only_accountant(self):
         self.assertEqual(self.member_client.get("/customers/").status_code, 200)
         path = reverse("office-member-action", args=[self.member.pk, "deactivate"])
@@ -520,6 +525,7 @@ class MembershipAndHandoverTests(StaffFixtures, TestCase):
 
 
 class BootstrapOwnerTests(TestCase):
+    client_class = Client
     def test_initial_account_requires_a_named_operator_without_prompting_for_password(self):
         with patch("accounting.management.commands.bootstrap_office_owner.getpass") as prompt, self.assertRaises(CommandError):
             call_command("bootstrap_office_owner", new_office_name="ΔΟΚΙΜΑΣΤΙΚΟ", username="s14-operator-required", email="operator@example.invalid", stdout=io.StringIO())
@@ -595,6 +601,7 @@ class StaffMailBoundaryTests(SimpleTestCase):
 
 
 class StaffConcurrencyTests(StaffFixtures, TransactionTestCase):
+    client_class = Client
     def parallel(self, operation):
         barrier = Barrier(2)
         def worker(index):

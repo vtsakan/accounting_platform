@@ -44,6 +44,8 @@ def delete_counterparty(user, key, *, version, confirmed):
                 tax_office='', address='', city='', postal_code='', phone_number='', email='',
                 updated_at=timezone.now())
             entity.refresh_from_db()
+            from .entity_profile_services import purge_profile
+            purge_profile(entity,user)
             marker = CounterpartyDeletion.objects.create(office=office, entity=entity,
                 actor=user, actor_label='', confirmed_version=version, contact_digest=digest)
             marker.refresh_from_db()

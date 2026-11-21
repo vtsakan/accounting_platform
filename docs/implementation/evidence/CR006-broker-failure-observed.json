@@ -1,0 +1,26 @@
+{
+  "observed_from": "User-supplied CR006 operator console, 2026-11-21",
+  "user_instruction": "DO NOT build, deploy or upgrade VM; additional requirements will follow. Do not publish GitHub changes implicitly.",
+  "operator_source": "git:12ed590084dd777a6d09ab8d9ee8337abf12da66",
+  "operator_image": "sha256:ac7cdf84beb1b18c8b206a5c9b97be5b861854bf8ee83b7a0ef83aeaccb0fa01",
+  "application_context_digest": "sha256:638e6b2c7cccd48fa6d572cec57aeddb51be18ea4af3ea35cf764d16db4daa1c",
+  "application_inputs": 334,
+  "delivery_verified_at": "2026-11-21T21:37:39+02:00",
+  "delivery_suite": {
+    "tests_run": 1085,
+    "tests_passed": 1085,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "financial_cases_passed": 36
+  },
+  "overall_cr006_status": "Pending: retained real-broker gate FAILED; no final Verified receipt reached",
+  "broker_stage": "restricted-database",
+  "broker_error": "RuntimeError: S26 Docker operation failed; stderr only shows ephemeral web-run container creation",
+  "failed_isolated_project": "accounting-s28-4c118e57e7a6ecea8414",
+  "diagnostic_limit": "Stage combines psql role/database creation, migrate and makemigrations --check; wrapper omits stdout so exact failing command/reason not observed.",
+  "static_finding": "New 0031 migration UUID primary keys omit serialize=False. Local Django Options.setup_pk sets primary key serialize=False, while ModelState.from_model clones it and autodetector compares fields. This is a concrete state mismatch and likely explains makemigrations check failure; exact failed stdout not yet recovered. No runtime reproduced by agent.",
+  "next_when_work_resumes": "Preserve all app/test/guard/receipt bytes until narrowly correcting schema metadata and diagnostics. Do not mark broker or full CR006 Verified from 1085 suite alone. Await new user requirements; no VM action.",
+  "agent_changes_this_followup": "Read-only source inspection plus these private handoff notes; no source edits, tests, Docker, VM, GitHub or app execution.",
+  "new_correction_status": "Prepared:0031 metadata and redacted broker stdout/stages; runtime retry Pending"
+}

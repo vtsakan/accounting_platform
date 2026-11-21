@@ -47,6 +47,8 @@ def actor(username, office=A, **flags):
     return user
 
 
+from .tests_entity_profile_support import EntityProfileFixtureClient as Client
+
 class CounterpartySyntaxTests(SimpleTestCase):
     def test_equivalent_afms_keep_leading_zeroes(self):
         for text in ('000000201', 'el 000-000-201', ' ００００００２０１ ', 'EL\u00a0000\u202f000\t201'):
@@ -64,6 +66,7 @@ class CounterpartySyntaxTests(SimpleTestCase):
 
 
 class CounterpartyWorkspaceTests(TestCase):
+    client_class = Client
     fixtures = ['s11_offices']
 
     @classmethod
@@ -437,6 +440,7 @@ class CounterpartyWorkspaceTests(TestCase):
 
 
 class CounterpartyConcurrencyTests(TransactionTestCase):
+    client_class = Client
     fixtures = ['s11_offices']
 
     def setUp(self):
@@ -545,6 +549,7 @@ class CounterpartyConcurrencyTests(TransactionTestCase):
 
 
 class CounterpartyMigrationTests(TransactionTestCase):
+    client_class = Client
     def migrate(self,target):
         executor=MigrationExecutor(connection)
         executor.migrate([('accounting',target)])

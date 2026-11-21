@@ -7,6 +7,8 @@
 </div>
 <p>Η ίδια εγγραφή μπορεί να είναι πελάτης και προμηθευτής. Το ιστορικό της παραμένει ενιαίο.</p>
 <form method="get" class="card card-body mb-3" role="search" aria-label="Αναζήτηση συναλλασσομένων">
+  {% for field in form.hidden_fields %}{{ field }}{% if field.errors %}<div role="alert">{{ field.errors }}</div>{% endif %}{% endfor %}
+  {% if fixed_role %}<input type="hidden" name="role" value="{{ fixed_role }}">{% endif %}
   <div class="row g-3">
   {% for field in form.visible_fields %}
     {% if field.name != 'role' or not fixed_role %}
@@ -14,7 +16,8 @@
     {% endif %}
   {% endfor %}
   </div>
-  <div class="mt-3"><button class="btn btn-primary" type="submit">Αναζήτηση</button> <a class="btn btn-outline-secondary" href="{{ request.path|default:'/counterparties/' }}">Καθαρισμός φίλτρων</a></div>
+  <div class="mt-3"><label for="directory-group">Ομαδοποίηση εξαγωγής</label><select name="group" id="directory-group"><option value="none">Χωρίς ομαδοποίηση</option value="tag">Ανά ετικέτα</option><option value="kind">Ανά κατηγορία προσώπου</option><option value="status">Ανά κατάσταση</option></select> <button class="btn btn-primary" type="submit">Αναζήτηση</button> <button class="btn btn-outline-primary" type="submit" formaction="{% url 'counterparty-directory-export' 'pdf' %}" formtarget="_blank">Εκτύπωση PDF</button> <button class="btn btn-outline-primary" type="submit" formaction="{% url 'counterparty-directory-export' 'csv' %}">Μαζική εξαγωγή CSV</button> <a class="btn btn-outline-secondary" href="{{ request.path|default:'/counterparties/' }}">Καθαρισμός φίλτρων</a></div>
+  <p>Οι εκτυπώσεις ακολουθούν όλα τα φίλτρα και περιλαμβάνουν όλες τις σελίδες. Στην ομαδοποίηση ανά ετικέτα, επαφές με πολλές ετικέτες εμφανίζονται σε κάθε αντίστοιχη ομάδα.</p>
 </form>
 <div class="table-responsive">
 <table class="table table-striped align-middle">
@@ -25,9 +28,9 @@
   <tr>
     <td><a href="{% url 'entity-detail' pk=entity.pk %}">{{ entity.name }}</a></td>
     <td>{% if entity.is_customer %}<span class="badge bg-primary">Πελάτης</span>{% endif %} {% if entity.is_supplier %}<span class="badge bg-info text-dark">Προμηθευτής</span>{% endif %}</td>
-    <td>{{ entity.get_legal_kind_display }}</td><td>{{ entity.vat_number|default:'—' }}</td>
+    <td>{{ entity.person_kind_label|default:entity.get_legal_kind_display }}{% for tag in entity.profile_summary.tags %}<br><small>{{ tag }}</small>{% endfor %}</td><td>{{ entity.vat_number|default:'—' }}</td>
     <td>{{ entity.phone_number|default:'—' }}<br>{{ entity.email|default:'—' }}</td>
-    <td>{% if entity.is_archived %}Αρχειοθετημένη{% else %}Ενεργή{% endif %}</td>
+    <td>{{ entity.contact_status_label|default:'Ενεργός' }}{% if entity.is_archived %}<br>Αρχειοθετημένη{% endif %}</td>
     <td><a class="btn btn-sm btn-outline-primary" href="{% url 'entity-detail' pk=entity.pk %}">Καρτέλα</a>
       {% if not entity.is_archived %}
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'archive-entity' entity.pk %}">Αρχειοθέτηση</a>

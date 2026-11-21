@@ -1,0 +1,6 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Κωδικοί TaxisNet{% endblock %}
+{% block content %}<h1>Κωδικοί TaxisNet · {{ entity.name }}</h1>
+{% if credential_error %}<div class="alert alert-danger" role="alert">{{ credential_error }}</div>{% else %}
+<section class="card card-body"><h2>{{ subject_label }}</h2><p>Η πρόσβαση καταγράφηκε με τον λογαριασμό σας.</p><label for="revealed-user">Username</label><input id="revealed-user" type="text" value="{{ taxis_username }}" readonly autocomplete="off" class="form-control"><label for="revealed-secret">Password</label><input id="revealed-secret" type="text" value="{{ taxis_password }}" readonly autocomplete="off" class="form-control"></section>{% endif %}
+<p><a href="{% url 'edit-entity' entity.pk %}">Επιστροφή στα στοιχεία οντότητας</a></p>{% endblock %}

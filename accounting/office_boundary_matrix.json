@@ -734,6 +734,22 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "entity-credentials-reveal",
+      "realm": "office-business",
+      "capability": "clients.credentials",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "counterparty-directory-export",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
     }
   ],
   "public_probes": [

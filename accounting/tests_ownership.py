@@ -37,7 +37,10 @@ B = "00000000-0000-4000-8000-00000000000b"
 DAY = date(2026, 1, 15)
 
 
+from .tests_entity_profile_support import EntityProfileFixtureClient as Client
+
 class OfficeBoundaryTests(TestCase):
+    client_class = Client
     fixtures = ["s11_offices"]
 
     @classmethod
@@ -297,6 +300,7 @@ class OfficeBoundaryTests(TestCase):
     "django_otp.middleware.OTPMiddleware", "accounting.auth_middleware.StaffSecurityMiddleware"}])
 class OwnershipMigrationTests(TransactionTestCase):
     # Rehearses the historical 0003/0004 schema before S13 auth tables exist.
+    client_class = Client
     def migrate_to(self, name):
         executor = MigrationExecutor(connection)
         executor.migrate([("accounting", name)])
@@ -405,6 +409,7 @@ class OwnershipMigrationTests(TransactionTestCase):
 
 
 class OfficeUniquenessConcurrencyTests(TransactionTestCase):
+    client_class = Client
     fixtures = ["s11_offices"]
 
     def race(self, model, offices):

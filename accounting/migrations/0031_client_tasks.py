@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     dependencies = [('accounting','0030_counterparty_retirement_guards'), migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
     operations = [
         migrations.CreateModel(name='ClientTask', fields=[
-            ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+            ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
             ('entity', models.ForeignKey('accounting.entity', on_delete=models.PROTECT, related_name='work_tasks', editable=False)),
             ('source_note', models.OneToOneField('accounting.counterpartynote', on_delete=models.PROTECT, related_name='work_task', editable=False)),
             ('creator', models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_client_tasks', editable=False)),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             'indexes': [models.Index(fields=['office', 'assignee', 'status', 'due_date'], name='cr006_task_assigned_due'), models.Index(fields=['office', 'entity', 'status', 'due_date'], name='cr006_task_client_due')],
         }),
         migrations.CreateModel(name='ClientTaskActivity', fields=[
-            ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)),
+            ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
             ('task', models.ForeignKey('accounting.clienttask', on_delete=models.PROTECT, null=True, related_name='activities', editable=False)),
             ('note', models.ForeignKey('accounting.counterpartynote', on_delete=models.PROTECT, related_name='task_activities', editable=False)),
             ('request_key', models.UUIDField(editable=False)),

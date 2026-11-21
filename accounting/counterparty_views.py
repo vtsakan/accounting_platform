@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
+from django.views.decorators.debug import sensitive_post_parameters
 
 from .capabilities import office_view, require_capability
 from .counterparty_services import ARCHIVED, archive_counterparty
@@ -29,8 +30,12 @@ class SearchForm(forms.Form):
     status = forms.ChoiceField(label="Κατάσταση", required=False, choices=[('active', 'Ενεργές εγγραφές'),
         ('archived', 'Αρχειοθετημένες εγγραφές'), ('all', 'Όλες οι εγγραφές')])
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        if user is not None:
+            from .entity_profile_forms import ProfileSearchMixin
+            ProfileSearchMixin.add_profile_filters(self,user)
+            self.fields['status'].label='Αρχειοθέτηση'
         for name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control' if name == 'q' else 'form-select'
 
@@ -55,7 +60,7 @@ def workspace(request, *, fixed_role=None):
         data['role'] = fixed_role
     if not data.get('status'):
         data['status'] = 'active'
-    form = SearchForm(data)
+    form = SearchForm(data,user=request.user)
     queryset = records(Entity, request.user)
     # A pending historical ownership backfill must never expose unassigned rows.
     if not queryset.exists():
@@ -78,7 +83,12 @@ def workspace(request, *, fixed_role=None):
             queryset = queryset.filter(condition)
     else:
         queryset = queryset.none()
+    if form.is_valid():
+        from .entity_profile_selectors import filter_profiles
+        queryset=filter_profiles(queryset,form.cleaned_data)
     page = Paginator(queryset.order_by('name', 'pk'), 25).get_page(request.GET.get('page'))
+    from .entity_profile_selectors import decorate_profiles
+    page.object_list=decorate_profiles(page.object_list)
     params = request.GET.copy(); params.pop('page', None)
     return render(request, 'accounting/counterparty_list.html', {'form': form, 'page_obj': page,
         'counterparties': page.object_list, 'customers': page.object_list, 'suppliers': page.object_list,
@@ -88,13 +98,18 @@ def workspace(request, *, fixed_role=None):
 
 
 @office_view('clients.write')
+@never_cache
+@sensitive_post_parameters('__ALL__')
 @require_http_methods(['GET', 'POST'])
 def edit(request, key=None):
     entity = record(Entity, request.user, key) if key is not None else None
     if entity and entity.is_archived:
         return render(request, 'accounting/entity_archived.html', {'entity': entity}, status=409)
     initial = {'is_customer': request.GET.get('role') != 'supplier', 'is_supplier': request.GET.get('role') == 'supplier'}
-    form = EntityForm(request.POST if request.method == 'POST' else None, user=request.user, instance=entity, initial=initial if entity is None else None)
+    from .entity_profile_selectors import profile_installed
+    from .entity_profile_forms import EntityProfileForm
+    form_type=EntityProfileForm if profile_installed() else EntityForm
+    form = form_type(request.POST if request.method == 'POST' else None, user=request.user, instance=entity, initial=initial if entity is None else None)
     if request.method == 'POST' and form.is_valid():
         try:
             saved = form.save()
@@ -103,6 +118,11 @@ def edit(request, key=None):
         else:
             messages.success(request, 'Τα στοιχεία του συναλλασσομένου αποθηκεύτηκαν.')
             return redirect('entity-detail', pk=saved.pk)
+    if isinstance(form,EntityProfileForm):
+        from .entity_profile_views import editor_context
+        from .report_selectors import read_snapshot
+        with read_snapshot(request.user):
+            return render(request,'accounting/entity_profile/editor.html',editor_context(request,entity,form))
     return render(request, 'accounting/edit_entity.html' if entity else 'accounting/add_entity.html', {'form': form, 'entity': entity})
 
 
@@ -132,6 +152,10 @@ def detail_snapshot(request, key):
     from .client_task_selectors import client_tasks
     from .counterparty_journal_selectors import card_summary
     context = card_summary(request.user, entity, agreements, movements)
+    from .entity_profile_selectors import financial_summary, profile_installed
+    if profile_installed():
+        from .entity_profile_views import profile_context_data
+        context.update(profile_context_data(request.user,entity),financial_summary=financial_summary(request.user,entity))
     return render(request, 'accounting/entity_detail.html', {**context, **client_tasks(request.user, entity, request.GET.get('task_page')), 'note_form': note_form(request.user, as_task=request.GET.get('new_task') == '1'), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,

@@ -1,0 +1,21 @@
+{% extends 'accounting/base.html' %}{% load static greek %}
+{% block title %}{% if entity %}Επεξεργασία {{ entity.name }}{% else %}Νέος συναλλασσόμενος{% endif %}{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/entity-profile.css' %}">{% endblock %}
+{% block content %}
+<header class="profile-heading"><div><p class="page-eyebrow">ΣΤΟΙΧΕΙΑ ΟΝΤΟΤΗΤΑΣ</p><h1>{% if entity %}{{ entity.name }}{% else %}Νέος συναλλασσόμενος{% endif %}</h1></div>{% if entity %}<a class="btn btn-outline-secondary" href="{% url 'entity-detail' entity.pk %}">Επιστροφή στην καρτέλα</a>{% endif %}</header>
+{% if financial_summary %}{% include 'accounting/entity_profile/balances.html' %}{% endif %}
+<form method="post" class="profile-editor" data-profile-editor autocomplete="off">
+{% csrf_token %}{% if form.errors %}<div class="alert alert-danger" role="alert">Ελέγξτε τα πεδία με σφάλμα πριν από την αποθήκευση. {{ form.non_field_errors }}</div>{% endif %}
+{% for field in form.hidden_fields %}{{ field }}{% if field.errors %}<div role="alert">{{ field.label }}: {{ field.errors }}</div>{% endif %}{% endfor %}
+<div class="profile-tabs" role="tablist" aria-label="Ενότητες στοιχείων οντότητας">{% for section in form.profile_sections %}<button type="button" role="tab" id="tab-{{ section.id }}" aria-controls="panel-{{ section.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" data-profile-tab="{{ section.id }}">{{ section.title }}</button>{% endfor %}</div>
+{% for section in form.profile_sections %}<section class="profile-section" id="panel-{{ section.id }}" role="tabpanel" aria-labelledby="tab-{{ section.id }}" data-profile-panel="{{ section.id }}"><h2>{{ section.title }}</h2>
+{% if section.id == 'spouse' %}<p>Τα κοινά στοιχεία επικοινωνίας ακολουθούν τις αλλαγές του υπόχρεου. Αποεπιλέξτε τα κοινά στοιχεία μόνο για διαφορετική επικοινωνία.</p>{% endif %}
+{% if section.id == 'notes' %}<p>Εσωτερική παρατήρηση του γραφείου. Οι χρονολογημένες σημειώσεις και οι εργασίες διατηρούνται ξεχωριστά στο ημερολόγιο της καρτέλας.</p>{% endif %}
+<div class="profile-fields">{% for field in section.fields %}<div class="profile-field{% if field.name == 'internal_notes' or field.name == 'tags' %} profile-field--wide{% endif %}" data-field="{{ field.name }}"{% if field.name in form.spouse_contact_names %} data-spouse-contact="{{ field.name }}"{% endif %}>{{ field.label_tag }}{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% if field.errors %}<div class="text-danger" role="alert">{{ field.errors }}</div>{% endif %}{% if field.name == 'tags' %}<div class="profile-tags" data-tag-preview aria-live="polite"></div>{% endif %}</div>{% endfor %}</div>
+{% if section.id == 'basic' or section.id == 'spouse' %}<p class="profile-hint">Για προσθήκη ή αντικατάσταση TaxisNet συμπληρώστε και username και password. Κενά πεδία διατηρούν τους αποθηκευμένους κωδικούς. Η αφαίρεση απαιτεί επιλογή του αντίστοιχου πεδίου.</p>
+{% if entity %}{% if section.id == 'basic' and main_credentials_stored %}<p>Υπάρχουν αποθηκευμένοι κωδικοί υπόχρεου. <button class="btn btn-outline-secondary" type="submit" form="reveal-main">Εμφάνιση κωδικών υπόχρεου</button></p>{% endif %}{% if section.id == 'spouse' and spouse_credentials_stored %}<p>Υπάρχουν αποθηκευμένοι κωδικοί συζύγου. <button class="btn btn-outline-secondary" type="submit" form="reveal-spouse">Εμφάνιση κωδικών συζύγου</button></p>{% endif %}{% endif %}{% endif %}
+</section>{% endfor %}
+<footer class="profile-save"><button class="btn btn-primary" type="submit">Αποθήκευση αλλαγών</button><a class="btn btn-outline-secondary" href="{% if entity %}{% url 'entity-detail' entity.pk %}{% else %}{% url 'counterparty-list' %}{% endif %}">Ακύρωση</a></footer></form>
+{% if entity %}{% if main_credentials_stored %}<form id="reveal-main" action="{% url 'entity-credentials-reveal' entity.pk 'MAIN' %}" method="post" target="_blank">{% csrf_token %}</form>{% endif %}{% if spouse_credentials_stored %}<form id="reveal-spouse" action="{% url 'entity-credentials-reveal' entity.pk 'SPOUSE' %}" method="post" target="_blank">{% csrf_token %}</form>{% endif %}{% endif %}
+<script src="{% static 'accounting/workspace/entity-profile.js' %}" defer></script>
+{% endblock %}

@@ -59,6 +59,8 @@ def snapshot(office):
     return result
 
 
+from .tests_entity_profile_support import EntityProfileFixtureClient as Client
+
 class BoundaryFixtures:
     fixtures=['s11_offices']
 
@@ -115,6 +117,7 @@ class BoundaryFixtures:
 
 
 class BoundaryGapTests(BoundaryFixtures,TestCase):
+    client_class = Client
     @classmethod
     def setUpTestData(cls):cls.seed()
 
@@ -176,6 +179,7 @@ def mark(area,route,persona,scenario,actual='passed'):
 
 
 class BoundaryHTTPTests(BoundaryFixtures,TestCase):
+    client_class = Client
     @classmethod
     def setUpTestData(cls):
         cls.seed()
@@ -201,6 +205,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'fee-schedule-detail','fee-schedule-change','fee-automation'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
         if name in {'task-detail','task-edit','task-complete','task-reopen'}:kwargs={'key':getattr(self,'task_'+suffix).pk}
         if name=='note-to-task':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'note_key':getattr(self,'task_note_'+suffix).pk}
+        if name=='counterparty-directory-export':kwargs={'filetype':'csv'}
+        if name=='entity-credentials-reveal':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'subject':'MAIN'}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):
@@ -365,6 +371,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         mark('workflow','client-finance-archive-restore','accountant','two-office-demonstration')
 
 class BoundaryAdminTests(BoundaryFixtures,TestCase):
+    client_class = Client
     @classmethod
     def setUpTestData(cls):cls.seed()
 
@@ -500,6 +507,7 @@ class BoundaryAdminTests(BoundaryFixtures,TestCase):
 
 
 class BoundaryDatabaseTests(BoundaryFixtures,TestCase):
+    client_class = Client
     @classmethod
     def setUpTestData(cls):cls.seed()
 
@@ -560,6 +568,7 @@ class BoundaryDatabaseTests(BoundaryFixtures,TestCase):
         mark('execution-adapter','unsupported-model-capability','owner','denied')
 
 class BoundaryInventoryTests(TestCase):
+    client_class = Client
     def test_every_current_route_admin_model_and_operator_command_has_a_realm(self):
         from django.contrib import admin
         from . import urls
@@ -592,6 +601,7 @@ class BoundaryInventoryTests(TestCase):
 
 
 class BoundaryOperatorTests(BoundaryFixtures,TestCase):
+    client_class = Client
     @classmethod
     def setUpTestData(cls):cls.seed()
 
@@ -681,6 +691,7 @@ class BoundaryOperatorTests(BoundaryFixtures,TestCase):
 
 
 class BoundaryConcurrencyTests(BoundaryFixtures,TransactionTestCase):
+    client_class = Client
     def setUp(self):self.seed()
 
     def pg_pid(self):

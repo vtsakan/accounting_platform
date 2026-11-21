@@ -15,8 +15,11 @@ from . import movement_views
 from . import counterparty_journal_views
 from . import client_task_views
 from . import counterparty_retirement_views
+from . import entity_profile_views
 
 urlpatterns = [
+    path('entity/<int:pk>/credentials/<str:subject>/',entity_profile_views.reveal,name='entity-credentials-reveal'),
+    path('counterparties/export/<str:filetype>/',entity_profile_views.export_directory,name='counterparty-directory-export'),
     path('tasks/', client_task_views.personal, name='task-list'),
     path('tasks/office/', client_task_views.office_tasks, name='office-task-list'),
     path('tasks/<uuid:key>/', client_task_views.detail, name='task-detail'),

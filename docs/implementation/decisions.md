@@ -1522,3 +1522,18 @@ services,30 migrations and all old assertions. Only new-route fixture/key and
 owner-capability expectations adapt in the old boundary matrix. Pre31 schema
 reads remain compatible; partial31/32 is an error. Actual prior CR005/VM/main
 4a817c4 is Verified; new runtime/VM/GitHub and all85 full acceptances Pending.
+# CR007 selected fiscal editor and explicit VM hold — 2026-11-21
+
+The owner selects independent ACTIVE/INACTIVE contact state, without hiding
+debt/history or replacing archive rules. Both owner and active same-office
+accountants may manage/reveal sealed TaxisNet credentials; explicit POST/CSRF
+and attributable access, never directory exports. Six precise person kinds
+live in a separate profile; legacy coarse classification remains compatible.
+Spouse contacts derive from current main contacts unless overridden. Existing
+financial selectors remain the only source of balances, without terms doubling.
+Old1085 assertions stay exact; old HTTP fixture clients supply only newly
+required state/category inputs, and new route keys are declared. New tests
+are supplied unexecuted. CR0061085/36 passed, retained broker failed; never
+claim full Verified. Fix0031 UUID serialization metadata and broker diagnostics.
+The user explicitly holds VM/GitHub on CR005, including after future local gates.
+All85 full requirement acceptances remain Pending.

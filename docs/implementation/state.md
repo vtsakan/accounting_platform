@@ -1,5 +1,21 @@
 # Implementation state
 
+## Current selected change — CR007 fiscal entity editor, 2026-11-21
+
+<!-- CR007-RESULT -->
+CR007 source Prepared: four tabs, canonical per-role balances, separate contact
+state, six person kinds, AMKA/spouse/inherited contacts, flags/tags/observations,
+sealed attributable TaxisNet access for owner AND active accountants, grouped
+directory PDF/CSV. New operator gate and browser/business acceptance Pending.
+User explicitly HOLDS VM/GitHub on actual CR005. All85 full acceptances Pending.
+<!-- /CR007-RESULT -->
+
+Actual CR006 delivery1085/1085 and36 finance passed21/11/2026 at21:37:39 Athens,
+source12ed590/imageac7cdf84/context638e. Retained broker failed at restricted-
+database; NO complete CR006 Verified receipt. Preserve that partial outcome.
+0031 changes only two UUID serialization metadata;0033/0034 add fiscal profiles.
+Read [the procedure](entity_fiscal_profile_el.md). No VM/cloud/GitHub execution.
+
 ## Current selected change — CR006 manual client tasks, 2026-11-21
 
 <!-- CR006-RESULT -->

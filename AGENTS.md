@@ -1,5 +1,34 @@
 # Accounting platform implementation instructions
 
+## Selected CR007 — fiscal entity editor, balances and private credentials
+
+User requests four editor tabs, canonical separate customer/supplier balances,
+six detailed person kinds, main AMKA and spouse identity/contact inheritance,
+six tax flags, bounded tags/filter/grouped PDF+CSV and internal observations.
+They explicitly selected INACTIVE separate from archive, and credentials access
+for BOTH owner and active same-office accountants. Keep debt/history visible.
+No credentials/AMKA/spouse/internal notes in directory exports. Credentials
+are sealed under a purpose/identity-derived key using retained external material;
+no plaintext default/GET/audit/logging. Explicit POST/CSRF reveal is attributed.
+Owner deletion must also remove all new profile PII and sealed credentials.
+
+CR006 operator delivery passed1085/36 at2026-11-21T21:37:39+02:00, imageac7cdf84,
+actual source12ed590084dd777a6d09ab8d9ee8337abf12da66, context638e/334inputs.
+Its real broker failed at restricted-database; full CR006 is NOT Verified.
+Correct only the two missing UUID serialize=False metadata in0031 and preserve
+its initial source lock/failure. Improve bounded redacted broker stdout/stages.
+Add0033/0034 only; keep original30 migrations and0032/financial services exact.
+Preserve all original1085 assertions, including all65 CR006 tests. Only old HTTP
+fixture clients may supply the new required state/category; two new route keys
+are added. No production path imports a fixture. Native new gate stays required.
+
+Most recent user instruction: DO NOT BUILD/UPGRADE VM. Keep VM and GitHub on
+actual CR005 even after local checks. New source Prepared, all85 full acceptances
+and browser/business approval Pending. Agent STATIC AST/hash/SQL/template/text/
+Git/archive checks only: NO tests, app setup/runtime, Docker/build, migration,
+browser, SSH, cloud or push. Supply Git/files-only APPLY and operator verifier.
+This selected feature supersedes the earlier task-only limits for its own scope.
+
 ## Selected CR006 — manual note-linked tasks
 
 The owner approves new/existing note conversion to manual tasks, free text,

@@ -1,7 +1,7 @@
 {% extends 'accounting/base.html' %}
 {% load greek static %}
 {% block title %}Καρτέλα {{ entity.name }}{% endblock %}
-{% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/client-journal.css' %}">{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/client-journal.css' %}"><link rel="stylesheet" href="{% static 'accounting/workspace/entity-profile.css' %}">{% endblock %}
 {% block content %}
 <header class="client-card-header"><div><p class="client-eyebrow">ΚΑΡΤΕΛΑ ΣΥΝΑΛΛΑΣΣΟΜΕΝΟΥ</p><h1>{{ entity.name }}</h1><p>{% if entity.is_customer %}<span class="client-badge client-badge--green">Πελάτης</span>{% endif %} {% if entity.is_supplier %}<span class="client-badge client-badge--red">Προμηθευτής</span>{% endif %} {% if entity.vat_number %} · Α.Φ.Μ. {{ entity.vat_number }}{% endif %}</p></div>
 <div class="client-actions"><a class="btn btn-primary" href="{% url 'entity-journal' entity.pk %}">Ημερολόγιο καρτέλας</a>{% if not entity.is_archived %}<a class="btn btn-outline-primary" href="#new-note">Νέα σημείωση</a><a class="btn btn-outline-secondary" href="{% url 'edit-entity' pk=entity.pk %}">Επεξεργασία</a><a class="btn btn-outline-secondary" href="{% url 'archive-entity' entity.pk %}">Αρχειοθέτηση</a>{% else %}<a class="btn btn-outline-primary" href="{% url 'restore-entity' pk=entity.pk %}">Επαναφορά εγγραφής</a>{% if can_delete_counterparty %}<a class="btn btn-outline-danger" href="{% url 'delete-entity' entity.pk %}">Διαγραφή</a>{% endif %}{% endif %}</div></header>
@@ -15,7 +15,9 @@
 <div class="client-stat client-stat--red"><span>Πληρωμές / εκροές</span><strong>{{ card_stats.total_expense|euro }}</strong><small>Πραγματικές εκροές ταμείου έως σήμερα</small></div>
 <div class="client-stat client-stat--blue"><span>Σημειώσεις</span><strong>{{ card_stats.notes }}</strong><small><a href="{% url 'entity-journal' entity.pk %}?kind=note">Προβολή όλων των σημειώσεων</a></small></div>
 </div></section>
+{% if financial_summary %}{% include 'accounting/entity_profile/balances.html' %}{% endif %}
 {% if settlements %}{% include 'accounting/settlements/totals.html' with totals=settlements %}{% endif %}
+{% include 'accounting/entity_profile/summary.html' %}
 {% include 'accounting/journal/legend.html' %}
 {% include 'accounting/tasks/client.html' %}
 <div class="client-card-columns"><section class="card card-body" aria-labelledby="recent-journal"><div class="client-section-heading"><h2 id="recent-journal">Πρόσφατη δραστηριότητα</h2><a href="{% url 'entity-journal' entity.pk %}">Όλο το ημερολόγιο →</a></div><p class="client-muted">Συμφωνίες, χρεώσεις, πληρωμές και σημειώσεις. Οι αντιστοιχίσεις εμφανίζονται χωριστά και δεν μετρούν ως νέα είσπραξη.</p><div class="client-timeline">{% for event in journal_preview %}{% include 'accounting/journal/event.html' %}{% empty %}<p class="client-empty">Δεν υπάρχουν ακόμη εγγραφές σε αυτή την καρτέλα.</p>{% endfor %}</div></section>

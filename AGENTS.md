@@ -1,5 +1,20 @@
 # Accounting platform implementation instructions
 
+## CR007 operator failure — narrow import/caption correction
+
+Actual CR007 image ebab4c5988a9af3fbd9d02461fa5ffba7ebacc8c19b0cd6bb400c6207a00b958
+built, but delivery ran1086 with3 Greek-caption subtest failures and1 module
+import error. All55 new methods were uncollected; full1140/broker not reached.
+Use allocate_cash AS allocate, preserving all55 method bodies/assertions.
+Use Greek visible export captions and valid four-way group option markup.
+Keep all other349 application inputs, all34 migrations,35 original assertion
+digests, financial services, permissions/crypto and all12 old receipts exact.
+Keep any CR007 exclusive binding byte-for-byte; never recreate/refresh it.
+Retain the initial source lock and actual failure summary; new source Prepared.
+Add only static AST import-target/caption/option checks before native work.
+Retry exact initial CR007 or initial CR006. Agent static checks only, no tests,
+Docker/app/migrations/browser/VM/cloud/GitHub. VM/GitHub remain held onCR005.
+
 ## Selected CR007 — fiscal entity editor, balances and private credentials
 
 User requests four editor tabs, canonical separate customer/supplier balances,

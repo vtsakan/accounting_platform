@@ -33,6 +33,8 @@ def retained_assertion_dump(node):
 
 
 def source_check():
+    from cr007_static_inputs import inspect
+    inspect(ROOT)
     policy = json.loads(MANIFEST.read_text())
     expected = {}
     for section in ('unchanged_files', 'changed_files', 'added_files'):

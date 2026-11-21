@@ -34,7 +34,7 @@ from .export_renderers import render_csv,render_pdf
 from .models import (AccountantProfile,Charge,Entity,EntityProfile,EntityProfileEvent,FinanceAuditEvent,
     TaxisCredential,Transaction)
 from .schema_test_support import restore_current_test_schema
-from .settlement_services import allocate
+from .settlement_services import allocate_cash as allocate
 from .tests_auth_support import staff_client_login
 from .tests_settlements import SettlementSupport
 

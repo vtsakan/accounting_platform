@@ -1,5 +1,14 @@
 # Implementation state
 
+## CR007 operator failure — discovery and Greek captions
+
+Initial CR007 image ebab4c59 built, but delivery ran1086 and failed with3
+Greek-caption subtest failures and1 import error. The55 new methods were
+uncollected; no full1140-test or broker gate completed. Correct only the
+allocate_cash alias, Greek export captions and grouping option markup;
+retain every assertion and the initial source lock. Correction Prepared;
+new operator retry Pending. VM/GitHub stayCR005; all85 acceptances Pending.
+
 ## Current selected change — CR007 fiscal entity editor, 2026-11-21
 
 <!-- CR007-RESULT -->

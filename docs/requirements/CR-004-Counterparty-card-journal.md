@@ -43,4 +43,4 @@ UR-CRM-03/07, UR-CSH-06, UR-AGR-03, UR-OFF-05, UR-LOC-01 and QR-01/03. It does
 not implement the other CRM labels/activities/relations or select S32. All 85
 full requirement acceptance statuses remain Pending. Preserve all 26 existing
 migrations, old financial services, historical receipts and every old assertion.
-Only the old boundary URL fixture gains the two new route names.
+The boundary URL fixture gains two new routes. Ordinary setup hooks restore the discovered test schema; explicit historical migration targets and all financial assertions remain unchanged.

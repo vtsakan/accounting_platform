@@ -11,6 +11,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.db import IntegrityError,close_old_connections,connection,transaction
 from django.db.migrations.executor import MigrationExecutor
+from .schema_test_support import restore_current_test_schema
 from django.test import TestCase,TransactionTestCase,override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -28,7 +29,7 @@ from .models import Agreement,BackgroundJob,Charge,Transaction
 class GenerationFixtures(FeeFixtures):
     @classmethod
     def setUpClass(cls):
-        MigrationExecutor(connection).migrate([('accounting','0026_fee_generation_guards')])
+        restore_current_test_schema()
         super().setUpClass()
 
     def setUp(self):

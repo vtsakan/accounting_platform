@@ -1,5 +1,31 @@
 # Accounting platform implementation instructions
 
+## CR-004 operator failure — restore ordinary fixture schema, 2026-11-21
+
+The actual operator run applied CR004 and ran962 tests, ending with3errors.
+Two retained diagnostics show a missing accounting_counterpartynote table in
+old ownership and settlement card-read tests; the third detail is truncated.
+Preserve evidence/CR004-initial-failure.json and the exact initial source lock.
+Static inspection finds five ordinary setUpClass hooks pinned to22/24/26;
+GenerationFixtures applies26 before later TestCase card reads need27/28.
+
+Change only those ordinary setup hooks to a shared disposable-test-DB helper
+that restores discovered graph leaves before class transactions. Historical
+migration contracts keep their precise old targets. Do not hide missing tables,
+skip tests, relax assertions or alter production selectors/notes/financial code.
+All initial45 CR004 tests and all original962 test bodies stay exact. Supply
+three further real old-schema→current→card/note/journal contracts (target965).
+The earlier fixture-only adaptation limit is superseded for these five setup
+hooks only. Keep all28 migrations and all historical actual receipts exact.
+
+Retain the existing exclusive CR004 binding; never rebind during an upgrade.
+The retry package must handle already-applied initial CR004 and fresh CR003,
+check known source/context before mutation, preserve old reports and perform
+Git/files only. New operator gate, accountant/browser and VM/GitHub Pending;
+initial technical failure remains recorded. All85 full acceptances Pending.
+Agent static syntax/source/hash/SQL/template/text checks only, no tests,
+Docker/build/migrations/native app/browser/SSH/cloud/push.
+
 ## Selected CR-004 — counterparty card, notes and journal, 2026-11-21
 
 The product owner requests a much richer client/supplier card, green incoming/

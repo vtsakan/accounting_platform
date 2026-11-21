@@ -45,8 +45,8 @@ def source_check():
     context = image.candidate_context()[1]
     if context['digest'] != policy['application_context_digest'] or context['file_count'] != policy['application_inputs']:
         raise RuntimeError('Διαφέρει το ελεγμένο περιεχόμενο της νέας εφαρμογής.')
-    tree = ast.parse((ROOT / 'accounting/tests_counterparty_journal.py').read_text())
-    methods = sum(isinstance(node, ast.FunctionDef) and node.name.startswith('test_') for node in ast.walk(tree))
+    methods = sum(isinstance(node, ast.FunctionDef) and node.name.startswith('test_')
+        for name in policy['test_files'] for node in ast.walk(ast.parse((ROOT / name).read_text())))
     if methods != policy['new_test_methods']:
         raise RuntimeError('Διαφέρουν οι νέοι έλεγχοι CR-004.')
     return policy, len(expected)

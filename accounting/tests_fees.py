@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, close_old_connections, connection, transaction
 from django.db.migrations.executor import MigrationExecutor
+from .schema_test_support import restore_current_test_schema
 from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -324,7 +325,7 @@ class FeeContracts(FeeFixtures, TestCase):
 class FeeConcurrency(FeeFixtures, TransactionTestCase):
     @classmethod
     def setUpClass(cls):
-        MigrationExecutor(connection).migrate([('accounting','0024_fee_configuration_guards')])
+        restore_current_test_schema()
         super().setUpClass()
 
     def test_concurrent_schedule_creation_has_one_obligation_source(self):

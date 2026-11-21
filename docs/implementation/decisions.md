@@ -1,5 +1,27 @@
 # Decision register
 
+## CR-004 schema-fixture retry — initial technical Failed, correction Prepared
+
+The supplied console ran962 tests and reported3errors. Two visible errors are
+card reads without the new notes table; one further detail is truncated by the
+inner runner. Static inspection identifies ordinary setup hooks that force an
+older22/24/26 schema. In particular GenerationFixtures.setUpClass removes27/28
+before later ordinary card-read tests. Preserve the initial failure and source
+lock; do not infer successful financial outcomes from an incomplete console.
+
+Restore the full discovered test migration graph in five ordinary setup hooks,
+restricted to the disposable PostgreSQL test DB before TestCase transactions.
+Leave historical migration targets, every old test assertion, all45 initial
+CR004 methods, production card/selectors/services and all28 migrations exact.
+Three additional PG contracts restore22/24/26 and verify unchanged financial
+rows plus successful card, note and journal use. Full retry target965/36 and
+real worker remain Pending; do not substitute an empty-notes fallback or skip.
+
+The Git/files-only retry validates initial690 source bindings/context for an
+already-applied CR004, retains its existing exclusive actual-report binding,
+and applies only the correction. It also supports the original CR003 baseline
+through a cumulative patch. VM/GitHub/browser/full acceptance remain Pending.
+
 ## CR-004 — selected client card and journal, Prepared, 2026-11-21
 
 Use direction-labelled green/red entries and blue notes, preserving all actual

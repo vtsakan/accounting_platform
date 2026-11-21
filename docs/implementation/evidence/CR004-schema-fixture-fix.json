@@ -1,0 +1,30 @@
+{
+  "change": "CR-004",
+  "correction": "ordinary test schema restoration",
+  "status": "Prepared",
+  "initial_preparation_reference": "git:1e80e6d8b2ab71b5d8112d26b63643cc2d673925",
+  "initial_operator_failure": "docs/implementation/evidence/CR004-initial-failure.json",
+  "initial_source_lock": "docs/implementation/evidence/CR004-initial-source-lock.json",
+  "changed_ordinary_setup_files": [
+    "accounting/tests_background_jobs.py",
+    "accounting/tests_fees.py",
+    "accounting/tests_fee_generation.py",
+    "accounting/tests_reports.py",
+    "accounting/tests_exports.py"
+  ],
+  "ordinary_setup_hooks": 5,
+  "production_files_and_original_cr004_tests_unchanged": 301,
+  "all_28_migrations_unchanged": true,
+  "all_previous_test_assertions_and_test_methods_unchanged": true,
+  "initial_cr004_test_methods_preserved": 45,
+  "new_schema_restoration_contracts": 3,
+  "new_cr004_methods_total": 48,
+  "full_suite_target": 965,
+  "static_python_ast": "Passed",
+  "static_old_body_assertion_comparison": "Passed",
+  "historical_migration_targets_unchanged": true,
+  "agent_native_execution": false,
+  "operator_retry": "Pending",
+  "vm_github_rollout": "Pending",
+  "full_requirement_acceptances_pending": 85
+}

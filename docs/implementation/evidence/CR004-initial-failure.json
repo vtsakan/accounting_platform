@@ -1,0 +1,27 @@
+{
+  "change": "CR-004",
+  "status": "Observed",
+  "operator_technical_status": "Failed",
+  "evidence_source": "Operator console attachment supplied 2026-11-21; delivery inner diagnostics are truncated",
+  "evidence_attachment_sha256": "sha256:9b5c166100609227550712993dabdbf7db107b321b042def83fd41d4ad016b06",
+  "stage": "full-production-pg17-delivery",
+  "tests_run": 962,
+  "errors_reported": 3,
+  "visible_error_cases": [
+    "accounting.tests_ownership.OfficeBoundaryTests.test_lists_and_reports_never_render_other_office_labels",
+    "accounting.tests_settlements.SettlementTests.test_get_routes_never_create_settlement_events"
+  ],
+  "remaining_error_detail": "One further error is included in the total but not visible in the supplied truncated diagnostics",
+  "visible_error": "ProgrammingError: relation accounting_counterpartynote does not exist",
+  "image": "sha256:5826908690399db0b5efe5d53c07610bfd05e3520311aa80cd764aca2b1c75a2",
+  "operator_source_commit": "Not printed in supplied console; no operator Git commit is reconstructed",
+  "initial_preparation_reference": "git:1e80e6d8b2ab71b5d8112d26b63643cc2d673925",
+  "application_context_digest": "sha256:0002f67fdf86f1bffececab43de8dcd2531a01f8fa70de96f9c9919674478b88",
+  "interpretation": "Static inspection identifies ordinary test setup hooks pinned to older schema leaves; GenerationFixtures.setUpClass downgrades the current test database to0026 before later card reads need the note table added by0027/0028",
+  "successful_cr004_receipt_generated": false,
+  "prior_cr003_technical_gate": "Verified917/917 remains preserved",
+  "agent_native_execution": false,
+  "local_demo_or_vm_changed": false,
+  "github_updated": false,
+  "full_requirement_acceptances_pending": 85
+}

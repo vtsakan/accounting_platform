@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, close_old_connections, connection, transaction
 from django.db.migrations.executor import MigrationExecutor
+from .schema_test_support import restore_current_test_schema
 from django.test import SimpleTestCase, TestCase, TransactionTestCase, override_settings
 from django.utils import timezone
 from core.redaction import redact_text
@@ -299,8 +300,8 @@ class BackgroundConcurrencyContracts(JobFixtures, TransactionTestCase):
     @classmethod
     def setUpClass(cls):
         # Historical migration contracts intentionally finish at their old leaf.
-        # Restore only the new test schema; do not change any historical test.
-        MigrationExecutor(connection).migrate([('accounting','0022_background_job_guards')])
+        # Restore the current discovered schema; preserve historical migration targets.
+        restore_current_test_schema()
         super().setUpClass()
 
     def test_concurrent_delivery_commits_one_effect(self):

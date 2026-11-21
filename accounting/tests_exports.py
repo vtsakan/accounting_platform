@@ -11,6 +11,7 @@ from unittest.mock import patch
 from pypdf import PdfReader
 from django.db import close_old_connections,connection
 from django.db.migrations.executor import MigrationExecutor
+from .schema_test_support import restore_current_test_schema
 from django.test import Client,TestCase,TransactionTestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -284,7 +285,7 @@ class ExportContracts(ExportFixtures,TestCase):
 class ExportSnapshotContracts(ExportFixtures,TransactionTestCase):
     @classmethod
     def setUpClass(cls):
-        MigrationExecutor(connection).migrate([('accounting','0026_fee_generation_guards')]);super().setUpClass()
+        restore_current_test_schema();super().setUpClass()
 
     def test_unpaged_rows_and_totals_keep_one_snapshot_during_concurrent_cash(self):
         from .export_selectors import full_rows

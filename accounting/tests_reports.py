@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import DatabaseError,close_old_connections,connection
 from django.db.migrations.executor import MigrationExecutor
+from .schema_test_support import restore_current_test_schema
 from django.test import TestCase,TransactionTestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -253,7 +254,7 @@ class ReportContracts(ReportFixtures,TestCase):
 class SnapshotContracts(ReportFixtures,TransactionTestCase):
     @classmethod
     def setUpClass(cls):
-        MigrationExecutor(connection).migrate([('accounting','0026_fee_generation_guards')]);super().setUpClass()
+        restore_current_test_schema();super().setUpClass()
 
     def test_normal_snapshot_is_read_only_in_postgresql(self):
         original=self.office.name

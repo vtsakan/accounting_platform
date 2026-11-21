@@ -1,5 +1,17 @@
 # Implementation state
 
+## CR005 operator fixture correction — 2026-11-21
+
+The actual portability retry passed its source-only check and bound the
+retained real receipts. The new Docker production gate ran1020 tests and
+failed with2 errors and1 failure: stale versions captured by the archive
+fixture and a missing CSRF token in the owner MFA fixture. The target mutation
+checks and all production guards remain unchanged. Correct only those two
+new fixture helpers, retaining all55 test bodies and33 old assertion digests.
+317 inputs with a new test-source context;30 migrations and1020/36 unchanged.
+Source correction Prepared; operator runtime, worker gate, VM/GitHub and
+all85 full acceptances remain Pending. Preserve both earlier failures.
+
 ## CR005 source-preflight correction — 2026-11-21
 
 The operator's initial APPLY stopped at the retained assertion digest for

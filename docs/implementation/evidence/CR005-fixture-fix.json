@@ -1,0 +1,29 @@
+{
+  "change": "CR-005",
+  "correction": "retirement fixture version refresh and authenticating CSRF token",
+  "status": "Prepared",
+  "actual_failure": "docs/implementation/evidence/CR005-runtime-failure.json",
+  "preserved_portability_source_lock": "docs/implementation/evidence/CR005-portability-source-lock.json",
+  "production_code_changed": false,
+  "old_shared_test_helpers_changed": false,
+  "test_file": "accounting/tests_counterparty_retirement.py",
+  "changed_helpers": [
+    "RetirementSupport.archive",
+    "RetirementSupport.client_for"
+  ],
+  "all_cr005_test_method_asts_unchanged": 55,
+  "retained_original_assertion_files": 33,
+  "old_migrations_unchanged": 30,
+  "application_inputs": 317,
+  "application_context_digest": "sha256:5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684",
+  "expected_suite": 1020,
+  "financial_cases_unchanged": 36,
+  "csrf_checks_disabled": false,
+  "mfa_bypassed": false,
+  "version_or_ownership_guard_relaxed": false,
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "operator_gate": "Pending",
+  "github_and_vm": "Pending",
+  "full_requirement_acceptances_pending": 85
+}

@@ -1476,3 +1476,17 @@ The installer first recognises exact initial or corrected source, checks all
 frozen bytes and preserves actual receipts/bindings, then applies the selected
 Git patch and invokes only the corrected source verifier. No agent tests or
 runtime execution; actual new verification and deployment remain Pending.
+
+## CR005 actual runtime fixture failure — 2026-11-21
+
+The real portability retry built the image and ran1020 tests, failing2errors/
+1failure. The archive service returns a freshly locked instance; the caller's
+fixture retained version0, so duplicate/concurrent deletion tests failed at
+the first correctly denied stale submission. Refresh that original fixture
+after the archive service. The owner requires real MFA, whose fixture POST
+also needs CSRF when the client enforces it. Obtain a real login-form cookie,
+provide its header for authentication only and remove it in finally before
+the target mutation. Keep CSRF enforcement active throughout. Do not change
+production/version/ownership/MFA policy, old test helpers or any of the55 new
+test bodies/assertions. Preserve exact prior source locks, both failures and
+seven actual old receipts/exclusive bindings. New runtime and VM/GitHub Pending.

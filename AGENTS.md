@@ -1,5 +1,33 @@
 # Accounting platform implementation instructions
 
+## CR005 operator runtime failure — fixture correction, 2026-11-21
+
+The supplied operator console confirms the portability fix applied and bound
+the genuine prior receipts. The full production-image gate ran1020 tests and
+failed with2 errors and1 failure. Preserve that actual failure and exact
+portability source lock. No new Verified receipt, worker gate or VM update
+was reached. The stale-version errors are correct rejections of fixture
+version0 after archive committed version1; the CSRF failure is the owner's
+real MFA POST without its own token, before the target deletion assertion.
+
+Correct only RetirementSupport.archive to refresh its caller's instance after
+the real archive service, and RetirementSupport.client_for to provide a real
+CSRF cookie/header during MFA then remove the header before returning. Never
+disable CSRF, MFA, fresh ownership or optimistic version checks. Preserve all
+production code,30 migrations, dependencies,33 original assertion digests and
+all55 CR005 test method bodies/assertions byte-for-byte in their AST form.
+Only the new CR005 fixture helpers/import may change; no shared old helper or
+old test adaptation. Gate target stays1020/36 with317 inputs and a new context
+because test source bytes changed. This selected correction supersedes only
+the earlier tooling-only preservation limit for this one new test file.
+
+Retry supports exact portability-fixed CR005 with the existing exclusive
+binding, original CR005 and fresh actual CR004. Validate known source bytes
+before mutation. Preserve all seven actual old receipts and any CR005 binding;
+never rebind. APPLY is Git/files only. Agent static syntax/AST/source/hash/Git/
+archive/text checks only, no tests/Docker/build/migrations/app/browser/SSH/
+cloud/push. New operator verification, VM/GitHub and all85 acceptances Pending.
+
 ## CR005 source-preflight portability correction — 2026-11-21
 
 The operator applied the initial CR005 patch but its source-only preflight

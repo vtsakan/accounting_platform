@@ -1,0 +1,38 @@
+{
+  "change": "CR-005",
+  "status": "Failed",
+  "source": "Actual operator console supplied by user; no successful report reconstructed",
+  "stage": "full-production-pg17-delivery",
+  "console_attachment": "Pasted text(20261121-134200).txt",
+  "console_sha256": "sha256:14450118551f77fe048dfa6f4de7b87f20f9758c5850eeda8d78bdf8abb01478",
+  "source_only_check": {
+    "source_files_checked": 721,
+    "application_inputs": 317,
+    "actual_cr004_vm_receipts_bound": true
+  },
+  "image_id": "sha256:dbbd4f67fbfe97a5f23517cd80c9f1fbb350b74c9f4fdbe4bd982c565b2c5ec7",
+  "tests_run": 1020,
+  "duration_seconds": 239.119,
+  "failures": 1,
+  "errors": 2,
+  "cases": [
+    {
+      "test": "accounting.tests_counterparty_retirement.OwnerDeletionContracts.test_duplicate_owner_submission_creates_one_marker_and_audit",
+      "result": "error",
+      "exception": "ValidationError(STALE) at first deletion request"
+    },
+    {
+      "test": "accounting.tests_counterparty_retirement.RetirementConcurrencyContracts.test_two_owner_deletions_create_one_marker_and_one_audit",
+      "result": "error",
+      "exception": "ValidationError(STALE)"
+    },
+    {
+      "test": "accounting.tests_counterparty_retirement.OwnerDeletionContracts.test_delete_post_requires_csrf_even_for_owner",
+      "result": "failure",
+      "exception": "Synthetic fixture did not pass the real MFA verification view"
+    }
+  ],
+  "verified_cr005_receipt_created": false,
+  "monthly_worker_gate_reached": false,
+  "vm_or_github_changed": false
+}

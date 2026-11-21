@@ -31,9 +31,9 @@
 ```bash
 bash <<'SH'
 set -euo pipefail
-unzip -o ~/Downloads/accounting-platform-CR005-assertion-fix.zip \
-  -d ~/Downloads/accounting-platform-CR005-assertion-fix
-bash ~/Downloads/accounting-platform-CR005-assertion-fix/APPLY_CR005.sh
+unzip -o ~/Downloads/accounting-platform-CR005-fixture-fix.zip \
+  -d ~/Downloads/accounting-platform-CR005-fixture-fix
+bash ~/Downloads/accounting-platform-CR005-fixture-fix/APPLY_CR005.sh
 cd ~/accountant_cloud/accounting_v5/accounting-platform
 export PATH="$HOME/.local/bin:$PATH"
 python3 tools/verify_cr005.py --record --host-dns
@@ -48,6 +48,12 @@ VM. Δεν ανακατασκευάζει το ιστορικό Git ούτε α�
 «Άλλαξαν αρχικές δοκιμαστικές απαιτήσεις». Διατηρεί όλα τα αρχικά αποτυπώματα
 και διορθώνει τη σύγκριση στις νεότερες Python, χωρίς αλλαγή των δοκιμών.
 Αναγνωρίζει τα ήδη εφαρμοσμένα αρχεία και προσθέτει μόνο τη διόρθωση.
+
+Η επόμενη δοκιμή έφτασε στις 1.020 περιπτώσεις και εντόπισε δύο σφάλματα
+έκδοσης στα fixtures και μία αποτυχία CSRF κατά την προετοιμασία του MFA.
+Το νέο πακέτο διορθώνει μόνο αυτή την προετοιμασία και διατηρεί όλες τις
+απαιτήσεις των δοκιμών. Δεν χαλαρώνει τον έλεγχο παλιάς έκδοσης, το MFA ή
+την προστασία CSRF. Χρειάζεται επανάληψη ολόκληρου του παραπάνω ελέγχου.
 
 Ο έλεγχος χρησιμοποιεί νέα παραγωγική εικόνα, απομονωμένη PostgreSQL 17,
 ολόκληρη τη σουίτα, τις 36 οικονομικές περιπτώσεις και τον πραγματικό worker

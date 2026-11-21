@@ -7,6 +7,7 @@ import time
 import uuid
 from unittest.mock import patch
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import DatabaseError, IntegrityError, close_old_connections, connection, transaction
@@ -48,7 +49,11 @@ class RetirementSupport(Fixtures):
 
     def archive(self, entity=None):
         item = entity or self.blank; item.refresh_from_db()
-        return archive_counterparty(self.member, item.pk, version=item.record_version, archive=True)
+        archived = archive_counterparty(self.member, item.pk, version=item.record_version, archive=True)
+        # The service locks and returns its own instance; keep the caller's
+        # fixture current before duplicate/concurrent submissions capture it.
+        item.refresh_from_db()
+        return archived
 
     def delete(self, *, user=None, entity=None, version=None, confirmed=True):
         item = entity or self.blank
@@ -83,7 +88,17 @@ class RetirementSupport(Fixtures):
             FinanceAuditEvent, SettlementCommand, CashAllocation, AllocationRelease)}
 
     def client_for(self, user=None, *, csrf=False):
-        client=Client(enforce_csrf_checks=csrf);staff_client_login(client,user or self.owner)
+        client=Client(enforce_csrf_checks=csrf)
+        if csrf:
+            # Authenticate through the real MFA POST with its CSRF proof.
+            # Remove that header before returning so the target mutation
+            # still has to supply its own token.
+            client.get('/login/')
+            client.defaults['HTTP_X_CSRFTOKEN']=client.cookies[settings.CSRF_COOKIE_NAME].value
+        try:
+            staff_client_login(client,user or self.owner)
+        finally:
+            client.defaults.pop('HTTP_X_CSRFTOKEN',None)
         return client
 
 

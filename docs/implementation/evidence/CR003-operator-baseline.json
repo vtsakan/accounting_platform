@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "change": "CR-003",
+  "operator_source": "git:ee73318b2b1af1c02e419ff9c7d1d8d029764b80",
+  "files": {
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891"
+  },
+  "capture": "actual operator receipt retained without alteration"
+}

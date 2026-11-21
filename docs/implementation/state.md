@@ -3,14 +3,7 @@
 <!-- CR005-PREVIEW -->
 ## Existing preview update — CR005
 
-Status: **Prepared**. Actual CR005 operator gate Verified1020/1020,36 finance,
-55 new methods and real worker at2026-11-21T16:03:32+02:00. Reuse the exact
-317-input image, preserve all724 source bindings and actual receipts. Update
-GitHub by ordinary fast-forward and the CURRENT28-migration preview through
-a separate28→30 clone. Retain every row/account/MFA/key and existing durable
-queue; both encrypted off-VM restores precede activation. VM/GitHub execution
-and human browser acceptance Pending. All85 full acceptances Pending.
-See [procedure](cr005_preview_upgrade_el.md).
+Status: **Verified**. Reuse the actual1020/36 and real-worker verified image. Retain the CURRENT database and migrate a separate28→30 clone, preserving every original row, account, MFA seed, session, pinned key and existing durable queue. Both encrypted snapshots must restore off-VM before activation. GitHub publication uses ordinary fast-forward only. Human browser/MFA acceptance and real R1/D05/D06/D07/G2/full acceptance remain Pending. See [the procedure](cr005_preview_upgrade_el.md).
 <!-- /CR005-PREVIEW -->
 
 ## CR005 operator fixture correction — 2026-11-21

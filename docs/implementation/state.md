@@ -27,7 +27,7 @@ All85 full acceptances remain Pending.
 ## Current selected change — CR-005, 2026-11-21
 
 <!-- CR005-RESULT -->
-CR-005 source Prepared: visible archive/restore, a shared database/server open-agreement veto, and owner-only deletion after archive without financial history. Contact values are removed; notes and attribution remain; deleted cards are excluded from lists, filters and old URLs. Two additive migrations0029/0030 preserve the28 original migrations and all original assertions. New operator PG17/HTTP/race/real-worker gate and VM/GitHub rollout Pending. All85 full requirement acceptances remain Pending.
+CR-005 source Prepared; operator technical gate Verified: 1020 tests, 36 financial cases, archive/open-contract/owner-deletion contracts and retained real monthly-worker/ack-loss gate passed. VM/GitHub rollout and accountant/browser acceptance remain Pending. All 85 full acceptances remain Pending.
 <!-- /CR005-RESULT -->
 
 Actual prior operator CR004 and VM/GitHub are Verified: 965/36, main

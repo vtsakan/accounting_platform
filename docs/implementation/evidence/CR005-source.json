@@ -1,10 +1,10 @@
 {
   "change": "CR-005",
   "status": "Prepared",
-  "implementation_reference_commit": "git:4f4b74ef62f9ef6bae73aa7a51a8b29c96f9084c",
+  "implementation_reference_commit": "git:189f539844a289eccb9291d394b09c88d3f94dc7",
   "actual_prior_operator_commit": "git:35a66ae24a40eb2bc8365a2e9530d08385513992",
   "prior_application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
-  "application_context_digest": "sha256:ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24",
+  "application_context_digest": "sha256:5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684",
   "application_inputs": 317,
   "retained_test_count": 965,
   "new_test_methods": 55,
@@ -33,13 +33,15 @@
   "operator_gate": "Pending",
   "github_and_vm": "Pending CR005 operator gate and separately bound deployment",
   "full_requirement_acceptances_pending": 85,
-  "source_bindings": 721,
+  "source_bindings": 724,
   "expected_suite": 1020,
-  "fixture_adaptation": "Only historical archived-open fixtures and new route capability support; all33 original assertion ASTs retained",
+  "fixture_adaptation": "Retain original33 assertion AST digests and all55 CR005 test method ASTs; refresh archive fixture instance and supply real CSRF during owner MFA only",
   "requirements": "docs/requirements/CR-005-Counterparty-archive-delete.md",
   "operator_command": "python3 tools/verify_cr005.py --record --host-dns",
-  "source_lock_sha256": "sha256:007ccf2992703d84920c2135679e7b8aa939fafb42c5f548421709c70f6c8c53",
+  "source_lock_sha256": "sha256:cca1c5a7b37624e59716da98929e5d539a4e682b539768776af6f3a5e789727c",
   "assertion_dump_policy": "Python 3.12 representation; show_empty=True explicitly on Python 3.13+; original33 baseline digests unchanged",
   "initial_failure": "docs/implementation/evidence/CR005-initial-preflight-failure.json",
-  "correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json"
+  "correction_evidence": "docs/implementation/evidence/CR005-fixture-fix.json",
+  "runtime_failure": "docs/implementation/evidence/CR005-runtime-failure.json",
+  "earlier_correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json"
 }

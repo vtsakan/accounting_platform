@@ -1,10 +1,10 @@
 {
   "change": "CR-005",
   "status": "Prepared",
-  "implementation_reference_commit": "git:4f4b74ef62f9ef6bae73aa7a51a8b29c96f9084c",
+  "implementation_reference_commit": "git:189f539844a289eccb9291d394b09c88d3f94dc7",
   "actual_prior_operator_commit": "git:35a66ae24a40eb2bc8365a2e9530d08385513992",
   "prior_application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
-  "application_context_digest": "sha256:ce74ac1e178eeff0c37938c2ab91bd5af247b373f076c4f9e641fc66a6a0ae24",
+  "application_context_digest": "sha256:5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684",
   "application_inputs": 317,
   "retained_test_count": 965,
   "new_test_methods": 55,
@@ -762,16 +762,19 @@
     "accounting/migrations/0029_counterparty_retirement.py": "sha256:f20954b8f8b80c196661dd4e62dcce6d1ba23ef635ecd5c7e51f0c809758ceba",
     "accounting/migrations/0030_counterparty_retirement_guards.py": "sha256:079b156e81e64f5686fe9841a8c5755b2f54b989eb2d85d27f1acea6aa390edb",
     "accounting/templates/accounting/entity_delete.html": "sha256:527a5f11eaa437016c6433b25659a709a8b432d845e74d26d835ed658ae38119",
-    "accounting/tests_counterparty_retirement.py": "sha256:44ba7978d9343dfad29af7968ce6bdf8263a6beebe11c75c72e1c9fa0e0a3152",
+    "accounting/tests_counterparty_retirement.py": "sha256:0c24fb3e4d501f21454123bee46e941c7aaf82f1971cb83613d02adb4636920d",
     "accounting/tests_cr005_support.py": "sha256:02ca20ae04eb366ae3004e31f01ea11c7bc314c22f3c74c513487f2bf7ab7cd8",
-    "docs/implementation/counterparty_archive_delete_el.md": "sha256:618a55868cb28319998cd8a2d67bb27be5e19fea424f9b55f2252b41423040b0",
+    "docs/implementation/counterparty_archive_delete_el.md": "sha256:ddeb3fb4779bdc134b491e5a759676419c2e2b8d4dbbbfa31237243725bad9ea",
     "docs/implementation/evidence/CR005-prior-completion.json": "sha256:039d1f5242603a7160bd64578de6d053edfcad8b7806ee55bbef91c7d8a661f6",
     "docs/requirements/CR-005-Counterparty-archive-delete.md": "sha256:eeebcaac52360fbb6cca26d66c123fb4de050aa5ac4f5849e978d7ec40e6613c",
     "tools/cr005_receipts.py": "sha256:dc59e2c58978b6772e65c52b60d76553162f0d579bb51b72d4cef6992b46af7d",
     "tools/verify_cr005.py": "sha256:f1c959b14169e6114b4ac447c81a85bc41d5e79009106416932a425997ef6604",
     "docs/implementation/evidence/CR005-initial-source-lock.json": "sha256:d883761b0aa6d88cca1bdae8e19c46a7ac221f46872f9aaae7a70f26aaac8638",
     "docs/implementation/evidence/CR005-initial-preflight-failure.json": "sha256:e16b75ae6805669fe7d35a3f7fcf2c893cafa988f6413aeabf741c772473c8a6",
-    "docs/implementation/evidence/CR005-assertion-portability-fix.json": "sha256:26a5f6fe9ed13fa116a7cd971ece13911654118cd9e2124964e99c3c7a50e67d"
+    "docs/implementation/evidence/CR005-assertion-portability-fix.json": "sha256:26a5f6fe9ed13fa116a7cd971ece13911654118cd9e2124964e99c3c7a50e67d",
+    "docs/implementation/evidence/CR005-portability-source-lock.json": "sha256:007ccf2992703d84920c2135679e7b8aa939fafb42c5f548421709c70f6c8c53",
+    "docs/implementation/evidence/CR005-runtime-failure.json": "sha256:46719980f817e95088fa4fdd4e6cd5661d91d8a9d67d58498d48ac9f453e176e",
+    "docs/implementation/evidence/CR005-fixture-fix.json": "sha256:c773c7997da6cb62a469398625f97bca089085d2320f48d04727208f7fc304e2"
   },
   "mutable_tracking": [
     "AGENTS.md",
@@ -795,8 +798,11 @@
   "operator_gate": "Pending",
   "github_and_vm": "Pending CR005 operator gate and separately bound deployment",
   "full_requirement_acceptances_pending": 85,
-  "source_bindings": 721,
+  "source_bindings": 724,
   "assertion_dump_policy": "Python 3.12 representation; show_empty=True explicitly on Python 3.13+; original33 baseline digests unchanged",
   "initial_failure": "docs/implementation/evidence/CR005-initial-preflight-failure.json",
-  "correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json"
+  "correction_evidence": "docs/implementation/evidence/CR005-fixture-fix.json",
+  "runtime_failure": "docs/implementation/evidence/CR005-runtime-failure.json",
+  "earlier_correction_evidence": "docs/implementation/evidence/CR005-assertion-portability-fix.json",
+  "fixture_adaptation": "Retain original33 assertion AST digests and all55 CR005 test method ASTs; refresh archive fixture instance and supply real CSRF during owner MFA only"
 }

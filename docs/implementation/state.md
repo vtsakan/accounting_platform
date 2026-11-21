@@ -1,5 +1,18 @@
 # Implementation state
 
+<!-- CR005-PREVIEW -->
+## Existing preview update — CR005
+
+Status: **Prepared**. Actual CR005 operator gate Verified1020/1020,36 finance,
+55 new methods and real worker at2026-11-21T16:03:32+02:00. Reuse the exact
+317-input image, preserve all724 source bindings and actual receipts. Update
+GitHub by ordinary fast-forward and the CURRENT28-migration preview through
+a separate28→30 clone. Retain every row/account/MFA/key and existing durable
+queue; both encrypted off-VM restores precede activation. VM/GitHub execution
+and human browser acceptance Pending. All85 full acceptances Pending.
+See [procedure](cr005_preview_upgrade_el.md).
+<!-- /CR005-PREVIEW -->
+
 ## CR005 operator fixture correction — 2026-11-21
 
 The actual portability retry passed its source-only check and bound the

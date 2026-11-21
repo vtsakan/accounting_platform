@@ -1,5 +1,42 @@
 # Accounting platform implementation instructions
 
+## Selected CR005 existing VM/GitHub update — actual1020/36 Verified
+
+The product owner requests the updated application and GitHub once checks
+pass. The latest actual console confirms CR005 Verified on2026-11-21 at
+16:03:32 Europe/Athens:1020/1020,36 financial cases,55 new methods,724 source
+bindings and real monthly-worker/commit-before-ack/revocation/single scheduler.
+Actual application source7b5fcb0047cc48488721be63db73e96a8b7674b3,
+image3c8191b7d180ba7bcb238975074bb880cefdb69bc989c2f320ad7f2e62351f6e,
+context5e2e455524a8a27e870f16bcb71b88918153d083b39d45e1f68bfea13442e684,
+317 inputs. This authorises the existing preview update after that new gate.
+The earlier runtime failure stays retained; it is not the latest gate result.
+
+Preserve all724 frozen source paths, all317 image inputs,30 migrations, old
+assertions and all55 CR005 test bodies. Reuse the exact passed image without
+rebuilding/rerunning the application suite. Save only the exact two known
+--record outputs before requiring clean committed context. Exclusively bind
+the nine actual files: successful CR005 receipt, its prior exclusive binding
+and seven original actual receipts. Never reconstruct operator Git lineage,
+replace real reports, refresh existing bindings or auto-commit unknown changes.
+
+Supply separate preview_cr005 tools. Existing VM is still CR004 schema28,
+image30597a05f45393d8d66ccc0f3924a2bdc38b007fab5c9f1755e22dfd652426a1.
+Only accounting-preview/europe-west1-b/accounting-514109 and its retained disk,
+hostname, keys, people, MFA and durable queue. Freeze HTTP/jobs, clone CURRENT
+28→30 under the restricted role, preserve every original column/row and same
+DB process. New deletion-marker table must be empty. Require encrypted before/
+after backups and both exact off-VM restores with the independent key before
+activation. No account/MFA/bootstrap/reset, DB restart, queue flush or volume
+deletion. Never roll back after jobs or public HTTP writes may begin.
+
+Publish actual operator history to GitHub by ordinary fast-forward only after
+source/history scan. Preserve bounded six-service runtime and empty media.
+VM capacity, real-client/business/browser acceptance and all85 full requirement
+acceptances stay Pending. Agent static AST/hash/source/text/Git/archive checks
+only; NO agent tests, Docker/build/migrations/app/browser/SSH/cloud/push. The
+operator runs the supplied update script and recovery checks.
+
 ## CR005 operator runtime failure — fixture correction, 2026-11-21
 
 The supplied operator console confirms the portability fix applied and bound

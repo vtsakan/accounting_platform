@@ -1490,3 +1490,16 @@ the target mutation. Keep CSRF enforcement active throughout. Do not change
 production/version/ownership/MFA policy, old test helpers or any of the55 new
 test bodies/assertions. Preserve exact prior source locks, both failures and
 seven actual old receipts/exclusive bindings. New runtime and VM/GitHub Pending.
+
+## CR005 actual successful gate and selected preview update — 2026-11-21
+
+The latest supplied operator output is Verified1020/1020 and36 finance at
+16:03:32 Europe/Athens. The55 new contracts,724 source protections and real
+worker/ack-loss/revocation/scheduler gate passed. Retain both earlier failures;
+do not rerun the passed suite or replace its image. Preserve the actual
+source7b5fcb0 lineage,317 bytes/context5e2e and all30 migrations. Supply separate
+CR005 deployment tools for the CURRENT CR00428→30 clone and GitHub fast-forward.
+Preserve nine real receipt/binding files; only exact recorder outputs may be
+committed before the unchanged clean-context guard. Both off-VM restores and
+all-original-row comparison precede activation. Never rewind after possible
+public/job writes. Operator deployment and all85 full acceptances stay Pending.

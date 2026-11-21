@@ -1,0 +1,12 @@
+{
+  "scope": "existing-preview-cr004",
+  "operator_source": "git:edacf958f5dc427575b45725502b9048d2ca41bf",
+  "operator_report_canonical_sha256": "sha256:c4a6f83a2e392a15e96adcc6cde93c4b2d7eaa06d804f593c4fdd1496d377a46",
+  "files": {
+    "docs/implementation/evidence/CR004-verification.json": "sha256:a0a2731f76ed5a56e8e2a3bfd4bd970cdf7bb5d7da2531a24ea4ab47fe216cc4",
+    "docs/implementation/evidence/CR003-verification.json": "sha256:1f8feac780aa893a9bf8dd7c970ed0a32a553b97b5ce598c217431d590421706",
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891",
+    "docs/implementation/evidence/CR003-operator-baseline.json": "sha256:d0077c3bcfb36803475e47a0bfc9098753bfd9277648ca7153d0220278c18088",
+    "docs/implementation/evidence/CR004-operator-baseline.json": "sha256:dfec50f4305696f4e950e6d44ba66a25bdc4babadf435834bfb729f8b5cb933a"
+  }
+}

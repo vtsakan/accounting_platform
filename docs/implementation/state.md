@@ -3,7 +3,7 @@
 ## Current selected change — CR-003, 2026-11-21
 
 <!-- CR003-RESULT -->
-CR-003 source Prepared: one new agreement-scoped receipt/payment and FIFO allocations save atomically; description can come from the agreement and choices are scoped to the selected party. Actual prior CR002 operator gate Verified: 878/878,36 finance and real worker. New operator runtime gate, browser/accountant acceptance and VM/GitHub rollout remain Pending. All85 full requirement acceptances remain Pending.
+CR-003 source Prepared; operator technical gate Verified: 917 tests, 36 financial cases and retained real monthly-worker/ack-loss gate passed. VM/GitHub rollout and accountant/browser acceptance remain Pending. All 85 full acceptances remain Pending.
 <!-- /CR003-RESULT -->
 
 The actual successful CR002 source is `ee73318b2b1af1c02e419ff9c7d1d8d029764b80`.

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "change": "CR-004",
+  "operator_source": "git:bd541fb269343838e217c916cd7a83013baeb0c9",
+  "files": {
+    "docs/implementation/evidence/CR003-verification.json": "sha256:1f8feac780aa893a9bf8dd7c970ed0a32a553b97b5ce598c217431d590421706",
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891",
+    "docs/implementation/evidence/CR003-operator-baseline.json": "sha256:d0077c3bcfb36803475e47a0bfc9098753bfd9277648ca7153d0220278c18088"
+  },
+  "capture": "actual operator receipts and existing binding retained without alteration"
+}

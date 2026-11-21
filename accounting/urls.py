@@ -12,8 +12,11 @@ from . import fee_generation_views
 from . import report_views
 from . import export_views
 from . import movement_views
+from . import counterparty_journal_views
 
 urlpatterns = [
+    path('entity/<int:pk>/journal/', counterparty_journal_views.journal, name='entity-journal'),
+    path('entity/<int:pk>/notes/add/', counterparty_journal_views.note_add, name='entity-note-add'),
     path('report/export/<str:filetype>/', export_views.period, name='report-export'),
     path('reports/clients/<int:pk>/export/<str:filetype>/', export_views.statement, name='client-statement-export'),
     path('reports/fees/export/<str:filetype>/', export_views.annual, name='fees-overview-export'),

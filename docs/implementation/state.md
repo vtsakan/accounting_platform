@@ -1,5 +1,16 @@
 # Implementation state
 
+## Current selected change — CR-004, 2026-11-21
+
+<!-- CR004-RESULT -->
+CR-004 source Prepared: richer client/supplier overview, green/red financial entries, blue notes with server time and accountant, and a paged list/monthly journal with all retained events. Actual prior CR003 operator gate Verified: 917/917,36 finance and real worker. New 45 operator contracts supplied; full target962, new note schema28. Agent static checks only; new runtime, accountant/browser acceptance and VM/GitHub rollout Pending. All85 full requirement acceptances Pending.
+<!-- /CR004-RESULT -->
+
+Actual successful CR003 source: `bd541fb269343838e217c916cd7a83013baeb0c9`,
+verified 21/11/2026 at08:07:18 Europe/Athens. Preserve its full actual report
+and previous binding, not an agent reconstruction. The older Prepared source
+notes below are historical. Read [the CR-004 procedure](counterparty_journal_el.md).
+
 ## Current selected change — CR-003, 2026-11-21
 
 <!-- CR003-RESULT -->

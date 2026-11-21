@@ -1,0 +1,11 @@
+{% extends 'accounting/base.html' %}{% load static %}
+{% block title %}Νέα σημείωση — {{ entity.name }}{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/client-journal.css' %}">{% endblock %}
+{% block content %}
+<p><a href="{% url 'entity-detail' entity.pk %}">← Καρτέλα {{ entity.name }}</a></p>
+<h1>Νέα σημείωση</h1><p>Η σημείωση αφορά αποκλειστικά την καρτέλα <strong>{{ entity.name }}</strong>.</p>
+<section class="card card-body client-note-panel">
+{% if entity.is_archived %}<div class="alert alert-secondary" role="status">Η εγγραφή είναι αρχειοθετημένη. Επαναφέρετέ την πριν προσθέσετε νέα σημείωση.</div>{% endif %}
+<form method="post" action="{% url 'entity-note-add' entity.pk %}">{% csrf_token %}<fieldset {% if entity.is_archived %}disabled{% endif %}>{% include 'accounting/journal/note_fields.html' %}</fieldset></form>
+</section>
+{% endblock %}

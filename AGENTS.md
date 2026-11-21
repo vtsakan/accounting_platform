@@ -1,5 +1,45 @@
 # Accounting platform implementation instructions
 
+## Selected CR-004 — counterparty card, notes and journal, 2026-11-21
+
+The product owner requests a much richer client/supplier card, green incoming/
+receivable entries, red outgoing/payable entries and blue attributable notes,
+plus a client journal with all financial events and all notes. Implement this
+selected feedback change; do not select S32 or deploy the VM. Read
+docs/requirements/CR-004-Counterparty-card-journal.md and
+docs/implementation/counterparty_journal_el.md.
+
+Actual CR003 operator proof is Verified at 2026-11-21T08:07:18+02:00, source
+git:bd541fb269343838e217c916cd7a83013baeb0c9,917/917,36 finance and real worker.
+Its 292-input context is de928a2467826d60f2797c923ba46ee4c4cd908c6961cde1452e31e3fc8a22b0.
+Agent preparation 5594575ae1f4a5cc792153e5f8f5bf63d80951e5 has identical
+application bytes but a different Git lineage. Retain the genuine CR003 full
+receipt, actual CR002 report and prior exclusive binding; never fabricate the
+operator history. Bind all three before the new runtime gate. Commit only the
+two exact known CR003 --record outputs before the clean image guard if needed.
+
+Authorise two new additive note migrations 0027/0028. Capture server time,
+fresh actor and username snapshot, same-office party, immutable row history,
+retry key and office/user/entity lock order. Keep original financial services,
+models fields,26 old migrations, dependencies and historical receipts exact.
+The only old test adaptation is the boundary URL helper gaining two route
+names; all prior assertions and other old test bodies remain exact. Add
+operator PG/HTTP/concurrency/migration contracts; agent static checks only.
+
+Use existing charge/debt/cash projections. A read-only paged SQL union includes
+terms, charges, all cash, allocations/releases, charge reversals and notes;
+every arm uses the same office/party. Use one read snapshot, dated filters,
+Greek monthly calendar, real all-page counts, Athens note dates and escaped
+plain text. A note or journal read never posts or reallocates money. Preserve
+old card contexts, pages, account/MFA/key state and role capabilities.
+
+APPLY performs Git/files only. New source Prepared; operator gate, browser/
+accountant acceptance and VM/GitHub rollout Pending. All85 full acceptances
+remain Pending. No agent tests, build, Docker, migrations, native app, browser,
+SSH, cloud or push; static AST/template compilation/SQL grammar/source/hash/
+text scan only. Earlier no-application-change/26-migration scope limits are
+historical and superseded only for this explicitly selected CR-004 change.
+
 ## Selected CR-003 — agreement-scoped cash settlement, 2026-11-21
 
 The user explicitly requests one-step receipts/payments against a selected

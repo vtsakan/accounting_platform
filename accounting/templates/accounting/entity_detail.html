@@ -1,14 +1,43 @@
 {% extends 'accounting/base.html' %}
-{% load greek %}
+{% load greek static %}
 {% block title %}Καρτέλα {{ entity.name }}{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/client-journal.css' %}">{% endblock %}
 {% block content %}
-<div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
-  <h1>{{ entity.name }}</h1>
-  <div>{% if entity.is_archived %}<a class="btn btn-primary" href="{% url 'restore-entity' pk=entity.pk %}">Επαναφορά εγγραφής</a>
-    {% else %}<a class="btn btn-secondary" href="{% url 'edit-entity' pk=entity.pk %}">Επεξεργασία</a> <a class="btn btn-outline-secondary" href="{% url 'archive-entity' pk=entity.pk %}">Αρχειοθέτηση</a>{% endif %}</div>
-</div>
+<header class="client-card-header"><div><p class="client-eyebrow">ΚΑΡΤΕΛΑ ΣΥΝΑΛΛΑΣΣΟΜΕΝΟΥ</p><h1>{{ entity.name }}</h1><p>{% if entity.is_customer %}<span class="client-badge client-badge--green">Πελάτης</span>{% endif %} {% if entity.is_supplier %}<span class="client-badge client-badge--red">Προμηθευτής</span>{% endif %} {% if entity.vat_number %} · Α.Φ.Μ. {{ entity.vat_number }}{% endif %}</p></div>
+<div class="client-actions"><a class="btn btn-primary" href="{% url 'entity-journal' entity.pk %}">Ημερολόγιο καρτέλας</a>{% if not entity.is_archived %}<a class="btn btn-outline-primary" href="#new-note">Νέα σημείωση</a><a class="btn btn-outline-secondary" href="{% url 'edit-entity' pk=entity.pk %}">Επεξεργασία</a>{% else %}<a class="btn btn-outline-primary" href="{% url 'restore-entity' pk=entity.pk %}">Επαναφορά εγγραφής</a>{% endif %}</div></header>
+<nav class="client-actions client-tabs" aria-label="Ενότητες καρτέλας"><a href="#client-overview">Επισκόπηση</a><a href="#agreements-heading">Συμφωνίες</a><a href="#movements-heading">Κινήσεις</a><a href="#identity-heading">Στοιχεία</a><a href="{% url 'entity-journal' entity.pk %}?view=month">Μηνιαίο ημερολόγιο</a></nav>
 {% if entity.is_archived %}<div class="alert alert-secondary" role="status">Αρχειοθετημένη εγγραφή από {{ entity.archived_at|el_date }}. Το ιστορικό παραμένει διαθέσιμο. Επαναφέρετε την εγγραφή πριν από νέα εργασία.</div>{% endif %}
 {% if entity.legal_kind == 'UNREVIEWED' %}<div class="alert alert-warning" role="status">Επιβεβαιώστε αν η εγγραφή αφορά φυσικό πρόσωπο ή επιχείρηση κατά την επόμενη επεξεργασία.</div>{% endif %}
+
+<section id="client-overview" aria-label="Επισκόπηση καρτέλας"><div class="client-stats">
+<div class="client-stat"><span>Συμφωνίες</span><strong>{{ card_stats.agreements }}</strong><small>Εισπρακτέες {{ card_stats.receivable_agreements }} · Πληρωτέες {{ card_stats.payable_agreements }}</small></div>
+<div class="client-stat client-stat--green"><span>Εισπράξεις / εισροές</span><strong>{{ card_stats.total_income|euro }}</strong><small>Πραγματικές εισροές ταμείου έως σήμερα</small></div>
+<div class="client-stat client-stat--red"><span>Πληρωμές / εκροές</span><strong>{{ card_stats.total_expense|euro }}</strong><small>Πραγματικές εκροές ταμείου έως σήμερα</small></div>
+<div class="client-stat client-stat--blue"><span>Σημειώσεις</span><strong>{{ card_stats.notes }}</strong><small><a href="{% url 'entity-journal' entity.pk %}?kind=note">Προβολή όλων των σημειώσεων</a></small></div>
+</div></section>
+{% if settlements %}{% include 'accounting/settlements/totals.html' with totals=settlements %}{% endif %}
+{% include 'accounting/journal/legend.html' %}
+<div class="client-card-columns"><section class="card card-body" aria-labelledby="recent-journal"><div class="client-section-heading"><h2 id="recent-journal">Πρόσφατη δραστηριότητα</h2><a href="{% url 'entity-journal' entity.pk %}">Όλο το ημερολόγιο →</a></div><p class="client-muted">Συμφωνίες, χρεώσεις, πληρωμές και σημειώσεις. Οι αντιστοιχίσεις εμφανίζονται χωριστά και δεν μετρούν ως νέα είσπραξη.</p><div class="client-timeline">{% for event in journal_preview %}{% include 'accounting/journal/event.html' %}{% empty %}<p class="client-empty">Δεν υπάρχουν ακόμη εγγραφές σε αυτή την καρτέλα.</p>{% endfor %}</div></section>
+<aside class="card card-body client-note-editor" id="new-note" aria-labelledby="note-heading"><h2 id="note-heading">Σημειώσεις καρτέλας</h2>{% if entity.is_archived %}<p>Το ιστορικό διατηρείται. Επαναφέρετε την εγγραφή πριν από νέα σημείωση.</p>{% else %}<form method="post" action="{% url 'entity-note-add' entity.pk %}">{% csrf_token %}{% include 'accounting/journal/note_fields.html' with form=note_form %}</form>{% endif %}<p class="client-muted mt-3">Οι σημειώσεις διατηρούνται με τον αρχικό συντάκτη. Για συμπλήρωση ή διόρθωση προσθέστε νέα σημείωση.</p><a href="{% url 'entity-journal' entity.pk %}?kind=note">Όλες οι σημειώσεις →</a></aside></div>
+
+<section class="card card-body mb-4" aria-labelledby="agreements-heading">
+  <h2 id="agreements-heading">Συμφωνίες</h2>
+  <div class="table-responsive"><table class="table table-hover">
+    <thead><tr><th scope="col">Περιγραφή</th><th scope="col">Συνολικό ποσό</th><th scope="col">Καταχωρισμένες χρεώσεις</th><th scope="col">Αντιστοιχισμένο</th><th scope="col">Ανεξόφλητο</th><th scope="col">Τρόπος χρέωσης</th></tr></thead>
+    <tbody>{% for agreement in agreements %}<tr class="client-row--{% if agreement.agreement_type == 'RECEIVABLE' %}green{% else %}red{% endif %}"><td><span class="client-badge client-badge--{% if agreement.agreement_type == 'RECEIVABLE' %}green{% else %}red{% endif %}">{% if agreement.agreement_type == 'RECEIVABLE' %}Εισπρακτέα{% else %}Πληρωτέα{% endif %}</span><br><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.effective_agreed_amount|default:agreement.total_amount|euro }}</td><td>{{ agreement.charge_total|default:0|euro }}</td><td>{{ agreement.allocated_total|default:0|euro }}</td><td>{{ agreement.remaining_obligation|default:0|euro }}</td><td>{% if agreement.billing_mode == 'ONE_OFF' %}Εφάπαξ{% elif agreement.billing_mode == 'MONTHLY' %}Μηνιαία{% else %}Σε αναμονή επιλογής{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="6">Δεν βρέθηκαν συμφωνίες για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if agreement_page.has_other_pages %}<nav aria-label="Σελίδες συμφωνιών">{% if agreement_page.has_previous %}<a href="?agreement_page={{ agreement_page.previous_page_number }}&amp;movement_page={{ movement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ agreement_page.number }} από {{ agreement_page.paginator.num_pages }} {% if agreement_page.has_next %}<a href="?agreement_page={{ agreement_page.next_page_number }}&amp;movement_page={{ movement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>
+<section class="card card-body mb-4" aria-labelledby="movements-heading">
+  <h2 id="movements-heading">Οικονομικές κινήσεις</h2>
+  <div class="table-responsive"><table class="table table-striped">
+    <thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Περιγραφή</th><th scope="col">Ταμείο</th><th scope="col">Συμφωνία</th><th scope="col">Ποσό</th></tr></thead>
+    <tbody>{% for tx in transactions %}<tr class="client-row--{% if tx.transaction_type == 'INCOME' %}green{% else %}red{% endif %}"><td>{{ tx.transaction_date|el_date }}</td><td><span class="client-badge client-badge--{% if tx.transaction_type == 'INCOME' %}green{% else %}red{% endif %}">{% if tx.transaction_type == 'INCOME' %}Έσοδο{% else %}Έξοδο{% endif %}</span><br>{{ tx.description }}{% if tx.posting_kind == 'REVERSAL' %}<br><small>Αντιλογισμός κίνησης</small>{% elif tx.posting_kind == 'REFUND' %}<br><small>Επιστροφή χρημάτων</small>{% endif %}</td><td>{{ tx.cash_account }}</td><td>{% if tx.agreement %}<a href="{% url 'agreement-detail' pk=tx.agreement.pk %}">{{ tx.agreement.description }}</a>{% else %}Αυτοτελής κίνηση{% endif %}</td><td>{% if tx.transaction_type == 'INCOME' %}+{% elif tx.transaction_type == 'EXPENSE' %}−{% endif %}{{ tx.amount|euro }}</td></tr>
+    {% empty %}<tr><td colspan="5">Δεν βρέθηκαν κινήσεις για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if movement_page.has_other_pages %}<nav aria-label="Σελίδες κινήσεων">{% if movement_page.has_previous %}<a href="?movement_page={{ movement_page.previous_page_number }}&amp;agreement_page={{ agreement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ movement_page.number }} από {{ movement_page.paginator.num_pages }} {% if movement_page.has_next %}<a href="?movement_page={{ movement_page.next_page_number }}&amp;agreement_page={{ agreement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>
 <section class="card card-body mb-4" aria-labelledby="identity-heading">
   <h2 id="identity-heading">Στοιχεία και επικοινωνία</h2>
   <dl class="row">
@@ -31,25 +60,6 @@
       {% if entity.is_supplier %}<a class="btn btn-outline-secondary" href="{% url 'add-expense' %}?entity_id={{ entity.pk }}">Νέα πληρωμή</a> <a class="btn btn-outline-primary" href="{% url 'add-agreement' %}?entity_id={{ entity.pk }}&amp;type=PAYABLE">Νέα συμφωνία πληρωμής</a>{% endif %}
     {% endif %}
   </nav>
-</section>
-{% if settlements %}{% include 'accounting/settlements/totals.html' with totals=settlements %}{% endif %}
-<section class="card card-body mb-4" aria-labelledby="agreements-heading">
-  <h2 id="agreements-heading">Συμφωνίες</h2>
-  <div class="table-responsive"><table class="table table-hover">
-    <thead><tr><th scope="col">Περιγραφή</th><th scope="col">Συνολικό ποσό</th><th scope="col">Καταχωρισμένες χρεώσεις</th><th scope="col">Αντιστοιχισμένο</th><th scope="col">Ανεξόφλητο</th><th scope="col">Τρόπος χρέωσης</th></tr></thead>
-    <tbody>{% for agreement in agreements %}<tr><td><a href="{% url 'agreement-detail' pk=agreement.pk %}">{{ agreement.description }}</a></td><td>{{ agreement.effective_agreed_amount|default:agreement.total_amount|euro }}</td><td>{{ agreement.charge_total|default:0|euro }}</td><td>{{ agreement.allocated_total|default:0|euro }}</td><td>{{ agreement.remaining_obligation|default:0|euro }}</td><td>{% if agreement.billing_mode == 'ONE_OFF' %}Εφάπαξ{% elif agreement.billing_mode == 'MONTHLY' %}Μηνιαία{% else %}Σε αναμονή επιλογής{% endif %}</td></tr>
-    {% empty %}<tr><td colspan="6">Δεν βρέθηκαν συμφωνίες για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
-  </table></div>
-  {% if agreement_page.has_other_pages %}<nav aria-label="Σελίδες συμφωνιών">{% if agreement_page.has_previous %}<a href="?agreement_page={{ agreement_page.previous_page_number }}&amp;movement_page={{ movement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ agreement_page.number }} από {{ agreement_page.paginator.num_pages }} {% if agreement_page.has_next %}<a href="?agreement_page={{ agreement_page.next_page_number }}&amp;movement_page={{ movement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
-</section>
-<section class="card card-body mb-4" aria-labelledby="movements-heading">
-  <h2 id="movements-heading">Οικονομικές κινήσεις</h2>
-  <div class="table-responsive"><table class="table table-striped">
-    <thead><tr><th scope="col">Ημερομηνία</th><th scope="col">Περιγραφή</th><th scope="col">Ταμείο</th><th scope="col">Συμφωνία</th><th scope="col">Ποσό</th></tr></thead>
-    <tbody>{% for tx in transactions %}<tr><td>{{ tx.transaction_date|el_date }}</td><td>{{ tx.description }}</td><td>{{ tx.cash_account }}</td><td>{% if tx.agreement %}<a href="{% url 'agreement-detail' pk=tx.agreement.pk %}">{{ tx.agreement.description }}</a>{% else %}Αυτοτελής κίνηση{% endif %}</td><td>{% if tx.transaction_type == 'INCOME' %}+{% elif tx.transaction_type == 'EXPENSE' %}−{% endif %}{{ tx.amount|euro }}</td></tr>
-    {% empty %}<tr><td colspan="5">Δεν βρέθηκαν κινήσεις για αυτή την εγγραφή.</td></tr>{% endfor %}</tbody>
-  </table></div>
-  {% if movement_page.has_other_pages %}<nav aria-label="Σελίδες κινήσεων">{% if movement_page.has_previous %}<a href="?movement_page={{ movement_page.previous_page_number }}&amp;agreement_page={{ agreement_page.number }}">Προηγούμενη</a>{% endif %} Σελίδα {{ movement_page.number }} από {{ movement_page.paginator.num_pages }} {% if movement_page.has_next %}<a href="?movement_page={{ movement_page.next_page_number }}&amp;agreement_page={{ agreement_page.number }}">Επόμενη</a>{% endif %}</nav>{% endif %}
 </section>
 {% if workspace_events %}<section class="card card-body mb-4" aria-labelledby="changes-heading"><h2 id="changes-heading">Πρόσφατες ενέργειες καρτέλας</h2><ul>{% for event in workspace_events %}<li>{{ event.occurred_at|el_date }} — {{ event.get_action_display }} — {{ event.actor.get_username }}</li>{% endfor %}</ul></section>{% endif %}
 <a href="{% url 'counterparty-list' %}">Επιστροφή στους συναλλασσομένους</a>

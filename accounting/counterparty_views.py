@@ -10,6 +10,7 @@ from django.db.models.functions import Coalesce
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.cache import never_cache
 
 from .capabilities import office_view
 from .counterparty_services import ARCHIVED, archive_counterparty
@@ -105,7 +106,14 @@ def edit(request, key=None):
 
 
 @office_view('clients.read')
+@never_cache
 def detail(request, key):
+    from .report_selectors import read_snapshot
+    with read_snapshot(request.user):
+        return detail_snapshot(request, key)
+
+
+def detail_snapshot(request, key):
     entity = record(Entity, request.user, key)
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
@@ -119,7 +127,10 @@ def detail(request, key):
     movement_page = Paginator(movements, 10).get_page(request.GET.get('movement_page'))
     events = entity.workspace_events.filter(office_id=entity.office_id).select_related('actor').order_by('-occurred_at', '-pk')[:10]
     from .settlement_selectors import settlement_totals
-    return render(request, 'accounting/entity_detail.html', {'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
+    from .counterparty_journal_forms import NoteForm
+    from .counterparty_journal_selectors import card_summary
+    context = card_summary(request.user, entity, agreements, movements)
+    return render(request, 'accounting/entity_detail.html', {**context, 'note_form': NoteForm(), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,
         'workspace_events': events})

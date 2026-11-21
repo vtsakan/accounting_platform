@@ -1,0 +1,14 @@
+{% load greek tz %}
+<article class="client-event client-event--{{ event.tone }}" id="{{ event.anchor }}">
+  <div class="client-event-heading">
+    <div><span class="client-badge client-badge--{{ event.tone }}">{{ event.label }}</span>{% if event.direction_label %}<span class="client-event-direction">{{ event.direction_label }}</span>{% endif %}</div>
+    {% if event.amount != None %}<strong class="client-event-amount">{% if event.kind == 'cash' %}{% if event.direction == 'RECEIVABLE' %}+{% elif event.direction == 'PAYABLE' %}−{% endif %}{% endif %}{{ event.amount|euro }}</strong>{% endif %}
+  </div>
+  {% if event.title %}<h3 class="client-event-title">{% if event.url %}<a href="{{ event.url }}">{{ event.title }}</a>{% else %}{{ event.title }}{% endif %}</h3>{% endif %}
+  {% if event.kind == 'note' %}<div class="client-note-text">{{ event.body|linebreaksbr }}</div>{% elif event.body %}<details class="client-event-remarks"><summary>Παρατηρήσεις κίνησης</summary><div class="client-note-text">{{ event.body|linebreaksbr }}</div></details>{% endif %}
+  {% if event.detail %}<p class="client-event-detail">{{ event.detail }}</p>{% endif %}
+  <footer class="client-event-meta">
+    <span>Ημερομηνία: <time datetime="{{ event.event_day|date:'Y-m-d' }}">{{ event.event_day|el_date }}</time></span>
+    <span>{% timezone 'Europe/Athens' %}Καταχωρίστηκε {{ event.recorded_at|date:'d/m/Y H:i' }}{% endtimezone %} · Λογιστής: {{ event.actor_label }}</span>
+  </footer>
+</article>

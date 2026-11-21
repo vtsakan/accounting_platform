@@ -353,3 +353,5 @@ from .job_models import BackgroundJob, JobEvent, JobProbeEffect, BackgroundPulse
 from .fee_models import ServiceItem, ServicePrice, FeeSchedule, FeeScheduleVersion
 
 from .fee_generation_models import FeeAutomationVersion, FeeGenerationRun
+
+from .counterparty_note_models import CounterpartyNote

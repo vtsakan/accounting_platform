@@ -650,6 +650,23 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "entity-journal",
+      "realm": "office-business",
+      "capability": "clients.read",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "entity-note-add",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [

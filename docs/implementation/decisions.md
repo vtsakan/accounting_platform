@@ -1,5 +1,37 @@
 # Decision register
 
+## CR-004 — selected client card and journal, Prepared, 2026-11-21
+
+Use direction-labelled green/red entries and blue notes, preserving all actual
+financial representations. Notes are independent of money, appended under
+fresh clients.write authority, office/user/entity serialization and strict
+retry identity. Database insertion supplies time/username; the saved label
+survives later username changes. Updates/deletes are denied; corrections are
+new notes. Archived parties retain readable history and require restoration
+for new notes. These choices implement the selected feedback without granting
+new roles, accepting submitted identities or exposing shared auth searches.
+
+Use a same-office/party SQL union over retained terms, charges, cash including
+corrections/refunds, allocations/releases, charge reversals and notes. Stable
+ordering, SQL count/paging, literal search and month aggregation share one
+read-only snapshot. Notes use Athens dates; financial effective dates remain
+distinct from recorded times. No duplicate financial sum, backfill or write
+on view. Retain the old card contexts and existing financial projections.
+
+Prior operator CR003 proof is Verified at2026-11-21T08:07:18+02:00,917/917,36
+finance,39 new methods,670 bindings and real worker; the application context
+matches agent preparation5594575 but actual source isbd541fb269343838e217c916cd7a83013baeb0c9.
+Exclusively bind the actual CR003 receipt and both retained CR002 artifacts.
+Save only validated prior --record outputs before the unchanged image guard.
+Never substitute agent-local summaries or reconstruct operator commits.
+
+Add note-only migrations0027/0028 and45 operator contracts. Preserve26 old
+migrations, all original assertions/services and historical receipts. Only
+the old boundary URL helper gains two new routes. Source Prepared, operator/
+Greek visual acceptance and VM/GitHub rollout Pending; all85 full acceptances
+remain Pending. The selected portion of UR-CRM-04 does not implement the other
+labels/activities/relations and is not an S32 selection.
+
 ## CR-003 — selected agreement receipt also settles debt, Prepared, 2026-11-21
 
 The product owner asks for automatic debt reduction when a new receipt/payment

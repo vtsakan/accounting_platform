@@ -13,8 +13,10 @@ from . import report_views
 from . import export_views
 from . import movement_views
 from . import counterparty_journal_views
+from . import counterparty_retirement_views
 
 urlpatterns = [
+    path('entity/<int:pk>/delete/', counterparty_retirement_views.delete, name='delete-entity'),
     path('entity/<int:pk>/journal/', counterparty_journal_views.journal, name='entity-journal'),
     path('entity/<int:pk>/notes/add/', counterparty_journal_views.note_add, name='entity-note-add'),
     path('report/export/<str:filetype>/', export_views.period, name='report-export'),

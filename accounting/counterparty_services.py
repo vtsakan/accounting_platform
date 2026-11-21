@@ -27,8 +27,9 @@ def actor_scope(user):
 
 
 def locked_record(office, key, version):
+    from .counterparty_retirement_selectors import visible_counterparties
     try:
-        entity = Entity.objects.select_for_update().get(pk=key, office=office)
+        entity = visible_counterparties(Entity.objects.select_for_update()).get(pk=key, office=office)
     except (Entity.DoesNotExist, ValueError, TypeError):
         raise Http404("Η εγγραφή δεν βρέθηκε.") from None
     if type(version) is not int or entity.record_version != version:
@@ -47,6 +48,11 @@ def safe_write():
             raise ValidationError({"vat_number": DUPLICATE_AFM}) from None
         if constraint == "s15_archived_work":
             raise ValidationError(ARCHIVED) from None
+        if constraint == 'cr005_archive_open':
+            from .counterparty_retirement_selectors import OPEN_AGREEMENT
+            raise ValidationError(OPEN_AGREEMENT) from None
+        if constraint == 'cr005_deleted_retained':
+            raise ValidationError('Η εγγραφή έχει διαγραφεί από την εφαρμογή.') from None
         raise
 
 
@@ -83,6 +89,10 @@ def archive_counterparty(user, key, *, version, archive):
     entity = locked_record(office, key, version)
     if type(archive) is not bool or archive == entity.is_archived:
         raise ValidationError("Η κατάσταση αρχειοθέτησης έχει ήδη αλλάξει. Ανανεώστε τη σελίδα.")
+    if archive:
+        from .counterparty_retirement_selectors import OPEN_AGREEMENT, archive_blockers
+        if archive_blockers(entity):
+            raise ValidationError(OPEN_AGREEMENT)
     entity.is_archived = archive
     entity.archived_at = timezone.now() if archive else None
     entity.archived_by = user if archive else None

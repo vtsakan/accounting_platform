@@ -1,5 +1,46 @@
 # Accounting platform implementation instructions
 
+
+## Selected CR005 — visible archive, open-contract veto and owner deletion
+
+The product owner explicitly requests visible archive controls, denial when an
+agreement is open, and deletion only by the office owner after archive. They
+selected deletion ONLY WITHOUT financial history. Implement this scope, not S32.
+Actual prior CR004/VM/GitHub is Verified: 965/36, current28 migrations, main
+git:35a66ae24a40eb2bc8365a2e9530d08385513992, context sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9.
+Preserve all actual operator receipts and old exclusive bindings byte-for-byte.
+Do not reconstruct the actual Git history in this distinct preparation branch.
+
+Add only0029/0030. Preserve all28 original migrations and financial services,
+original assertions/36 cases, dependency pins, accounts/MFA/keys and current VM.
+Archive uses posted unpaid obligations plus current/future contract terms:
+fully settled ONE_OFF can close; active MONTHLY, pending/review/draft/future
+terms or any unpaid charge blocks. Legacy COMPLETED alone is insufficient.
+Use the same SQL decision in HTTP/service and a database veto, under the usual
+office/user/entity locks with fresh authority and version checks.
+
+Owner deletion requires clients.delete, active same-office owner, archived
+identity, explicit POST/CSRF/version and NO financial history, including closed,
+reversed, fully paid or audit-only history. Remove contact values and exclude
+the retained anonymous identity from every workspace, detail, restore, note,
+statement and export. Keep immutable note/audit anchors and an attributed
+server-timed deletion marker. Do not cascade/delete money, notes or audit rows.
+No UI undelete. Actual permission is rechecked after locks; flags cannot grant it.
+
+Previously archived/open history remains valid. The old replay, reversal and
+statement tests seed that authentic historical starting state only in a
+restricted disposable-test-DB fixture. It may disable only the new archive veto
+under an exclusive table lock, and restores it before returning; no app path
+imports it. Keep every original assertion unchanged. New CR005 tests always use
+the real service/SQL guard and never this legacy fixture. Boundary adaptation
+adds the delete route/owner capability without removing earlier cases.
+
+APPLY performs Git/files only and binds the actual seven receipts exclusively.
+New source Prepared until the operator image/PG17/full-suite/real-worker gate.
+Agent static syntax/source/hash/SQL/template/text checks only; NO agent tests,
+Docker/build/migrations/app/browser/SSH/cloud/push. VM/GitHub rollout is separate
+after the new gate, all85 full acceptances and human browser acceptance Pending.
+
 ## Selected CR004 VM/GitHub update —965-test gate Verified, 2026-11-21
 
 The user explicitly requests the latest existing VM and GitHub once checks

@@ -252,7 +252,7 @@ class PostingContractTests(Fixtures,TestCase):
         with self.assertRaises(ValidationError):self.reverse(pair[0])
     def test_reversal_of_archived_history_is_allowed_but_new_work_stays_denied(self):
         original=self.post()
-        from .counterparty_services import archive_counterparty
+        from .tests_cr005_support import historical_archive as archive_counterparty
         archive_counterparty(self.owner,self.customer.pk,version=0,archive=True)
         result=self.reverse(original);self.assertEqual(result[0].entity_id,self.customer.pk)
         with self.assertRaises(ValidationError):self.post()

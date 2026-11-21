@@ -1,0 +1,18 @@
+{
+  "change": "CR-005",
+  "status": "Observed prior completion",
+  "prior_step": "CR004-VM",
+  "prior_status": "Verified",
+  "prior_verified_at": "2026-11-21T10:19:05+00:00",
+  "actual_github_main": "git:35a66ae24a40eb2bc8365a2e9530d08385513992",
+  "prior_application_commit": "git:edacf958f5dc427575b45725502b9048d2ca41bf",
+  "prior_application_context_digest": "sha256:b72e10ff53dcc5613beba5f0126f8bddede58860b023e051f48c4ba7a86322a9",
+  "prior_image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:30597a05f45393d8d66ccc0f3924a2bdc38b007fab5c9f1755e22dfd652426a1",
+  "prior_suite_passed": 965,
+  "prior_financial_cases_passed": 36,
+  "prior_target_migrations": 28,
+  "prior_off_vm_all_public_tables_match": true,
+  "evidence": "Actual operator console and exact GitHub receipt at the supplied completed main commit; summary only",
+  "cr005_runtime_executed": false,
+  "full_requirement_acceptances_pending": 85
+}

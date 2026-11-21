@@ -11,7 +11,7 @@ from .export_schema import ExportError
 from .export_selectors import build_document
 from .export_renderers import render_csv,render_pdf
 from .models import Entity
-from .office_access import validate_filter_ids
+from .office_access import record,validate_filter_ids
 from .report_forms import PeriodReportForm,StatementForm,AnnualReportForm
 
 
@@ -20,7 +20,7 @@ def attachment(request,kind,filetype,pk=None):
     profile=require_capability(request.user,'finance.read');office_id=profile.office_id
     validate_filter_ids(request)
     if kind=='statement':
-        entity=get_object_or_404(Entity.objects.filter(office_id=office_id),pk=pk)
+        entity=record(Entity,request.user,pk)
         form=StatementForm(request.GET,user=request.user,entity=entity)
         back=reverse('client-statement',args=[pk]);filename='Καρτέλα συναλλασσομένου'
     elif kind=='annual':

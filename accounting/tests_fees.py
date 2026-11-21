@@ -147,7 +147,7 @@ class FeeContracts(FeeFixtures, TestCase):
         with self.assertRaises(ValidationError):self.schedule(agreement_id=self.agreement.pk)
 
     def test_archived_client_cannot_receive_new_schedule(self):
-        from .counterparty_services import archive_counterparty
+        from .tests_cr005_support import historical_archive as archive_counterparty
         self.customer.refresh_from_db()
         archive_counterparty(self.member, self.customer.pk, version=self.customer.record_version, archive=True)
         with self.assertRaises(ValidationError):self.schedule()

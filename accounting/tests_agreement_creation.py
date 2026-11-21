@@ -167,7 +167,7 @@ class AgreementCreationTests(CreationSupport, TestCase):
         before = self.counts()
         with self.assertRaises(ValidationError):
             create_with_charge(self.member, self.candidate(entity=self.supplier), **self.intent())
-        from .counterparty_services import archive_counterparty
+        from .tests_cr005_support import historical_archive as archive_counterparty
         self.customer.refresh_from_db()
         archive_counterparty(self.member, self.customer.pk, version=self.customer.record_version, archive=True)
         with self.assertRaises(ValidationError):

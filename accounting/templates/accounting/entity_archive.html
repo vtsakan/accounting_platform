@@ -4,8 +4,16 @@
 <h1>{% if restore %}Επαναφορά{% else %}Αρχειοθέτηση{% endif %}: {{ entity.name }}</h1>
 {% if restore %}<p>Η εγγραφή θα είναι ξανά διαθέσιμη για νέες συμφωνίες και κινήσεις.</p>
 {% else %}<p>Το οικονομικό ιστορικό και οι υπάρχουσες συνδέσεις διατηρούνται. Η εγγραφή δεν θα είναι διαθέσιμη για νέα εργασία μέχρι να την επαναφέρετε.</p>{% endif %}
+{% if archive_blocker_count %}
+<div class="alert alert-warning" role="alert"><p><strong>Δεν επιτρέπεται η αρχειοθέτηση: υπάρχει ανοιχτή συμφωνία.</strong></p>
+<p>Ελέγξτε τις χρεώσεις, τις εξοφλήσεις και τη λήξη των όρων. Οι ενεργές μηνιαίες συμφωνίες χρειάζονται λήξη ακόμη κι αν έχουν εξοφληθεί οι χρεώσεις έως σήμερα.</p>
+<ul>{% for item in archive_blockers %}<li><a href="{% url 'agreement-detail' item.pk %}">Συμφωνία #{{ item.pk }}</a> — {{ item.reason }}</li>{% endfor %}</ul>
+{% if archive_blocker_count > 20 %}<p>Συνολικά {{ archive_blocker_count }} ανοιχτές συμφωνίες. Εμφανίζονται οι πρώτες 20.</p>{% endif %}</div>
+{% endif %}
 <form method="post">{% csrf_token %}{{ form }}
+  {% if not archive_blocker_count %}
   <button type="submit" class="btn btn-primary">{% if restore %}Επιβεβαίωση επαναφοράς{% else %}Επιβεβαίωση αρχειοθέτησης{% endif %}</button>
+  {% endif %}
   <a class="btn btn-secondary" href="{% url 'entity-detail' pk=entity.pk %}">Ακύρωση</a>
 </form>
 {% endblock %}

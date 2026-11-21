@@ -28,7 +28,8 @@ def add_note(user, entity_id, *, body, request_key):
     except (ValueError, TypeError, AttributeError):
         raise ValidationError('Η φόρμα δεν έχει έγκυρο αναγνωριστικό. Ανοίξτε νέα σημείωση.') from None
     try:
-        entity = Entity.objects.select_for_update().get(pk=entity_id, office=office)
+        from .counterparty_retirement_selectors import visible_counterparties
+        entity = visible_counterparties(Entity.objects.select_for_update()).get(pk=entity_id, office=office)
     except (Entity.DoesNotExist, ValueError, TypeError):
         raise Http404('Η καρτέλα δεν βρέθηκε.') from None
     existing = CounterpartyNote.objects.filter(office=office, request_key=key).first()

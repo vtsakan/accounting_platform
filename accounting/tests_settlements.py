@@ -17,7 +17,7 @@ from django.utils import timezone
 from .models import (AccountantProfile, Agreement, AllocationRelease, CashAllocation, Charge, Entity,
                      FinanceCommand, Office, SettlementCommand, Transaction)
 from .charge_services import post_charge, save_terms
-from .counterparty_services import archive_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 from .finance_services import audit_context, command_for, complete, fingerprint, post_cash, post_transfer, reverse_cash
 from .settlement_services import allocate_cash, release_allocation
 from .settlement_selectors import allocation_history, cash_sources, charge_balances, settlement_totals

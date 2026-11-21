@@ -1,0 +1,21 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Διαγραφή αρχειοθετημένης εγγραφής{% endblock %}
+{% block content %}
+<h1>Διαγραφή: {{ entity.name }}</h1>
+{% if not entity.is_archived %}
+<div class="alert alert-warning" role="alert">Αρχειοθετήστε πρώτα την εγγραφή πριν από τη διαγραφή.</div>
+{% elif not can_delete %}
+<div class="alert alert-warning" role="alert">Η εγγραφή έχει οικονομικό ιστορικό και διατηρείται. Διαγραφή επιτρέπεται μόνο χωρίς συμφωνίες, χρεώσεις ή κινήσεις, ακόμη κι αν το υπόλοιπο είναι μηδενικό.</div>
+{% endif %}
+<p>Η εγγραφή θα αφαιρεθεί από τις λίστες και οι παλιοί σύνδεσμοί της δεν θα είναι διαθέσιμοι. Τα στοιχεία ταυτότητας και επικοινωνίας θα αφαιρεθούν. Οι σημειώσεις και το ίχνος ενεργειών διατηρούνται. Η διαγραφή δεν αναιρείται από την εφαρμογή.</p>
+<form method="post">{% csrf_token %}
+{% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{{ form.version }}
+{% if form.version.errors %}<div role="alert">{{ form.version.errors }}</div>{% endif %}
+{% if can_delete %}
+<p>{{ form.confirm }} {{ form.confirm.label_tag }}{% if form.confirm.errors %}<span role="alert">{{ form.confirm.errors }}</span>{% endif %}</p>
+<button type="submit" class="btn btn-danger">Διαγραφή εγγραφής</button>
+{% endif %}
+<a class="btn btn-secondary" href="{% url 'entity-detail' entity.pk %}">Επιστροφή στην καρτέλα</a>
+</form>
+{% endblock %}

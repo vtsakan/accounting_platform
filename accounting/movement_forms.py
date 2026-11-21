@@ -22,6 +22,8 @@ class CashMovementFilterForm(forms.Form):
         # Historical filters deliberately include inactive/archived references.
         for field, model in [('cash_account', CashAccount), ('category', Category), ('entity', Entity)]:
             self.fields[field].queryset = model.objects.filter(office_id=self.office_id).order_by('name', 'pk')
+        from .counterparty_retirement_selectors import visible_counterparties
+        self.fields['entity'].queryset = visible_counterparties(self.fields['entity'].queryset)
         self.fields['category'].queryset = self.fields['category'].queryset.select_related('parent')
         for field in self.fields.values():
             field.widget.attrs.setdefault('class', 'form-select' if isinstance(field, forms.ChoiceField) else 'form-control')

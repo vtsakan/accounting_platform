@@ -95,14 +95,14 @@ class CounterpartyEvent(models.Model):
     entity = models.ForeignKey(Entity, on_delete=models.PROTECT, related_name="workspace_events", verbose_name="Συναλλασσόμενος")
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name="Λογιστής")
     action = models.CharField(max_length=10, choices=[("create", "Δημιουργία"), ("update", "Ενημέρωση"),
-        ("archive", "Αρχειοθέτηση"), ("restore", "Επαναφορά")], verbose_name="Ενέργεια")
+        ("archive", "Αρχειοθέτηση"), ("restore", "Επαναφορά"), ("delete", "Διαγραφή")], verbose_name="Ενέργεια")
     version = models.PositiveBigIntegerField(verbose_name="Έκδοση")
     changed_fields = models.JSONField(default=list, verbose_name="Πεδία που άλλαξαν")
     occurred_at = models.DateTimeField(auto_now_add=True, verbose_name="Ημερομηνία")
 
     class Meta:
         ordering = ["-occurred_at", "-pk"]
-        constraints = [models.CheckConstraint(condition=models.Q(action__in=["create", "update", "archive", "restore"]), name="counterparty_valid_event")]
+        constraints = [models.CheckConstraint(condition=models.Q(action__in=["create", "update", "archive", "restore", "delete"]), name="counterparty_valid_event")]
         verbose_name = "Ενέργεια συναλλασσομένου"
         verbose_name_plural = "Ενέργειες συναλλασσομένων"
 
@@ -355,3 +355,7 @@ from .fee_models import ServiceItem, ServicePrice, FeeSchedule, FeeScheduleVersi
 from .fee_generation_models import FeeAutomationVersion, FeeGenerationRun
 
 from .counterparty_note_models import CounterpartyNote
+
+from .counterparty_retirement_models import CounterpartyDeletion
+
+from .counterparty_retirement_models import CounterpartyDeletion

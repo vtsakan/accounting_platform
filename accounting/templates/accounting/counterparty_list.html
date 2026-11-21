@@ -30,8 +30,12 @@
     <td>{% if entity.is_archived %}Αρχειοθετημένη{% else %}Ενεργή{% endif %}</td>
     <td><a class="btn btn-sm btn-outline-primary" href="{% url 'entity-detail' pk=entity.pk %}">Καρτέλα</a>
       {% if not entity.is_archived %}
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'archive-entity' entity.pk %}">Αρχειοθέτηση</a>
         {% if entity.is_customer %}<a class="btn btn-sm btn-outline-success" href="{% url 'add-income' %}?entity_id={{ entity.pk }}">Νέα είσπραξη</a>{% endif %}
         {% if entity.is_supplier %}<a class="btn btn-sm btn-outline-secondary" href="{% url 'add-expense' %}?entity_id={{ entity.pk }}">Νέα πληρωμή</a>{% endif %}
+      {% else %}
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'restore-entity' entity.pk %}">Επαναφορά</a>
+        {% if can_delete_counterparty %}<a class="btn btn-sm btn-outline-danger" href="{% url 'delete-entity' entity.pk %}">Διαγραφή</a>{% endif %}
       {% endif %}
     </td>
   </tr>

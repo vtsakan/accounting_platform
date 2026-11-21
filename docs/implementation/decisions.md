@@ -1446,3 +1446,19 @@ image through the existing exact-context/identity --image checks and rerun every
 gate. Preserve historical receipts. S26 remains Prepared; the agent executes
 only static checks. Real Redis completion, VM rollout, D05/G2 and all full
 acceptances stay Pending. See evidence/S26-probe-path-fix.json.
+
+
+## CR005 selected feedback — 2026-11-21
+
+The product owner selects visible archive, denial while an agreement is open,
+and deletion only by the same-office owner after archive. They explicitly
+choose deletion without financial history. Settled one-off and closed terms
+are separate from active monthly/future obligations. A legacy paid flag alone
+is insufficient. Deleted nonfinancial cards lose contact data and visibility;
+immutable notes/audit remain anchored to the retained anonymous identity.
+Current roles are re-read after office/user locks. New database guards mirror
+the server policy. Add only0029/0030; original28 migrations and financial
+assertions stay exact. Old archived-open compatibility contracts use explicitly
+historical disposable-test fixtures; new policy contracts use the real service.
+Actual CR004/VM/main35a66ae completion is retained, never reconstructed. New
+source Prepared; operator verification/browser/VM/GitHub and all85 Pending.

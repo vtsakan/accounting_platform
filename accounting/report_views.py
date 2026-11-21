@@ -4,7 +4,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 from .capabilities import office_view,require_capability
 from .models import Entity
-from .office_access import validate_filter_ids
+from .office_access import record, validate_filter_ids
 from .report_forms import PeriodReportForm,StatementForm,AnnualReportForm
 from .report_selectors import period_report,annual_report,dashboard_report
 
@@ -30,7 +30,7 @@ def period(request):
 @require_GET
 def statement(request,pk):
     validate_filter_ids(request)
-    entity=get_object_or_404(Entity.objects.filter(office_id=require_capability(request.user,'finance.read').office_id),pk=pk)
+    entity=record(Entity,request.user,pk)
     form=StatementForm(request.GET,user=request.user,entity=entity)
     return render(request,'accounting/reports/statement.html',{'filter_form':form,'entity':entity,**period_report(request.user,form,statement=True)})
 

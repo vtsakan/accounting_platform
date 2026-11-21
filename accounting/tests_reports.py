@@ -225,7 +225,7 @@ class ReportContracts(ReportFixtures,TestCase):
 
     def test_archived_clients_keep_historical_statement(self):
         self.scenario()
-        from .counterparty_services import archive_counterparty
+        from .tests_cr005_support import historical_archive as archive_counterparty
         archive_counterparty(self.member,self.customer.pk,version=0,archive=True)
         response=self.client_for().get(reverse('client-statement',args=[self.customer.pk]))
         self.assertEqual(response.status_code,200);self.assertEqual(response.context['receivable_remaining'],75)

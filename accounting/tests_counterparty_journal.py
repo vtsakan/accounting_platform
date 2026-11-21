@@ -19,7 +19,7 @@ from django.utils import timezone
 from .counterparty_journal_forms import JournalForm, NoteForm
 from .counterparty_journal_selectors import JournalRows, journal_page
 from .counterparty_note_services import add_note
-from .counterparty_services import archive_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 from .models import (AccountantProfile, Agreement, AgreementTermsVersion,
     AllocationRelease, CashAllocation, Charge, CounterpartyNote, Entity,
     FinanceAuditEvent, FinanceCommand, Office, SettlementCommand, Transaction)

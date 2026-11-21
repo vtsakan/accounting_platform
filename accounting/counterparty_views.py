@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 
-from .capabilities import office_view
+from .capabilities import office_view, require_capability
 from .counterparty_services import ARCHIVED, archive_counterparty
 from .counterparty_validation import afm_text
 from .forms import EntityForm
@@ -83,6 +83,7 @@ def workspace(request, *, fixed_role=None):
     return render(request, 'accounting/counterparty_list.html', {'form': form, 'page_obj': page,
         'counterparties': page.object_list, 'customers': page.object_list, 'suppliers': page.object_list,
         'fixed_role': fixed_role, 'page_query': params.urlencode(),
+        'can_delete_counterparty': require_capability(request.user, 'clients.read').role == 'owner',
         'workspace_title': {'customer':'Πελάτες', 'supplier':'Προμηθευτές'}.get(fixed_role, 'Συναλλασσόμενοι')})
 
 
@@ -133,7 +134,8 @@ def detail_snapshot(request, key):
     return render(request, 'accounting/entity_detail.html', {**context, 'note_form': NoteForm(), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,
-        'workspace_events': events})
+        'workspace_events': events,
+        'can_delete_counterparty': require_capability(request.user, 'clients.read').role == 'owner'})
 
 
 @office_view('clients.write')
@@ -149,7 +151,10 @@ def archive(request, key, *, restore=False):
         else:
             messages.success(request, 'Η εγγραφή επανήλθε στις ενεργές.' if restore else 'Η εγγραφή αρχειοθετήθηκε. Το ιστορικό διατηρήθηκε.')
             return redirect('entity-detail', pk=saved.pk)
-    return render(request, 'accounting/entity_archive.html', {'entity': entity, 'form': form, 'restore': restore})
+    from .counterparty_retirement_selectors import archive_blockers
+    blockers = [] if restore or entity.is_archived else archive_blockers(entity)
+    return render(request, 'accounting/entity_archive.html', {'entity': entity, 'form': form,
+        'restore': restore, 'archive_blockers': blockers[:20], 'archive_blocker_count': len(blockers)})
 
 
 @office_view('clients.write')

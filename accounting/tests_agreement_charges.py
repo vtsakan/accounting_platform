@@ -19,7 +19,7 @@ from .forms import AgreementForm
 from .agreement_selectors import agreement_projection, obligation_totals
 from .tests_finance_posting import Fixtures, DAY
 from .tests_auth_support import staff_client_login
-from .counterparty_services import archive_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 
 
 class ChargeSupport(Fixtures):

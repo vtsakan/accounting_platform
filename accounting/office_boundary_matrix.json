@@ -667,6 +667,15 @@
         "GET",
         "POST"
       ]
+    },
+    {
+      "route": "delete-entity",
+      "realm": "office-business",
+      "capability": "clients.delete",
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [

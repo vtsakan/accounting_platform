@@ -28,10 +28,11 @@ from django.urls import path, reverse
 from django.utils import timezone
 
 from .auth_policy import state_for
-from .counterparty_services import archive_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 from .membership import create_accountant_profile, change_membership
 from .models import AccountantProfile, Agreement, CashAccount, Category, CounterpartyEvent, Entity, Office, Transaction
 from .settlement_models import SettlementCommand, CashAllocation, AllocationRelease
+from .counterparty_retirement_models import CounterpartyDeletion
 from .correction_models import FinanceCorrection, CorrectionRelease, CashRefund, ChargeReversal, ChargeReplacement, AgreementChange, FinancePeriodClose
 from .office_models import OfficeAuditEvent, OwnershipHandover, StaffInvitation
 from .office_access import execution_record, records, save_for_user
@@ -41,7 +42,7 @@ A='00000000-0000-4000-8000-00000000000a'
 B='00000000-0000-4000-8000-00000000000b'
 C='00000000-0000-4000-8000-00000000000c'
 DAY=date(2026,1,15)
-BUSINESS=(Entity,CashAccount,Category,Agreement,Transaction,CounterpartyEvent,StaffInvitation,OwnershipHandover,OfficeAuditEvent,SettlementCommand,CashAllocation,AllocationRelease,FinanceCorrection,CorrectionRelease,CashRefund,ChargeReversal,ChargeReplacement,AgreementChange,FinancePeriodClose)
+BUSINESS=(Entity,CashAccount,Category,Agreement,Transaction,CounterpartyEvent,StaffInvitation,OwnershipHandover,OfficeAuditEvent,SettlementCommand,CashAllocation,AllocationRelease,FinanceCorrection,CorrectionRelease,CashRefund,ChargeReversal,ChargeReplacement,AgreementChange,FinancePeriodClose,CounterpartyDeletion)
 
 
 def make_actor(name,office=A,role='accountant',**flags):
@@ -184,7 +185,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
         kwargs={}
-        if name in {'entity-detail','edit-entity','archive-entity','restore-entity','entity-settlements','client-statement','client-statement-export','entity-journal','entity-note-add'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
+        if name in {'entity-detail','edit-entity','archive-entity','restore-entity','entity-settlements','client-statement','client-statement-export','entity-journal','entity-note-add','delete-entity'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
         if name in {'report-export','client-statement-export','fees-overview-export'}:kwargs['filetype']='csv'
         if name in {'agreement-detail','edit-agreement','agreement-charge-add','agreement-amend'}:kwargs={'pk':getattr(self,'agreement_'+suffix).pk}
         if name in {'cash-account-detail','cash-account-edit','cash-account-opening','cash-account-adjustment'}:kwargs={'pk':getattr(self,'cash_'+suffix).pk}
@@ -226,7 +227,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
                 with self.subTest(persona=persona,route=name):
                     if persona in {'anonymous','inactive-user'}:expected=302
                     elif persona not in {'owner','accountant'}:expected=403
-                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release','finance.reverse','finance.refund','finance.amend','finance.close'}:expected=403
+                    elif persona=='accountant' and row['capability'] in {'office.settings','staff.manage','office.audit','finance.opening','finance.release','finance.reverse','finance.refund','finance.amend','finance.close','clients.delete'}:expected=403
                     elif row['methods']==['POST']:expected=405
                     else:expected=200
                     response=client.get(self.url(name))

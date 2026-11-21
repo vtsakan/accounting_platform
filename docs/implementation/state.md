@@ -1,5 +1,17 @@
 # Implementation state
 
+## Current selected change — CR-005, 2026-11-21
+
+<!-- CR005-RESULT -->
+CR-005 source Prepared: visible archive/restore, a shared database/server open-agreement veto, and owner-only deletion after archive without financial history. Contact values are removed; notes and attribution remain; deleted cards are excluded from lists, filters and old URLs. Two additive migrations0029/0030 preserve the28 original migrations and all original assertions. New operator PG17/HTTP/race/real-worker gate and VM/GitHub rollout Pending. All85 full requirement acceptances remain Pending.
+<!-- /CR005-RESULT -->
+
+Actual prior operator CR004 and VM/GitHub are Verified: 965/36, main
+`35a66ae24a40eb2bc8365a2e9530d08385513992`,28 migrations and both off-VM restores.
+That completion does not verify the new CR005 source. Preserve the seven actual
+receipt/binding files without replacement. See [procedure](counterparty_archive_delete_el.md).
+
+
 <!-- CR004-PREVIEW -->
 ## Existing preview update — CR004
 

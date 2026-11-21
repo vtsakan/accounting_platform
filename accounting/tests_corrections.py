@@ -27,7 +27,7 @@ from .movement_selectors import operating_totals
 from .correction_selectors import terms_on
 from .correction_services import (amend_agreement, cash_members, close_period, correct_cash, correct_charge,
     correct_transfer, correction_context, finish, new_action, refund_credit, reverse_entry, reverse_refund)
-from .counterparty_services import archive_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 from .tests_auth_support import staff_client_login
 from .tests_settlements import SettlementSupport, WHY
 from .tests_finance_posting import DAY

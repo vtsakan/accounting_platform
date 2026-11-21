@@ -20,7 +20,8 @@ from django.test import Client, SimpleTestCase, TestCase, TransactionTestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .counterparty_services import archive_counterparty, save_counterparty
+from .counterparty_services import save_counterparty
+from .tests_cr005_support import historical_archive as archive_counterparty
 from .counterparty_validation import SPACES, afm_key
 from .forms import AgreementForm, EntityForm, ExpenseForm, IncomeForm
 from .membership import create_accountant_profile, change_membership

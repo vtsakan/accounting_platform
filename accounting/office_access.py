@@ -46,7 +46,11 @@ def records(model, user):
     if model not in MODELS:
         raise PermissionDenied("Η πρόσβαση σε αυτόν τον τύπο εγγραφής δεν υποστηρίζεται.")
     profile = require_capability(user, model_capability(model))
-    return model.objects.filter(office_id=profile.office_id)
+    queryset = model.objects.filter(office_id=profile.office_id)
+    if model is Entity:
+        from .counterparty_retirement_selectors import visible_counterparties
+        queryset = visible_counterparties(queryset)
+    return queryset
 
 
 def record(model, user, key):

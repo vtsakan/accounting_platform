@@ -16,6 +16,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError,connection,transaction,close_old_connections
 from django.test import TestCase,SimpleTestCase,TransactionTestCase,Client,override_settings
 from django.urls import reverse
+from django.utils import timezone as django_timezone
 
 from core.attachment_crypto import unseal
 from core.attachment_upload import BoundedAttachmentUploadHandler
@@ -25,7 +26,8 @@ from .attachment_services import (save_category,upload_attachment,edit_attachmen
     download_attachment,attachment_context)
 from .attachment_validation import upload_bytes,inspect_content,scan_content
 from .counterparty_retirement_services import delete_counterparty
-from .counterparty_services import archive_counterparty
+from .tests_attachment_support import archive_for_attachment_fixture as archive_counterparty
+from .auth_policy import state_for
 from .membership import create_accountant_profile
 from .models import Entity,AccountantProfile,Transaction,Charge,FinanceAuditEvent
 from .schema_test_support import restore_current_test_schema
@@ -54,10 +56,12 @@ class AttachmentSupport(Fixtures):
         return upload_attachment(self.member,self.customer.pk,**values)
 
     def client_for(self,user=None,csrf=False):
+        actor=user or self.member
+        state=state_for(actor);state.enrolled_at=django_timezone.now();state.save(update_fields=['enrolled_at'])
         client=Client(enforce_csrf_checks=csrf)
         if csrf:
             client.get('/login/');client.defaults['HTTP_X_CSRFTOKEN']=client.cookies[settings.CSRF_COOKIE_NAME].value
-        try:staff_client_login(client,user or self.member)
+        try:staff_client_login(client,actor)
         finally:client.defaults.pop('HTTP_X_CSRFTOKEN',None)
         return client
 

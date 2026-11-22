@@ -1,0 +1,23 @@
+{
+  "change": "CR008",
+  "status": "Failed",
+  "scope": "User-supplied actual initial production-image delivery console",
+  "operator_image": "sha256:10c74f7fa61b31be0c8c1bd36d044e40345840d66caef765af12332db8d7b357",
+  "operator_source_commit": "Not present in supplied excerpt; operator ancestry not reconstructed",
+  "initial_prepared_reference_only": "git:fb96fe25bb05fcd09c49297730f483e49bc7ac69",
+  "application_context_digest": "sha256:775fca3b51d03d8e30abc200847bfa9ac1d6a16e4daef5865013e727ee1ca268",
+  "tests_run": 1186,
+  "failures": 1,
+  "errors": 3,
+  "duration_seconds": 309.627,
+  "archive_errors": "Three new test fixtures omitted required archive keyword; existing service correctly requires explicit intent",
+  "permission_failure": "New accountant fixture lacked enrolled/verified MFA; security middleware redirected302 before capability403",
+  "expected_behavior_preserved": "Original403 assertion, actual owner-only removal, MFA and CSRF unchanged",
+  "real_scanner_file_recovery_gate_reached": false,
+  "retained_real_broker_gate_reached": false,
+  "full_cr008_verified": false,
+  "negative_permission_host_and_csrf_logs": "Expected negative probes, not a reason to weaken security",
+  "vm_github_hold_by_user": true,
+  "agent_tests_or_runtime_executed": false,
+  "full_requirement_acceptances_pending": 85
+}

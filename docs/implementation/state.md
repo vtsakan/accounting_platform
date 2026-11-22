@@ -1,5 +1,17 @@
 # Implementation state
 
+## CR008 actual operator failure — fixture correction, 2026-11-22
+
+Initial image10c74f7f ran1186 tests and stopped with1 failure/3 errors. Three
+new archive calls omitted the required explicit archive intent; the accountant
+fixture reached MFA redirect302 before the expected permission403. Correct only
+the new archive/MFA fixture helpers. Keep all46 test methods/assertions, all36
+migrations, production policy and the other369/371 app inputs exact. Original
+source lock/failure retained. Source Prepared; new full1186/36/files/worker gate
+Pending. No scanner/recovery/broker completion or CR008 Verified is claimed.
+VM/GitHub stayCR005; all85 full acceptances Pending.
+
+
 ## Current selected change — CR008 private classified client attachments, 2026-11-22
 
 <!-- CR008-RESULT -->

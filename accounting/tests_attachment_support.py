@@ -11,8 +11,14 @@ from pypdf import PdfWriter
 from PIL import Image
 
 from .attachment_services import save_category,upload_attachment
+from .counterparty_services import archive_counterparty as archive_service
 
 SCANNER='ClamAV 1.5.0/1/Mon Nov 23 00:00:00 2026'
+
+
+def archive_for_attachment_fixture(user,key,*,version):
+    """Use the actual archive service with its required explicit intent."""
+    return archive_service(user,key,version=version,archive=True)
 
 
 @lru_cache(maxsize=1)

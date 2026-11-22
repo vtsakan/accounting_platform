@@ -1,5 +1,21 @@
 # Accounting platform implementation instructions
 
+## CR008 operator failure — explicit archive intent and real MFA fixture
+
+The actual user console ran1186 tests:1 failure and3 errors, image10c74f7f.
+No successful CR008 receipt, real scanner/restore or retained broker gate exists.
+Correct ONLY the new attachment test helpers: call the unchanged archive service
+with archive=True and enroll both fixture roles before staff_client_login proves
+real MFA. Preserve all46 new test-method ASTs/assertions, all old tests, all36
+migrations and the other369 of371 image inputs byte-for-byte. Do not change
+production permissions/MFA/CSRF/archive rules or expected302/403 outcomes.
+Keep the original source lock and actual failure summary. Static signature
+checking may reject missing required local API arguments before native work.
+Retry accepts exact installed initialCR008 with its existing exclusive binding,
+or exact successfulCR007; never refresh old reports or CR008 binding. New source
+Prepared, native full1186/36/files/worker retry Pending; VM/GitHub stillCR005.
+Agent static checks only; no tests/app/Docker/migrations/browser/cloud/push.
+
 ## Selected CR008 — private classified client attachments
 
 The user now requests PDF/DOC/DOCX/images on the main client card and selected

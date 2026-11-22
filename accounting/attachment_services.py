@@ -109,7 +109,7 @@ def upload_attachment(user,entity_id,*,category_id,description,upload,request_ke
         if entity.is_archived:raise ValidationError(ARCHIVED)
         selected_category(office,category_id)
     # Potentially slow validation/antivirus never holds the office writer lock.
-    mime=inspect_content(extension,payload);scanner=scan_content(payload)
+    scanner=scan_content(payload);mime=inspect_content(extension,payload)
     file_id=uuid.uuid4();salt,nonce,ciphertext=seal(office.pk,entity.pk,file_id,digest,mime,payload)
     with transaction.atomic():
         office,entity=person_locked(user,entity_id,'clients.write')

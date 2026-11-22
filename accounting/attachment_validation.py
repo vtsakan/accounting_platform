@@ -1,6 +1,7 @@
 """Bounded uploads, isolated content inspection and fail-closed ClamD INSTREAM."""
 from datetime import datetime,timezone
 import hashlib
+import os
 from pathlib import Path
 import re
 import socket
@@ -49,7 +50,9 @@ def upload_bytes(upload):
 def inspect_content(extension,payload):
     try:
         result=subprocess.run([sys.executable,'-m','core.attachment_inspect',extension],input=payload,
-            stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,timeout=8,check=False)
+            stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,timeout=8,check=False,
+            cwd=Path(__file__).resolve().parents[1],env={'PATH':os.defpath,'LANG':'C.UTF-8',
+                'PYTHONDONTWRITEBYTECODE':'1','PYTHONNOUSERSITE':'1'})
     except (OSError,subprocess.TimeoutExpired):result=None
     if result is None or result.returncode or result.stdout.strip()!=b'VALID':
         raise ValidationError({'file':'Το περιεχόμενο δεν είναι έγκυρο ή δεν αντιστοιχεί στον τύπο του αρχείου.'})

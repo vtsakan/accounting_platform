@@ -3,7 +3,7 @@
   "status": "Prepared",
   "profile": "cr008-existing-database-4GiB-test-uploads",
   "scope": "same-current-schema36-database-runtime-profile-only",
-  "implementation_reference_commit": "git:515f2a3bfee11434443f37962d06d629baf177e6",
+  "implementation_reference_commit": "git:f1e7c2fec0809afd7f9292d87ed1a972327c5f88",
   "previous_actual_completed_record": "git:24b32799871d887878e06247bd1c351c16391527",
   "previous_actual_deployment": "git:ab10d6fc285be6b2be69b8891123e38e9ad57202",
   "previous_actual_report_canonical_sha256": "sha256:bb3fe31f400807469bd61fe0498fc1807af65be2fc50c0b6746c080702a0dd36",
@@ -24,8 +24,8 @@
   "actual_report_files_bound_exclusively": 18,
   "retained_source_files": 824,
   "existing_operator_guard_methods_preserved": 52,
-  "additional_operator_guard_methods": 21,
-  "operator_guard_methods_supplied": 73,
+  "additional_operator_guard_methods": 29,
+  "operator_guard_methods_supplied": 81,
   "agent_tests_executed": false,
   "agent_runtime_executed": false,
   "operator_production_tests_previously_passed": 1186,
@@ -46,7 +46,7 @@
   "g2_release_acceptance": "Pending",
   "sha256": {
     "compose.preview-cr008-hold.yml": "sha256:fcb25199b1f9699f86ace6aea1991831dd9b7d02c7960d047bc2670e6d855edf",
-    "compose.preview-cr008.yml": "sha256:6f8bcc07c4e22d6fc4d75bb88be8b498ef50b3ba58639eb39f61592a41c6b1b6",
+    "compose.preview-cr008.yml": "sha256:62810f30e2f52a919fd2678c960a485066802361677724742ec455bc3fbd5ce1",
     "docker/attachment-scanner-pin.json": "sha256:8ec286fb5ebf484fe940fa2404495ed41c424a1d5b6a255e355401c762e1bb6f",
     "docker/preview-cr008-clamd.conf": "sha256:d5faa2098100e971d173aca3423eef03da96e71ef183eb0835c83ecb85ff0f1d",
     "docker/preview-cr008-freshclam.conf": "sha256:d34b18cbc6d399c19f6642ff0940955f2d725e7e14ec9890b739021d5cc1535d",
@@ -62,10 +62,26 @@
     "tools/preview_cr008_policy.py": "sha256:06122127514ca0ade3ce41a409bc255c645efd3a9a81181980f0c2a6b0db30db",
     "tools/preview_cr008_profile_host.py": "sha256:7eefae770a8b93d27f6514532968eb6295b71e6ce05d8f378122b233df2bd2a1",
     "tools/preview_cr008_profile_policy.py": "sha256:149aafcf7aa4ee2bc334c39a7fd04bd18c279596797c0dfa4e475aa8973e6abb",
-    "tools/preview_cr008_profile_release.py": "sha256:618b796e17a92235833f117b06a117348e7ef48587387d0ca0f407ced0ae799f",
+    "tools/preview_cr008_profile_release.py": "sha256:cd15b689bb89c2c9ff36bad3813387e531b3d5e0e551c2448f2bb6fdec8c7e39",
     "tools/preview_cr008_release.py": "sha256:599e134c5eb327d297a2da830925399095f019100a10c0d4d458fd0d83b87c01",
     "tools/preview_cr008_scanner.py": "sha256:1fb67e10f2457b58c9710ab4360284f2bc37a4bc8a1b9b3582faab06ea0012bd",
     "tools/test_preview_cr008.py": "sha256:6161aef1bc16f9106c72a039c18bdbb075cffde5f6176cb7e1e83bcd39831ffb",
-    "tools/test_preview_cr008_profile.py": "sha256:fd4259614450c6eec5571a1d24a0f1850d83245ad05c015deccb174152f715e4"
+    "tools/test_preview_cr008_profile.py": "sha256:fd4259614450c6eec5571a1d24a0f1850d83245ad05c015deccb174152f715e4",
+    "docs/implementation/evidence/CR008-4GB-duration-prior-source.json": "sha256:84444a5a68351eedcd98d2030a06199b5b9cd99a05d22d6fc7ba11d07d20ab61",
+    "docs/implementation/evidence/CR008-4GB-duration-fix.json": "sha256:c24c8111789d0512c04b7db3dffb40bb5bea299c362ca55032a54923404197bd",
+    "docs/implementation/cr008_compose_duration_fix_el.md": "sha256:c60eaa8e2b68c876cebe4aed67743cbaed2e8afd4657a0137fbffba38cc3844e",
+    "tools/preview_cr008_profile_retry.py": "sha256:bbf4dff547a3a95420790eed84876124fa82bfeed727a396050fa0a9289023fd",
+    "tools/test_preview_cr008_retry.py": "sha256:691fbef994c6338ada9c2d5e1068feadfdef2d967f438e4639e3ecc5530dd244"
+  },
+  "duration_correction": {
+    "status": "Prepared",
+    "original_source_retained": "docs/implementation/evidence/CR008-4GB-duration-prior-source.json",
+    "observed_compose_version": "5.7.0",
+    "start_period_before": "10min",
+    "start_period_after": "10m",
+    "start_period_seconds": 600,
+    "actual_failed_plan_preserved": "docs/implementation/evidence/CR008-4GB-duration-fix.json",
+    "pending_target_retarget": "Only after an exact earlier committed preparation, no new journal and a successful guarded native plan",
+    "prior_completed_private_config_or_vm_journal_rewritten": false
   }
 }

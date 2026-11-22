@@ -44,6 +44,16 @@ def prepare():
     create_accountant_profile(user_id=user.pk,office_id=office.pk,role='owner')
     person=Entity.objects.create(office=office,name='ΣΥΝΘΕΤΙΚΗ ΚΑΡΤΕΛΑ ΑΡΧΕΙΩΝ',entity_type='CUSTOMER')
     category=save_category(user,name='Συνθετικά δικαιολογητικά')
+    # The official fixture is the entire68-byte file, not text appended to a PDF.
+    # Keep it in memory and require a genuine infected response from the scanner.
+    marker=base64.b64decode('WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=')
+    if len(marker)!=68 or hashlib.sha256(marker).hexdigest()!='275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f':
+        raise RuntimeError('The canonical antivirus fixture bytes changed')
+    print('[CR008-FILES] Πραγματική απόρριψη κανονικού δείγματος antivirus68 bytes.',flush=True)
+    try:scan_content(marker)
+    except ValidationError as error:
+        assert error.error_dict['file'][0].code=='infected'
+    else:raise RuntimeError('The real scanner did not reject the canonical68-byte antivirus fixture')
     bodies=[('pdf',pdf_bytes()),('doc',doc_bytes()),('docx',docx_bytes()),('png',image_bytes()),
         ('jpg',image_bytes('JPEG')),('gif',image_bytes('GIF')),('webp',image_bytes('WEBP')),
         ('tif',image_bytes('TIFF')),('bmp',image_bytes('BMP'))]
@@ -59,14 +69,11 @@ def prepare():
     duplicate,replay=upload_attachment(user,person.pk,category_id=category.pk,description='',upload=file(),request_key=nonce)
     assert replay and row.pk==duplicate.pk
     before=ClientAttachment.objects.count()
-    # Official harmless antivirus test fixture, assembled only in this isolated process.
-    marker=base64.b64decode('WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=')
-    for data in (marker,pdf_bytes()+b'\n%'+marker+b'\n'):
-        try:scan_content(data)
-        except ValidationError as error:
-            assert error.error_dict['file'][0].code=='infected'
-        else:raise RuntimeError('The real scanner did not reject its antivirus test fixture')
-    try:upload_attachment(user,person.pk,category_id=category.pk,description='',upload=file(body=pdf_bytes()+b'\n%'+marker+b'\n'),request_key=uuid.uuid4())
+    # An allowed filename exercises the actual upload service. Its real scanner
+    # runs before parsing, so canonical bytes must be denied as infected and may
+    # never reach accepted storage, regardless of their misleading extension.
+    print('[CR008-FILES] Πραγματική απόρριψη μεταφόρτωσης πριν από αποθήκευση.',flush=True)
+    try:upload_attachment(user,person.pk,category_id=category.pk,description='',upload=file('antivirus.pdf',marker),request_key=uuid.uuid4())
     except ValidationError as error:
         assert error.error_dict['file'][0].code=='infected'
     else:raise RuntimeError('Infected file reached accepted storage')

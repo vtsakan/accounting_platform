@@ -1,5 +1,21 @@
 # Implementation state
 
+## CR008 actual full suite passed; antivirus probe correction,2026-11-22
+
+Actual native source git:b493521e711f340f45aac16535e5935df52cce3b, image91ef03bf,
+context9a530ae7 passed1186/1186,36 finance cases and full production delivery
+at10:06:09 Athens. The subsequent real-files probe failed its generic antivirus
+fixture expectation after nine clean formats. Preserve the actual private
+delivery report and all previous failure snapshots; no complete CR008 Verified
+is claimed. Correct only the tools' noncanonical PDF-prefixed EICAR expectation.
+Canonical68-byte scanner/upload denial, no accepted writes, file recovery and
+the retained real worker remain mandatory. All371 image inputs and36 migrations
+are unchanged. Optional resume validates the exact observed report, native Git
+ancestry, same image/context and freshly scans current source/history before
+running all remaining gates. Suite reuse is explicit in the resulting report.
+Source Prepared; remaining technical gate and all85 acceptances Pending.
+VM/GitHub stayCR005. Agent static checks only.
+
 ## CR008 actual retry failure — streaming response cleanup, 2026-11-22
 
 Fixture-corrected operator image4f1bd5a5 ran1186 tests in326.564s and ended

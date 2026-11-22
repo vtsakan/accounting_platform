@@ -106,12 +106,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--record', action='store_true')
     parser.add_argument('--source-only', action='store_true')
+    parser.add_argument('--resume-delivery', action='store_true',
+        help='Continue only from the exact retained successful1186/36 operator delivery')
     choice = parser.add_mutually_exclusive_group()
     choice.add_argument('--host-dns', action='store_true')
     choice.add_argument('--image')
     args = parser.parse_args()
-    if args.source_only and (args.record or args.host_dns or args.image):
+    if args.source_only and (args.record or args.host_dns or args.image or args.resume_delivery):
         parser.error('--source-only cannot be combined with runtime/record options')
+    if args.resume_delivery and args.image:
+        parser.error('--resume-delivery selects the exact passed image; do not add --image')
     stage = 'source-preflight'
     try:
         policy, retained = source_check()
@@ -124,8 +128,13 @@ def main():
         clean_source()
         baseline = verify_binding(ROOT)
         require_local_docker()
-        stage = 'new-production-image'
-        if args.image:
+        stage = 'new-production-image';resumed_proof=None
+        if args.resume_delivery:
+            stage = 'retained-successful-delivery-validation'
+            from cr008_delivery_resume import load_retained_delivery
+            delivery,resumed_proof=load_retained_delivery(policy)
+            selected=image.reuse_for_verification(resumed_proof['image_id'])
+        elif args.image:
             selected = image.reuse_for_verification(args.image)
         elif args.host_dns:
             from build_host_dns import build
@@ -133,16 +142,30 @@ def main():
         else:
             selected = image.build()
         with tempfile.TemporaryDirectory(prefix='accounting-cr008-') as directory:
-            stage = 'full-production-pg17-delivery'
-            destination = Path(directory) / 'delivery.json'
-            subprocess.run([sys.executable, str(ROOT / 'tools/verify_delivery.py'), '--report', str(destination),
-                            '--image', selected['image_id']], cwd=ROOT, check=True)
-            delivery = json.loads(destination.read_text())
-            retained_report = ROOT/'private/cr008'/selected['image_id'].removeprefix('sha256:')/'delivery.json'
-            retained_report.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
-            retained_report.write_text(json.dumps(delivery,ensure_ascii=False,indent=2)+'\n')
-            retained_report.chmod(0o600)
-            print('[CR008] Η αναφορά της σουίτας διατηρήθηκε τοπικά: '+str(retained_report),flush=True)
+            if resumed_proof is None:
+                stage = 'full-production-pg17-delivery'
+                destination = Path(directory) / 'delivery.json'
+                subprocess.run([sys.executable, str(ROOT / 'tools/verify_delivery.py'), '--report', str(destination),
+                                '--image', selected['image_id']], cwd=ROOT, check=True)
+                delivery = json.loads(destination.read_text())
+                retained_report = ROOT/'private/cr008'/selected['image_id'].removeprefix('sha256:')/'delivery.json'
+                retained_report.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
+                payload=json.dumps(delivery,ensure_ascii=False,indent=2)+'\n'
+                if retained_report.exists() and retained_report.read_text()!=payload:
+                    revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+                    retained_report=retained_report.with_name('delivery-'+revision+'.json')
+                if not retained_report.exists():
+                    with retained_report.open('x') as stream:stream.write(payload)
+                elif retained_report.read_text()!=payload:
+                    raise RuntimeError('Διαφέρει προηγούμενη επιτυχής αναφορά. Δεν αντικαταστάθηκε.')
+                retained_report.chmod(0o600)
+                print('[CR008] Η αναφορά της σουίτας διατηρήθηκε τοπικά: '+str(retained_report),flush=True)
+                current_scan=delivery['secret_scan']
+            else:
+                print('[CR008] Επιβεβαιώθηκαν η πραγματική1186/36 αναφορά και τα ίδια371 αρχεία εφαρμογής. Συνεχίζεται ο έλεγχος αρχείων με την ίδια εικόνα.',flush=True)
+                stage='resumed-current-source-history-scan'
+                from cr008_delivery_resume import scan_current_source
+                current_scan=scan_current_source(Path(directory))
             suite = delivery['suite']
             expected = policy['retained_test_count'] + policy['new_test_methods']
             if (suite['tests_run'] != expected or suite['tests_passed'] != expected or any(suite[key] for key in
@@ -162,11 +185,18 @@ def main():
         source_check()
         verify_binding(ROOT)
         clean_source()
+        if resumed_proof is not None:
+            from cr008_delivery_resume import load_retained_delivery
+            if load_retained_delivery(policy)[1]!=resumed_proof:
+                raise RuntimeError('Η διατηρημένη επιτυχής αναφορά άλλαξε κατά την εκτέλεση.')
         report = {'change': 'CR-008', 'status': 'Verified', 'source_status': 'Prepared',
-            'scope': 'isolated-production-pg17-entity-fiscal-profile-and-retained-manual-tasks-and-monthly-worker',
+            'scope': 'isolated-production-pg17-private-client-attachments-and-retained-manual-tasks-and-monthly-worker',
             'verified_at': datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
             'source_commit': 'git:' + subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-            'image': delivery['image'], 'application_context_digest': policy['application_context_digest'],
+            'image': selected if resumed_proof is not None else delivery['image'],
+            'application_context_digest': policy['application_context_digest'],
+            'production_suite_rerun':resumed_proof is None,'retained_successful_delivery':resumed_proof,
+            'secret_scan':current_scan,
             'suite': suite, 'private_files':files, 'new_test_methods': policy['new_test_methods'], 'retained_source_files_checked': retained,
             'real_monthly_worker_and_commit_before_ack': True,
             'revocation_blocks_execution': broker['revocation_blocks_execution'],

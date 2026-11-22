@@ -1,5 +1,32 @@
 # Accounting platform implementation instructions
 
+## CR008 actual full delivery passed — canonical antivirus probe correction
+
+Actual operator source b493521e711f340f45aac16535e5935df52cce3b passed1186/1186,
+36 finance cases and the production delivery gate at2026-11-22T10:06:09+02:00.
+Image91ef03bf/context9a530ae7 contains371 inputs. The report was retained under
+private/cr008/<image-id>/delivery.json. The subsequent real-files probe failed
+because one generic EICAR expectation covered both canonical68-byte bytes and
+a PDF-prefixed copy; the latter does not satisfy the official EICAR definition.
+The log does not identify which of the two iterations failed. Keep real scanner
+denial mandatory: exact canonical68 bytes directly and through the actual upload
+service under an allowed filename, before parser/storage. Require infected code
+and no accepted rows; do not add a signature, allow list, mock or production bypass.
+
+This correction is TOOLS/DOCS ONLY: all371 image inputs,36 migrations,46 new
+test methods and all old assertions are byte-for-byte unchanged to the passed
+streaming source. Preserve every old report/binding and all previous failures.
+Optional --resume-delivery may reuse ONLY the exact canonical-hash-bound native
+report observed in the supplied console, actual b493521e Git ancestry, identical
+committed/current application manifests and the same immutable local image.
+Preserve the private report without rewriting it; never fabricate native Git
+history. Rerun the current source/history scan with hashed tools, real files/
+scanner/restore and retained worker. Report explicitly that the suite was reused.
+Recorder still commits only its exact two successful outputs. Unknown/missing
+receipt/context/ancestry requires the normal full gate, never silent reuse.
+All85 full acceptances and the remaining CR008 technical gate are Pending;
+VM/GitHub remain held onCR005. Agent static checks only, no tests/app/Docker/DB.
+
 ## CR008 retry failure — test-client streaming response lifecycle
 
 The actual fixture-corrected operator image4f1bd5a5 ran1186 tests and ended

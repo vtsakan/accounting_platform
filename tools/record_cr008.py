@@ -34,6 +34,18 @@ def commit_actual_result(root=ROOT):
         and report.get('application_context_digest')==policy['application_context_digest']
         and report.get('actual_prior_receipt_files_sha256')==baseline['files'],
         'Η αναφορά δεν αντιστοιχεί στην τρέχουσα ελεγμένη πηγή.')
+    need(type(report.get('production_suite_rerun')) is bool,
+        'Απουσιάζει η ρητή καταγραφή επανάληψης ή διατήρησης της πραγματικής σουίτας.')
+    if not report['production_suite_rerun']:
+        from cr008_delivery_resume import load_retained_delivery
+        delivery,proof=load_retained_delivery(policy,recording=True)
+        need(report.get('retained_successful_delivery')==proof and report['suite']==delivery['suite']
+            and report['image']['image_id']==proof['image_id']
+            and report['image']['verification_revision']==report['source_commit'],
+            'Δεν διατηρήθηκε η ακριβής επιτυχής αναφορά και η ίδια εικόνα.')
+    scan=report.get('secret_scan',{})
+    need(scan.get('scanner')=='detect-secrets' and scan.get('version')=='1.5.0'
+        and scan.get('unreviewed_findings')==0,'Απουσιάζει νέος έλεγχος της τρέχουσας πηγής/ιστορίας.')
     need(all(report.get(k) is True for k in ('real_monthly_worker_and_commit_before_ack',
         'revocation_blocks_execution','second_scheduler_rejected','restricted_role_migrations',
         'historical_receipts_unchanged','docker_execution_by_operator','owned_resources_removed','vm_github_hold_by_user')),

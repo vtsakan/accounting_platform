@@ -208,7 +208,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'task-detail','task-edit','task-complete','task-reopen'}:kwargs={'key':getattr(self,'task_'+suffix).pk}
         if name=='note-to-task':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'note_key':getattr(self,'task_note_'+suffix).pk}
         if name=='counterparty-directory-export':kwargs={'filetype':'csv'}
-        if name=='entity-credentials-reveal':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'subject':'MAIN'}
+        if name in {'entity-credentials-reveal','entity-gsis-credentials'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk,'subject':'MAIN'}
         if name in {'attachment-upload','attachment-edit','attachment-remove','attachment-download'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
         if name in {'attachment-edit','attachment-remove','attachment-download'}:kwargs['key']=getattr(self,'attachment_'+suffix).pk
         if name=='attachment-category-edit':kwargs={'key':getattr(self,'attachment_category_'+suffix).pk}

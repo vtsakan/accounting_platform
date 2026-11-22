@@ -3,6 +3,7 @@
 {% block page_styles %}<link rel="stylesheet" href="{% static 'accounting/workspace/entity-profile.css' %}">{% endblock %}
 {% block content %}
 <header class="profile-heading"><div><p class="page-eyebrow">ΣΤΟΙΧΕΙΑ ΟΝΤΟΤΗΤΑΣ</p><h1>{% if entity %}{{ entity.name }}{% else %}Νέος συναλλασσόμενος{% endif %}</h1></div>{% if entity %}<a class="btn btn-outline-secondary" href="{% url 'entity-detail' entity.pk %}">Επιστροφή στην καρτέλα</a>{% endif %}</header>
+{% include 'accounting/entity_profile/gsis.html' %}
 {% if financial_summary %}{% include 'accounting/entity_profile/balances.html' %}{% endif %}
 <form method="post" class="profile-editor" data-profile-editor autocomplete="off">
 {% csrf_token %}{% if form.errors %}<div class="alert alert-danger" role="alert">Ελέγξτε τα πεδία με σφάλμα πριν από την αποθήκευση. {{ form.non_field_errors }}</div>{% endif %}

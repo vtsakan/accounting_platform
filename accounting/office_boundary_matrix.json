@@ -744,6 +744,14 @@
       ]
     },
     {
+      "route": "entity-gsis-credentials",
+      "realm": "office-business",
+      "capability": "clients.credentials",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
       "route": "counterparty-directory-export",
       "realm": "office-business",
       "capability": "clients.read",

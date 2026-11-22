@@ -1,0 +1,25 @@
+{% load static %}{% if gsis_available %}
+<section class="card card-body mb-4" data-gsis-panel data-entity-id="{{ entity.pk }}" aria-label="Σύνδεση GSIS">
+  <h2>Σύνδεση GSIS</h2>
+  <p>Ανοίξτε το GSIS σε νέο παράθυρο και αντιγράψτε τους αποθηκευμένους κωδικούς για επικόλληση εκεί.</p>
+  <div class="client-actions">
+    <form action="{% url 'entity-gsis-credentials' entity.pk 'MAIN' %}" method="post" data-gsis-form data-gsis-subject="MAIN">{% csrf_token %}<button type="button" class="btn btn-primary" data-gsis-launch>Σύνδεση GSIS — Πελάτης</button></form>
+    <form action="{% url 'entity-gsis-credentials' entity.pk 'SPOUSE' %}" method="post" data-gsis-form data-gsis-subject="SPOUSE">{% csrf_token %}<button type="button" class="btn btn-outline-primary" data-gsis-launch>Σύνδεση GSIS — Σύζυγος</button></form>
+  </div>
+  <p class="client-muted">Χρησιμοποιούνται μόνο οι αποθηκευμένοι κωδικοί. Αποθηκεύστε πρώτα τυχόν αλλαγές. Η επικόλληση και η τελική σύνδεση γίνονται από εσάς.</p>
+  <p data-gsis-status role="status" aria-live="polite"></p>
+  <noscript><p>Ενεργοποιήστε τη λειτουργία σεναρίων του προγράμματος περιήγησης για τα κουμπιά αντιγραφής.</p></noscript>
+  <dialog data-gsis-dialog aria-labelledby="gsis-copy-heading" class="gsis-dialog">
+    <div class="gsis-dialog-body">
+      <h2 id="gsis-copy-heading" data-gsis-title>Κωδικοί για σύνδεση</h2>
+      <p data-gsis-message role="status" aria-live="polite"></p>
+      <div class="gsis-field"><label for="gsis-username">Όνομα χρήστη</label><input id="gsis-username" data-gsis-username type="text" readonly autocomplete="off" spellcheck="false"><button type="button" class="btn btn-outline-secondary" data-gsis-copy="username" disabled>Αντιγραφή ονόματος χρήστη</button></div>
+      <div class="gsis-field"><label for="gsis-password">Κωδικός πρόσβασης</label><input id="gsis-password" data-gsis-password type="password" readonly autocomplete="off"><button type="button" class="btn btn-outline-secondary" data-gsis-copy="password" disabled>Αντιγραφή κωδικού</button></div>
+      <p>Τα πεδία αδειάζουν με το κλείσιμο ή μετά από ενάμισι λεπτό. Χωρίς αποθηκευμένους κωδικούς παραμένουν κενά.</p>
+      <div class="client-actions"><a class="btn btn-outline-primary" href="https://www1.gsis.gr/taxisnet/mytaxisnet" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Άνοιγμα GSIS</a><button type="button" class="btn btn-secondary" data-gsis-close>Κλείσιμο και απόκρυψη κωδικών</button></div>
+    </div>
+  </dialog>
+</section>
+<link rel="stylesheet" href="{% static 'accounting/workspace/gsis.css' %}">
+<script src="{% static 'accounting/workspace/gsis.js' %}" defer></script>
+{% endif %}

@@ -30,6 +30,7 @@ def profile_context_data(user,entity):
     return {'fiscal_profile':profile,'effective_spouse_contacts':spouse_contacts(entity,profile) if profile and profile.spouse_enabled else {},
         'profile_flags':[(label,getattr(profile,name)) for name,label in FLAG_LABELS.items()] if profile else [],
         'main_credentials_stored':'MAIN' in saved,'spouse_credentials_stored':'SPOUSE' in saved,
+        'gsis_available':profile_installed() and not entity.is_archived,
         'profile_events':entity.fiscal_events.filter(office_id=entity.office_id)[:10] if profile_installed() else []}
 
 

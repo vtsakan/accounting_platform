@@ -17,6 +17,7 @@ from . import client_task_views
 from . import counterparty_retirement_views
 from . import entity_profile_views
 from . import attachment_views
+from . import gsis_views
 
 urlpatterns = [
     path('attachments/categories/',attachment_views.catalogue,name='attachment-categories'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('entity/<int:pk>/attachments/<uuid:key>/download/',attachment_views.download,name='attachment-download'),
 
     path('entity/<int:pk>/credentials/<str:subject>/',entity_profile_views.reveal,name='entity-credentials-reveal'),
+    path('entity/<int:pk>/gsis/<str:subject>/credentials/',gsis_views.credentials,name='entity-gsis-credentials'),
     path('counterparties/export/<str:filetype>/',entity_profile_views.export_directory,name='counterparty-directory-export'),
     path('tasks/', client_task_views.personal, name='task-list'),
     path('tasks/office/', client_task_views.office_tasks, name='office-task-list'),

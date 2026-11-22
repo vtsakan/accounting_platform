@@ -750,6 +750,94 @@
       "methods": [
         "GET"
       ]
+    },
+    {
+      "route": "attachment-categories",
+      "realm": "office-business",
+      "methods": [
+        "GET"
+      ],
+      "capability": "clients.read",
+      "ownership_parameters": [],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-category-add",
+      "realm": "office-business",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "capability": "office.settings",
+      "ownership_parameters": [],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-category-edit",
+      "realm": "office-business",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "capability": "office.settings",
+      "ownership_parameters": [
+        "key"
+      ],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-upload",
+      "realm": "office-business",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "capability": "clients.write",
+      "ownership_parameters": [
+        "pk"
+      ],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-edit",
+      "realm": "office-business",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "capability": "clients.write",
+      "ownership_parameters": [
+        "pk",
+        "key"
+      ],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-remove",
+      "realm": "office-business",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "capability": "clients.delete",
+      "ownership_parameters": [
+        "pk",
+        "key"
+      ],
+      "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "attachment-download",
+      "realm": "office-business",
+      "methods": [
+        "POST"
+      ],
+      "capability": "clients.read",
+      "ownership_parameters": [
+        "pk",
+        "key"
+      ],
+      "description": "CR008 private client attachment; same-office fresh authority"
     }
   ],
   "public_probes": [

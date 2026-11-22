@@ -110,3 +110,12 @@ CELERY_BEAT_SCHEDULE_FILENAME = '/app/run/beat/celerybeat-schedule'
 CELERY_BEAT_MAX_LOOP_INTERVAL = 10
 CELERY_BEAT_SCHEDULE = {'durable-dispatch-recovery': {'task': 'accounting.recover_jobs',
     'schedule': 10.0, 'options': {'queue': 'accounting', 'expires': 20}}}
+
+# CR008: bounded uploads; private scanner configured only by the operator.
+ATTACHMENT_SCANNER_HOST=env('ATTACHMENT_SCANNER_HOST','')
+from core.config import integer
+ATTACHMENT_SCANNER_PORT=integer('ATTACHMENT_SCANNER_PORT',3310,minimum=1,maximum=65535)
+FILE_UPLOAD_HANDLERS=['core.attachment_upload.BoundedAttachmentUploadHandler',
+    'django.core.files.uploadhandler.MemoryFileUploadHandler','django.core.files.uploadhandler.TemporaryFileUploadHandler']
+FILE_UPLOAD_MAX_MEMORY_SIZE=512*1024
+DATA_UPLOAD_MAX_NUMBER_FILES=1

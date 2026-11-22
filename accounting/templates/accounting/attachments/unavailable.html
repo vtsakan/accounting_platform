@@ -1,0 +1,3 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Μη διαθέσιμο συνημμένο{% endblock %}
+{% block content %}<h1>Το συνημμένο δεν είναι διαθέσιμο</h1><p>Δεν ήταν δυνατή η ασφαλής ανάκτηση του αρχείου. Επικοινωνήστε με τον ιδιοκτήτη του γραφείου.</p>{% if entity %}<a href="{% url 'entity-detail' entity.pk %}#attachments">Επιστροφή στην καρτέλα</a>{% else %}<a href="{% url 'counterparty-list' %}">Συναλλασσόμενοι</a>{% endif %}{% endblock %}

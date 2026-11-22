@@ -1,0 +1,16 @@
+{
+  "reviewed_at": "2026-11-22",
+  "reference": "clamav/clamav:stable_base@sha256:7e43db777ae70ed9b60e75fcbdfda6f462c710565c69ccff2ed83a7ec5aba417",
+  "platform_manifest": "sha256:1fb48c69a6331dd74cf7651f85ba05c748356cdf2d05c8446e9d3f4c12e84432",
+  "platform": "linux/amd64",
+  "image_version_labels": {
+    "maintainer": "ClamAV bugs <clamav-bugs@external.cisco.com>"
+  },
+  "memory_mib": 4096,
+  "scope": "Operator isolated file verification only; no VM deployment",
+  "sources": [
+    "https://docs.clamav.net/manual/Installing/Docker.html",
+    "https://docs.clamav.net/manual/Usage/Scanning.html"
+  ],
+  "agent_execution": "Registry manifest/config metadata only; no image pull/build/container execution"
+}

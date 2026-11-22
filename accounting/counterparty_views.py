@@ -156,6 +156,8 @@ def detail_snapshot(request, key):
     if profile_installed():
         from .entity_profile_views import profile_context_data
         context.update(profile_context_data(request.user,entity),financial_summary=financial_summary(request.user,entity))
+    from .attachment_selectors import card_attachments
+    context.update(card_attachments(request.user,entity,request.GET))
     return render(request, 'accounting/entity_detail.html', {**context, **client_tasks(request.user, entity, request.GET.get('task_page')), 'note_form': note_form(request.user, as_task=request.GET.get('new_task') == '1'), 'settlements': settlement_totals(request.user, entity=entity), 'entity': entity, 'agreements': agreement_page,
         'transactions': movement_page, 'standalone_transactions': movement_page,
         'agreement_page': agreement_page, 'movement_page': movement_page,

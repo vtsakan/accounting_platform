@@ -1,0 +1,8 @@
+{% extends 'accounting/base.html' %}
+{% block title %}{% if attachment %}Επεξεργασία συνημμένου{% else %}Νέο συνημμένο{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if attachment %}Επεξεργασία συνημμένου{% else %}Νέο συνημμένο{% endif %}</h1><p><a href="{% url 'entity-detail' entity.pk %}#attachments">{{ entity.name }} · Επιστροφή στα συνημμένα</a></p>
+{% if attachment %}<p>{{ attachment.original_name }}</p>{% else %}<p>Ένα αρχείο ανά καταχώριση, έως 25 μεγαμπάιτ. Επιλέξτε χαρακτηρισμό από τη λίστα του γραφείου και προσθέστε προαιρετική περιγραφή.</p>{% endif %}
+{% if not has_categories %}<div class="alert alert-info">Δεν υπάρχουν ενεργοί χαρακτηρισμοί. Ο ιδιοκτήτης του γραφείου χρειάζεται να προσθέσει έναν από τη <a href="{% url 'attachment-categories' %}">λίστα χαρακτηρισμών</a>.</div>{% endif %}
+<form method="post" enctype="multipart/form-data" class="card card-body">{% csrf_token %}{{ form.as_p }}<div class="client-actions"><button type="submit" class="btn btn-primary" {% if not has_categories %}disabled{% endif %}>{% if attachment %}Αποθήκευση αλλαγών{% else %}Μεταφόρτωση συνημμένου{% endif %}</button><a class="btn btn-outline-secondary" href="{% url 'entity-detail' entity.pk %}#attachments">Ακύρωση</a></div></form>
+{% endblock %}

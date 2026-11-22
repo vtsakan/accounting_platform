@@ -1,0 +1,15 @@
+{
+  "change": "CR-007",
+  "status": "Verified",
+  "scope": "Observed user console and validated result-only commit; not a reconstructed runtime receipt",
+  "tests_passed": 1140,
+  "financial_cases_passed": 36,
+  "real_worker_gate_confirmed": true,
+  "source_commit_prefix_supplied": "e1523b9",
+  "result_commit_prefix_supplied": "02e3907",
+  "working_tree_clean_after_commit": true,
+  "full_runtime_receipt_supplied_to_agent": false,
+  "actual_report_must_be_validated_and_bound_on_operator_machine": true,
+  "vm_github_hold_by_user": true,
+  "agent_native_execution": false
+}

@@ -1,5 +1,29 @@
 # Accounting platform implementation instructions
 
+## Selected CR008 — private classified client attachments
+
+The user now requests PDF/DOC/DOCX/images on the main client card and selected
+a shared office classification catalogue PLUS a free description per file.
+Actual operator CR007 gate is Verified1140/36 plus worker, recorded in02e3907;
+its real full receipt/parent Git identities exist ONLY on the operator machine.
+Never reconstruct that report or ancestry here. Bind it exclusively on APPLY
+after strict validation, preserving all12 prior receipts and the CR007 binding.
+Preserve all351 old application inputs except integration hooks explicitly
+needed by this feature; retain all34 old migrations and all1140 test assertions.
+Use0035/0036 only. Catalogue writes and file removal are owner-only; active
+same-office accountants may upload/read/reclassify. Archive blocks uploads/edits;
+existing files remain readable and explicit owner removal remains available.
+Keep 25MB per file, bounded content checks, fail-closed malware scanning, private
+authenticated downloads and value-free audit. Store bounded sealed bytes in the
+database so the existing encrypted database backup includes the same transaction;
+new recovery proof must also decrypt restored synthetic files with recovered keys.
+This is the selected CR scope, not full S38/S39/portal/versioning acceptance.
+All85 full acceptances remain Pending. VM/GitHub remain explicitly held onCR005.
+Agent STATIC AST/hash/SQL/template/Git/archive checks only: NO tests, application
+setup, Docker/build, migrations, browser, SSH/cloud or push. Operator native gate
+must prove the complete retained suite, real scanner, restricted migrations,
+file recovery and retained real monthly worker before any Verified report.
+
 ## CR007 operator failure — narrow import/caption correction
 
 Actual CR007 image ebab4c5988a9af3fbd9d02461fa5ffba7ebacc8c19b0cd6bb400c6207a00b958

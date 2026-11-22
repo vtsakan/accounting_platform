@@ -16,8 +16,17 @@ from . import counterparty_journal_views
 from . import client_task_views
 from . import counterparty_retirement_views
 from . import entity_profile_views
+from . import attachment_views
 
 urlpatterns = [
+    path('attachments/categories/',attachment_views.catalogue,name='attachment-categories'),
+    path('attachments/categories/add/',attachment_views.category_edit,name='attachment-category-add'),
+    path('attachments/categories/<uuid:key>/',attachment_views.category_edit,name='attachment-category-edit'),
+    path('entity/<int:pk>/attachments/add/',attachment_views.upload,name='attachment-upload'),
+    path('entity/<int:pk>/attachments/<uuid:key>/edit/',attachment_views.edit,name='attachment-edit'),
+    path('entity/<int:pk>/attachments/<uuid:key>/remove/',attachment_views.remove,name='attachment-remove'),
+    path('entity/<int:pk>/attachments/<uuid:key>/download/',attachment_views.download,name='attachment-download'),
+
     path('entity/<int:pk>/credentials/<str:subject>/',entity_profile_views.reveal,name='entity-credentials-reveal'),
     path('counterparties/export/<str:filetype>/',entity_profile_views.export_directory,name='counterparty-directory-export'),
     path('tasks/', client_task_views.personal, name='task-list'),

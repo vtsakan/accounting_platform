@@ -46,6 +46,8 @@ def delete_counterparty(user, key, *, version, confirmed):
             entity.refresh_from_db()
             from .entity_profile_services import purge_profile
             purge_profile(entity,user)
+            from .attachment_services import purge_client_attachments
+            purge_client_attachments(entity,user)
             marker = CounterpartyDeletion.objects.create(office=office, entity=entity,
                 actor=user, actor_label='', confirmed_version=version, contact_digest=digest)
             marker.refresh_from_db()

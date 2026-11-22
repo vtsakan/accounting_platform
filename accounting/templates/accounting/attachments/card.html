@@ -1,0 +1,14 @@
+{% load greek %}
+{% if attachments_available %}
+<section id="attachments" class="card card-body mb-4" aria-labelledby="attachments-heading">
+  <div class="client-section-heading"><div><h2 id="attachments-heading">Συνημμένα</h2><p>Ιδιωτικά αρχεία της καρτέλας με χαρακτηρισμό και περιγραφή.</p></div><div class="client-actions">{% if not entity.is_archived %}<a class="btn btn-primary" href="{% url 'attachment-upload' entity.pk %}">Νέο συνημμένο</a>{% endif %}<a class="btn btn-outline-secondary" href="{% url 'attachment-categories' %}">Χαρακτηρισμοί γραφείου</a></div></div>
+  <form method="get" action="#attachments" class="client-attachment-filter">
+    {{ attachment_filter.as_p }}<button class="btn btn-outline-primary" type="submit">Εφαρμογή φίλτρων</button><a href="{% url 'entity-detail' entity.pk %}#attachments">Καθαρισμός φίλτρων</a>
+  </form>
+  <div class="table-responsive"><table class="table"><caption>Συνημμένα του λογιστικού γραφείου για αυτή την καρτέλα</caption><thead><tr><th scope="col">Αρχείο</th><th scope="col">Χαρακτηρισμός και περιγραφή</th><th scope="col">Καταχώριση</th><th scope="col">Ενέργειες</th></tr></thead><tbody>
+  {% for item in attachment_page %}<tr><td><strong>{{ item.original_name }}</strong><br><small>{{ item.byte_size|filesizeformat }}</small></td><td>{{ item.category.name }}{% if not item.category.is_active %} · Ανενεργός χαρακτηρισμός{% endif %}{% if item.description %}<p class="client-attachment-description">{{ item.description|linebreaksbr }}</p>{% endif %}</td><td>{{ item.created_at|el_date }}<br>{{ item.uploader_label }}</td><td><div class="client-actions"><form method="post" action="{% url 'attachment-download' entity.pk item.pk %}">{% csrf_token %}<button class="btn btn-outline-primary" type="submit">Λήψη</button></form>{% if not entity.is_archived %}<a class="btn btn-outline-secondary" href="{% url 'attachment-edit' entity.pk item.pk %}">Επεξεργασία</a>{% endif %}{% if can_delete_counterparty %}<a class="btn btn-outline-danger" href="{% url 'attachment-remove' entity.pk item.pk %}">Αφαίρεση</a>{% endif %}</div></td></tr>
+  {% empty %}<tr><td colspan="4">Δεν βρέθηκαν συνημμένα{% if attachment_filter.is_bound %} με αυτά τα φίλτρα{% endif %}.</td></tr>{% endfor %}
+  </tbody></table></div>
+  {% if attachment_page.has_other_pages %}<nav aria-label="Σελίδες συνημμένων">{% if attachment_page.has_previous %}<a href="?{{ attachment_query }}&amp;attachment_page={{ attachment_page.previous_page_number }}#attachments">Προηγούμενη</a>{% endif %} Σελίδα {{ attachment_page.number }} από {{ attachment_page.paginator.num_pages }} {% if attachment_page.has_next %}<a href="?{{ attachment_query }}&amp;attachment_page={{ attachment_page.next_page_number }}#attachments">Επόμενη</a>{% endif %}</nav>{% endif %}
+</section>
+{% endif %}

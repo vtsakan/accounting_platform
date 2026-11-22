@@ -65,3 +65,4 @@ S61,P8,Implement conditional AADE debt statement retrieval,S49 S50,Not started,,
 S62,P8,Implement conditional e EFKA notice retrieval,S49 S50,Not started,,,,UR-INT-05 UR-LOC-01,,,,
 S63,P9,Complete the integrated pilot and release evidence,S48 S53 S59 S60 S61 S62,Not started,,,,QR-01 QR-02 QR-03 QR-05 QR-06 QR-08 QR-09 QR-10 QR-11 QR-12 QR-13 QR-14 UR-LOC-01,,,,
 S64,P9,Complete operating handover and the maintenance backlog,S63,Not started,,,,QR-09 QR-12 QR-14 UR-LOC-01,,,,
+CR008,CR,Private classified client-card attachments,CR007,Prepared,change/cr008-client-attachments,,,UR-DOC-01 UR-DOC-02 QR-01 QR-09 UR-LOC-01,docs/requirements/CR-008-Client-attachments.md; docs/implementation/client_attachments_el.md; docs/implementation/evidence/CR008-source.json,Pending accountant/browser; all85 full acceptances Pending,New operator suite/scanner/recovery/worker gate Pending; VM/GitHub held onCR005,Operator python3 tools/verify_cr008.py --record --host-dns

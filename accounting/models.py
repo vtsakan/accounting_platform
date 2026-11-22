@@ -361,3 +361,5 @@ from .entity_profile_models import EntityProfile, TaxisCredential, EntityProfile
 from .counterparty_retirement_models import CounterpartyDeletion
 
 from .counterparty_retirement_models import CounterpartyDeletion
+
+from .attachment_models import AttachmentCategory,ClientAttachment,AttachmentEvent

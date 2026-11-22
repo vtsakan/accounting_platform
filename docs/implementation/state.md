@@ -1,5 +1,23 @@
 # Implementation state
 
+## Current selected change — CR008 private classified client attachments, 2026-11-22
+
+<!-- CR008-RESULT -->
+CR008 source Prepared: main-card private PDF/DOC/DOCX/raster attachments,
+shared office category catalogue plus free description, attributed time/user,
+metadata filters and protected downloads; sealed transactional bytes and
+value-free audit. New complete operator suite, actual antivirus and encrypted
+file recovery and retained real monthly-worker gate Pending. VM/GitHub held
+on actualCR005. All85 full requirement and browser/business acceptances Pending.
+<!-- /CR008-RESULT -->
+
+Actual CR007 console confirmed1140/1140,36 financial cases and worker; its two
+real --record files were committed by the operator in02e3907 with a clean tree.
+The full runtime receipt is not reconstructed here. CR008 APPLY validates that
+actual receipt/Git history and exclusively binds all14 old files. Earlier source
+Prepared notes below remain historical. See client_attachments_el.md.
+
+
 ## CR007 operator failure — discovery and Greek captions
 
 Initial CR007 image ebab4c59 built, but delivery ran1086 and failed with3

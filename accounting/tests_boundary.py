@@ -187,6 +187,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         seed_fee_routes(cls)
         from .tests_client_tasks import seed_task_routes
         seed_task_routes(cls)
+        from .tests_attachment_support import seed_attachment_routes
+        seed_attachment_routes(cls)
 
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
@@ -207,6 +209,9 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name=='note-to-task':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'note_key':getattr(self,'task_note_'+suffix).pk}
         if name=='counterparty-directory-export':kwargs={'filetype':'csv'}
         if name=='entity-credentials-reveal':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'subject':'MAIN'}
+        if name in {'attachment-upload','attachment-edit','attachment-remove','attachment-download'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
+        if name in {'attachment-edit','attachment-remove','attachment-download'}:kwargs['key']=getattr(self,'attachment_'+suffix).pk
+        if name=='attachment-category-edit':kwargs={'key':getattr(self,'attachment_category_'+suffix).pk}
         return reverse(name,kwargs=kwargs)
 
     def no_foreign(self,response):

@@ -5,7 +5,10 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+from types import SimpleNamespace
+import subprocess
+import preview_cr008_scanner as scanner
 
 import preview_cr008_policy as p
 import preview_cr008_host as h
@@ -223,7 +226,7 @@ class ImageAndRecordContracts(unittest.TestCase):
                 writer.writerows({'acceptance_status':'Pending'} for _ in range(85))
             p.track(root,'Prepared','git:'+'0'*40)
             self.assertIn(original,(docs/'state.md').read_text())
-            self.assertIn('new attachment uploads disabled',(docs/'state.md').read_text())
+            self.assertIn('enable test attachment uploads',(docs/'state.md').read_text())
 
     def test_receipt_binding_cannot_refresh_changed_historical_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -255,8 +258,8 @@ class RetainedVMAndUploadsContracts(unittest.TestCase):
         source,target=pair();source['gcp']['machine_type']='e2-medium';target['gcp']['machine_type']='e2-standard-2'
         with self.assertRaises(RuntimeError):p.transition(source,target)
 
-    def test_policy_keeps_new_uploads_disabled(self):
-        self.assertIs(p.UPLOADS_ENABLED,False)
+    def test_policy_enables_real_scanner_uploads_on_existing_vm(self):
+        self.assertIs(p.UPLOADS_ENABLED,True)
 
     def test_complete_antivirus_and_file_recovery_proof_is_required(self):
         for key in ('antivirus_real_eicar_denied','all_public_tables_and_file_hashes_matched','wrong_recovery_key_denied'):
@@ -270,20 +273,135 @@ class RetainedVMAndUploadsContracts(unittest.TestCase):
         with patch.object(p,'REPORT_SHA',p.digest_object(report)):
             with self.assertRaises(RuntimeError):p.verified_report(report)
 
-    def test_actual_disabled_scanner_check_is_read_only(self):
-        response=b'{"attachment_uploads_enabled":false,"scanner_unavailable_denied_without_writes":true}'
-        with patch.object(h,'compose',return_value=response) as execute:
-            value=h.uploads_disabled_check(pair()[1])
-        self.assertFalse(value['attachment_uploads_enabled'])
+    def test_actual_scanner_check_is_read_only(self):
+        response=json.dumps(scanner_proof()).encode()
+        with patch.object(scanner,'memory',return_value=memory_budget()),patch.object(h,'compose',return_value=response) as execute:
+            value=scanner.proof(pair()[1],h.compose)
+        self.assertTrue(value['attachment_uploads_enabled'])
         self.assertIn('scan_content',execute.call_args.args[-1])
         self.assertNotIn('upload_attachment',execute.call_args.args[-1])
 
-    def test_unexpected_upload_enablement_blocks_runtime_acceptance(self):
-        with patch.object(h,'compose',return_value=b'{"attachment_uploads_enabled":true}'):
-            with self.assertRaises(RuntimeError):h.uploads_disabled_check(pair()[1])
+    def test_missing_antivirus_blocks_runtime_acceptance(self):
+        with patch.object(h,'compose',return_value=b'{"attachment_uploads_enabled":false}'):
+            with self.assertRaises(RuntimeError):scanner.proof(pair()[1],h.compose)
 
     def test_all_sixteen_actual_receipts_are_retained(self):
         self.assertEqual(len(p.RETAINED_REPORTS),16)
+
+
+def memory_budget():
+    return {'MemTotal':4_000_000,'MemAvailable':700_000,'SwapTotal':2_097_152,'SwapFree':2_000_000}
+
+
+def scanner_proof():
+    return {'attachment_uploads_enabled':True,'real_clean_stream_accepted':True,
+        'real_eicar_denied':True,'scanner_unavailable_denied_without_writes':True,'scanner_version':'synthetic fixture only'}
+
+
+class ScannerResourceContracts(unittest.TestCase):
+    def test_existing_sufficient_swap_is_reused_without_allocating(self):
+        stamp=Mock();stamp.exists.return_value=False;stamp.is_symlink.return_value=False
+        with patch.object(scanner,'SWAP_BINDING',stamp),patch.object(scanner.os,'geteuid',return_value=0),\
+             patch.object(scanner,'memory',return_value=memory_budget()),patch.object(scanner.os,'open') as allocate:
+            result=scanner.ensure_swap()
+        self.assertEqual(result['mode'],'existing-swap-retained');allocate.assert_not_called()
+
+    def test_unbound_existing_swap_path_is_never_overwritten(self):
+        stamp=Mock();stamp.exists.return_value=False;stamp.is_symlink.return_value=False
+        path=Mock();path.exists.return_value=True
+        budget=memory_budget();budget['SwapTotal']=0
+        with patch.object(scanner,'SWAP_BINDING',stamp),patch.object(scanner,'SWAP_FILE',path),\
+             patch.object(scanner.os,'geteuid',return_value=0),patch.object(scanner,'memory',return_value=budget),\
+             patch.object(scanner.os,'open') as allocate:
+            with self.assertRaises(RuntimeError):scanner.ensure_swap()
+        allocate.assert_not_called()
+
+    def test_swap_ownership_permissions_and_inode_cannot_drift(self):
+        path=Mock();path.is_symlink.return_value=False;path.is_file.return_value=True
+        base={'st_size':scanner.SWAP_BYTES,'st_dev':9,'st_ino':10,'st_uid':0,'st_mode':0o100600}
+        binding={'purpose':scanner.OWNER,'path':str(path),'bytes':scanner.SWAP_BYTES,'device':9,'inode':10}
+        for key,value in (('st_uid',1000),('st_mode',0o100644),('st_ino',11)):
+            path.stat.return_value=SimpleNamespace(**{**base,key:value})
+            with self.subTest(key=key),patch.object(scanner,'SWAP_FILE',path):
+                with self.assertRaises(RuntimeError):scanner.check_owned_swap(binding)
+
+    def test_non_root_cannot_prepare_vm_swap(self):
+        with patch.object(scanner.os,'geteuid',return_value=1000),patch.object(scanner.os,'open') as allocate:
+            with self.assertRaises(RuntimeError):scanner.ensure_swap()
+        allocate.assert_not_called()
+
+    def test_signatures_update_only_after_daemon_stops(self):
+        events=[]
+        def command(*args,**kwargs):events.append(args[1])
+        def run(*args,**kwargs):events.append('update');return SimpleNamespace(returncode=0)
+        with patch.object(scanner,'ensure_swap'),patch.object(scanner,'volume'),\
+             patch.object(scanner.host,'release_path',return_value=Path('/synthetic-release')),\
+             patch.object(scanner.subprocess,'run',side_effect=run):
+            scanner.update(pair()[1],command)
+        self.assertEqual(events,['stop','update','up'])
+
+    def test_failed_updater_never_starts_the_scanner(self):
+        compose=Mock()
+        with patch.object(scanner,'ensure_swap'),patch.object(scanner,'volume'),\
+             patch.object(scanner.host,'release_path',return_value=Path('/synthetic-release')),\
+             patch.object(scanner.subprocess,'run',return_value=SimpleNamespace(returncode=1)):
+            with self.assertRaises(RuntimeError):scanner.update(pair()[1],compose)
+        self.assertEqual([call.args[1] for call in compose.call_args_list],['stop'])
+
+    def test_updater_has_immutable_image_and_bounded_memory(self):
+        with patch.object(scanner,'ensure_swap'),patch.object(scanner,'volume'),\
+             patch.object(scanner.host,'release_path',return_value=Path('/synthetic-release')),\
+             patch.object(scanner.subprocess,'run',return_value=SimpleNamespace(returncode=0)) as execute:
+            scanner.update(pair()[1],Mock())
+        command=execute.call_args.args[0]
+        self.assertIn(scanner.IMAGE,command)
+        self.assertEqual(command[command.index('--memory')+1],'2560m')
+        self.assertEqual(command[command.index('--memory-swap')+1],'4096m')
+        self.assertNotIn('--privileged',command)
+        self.assertNotIn('/run/accounting/signing',' '.join(command))
+
+    def test_timeout_stops_only_the_owned_updater(self):
+        row={'Id':'synthetic-owned-container','Config':{'Image':scanner.IMAGE,'Labels':{'gr.accounting.owner':scanner.OWNER}}}
+        responses=[subprocess.TimeoutExpired('synthetic updater',900),SimpleNamespace(returncode=0,stdout=json.dumps([row])),SimpleNamespace(returncode=0)]
+        compose=Mock()
+        with patch.object(scanner,'ensure_swap'),patch.object(scanner,'volume'),\
+             patch.object(scanner.host,'release_path',return_value=Path('/synthetic-release')),\
+             patch.object(scanner.subprocess,'run',side_effect=responses) as execute:
+            with self.assertRaises(RuntimeError):scanner.update(pair()[1],compose)
+        self.assertEqual(execute.call_args.args[0],['docker','stop','--time','10','synthetic-owned-container'])
+        self.assertEqual(len(compose.call_args_list),1)
+
+    def test_timeout_never_stops_a_foreign_container(self):
+        row={'Id':'foreign','Config':{'Image':'unrelated','Labels':{}}}
+        responses=[subprocess.TimeoutExpired('synthetic updater',900),SimpleNamespace(returncode=0,stdout=json.dumps([row]))]
+        with patch.object(scanner,'ensure_swap'),patch.object(scanner,'volume'),\
+             patch.object(scanner.host,'release_path',return_value=Path('/synthetic-release')),\
+             patch.object(scanner.subprocess,'run',side_effect=responses) as execute:
+            with self.assertRaises(RuntimeError):scanner.update(pair()[1],Mock())
+        self.assertEqual(execute.call_count,2)
+
+    def test_scanner_proof_does_not_create_business_records(self):
+        self.assertIn("code!='infected'",scanner.PROBE)
+        self.assertNotIn('upload_attachment',scanner.PROBE)
+        self.assertNotIn('.objects.create',scanner.PROBE)
+
+    def test_each_missing_security_proof_blocks_activation(self):
+        for key in ('real_clean_stream_accepted','real_eicar_denied','scanner_unavailable_denied_without_writes'):
+            value=scanner_proof();value[key]=False
+            with self.subTest(key=key),patch.object(scanner,'memory',return_value=memory_budget()):
+                with self.assertRaises(RuntimeError):scanner.proof(pair()[1],Mock(return_value=json.dumps(value)))
+
+    def test_insufficient_actual_headroom_blocks_acceptance(self):
+        for key in ('MemAvailable','SwapFree'):
+            budget=memory_budget();budget[key]=1000
+            with self.subTest(key=key),patch.object(scanner,'memory',return_value=budget):
+                with self.assertRaises(RuntimeError):scanner.proof(pair()[1],Mock(return_value=json.dumps(scanner_proof())))
+
+    def test_oom_is_rejected_before_waiting_or_accepting_uploads(self):
+        container=Mock(return_value={'State':{'OOMKilled':True},'RestartCount':1})
+        with patch.object(scanner.time,'sleep') as pause:
+            with self.assertRaises(RuntimeError):scanner.wait(pair()[1],container)
+        pause.assert_not_called()
 
 
 

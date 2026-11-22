@@ -17,6 +17,7 @@ import operations_host as ops
 import preview_common as common
 import preview_host as host
 import preview_cr008_policy as policy
+import preview_cr008_scanner as scanner
 from r1_gate import digest_object, require
 from vm_material_common import release_context
 from vm_material_host import merge_hashed_assets, static_assets, runtime_secrets, web_identity
@@ -137,6 +138,8 @@ def source_check(source):
 
 def stage(value, bundle):
     require(not STATE.exists(), 'A preview upgrade journal exists; use status/resume/abort instead of overwriting it')
+    require(value.get('deployment_profile')=='4GiB-test-with-private-antivirus-and-bounded-swap',
+        'A different previous deployment attempt was retained; inspect it before changing its profile')
     source, target = value['source'], common.validate(value['target'], published=True)
     policy.transition(source, target); source_check(source); common.dns(source)
     require(source['published']['image'] == policy.OLD_IMAGE, 'Expected the currently deployed CR005 preview source')
@@ -184,12 +187,16 @@ def stage(value, bundle):
     host.environment_file(target)
     compose(target, 'config', '--quiet')
     resolved = compose(target, 'config', '--format', 'json', json_output=True)
-    require(set(resolved['services']) == {'db', 'web', 'caddy', 'redis', 'worker', 'scheduler'}, 'Expected the six bounded preview services')
-    require(resolved['services']['web']['environment']['GUNICORN_WORKERS'] == '4'
+    require(set(resolved['services']) == {'db', 'web', 'caddy', 'redis', 'worker', 'scheduler', 'scanner'}, 'Expected the seven bounded test-profile services')
+    require(resolved['services']['web']['environment']['GUNICORN_WORKERS'] == '2'
             and resolved['services']['redis']['image'] == policy.REDIS, 'Resolved workers or broker differ')
-    require(all(resolved['services'][service]['environment'].get('ATTACHMENT_SCANNER_HOST')==''
-        for service in ('web','worker','scheduler')),'User-selected uploads-disabled environment differs')
-    value.update(created_at=oc.now(), capacity=available, source_operations=ops.load(),
+    require(all(resolved['services'][service]['environment'].get('ATTACHMENT_SCANNER_HOST')=='scanner'
+        for service in ('web','worker','scheduler')),'The private test scanner setting differs')
+    require(resolved['services']['scanner']['image']==scanner.IMAGE,'Pinned private scanner image differs')
+    compose(target,'run','--rm','--no-deps','-T','--entrypoint','caddy','caddy','validate',
+        '--config','/etc/caddy/Caddyfile','--adapter','caddyfile')
+    resources=scanner.prepare(target)
+    value.update(created_at=oc.now(), capacity=available, scanner_resources=resources, source_operations=ops.load(),
                  database_process=database_identity(source), runtime_secrets=runtime_secrets(),
                  static_assets=journal_static_assets(target), queue_storage=original_queue,
                  source_boot_wrapper=Path('/usr/local/sbin/accounting-preview').read_text())
@@ -210,6 +217,11 @@ def hold():
 def resume_operations():
     HOLD.unlink(missing_ok=True)
     common.run(['systemctl', 'start', *oc.UNITS])
+    state=json.loads(STATE.read_text()) if STATE.exists() else {}
+    if state.get('public_cutover_started') and host.load()==state.get('target'):
+        scanner.start_timer()
+    else:
+        scanner.stop_timer()
 
 
 def bind(config, operations, *, new_boot):
@@ -222,6 +234,7 @@ def bind(config, operations, *, new_boot):
         wrapper = Path('/usr/local/sbin/accounting-preview')
         wrapper.write_text('#!/bin/sh\nexec /usr/bin/python3 /usr/local/lib/accounting/preview_cr008_host.py "$@"\n')
         wrapper.chmod(0o755)
+        scanner.install_timer()
 
 
 def clone_program(state, action, expected=None):
@@ -286,9 +299,13 @@ def prepare(expected):
         oc.validate(state['target_operations'])
         checkpoint(state, 'binding_clone')
         bind(target, state['target_operations'], new_boot=True)
+        # A real scanner must pass BEFORE candidate backup/public activation.
+        checkpoint(state,'initialising_private_scanner')
+        scanner.update(target,compose,staging=True);scanner.wait(target,container)
         # No worker/scheduler or public proxy is started before both restore proofs.
         compose(target, 'up', '--detach', '--no-deps', '--force-recreate', '--pull', 'never', 'web', staging=True)
         wait_web(target); web_identity(target)
+        state['scanner_pre_activation']=scanner.proof(target,compose)
         require(container(target, 'web')['HostConfig']['RestartPolicy']['Name'] == 'no', 'Candidate must remain stopped across a reboot')
         state['candidate_snapshot'] = inventory(target)
         clone_program(state, 'check', state['migration']['retained_snapshot'])
@@ -310,7 +327,7 @@ def abort():
     state = json.loads(STATE.read_text()); policy.before_public(state)
     source, target = state['source'], state['target']
     hold(); pause_timers()
-    compose(target, 'stop', 'scheduler', 'worker', 'redis', 'caddy', 'web')
+    compose(target, 'stop', 'scheduler', 'worker', 'redis', 'caddy', 'web', 'scanner')
     if 'frozen_snapshot' in state:
         require(inventory(source) == state['frozen_snapshot'], 'Original changed after freeze; automatic rollback refused')
     same_database_process(state)
@@ -325,32 +342,16 @@ def abort():
 
 
 
-def uploads_disabled_check(config):
-    program="""import django,json;django.setup()
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from accounting.attachment_validation import scan_content
-assert settings.ATTACHMENT_SCANNER_HOST==''
-try:scan_content(b'CR008 uploads-disabled read-only probe')
-except ValidationError:pass
-else:raise RuntimeError('New attachment uploads are unexpectedly enabled')
-print(json.dumps({'attachment_uploads_enabled':False,'scanner_unavailable_denied_without_writes':True}))
-"""
-    result=json.loads(compose(config,'exec','-T','web','python','-c',program))
-    require(result=={'attachment_uploads_enabled':False,'scanner_unavailable_denied_without_writes':True},
-        'The actual uploads-disabled production setting did not fail closed')
-    return result
-
 
 def runtime_check(state):
     target = state['target']; same_database_process(state)
     require(queue_storage(target) == state['queue_storage'], 'Durable Redis/scheduler storage changed')
     audited = host.image_check(target)
-    limits = {'web': 1024, 'redis': 192, 'worker': 512, 'scheduler': 192, 'caddy': 256}
-    for service in ('web', 'redis', 'worker', 'scheduler', 'caddy'):
+    limits = {'web': 512, 'redis': 192, 'worker': 256, 'scheduler': 128, 'caddy': 128, 'scanner': scanner.MEMORY_MIB}
+    for service in limits:
         item = container(target, service)
         require(item['State']['Running'], 'A required preview service is stopped: ' + service)
-        if service in ('web','redis','worker','scheduler'):
+        if service in ('web','redis','worker','scheduler','scanner'):
             require(item['State'].get('Health',{}).get('Status') == 'healthy', 'A runtime health check failed: '+service)
         require(item['HostConfig']['Memory'] == limits[service] * 1024**2,
                 'A running preview memory cap differs: ' + service)
@@ -359,10 +360,15 @@ def runtime_check(state):
             environment = dict(v.split('=', 1) for v in item['Config']['Env'] if '=' in v)
             require(environment.get('BACKGROUND_JOBS_ENABLED') == 'true'
                     and environment.get('FEE_AUTOMATION_ENABLED') == 'true', 'Runtime feature settings differ')
-            require(environment.get('ATTACHMENT_SCANNER_HOST')=='','New attachment uploads must remain disabled on this4GiB VM')
+            require(environment.get('ATTACHMENT_SCANNER_HOST')=='scanner','New uploads require the private scanner on this4GiB test VM')
         if service == 'web':
-            require(item['HostConfig']['NanoCpus'] == 2_000_000_000
+            require(item['HostConfig']['NanoCpus'] == 1_000_000_000
                     and item['HostConfig']['RestartPolicy']['Name'] == 'unless-stopped', 'Web CPU/restart policy differs')
+        if service=='scanner':
+            require(item['Config']['Image']==scanner.IMAGE and item['HostConfig']['MemorySwap']==scanner.MEMORY_SWAP_MIB*1024**2
+                and set(item['NetworkSettings']['Networks'])=={'accounting-preview_scanning'}
+                and not item['State'].get('OOMKilled') and item.get('RestartCount',0)==0,
+                'Private scanner identity, swap cap or stability differs')
         if service == 'redis':
             require(item['Config']['Image'] == policy.REDIS, 'Redis image differs')
         if service == 'worker':
@@ -372,24 +378,27 @@ def runtime_check(state):
     from s31_runtime_policy import PROC
     require(container(target, 'db')['HostConfig']['Memory'] == 768 * 1024**2, 'The retained database memory cap differs')
     workers = json.loads(compose(target, 'exec', '-T', 'web', 'python', '-c', PROC))
-    require(workers == {'configured_workers': 4, 'live_worker_children': 4}, 'Four actual Gunicorn workers required')
+    require(workers == {'configured_workers': 2, 'live_worker_children': 2}, 'Two actual test-profile Gunicorn workers required')
     settings = host.settings_check(target)
     require(settings['debug'] is False and settings['uid'] == 10001 and settings['secure_cookies']
             and settings['hosts'] == [target['hostname']] and settings['origins'] == ['https://' + target['hostname']]
             and settings['proxy'] == ['HTTP_X_FORWARDED_PROTO', 'https'] and settings['media'] == '/app/media', 'Production security settings differ')
     web_identity(target)
-    uploads=uploads_disabled_check(target)
+    uploads=scanner.proof(target,compose)
     require(query(target, target['db_name'], "SELECT count(*) FROM pg_stat_activity WHERE application_name='accounting-s26-scheduler';") == '1',
             'Exactly one scheduler database session is required')
     health = json.loads(compose(target, 'exec', '-T', 'web', 'python', 'manage.py', 'background_jobs', 'health', '--strict'))
     require(health['status'] == 'ok', 'Background execution is not healthy')
     common.run(['iptables', '-w', '-C', 'DOCKER-USER', '-d', '169.254.169.254/32', '-j', 'REJECT'])
-    return {'web_workers': 4, 'worker_concurrency': 1, 'scheduler_containers': 1,
-            'observed_memory_caps_mib': {**limits, 'db': 768}, 'web_cpu_cap': 2,
+    require(common.run(['systemctl','is-active',scanner.TIMER]).decode().strip()=='active',
+        'The serial signature update timer is not active')
+    return {'web_workers': 2, 'worker_concurrency': 1, 'scheduler_containers': 1,
+            'observed_memory_caps_mib': {**limits, 'db': 768}, 'web_cpu_cap': 1,
             'broker': health['broker'], 'worker_healthy': health['worker'], 'scheduler_healthy': health['scheduler'],
             'internal_ports_private': True, 'same_database_container_and_start_time': True,
             'pinned_signing_and_database_material_retained': True, 'durable_queue_storage_retained': True, 'production_settings': settings,
-            'attachment_uploads_enabled':False,'scanner_containers':0,'scanner_memory_cap_mib':0,
+            'attachment_uploads_enabled':True,'scanner_containers':1,'scanner_memory_cap_mib':scanner.MEMORY_MIB,
+            'scanner_memory_plus_swap_cap_mib':scanner.MEMORY_SWAP_MIB,'scanner_proof':uploads,
             'scanner_unavailable_denied_without_writes':uploads['scanner_unavailable_denied_without_writes'],
             'vm_resized':False,'retained_memory_kib':state['capacity']['memory_kib'],
             'vm_capacity_acceptance': 'Pending D06; preview health only, no 50-session VM load claim'}
@@ -411,8 +420,10 @@ def activate(restored):
     else:
         require(state.get('off_vm_restored') == restored, 'Resume requires the original exact pair of recovery proofs')
     try:
-        compose(target, 'up', '--detach', '--no-deps', '--pull', 'never', 'web', 'redis')
+        compose(target, 'up', '--detach', '--no-deps', '--pull', 'never', 'web', 'redis', 'scanner')
         wait_web(target)
+        scanner.wait(target,container)
+        scanner.start_timer()
         for _ in range(60):
             if container(target, 'redis')['State'].get('Health', {}).get('Status') == 'healthy':
                 break
@@ -469,17 +480,29 @@ def boot():
     require(state['public_cutover_started'] and host.load() == state['target'], 'No authorised preview activation binding')
     host.mounted(state['target'])
     require((common.HOST_DATA / 'postgres17/PG_VERSION').read_text().strip() == '17', 'Existing PG17 data missing')
+    scanner.ensure_swap();scanner.volume()
     database = container(state['target'], 'db')
     if not database['State']['Running']:
         common.run(['docker', 'start', database['Id']])
-    compose(state['target'], 'up', '--detach', '--no-deps', '--wait', '--wait-timeout', '240', '--pull', 'never',
-            'redis', 'web', 'worker', 'scheduler', 'caddy')
+    compose(state['target'], 'up', '--detach', '--no-deps', '--wait', '--wait-timeout', '900', '--pull', 'never',
+            'redis', 'web', 'worker', 'scheduler', 'scanner', 'caddy')
+    scanner.start_timer()
     return {'status': 'Resumed existing preview; no migrations or account creation'}
+
+
+def refresh_scanner():
+    state=json.loads(STATE.read_text())
+    require(not HOLD.exists() and state['public_cutover_started'] and host.load()==state['target'],
+        'Refresh only the active authorised CR008 test scanner')
+    scanner.update(state['target'],compose);scanner.wait(state['target'],container)
+    proof=scanner.proof(state['target'],compose)
+    common.private_json(Path('/etc/accounting/cr008-scanner-last-refresh.json'),{'at':oc.now(),**proof})
+    return proof
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('plan', 'prepare', 'state', 'status', 'abort', 'activate', 'complete', 'resume', 'secrets'))
+    parser.add_argument('action', choices=('plan', 'prepare', 'state', 'status', 'abort', 'activate', 'complete', 'resume', 'secrets', 'scanner-refresh'))
     parser.add_argument('--input', type=Path); parser.add_argument('--bundle', type=Path)
     parser.add_argument('--plan-sha256'); parser.add_argument('--proof', type=Path)
     args = parser.parse_args()
@@ -502,6 +525,8 @@ def main():
                 result = activate(json.loads(args.proof.read_text()))
             elif args.action == 'complete':
                 result = complete(json.loads(args.proof.read_text()))
+            elif args.action == 'scanner-refresh':
+                result=refresh_scanner()
             elif args.action == 'secrets':
                 host.refresh(host.load()); result = {'status': 'Loaded the existing pinned runtime material'}
             else:
@@ -510,7 +535,7 @@ def main():
     except Exception as error:
         reason = str(error) if isinstance(error, RuntimeError) else 'Operation stopped; private provider output omitted'
         print(json.dumps({'status': 'Stopped', 'phase': PHASE, 'reason': reason, 'error': type(error).__name__}))
-        if args.action in ('resume', 'secrets'):
+        if args.action in ('resume', 'secrets', 'scanner-refresh'):
             sys.exit(1)
 
 

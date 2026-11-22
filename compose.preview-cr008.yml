@@ -1,12 +1,64 @@
-# User selected the retained4GiB VM and temporarily disabled new uploads.
-# Application image, signing material and existing six-service limits stay exact.
+# Explicit4GiB test profile: real private AV, two web workers, bounded swap.
 services:
   web:
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1
     environment:
-      ATTACHMENT_SCANNER_HOST: ""
+      GUNICORN_WORKERS: "2"
+      ATTACHMENT_SCANNER_HOST: scanner
+    networks: [application, database, jobs, scanning]
   worker:
+    mem_limit: 256m
+    memswap_limit: 256m
     environment:
-      ATTACHMENT_SCANNER_HOST: ""
+      ATTACHMENT_SCANNER_HOST: scanner
+    networks: [database, jobs, scanning]
   scheduler:
+    mem_limit: 128m
+    memswap_limit: 128m
     environment:
-      ATTACHMENT_SCANNER_HOST: ""
+      ATTACHMENT_SCANNER_HOST: scanner
+    networks: [database, jobs, scanning]
+  caddy:
+    mem_limit: 128m
+    memswap_limit: 128m
+    volumes:
+      - type: bind
+        source: ./infrastructure/Caddyfile.cr008-test
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        bind: {create_host_path: false}
+  scanner:
+    image: clamav/clamav:stable_base@sha256:7e43db777ae70ed9b60e75fcbdfda6f462c710565c69ccff2ed83a7ec5aba417
+    platform: linux/amd64
+    pull_policy: never
+    restart: unless-stopped
+    read_only: true
+    mem_limit: 2560m
+    memswap_limit: 4096m
+    cpus: 1
+    pids_limit: 64
+    cap_drop: [ALL]
+    cap_add: [SETUID, SETGID]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=192m,mode=1777"]
+    networks: [scanning]
+    volumes:
+      - clamav_signatures:/var/lib/clamav:ro
+      - ./docker/preview-cr008-clamd.conf:/etc/clamav/cr008.conf:ro
+    entrypoint: [clamd, --foreground, --config-file=/etc/clamav/cr008.conf]
+    healthcheck:
+      test: [CMD, clamdscan, --config-file=/etc/clamav/cr008.conf, --ping=1]
+      interval: 10s
+      timeout: 4s
+      retries: 6
+      start_period: 10min
+    stop_grace_period: 30s
+    logging: {driver: local, options: {max-size: 10m, max-file: "3"}}
+networks:
+  scanning: {internal: true}
+volumes:
+  clamav_signatures:
+    external: true
+    name: accounting-preview_clamav_signatures

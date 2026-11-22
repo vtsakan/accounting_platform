@@ -67,8 +67,8 @@ def source_gate(*, clean=True):
         and manifest.get('application_inputs') == 371
         and manifest.get('operator_source') == 'git:' + policy.VERIFIED_SOURCE
         and manifest.get('operator_report_canonical_sha256') == policy.REPORT_SHA
-        and manifest.get('attachment_uploads_enabled') is False
-        and manifest.get('attachment_scanner_deployed') is False
+        and manifest.get('attachment_uploads_enabled') is True
+        and manifest.get('attachment_scanner_deployed') is True
         and manifest.get('vm_resized') is False
         and manifest.get('retained_machine_type') == 'e2-medium',
         'The prepared preview manifest must bind the actual successful CR008 gate')
@@ -85,6 +85,7 @@ def source_gate(*, clean=True):
 def checkpoint():
     # The Git/files-only installer handles only exact successful --record output.
     # Publication never commits unknown changes or changes historical receipts.
+    if CONFIG.exists():load()  # Never reuse a different earlier cutover attempt.
     return source_gate()[0]
 
 
@@ -150,6 +151,8 @@ def host_action(config, action, *arguments):
 
 def load():
     value = json.loads(CONFIG.read_text())
+    require(value.get('deployment_profile')=='4GiB-test-with-private-antivirus-and-bounded-swap',
+        'The retained previous deployment configuration has a different profile; inspect status before changing it')
     policy.transition(value['source'], value['target'])
     common.validate(value['source'], published=True); common.validate(value['target'], published=True)
     return value
@@ -225,7 +228,8 @@ def publish(identity):
     target['published'] = {'commit': policy.APP_REVISION, 'image': digests[0], 'image_id': policy.IMAGE_ID,
                            'context_digest': policy.CONTEXT, 'delivery_evidence': digest_object(report)}
     policy.transition(source, target); common.validate(target, published=True)
-    value = {'source': source, 'target': target, 'operator_report_sha256': digest_object(report)}
+    value = {'source': source, 'target': target, 'operator_report_sha256': digest_object(report),
+        'deployment_profile':'4GiB-test-with-private-antivirus-and-bounded-swap'}
     common.private_json(CONFIG, value, exclusive=True)
     return value
 
@@ -329,10 +333,12 @@ def record(state):
             and state['off_vm_restored']['after']['tables_checked'] == migration['old_tables_checked'] + 8,
             'The actual source/clone restored table coverage is incomplete')
     runtime = state['runtime']
-    require(runtime['attachment_uploads_enabled'] is False and runtime['scanner_containers'] == 0
+    require(runtime['attachment_uploads_enabled'] is True and runtime['scanner_containers'] == 1
             and runtime['vm_resized'] is False and runtime['scanner_unavailable_denied_without_writes'] is True
-            and 3_500_000 <= runtime['retained_memory_kib'] < 4_500_000,
-            'Retain the actual4GiB uploads-disabled runtime proof')
+            and 3_500_000 <= runtime['retained_memory_kib'] < 4_500_000
+            and runtime['web_workers']==2 and runtime['scanner_memory_cap_mib']==2560
+            and all(runtime['scanner_proof'][key] is True for key in ('real_clean_stream_accepted','real_eicar_denied')),
+            'Retain the actual4GiB test scanner, memory and fail-closed runtime proof')
     report = {'step': 'CR008-VM', 'status': 'Verified', 'verified_at': state['completed_at'],
               'scope': 'existing-preview-only', 'hostname': policy.HOSTNAME,
               'application_commit': 'git:' + policy.APP_REVISION,
@@ -352,10 +358,11 @@ def record(state):
               'plaintext_removed': True, 'public_checks': state['public_checks'],
               'actual_browser_login_mfa': 'Pending operator login with the existing account',
               'real_client_release': 'Blocked; R1/D05/D06/D07/G2 Pending',
-              'full_requirement_acceptances_pending': 85, 'document_recovery': 'CR008 isolated encrypted files restore Verified; live uploads disabled; media empty; full S38 Pending',
-              'agent_native_execution': False,'attachment_uploads_enabled':False,
-              'attachment_scanner_deployed':False,'vm_resized':False,'retained_vm_memory_choice':'4GiB',
-              'user_choice':'retain4GiB and temporarily disable new attachment uploads'}
+              'full_requirement_acceptances_pending': 85, 'document_recovery': 'CR008 isolated encrypted files restore Verified; encrypted DB backups include live sealed bytes; full S38 Pending',
+              'agent_native_execution': False,'attachment_uploads_enabled':True,
+              'attachment_scanner_deployed':True,'vm_resized':False,'retained_vm_memory_choice':'4GiB',
+              'deployment_profile':'4GiB-test-with-private-antivirus-and-bounded-swap',
+              'user_choice':'retain4GiB and enable attachment uploads for testing'}
     path = ROOT / PUBLIC
     if path.exists():
         require(json.loads(path.read_text()) == report, 'Existing public deployment evidence differs; it was not replaced')
@@ -379,7 +386,7 @@ def push_result():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('source', 'all', 'github', 'publish', 'deploy', 'resume', 'status', 'abort', 'record'))
+    parser.add_argument('action', choices=('source', 'all', 'github', 'publish', 'deploy', 'resume', 'status', 'abort', 'record', 'scanner-refresh'))
     parser.add_argument('--identity', type=Path,
                         default=Path.home() / '.config/totalaccounting/recovered-backup-age.key')
     args = parser.parse_args()
@@ -393,6 +400,8 @@ def main():
             result = github()
         elif args.action == 'status':
             result = host_action(load(), 'status') if CONFIG.exists() else {'status': 'Not configured; no VM change'}
+        elif args.action == 'scanner-refresh':
+            result = host_action(load(), 'scanner-refresh')
         elif args.action == 'abort':
             result = host_action(load(), 'abort')
         elif args.action == 'publish':

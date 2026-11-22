@@ -1,5 +1,37 @@
 # Accounting platform implementation instructions
 
+## Revised CR0084GiB test uploads — user request supersedes disabled uploads
+
+The user explicitly now requires attachment uploads for testing on the existing
+4GiB VM. This supersedes the prior uploads-disabled selection. Keep e2-medium,
+same disks/hostname/keys/accounts/MFA/PG process and the exact371-input image.
+No resize/newVM/build. Deployment-only profile: two web workers, seven bounded
+services, real private pinned ClamD with2560MiB RAM and4096MiB combined RAM/swap,
+and2GiB owned or existing host swap on the retained disk. Never overwrite an
+unknown swap path, alter other swap areas/fstab, disable OOM safeguards or skip
+antivirus. Load signatures serially with the daemon stopped; keep database load
+testing and all scan alerts. Require genuine clean/EICAR/fail-closed proof and
+actual free memory/swap before enabling uploads. Daily serial updates may make
+uploads temporarily unavailable. Private scanner has no host ports/egress or
+application keys; cap HTTP request bodies at28MiB and keep file limit25MiB.
+
+Keep every824 frozen CR008 file,371 app inputs,36 migrations, all assertions,
+16 actual native reports/bindings and all85 acceptances exact. Same clone30→36,
+both53/61-table encrypted off-VM restores before public/jobs activation. Never
+rewind after new writes. Keep actual e7 source/record child proof only on the
+operator machine. Accept a fresh successfulCR008 or the exact earlier prepared
+uploads-disabled package without refreshing its binding. An already configured
+old cutover attempt requires explicit inspection; never silently reuse its
+journal/configuration under the new profile. GitHub main was read unchanged
+at4a817c4 on2026-11-22. No native4GiB memory or scanner success is claimed yet.
+
+Agent STATIC source/AST/Compose/Git/archive/secret-text checks only: no tests,
+app setup/runtime, Docker/build/migrations, SSH/cloud/push. Supply52 operator
+resource/rollout contracts and the executable native update package. It reuses
+the actual1186/36 image and retains its previous isolated antivirus/file-recovery
+and worker proof. New4GiB runtime/browser/workload proof stays Pending.
+
+
 ## Selected CR008 existing VM/GitHub update — retain4GiB, new uploads disabled
 
 The user now explicitly authorises GitHub and the existing VM update, superseding

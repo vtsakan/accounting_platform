@@ -1,4 +1,6 @@
-# A candidate must remain stopped across reboot until both restores pass.
+# Candidate HTTP and AV remain stopped across reboot until both restores pass.
 services:
   web:
+    restart: "no"
+  scanner:
     restart: "no"

@@ -29,7 +29,7 @@ RECORDED = (RECEIPT, 'docs/implementation/state.md')
 BASELINE = 'docs/implementation/evidence/CR008-VM-operator-baseline.json'
 from cr008_receipts import PATHS as PRIOR_RECEIPTS, BINDING as PRIOR_BINDING
 RETAINED_REPORTS = (RECEIPT, *PRIOR_RECEIPTS, PRIOR_BINDING)
-UPLOADS_ENABLED = False  # Explicit product-owner choice: retain4GiB, no scanner or resize.
+UPLOADS_ENABLED = True  # Revised explicit request: uploads on the same4GiB test VM.
 QUEUE_CODE = ('compose.production.yml', 'compose.preview-s31.yml', 'compose.preview-s31-hold.yml',
     'accounting/job_models.py', 'accounting/job_services.py',
     'accounting/fee_generation_models.py', 'accounting/fee_generation_services.py',
@@ -165,8 +165,8 @@ def before_public(state):
 def same_capacity(memory_kib, available_kib, disk_free, database_bytes):
     require(3_500_000 <= memory_kib < 4_500_000 and available_kib >= 1_000_000,
         'Expected the retained4GiB VM with sufficient free memory; no resize was attempted')
-    require(disk_free >= max(2*1024**3, 3*database_bytes),
-        'Insufficient retained-disk space for the current database, new clone and image')
+    require(disk_free >= max(6*1024**3, 3*database_bytes + 2*1024**3),
+        'Insufficient retained-disk space for the current database, clone, image, signatures and2GiB test swap')
 
 
 def rebound_operations(original, target):
@@ -193,8 +193,10 @@ def track(root,status,source,*,receipt=None):
         'Status: **'+status+'**. Reuse the actual1186/36 plus antivirus/file-recovery/worker verified image. '
         'Clone the CURRENT30-migration database and migrate only the clone to36, preserving all original data, '
         'people, MFA, sessions, pinned keys and durable queue. Both encrypted backups must restore off-VM before activation. '
-        'Explicit user choice: keep the same4GiB VM, no resize or scanner; new attachment uploads disabled, '
-        'task and fiscal/profile functions enabled. GitHub publication is ordinary fast-forward only. '
+        'Revised user choice: keep the same4GiB VM, enable test attachment uploads with a real private scanner, '
+        'two web workers and2GiB owned or existing swap; no resize. Task and fiscal/profile functions enabled. '
+        'Daily signature updates are serial; scanner failure blocks uploads. Native scanner/memory proof is required. '
+        'GitHub publication is ordinary fast-forward only. '
         'Browser/MFA acceptance, real-client release and all85 full acceptances remain Pending. '
         'See [the procedure](cr008_preview_upgrade_el.md).\n<!-- /CR008-PREVIEW -->')
     path=root/'docs/implementation/state.md';text=path.read_text()

@@ -72,6 +72,18 @@ class AttachmentFormatContracts(SimpleTestCase):
         for extension in ('pdf','doc','docx','png'):
             with self.subTest(extension=extension),self.assertRaises(ValidationError):inspect_content(extension,b'<html>unsafe</html>')
 
+    def test_pdf_opening_navigation_is_allowed_but_page_scripts_are_rejected(self):
+        from pypdf import PdfWriter
+        from pypdf.generic import NameObject,ArrayObject,DictionaryObject,TextStringObject
+        writer=PdfWriter();page=writer.add_blank_page(width=100,height=100)
+        writer._root_object[NameObject('/OpenAction')]=ArrayObject([page.indirect_reference,NameObject('/Fit')])
+        stream=io.BytesIO();writer.write(stream)
+        self.assertEqual(inspect_content('pdf',stream.getvalue()),'application/pdf')
+        page[NameObject('/AA')]=DictionaryObject({NameObject('/O'):DictionaryObject({
+            NameObject('/S'):NameObject('/JavaScript'),NameObject('/JS'):TextStringObject('app.alert(1)')})})
+        stream=io.BytesIO();writer.write(stream)
+        with self.assertRaises(ValidationError):inspect_content('pdf',stream.getvalue())
+
     def test_size_empty_and_extension_are_bounded(self):
         for upload in (file(body=b''),file('x.svg',b'<svg/>'),file(body=b'x'*(MAX_FILE_BYTES+1))):
             with self.assertRaises(ValidationError):upload_bytes(upload)

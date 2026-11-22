@@ -73,9 +73,24 @@ def inspect(extension,data):
         reader=PdfReader(io.BytesIO(data),strict=True)
         if reader.is_encrypted or not 1<=len(reader.pages)<=2000:raise ValueError()
         root=reader.trailer['/Root']
-        names=root.get('/Names',{})
-        if hasattr(names,'get_object'):names=names.get_object()
-        if any(k in root for k in ('/OpenAction','/AA')) or '/JavaScript' in names or '/EmbeddedFiles' in names:raise ValueError()
+        from pypdf.generic import IndirectObject
+        pending=[root];objects=set();references=set();examined=0
+        forbidden={'/AA','/JS','/JavaScript','/EmbeddedFiles','/EF','/RichMediaContent','/XFA'}
+        actions={'/JavaScript','/Launch','/GoToR','/GoToE','/SubmitForm','/ImportData','/Rendition'}
+        while pending:
+            node=pending.pop();examined+=1
+            if examined>50000:raise ValueError()
+            if isinstance(node,IndirectObject):
+                identity=(node.idnum,node.generation)
+                if identity in references:continue
+                references.add(identity);node=node.get_object()
+            if isinstance(node,(dict,list)):
+                if id(node) in objects:continue
+                objects.add(id(node))
+                if isinstance(node,dict):
+                    if forbidden.intersection(node) or node.get('/S') in actions:raise ValueError()
+                    pending.extend(node.values())
+                else:pending.extend(node)
     elif extension=='docx':
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             rows=archive.infolist();names=[r.filename for r in rows]

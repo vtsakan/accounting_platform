@@ -1,5 +1,42 @@
 # Accounting platform implementation instructions
 
+## Selected CR008 existing VM/GitHub update — retain4GiB, new uploads disabled
+
+The user now explicitly authorises GitHub and the existing VM update, superseding
+the earlier deployment hold. They selected RETAIN4GiB and temporarily NO NEW
+attachment uploads. Do not resize, add a scanner/new VM, change billing resources,
+reset accounts/MFA/signing material, or silently enable uploads. The exact passed
+371-input image must remain unchanged. Use a deployment-only Compose overlay
+forcing ATTACHMENT_SCANNER_HOST empty for web/worker/scheduler and prove the
+actual production scanner path denies new bytes without writes. Keep six bounded
+services, existing Redis/scheduler volumes and PostgreSQL process throughout.
+
+Actual native CR008 is Verified1186/36 plus real antivirus,61-table/10-file
+encrypted recovery and retained real worker at2026-11-22T10:32:59+02:00.
+Application image/source b493521e711f340f45aac16535e5935df52cce3b,
+full gate source e7a02974d019d1b611a48c7c7c62b2d9b938e820,
+image91ef03bf/context9a530ae7. The actual --record child commit exists only on
+the operator machine; its ID was not printed and must never be fabricated here.
+Validate it as the exact child of e7 with only the actual result and its state.
+Exclusively bind16 actual reports/old bindings; never refresh them. Preserve all
+824 prior source bindings,371 app inputs,36 migrations and every test assertion.
+
+Existing GitHub main4a817c401d6a9205e62586dc6ab2e70e15866dfa was independently
+read through the connector. VM is actualCR005/schema30, same hostname/disks/
+roles/keys/people. Publish the real operator history by ordinary fast-forward,
+reuse the cached immutable image without rebuilding, clone CURRENT30→36 under
+the restricted role and preserve all old columns/rows. Require the exact eight
+new business tables empty and both encrypted53/61-table off-VM restores with
+the existing independently recovered key before activation. No rollback after
+jobs/HTTP writes begin. Keep restart/hold/recovery paths and daily DB backups.
+
+VM update report must distinguish isolated file-recovery proof from disabled
+live uploads, retain all85 full acceptances and browser/business gates Pending,
+and record no resize/scanner. Agent STATIC source/AST/SQL/template/Git/archive
+checks only; no tests/app/setup/Docker/SSH/cloud/push here. Supply an executable
+operator package, since the genuine verified Git lineage and GCP session live
+on the user's machine. This is preparation, not a claim of completed deployment.
+
 ## CR008 actual full delivery passed — canonical antivirus probe correction
 
 Actual operator source b493521e711f340f45aac16535e5935df52cce3b passed1186/1186,

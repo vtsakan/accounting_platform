@@ -1,0 +1,12 @@
+# User selected the retained4GiB VM and temporarily disabled new uploads.
+# Application image, signing material and existing six-service limits stay exact.
+services:
+  web:
+    environment:
+      ATTACHMENT_SCANNER_HOST: ""
+  worker:
+    environment:
+      ATTACHMENT_SCANNER_HOST: ""
+  scheduler:
+    environment:
+      ATTACHMENT_SCANNER_HOST: ""

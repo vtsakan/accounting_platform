@@ -1,0 +1,4 @@
+# A candidate must remain stopped across reboot until both restores pass.
+services:
+  web:
+    restart: "no"

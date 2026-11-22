@@ -1,7 +1,7 @@
 {
   "change": "CR008",
   "status": "Prepared",
-  "implementation_reference_commit": "git:ce6c99886c0c53ee5feca41b40f84894474ae90e",
+  "implementation_reference_commit": "git:5dc70166ff44f8432dcd40a475637ead865ba2d5",
   "actual_prior_operator_record_commit_prefix": "02e3907",
   "actual_prior_operator_source_commit_prefix": "e1523b9",
   "actual_prior_delivery_tests_passed": 1140,
@@ -754,7 +754,6 @@
     "docs/requirements/CR-006-Manual-client-tasks.md": "sha256:17826b14a42f317460b62606ea5956deb5202756494abfc969f8f11ee2b5e421",
     "docs/requirements/CR-007-Entity-fiscal-profile.md": "sha256:fca84091fcd0cf58fe848602455f432a0e5f5ac138df9cc02808fc5126f047fc",
     "docs/security/README.md": "sha256:56546e3eb26cf24c6bd700e0019f082903daf979c1e94e705ec62aa9a2bfad79",
-    "docs/security/secret_scan_allowlist.csv": "sha256:7ed1e9403da97277021e7541e8fd403a5d15d5a7bc69eb77b8166cdc72f9cf6d",
     "gunicorn.conf.py": "sha256:6ff7e4c6d918f9ed5819acbdfe4711abb56a9553b3f6fb273dc804d0a0b946aa",
     "infrastructure/Caddyfile": "sha256:f2a5cd80a5df5cdb5fe4f1933303e1543acbd4c9873ba337610f875f98abb975",
     "infrastructure/bootstrap_docker.sh": "sha256:8a30ac5fe0898002663b3d464580890665094cdd5005fa70639c31d3a18ea53f",
@@ -937,7 +936,8 @@
     "accounting/tests_boundary.py": "sha256:c8da83dafacbaa07432253556494bcb24647a626c5c9b33644c2c7c3e53be12e",
     "accounting/urls.py": "sha256:1795e5ce9e875d78003f5fb7f44f47a234133882dddbde6d98758c36fdc054da",
     "core/settings/base.py": "sha256:4716498a69bcf16e7eb34055e3fba1c2330f346edb50e4bccbf1625d5a9aa6fc",
-    "docs/implementation/steps.csv": "sha256:0974f36775a83cd428c9fe78adb7c017039c0bdbed8a8f9a4176c62930b94ba9"
+    "docs/implementation/steps.csv": "sha256:0974f36775a83cd428c9fe78adb7c017039c0bdbed8a8f9a4176c62930b94ba9",
+    "docs/security/secret_scan_allowlist.csv": "sha256:3cb14a8a230f8708d01174321d88a2c879e5235c802e261985cf51c64e322b2a"
   },
   "added_files": {
     "accounting/attachment_forms.py": "sha256:651fb20d7f1b93011857c19c1dcf251c38110b865545b13b10f79c580b491c62",

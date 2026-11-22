@@ -1,7 +1,7 @@
 {
   "change": "CR008",
   "status": "Prepared",
-  "implementation_reference_commit": "git:ce6c99886c0c53ee5feca41b40f84894474ae90e",
+  "implementation_reference_commit": "git:5dc70166ff44f8432dcd40a475637ead865ba2d5",
   "actual_prior_operator_record_commit_prefix": "02e3907",
   "actual_prior_operator_source_commit_prefix": "e1523b9",
   "actual_prior_delivery_tests_passed": 1140,
@@ -150,5 +150,5 @@
   "remaining_native_gate": "real canonical antivirus/upload denial, encrypted file recovery and retained real worker",
   "resume_requires_exact_observed_report_and_native_ancestry_and_identical_context": true,
   "resume_fresh_source_history_secret_scan_required": true,
-  "source_lock_sha256": "sha256:bc67bd00b71119c3c2d88365ff9239e4942002bf7ae831a5d931659d744eb055"
+  "source_lock_sha256": "sha256:91efaa88fc29aa982bc0c9c6f816e4fd8a62ec41ee3d72d9fccba3f68aba5973"
 }

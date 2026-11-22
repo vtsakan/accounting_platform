@@ -1,0 +1,23 @@
+{
+  "scope": "existing-preview-cr008",
+  "operator_source": "git:e7a02974d019d1b611a48c7c7c62b2d9b938e820",
+  "operator_report_canonical_sha256": "sha256:51e01b03eafb309c4a525a35e0e84d453b0fc80ba706639837f4b5cb10c6ea75",
+  "files": {
+    "docs/implementation/evidence/CR008-verification.json": "sha256:42f3b332b3b0fda50263d590493e7cc1fd981d37770db36184f8e726e5b31734",
+    "docs/implementation/evidence/CR005-verification.json": "sha256:a80df898d1f26378bc4685841c7753ffd249b95e0495addf0c7c3cd5af082274",
+    "docs/implementation/evidence/CR004-verification.json": "sha256:a0a2731f76ed5a56e8e2a3bfd4bd970cdf7bb5d7da2531a24ea4ab47fe216cc4",
+    "docs/implementation/evidence/CR003-verification.json": "sha256:1f8feac780aa893a9bf8dd7c970ed0a32a553b97b5ce598c217431d590421706",
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891",
+    "docs/implementation/evidence/CR003-operator-baseline.json": "sha256:d0077c3bcfb36803475e47a0bfc9098753bfd9277648ca7153d0220278c18088",
+    "docs/implementation/evidence/CR004-operator-baseline.json": "sha256:dfec50f4305696f4e950e6d44ba66a25bdc4babadf435834bfb729f8b5cb933a",
+    "docs/implementation/evidence/CR004-VM-verification.json": "sha256:4ef12db035b7f93e42730a38ca39fa18fd2a747db5f34d915e74322f5feafa4e",
+    "docs/implementation/evidence/CR004-VM-operator-baseline.json": "sha256:1593e2378a3c7e6adb5c71405bbfa73b968680fb2810d20eb6c32304efd35eaa",
+    "docs/implementation/evidence/CR005-operator-baseline.json": "sha256:63129cd558fbe5af29723c29d7e5588ee6c414bcd7627495cecbe800d4ccad14",
+    "docs/implementation/evidence/CR005-VM-verification.json": "sha256:b141e22eec872577f965ef7539a4ee275563098b6b527cf7bd47468b492c2a01",
+    "docs/implementation/evidence/CR005-VM-operator-baseline.json": "sha256:f020550f933e561c948d248b841268e7604df01fdfa93947c9ee519ddf84e208",
+    "docs/implementation/evidence/CR006-operator-baseline.json": "sha256:cd8ce51414a35ff94b061cd0f37417813a9ee8bc3f0ce0a10da789babceb5503",
+    "docs/implementation/evidence/CR007-operator-baseline.json": "sha256:eaad5d5787cc1c8b1a826e3d5cfc6b811bf06c32eca53464715ac1d0e6480201",
+    "docs/implementation/evidence/CR007-verification.json": "sha256:b90b0bb2e39c4017150d6332a81bde0d26b8f387cabe8bd76af440544e98bacf",
+    "docs/implementation/evidence/CR008-operator-baseline.json": "sha256:d8a4ca1983058073b1276bf2e1650f4eae20f023545db9724512be15b896f49d"
+  }
+}

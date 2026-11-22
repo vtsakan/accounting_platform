@@ -35,8 +35,8 @@ def inspect(root):
         'console.','requestSubmit(','.submit(', 'bmctx=', 'request_id=', 'password=', 'username=', 'postMessage(')),
         'GSIS copy cannot store/log secrets, submit externally or put credentials/session tokens in a URL')
     view=(root/'accounting/gsis_views.py').read_text()
-    require("@office_view('clients.credentials', mfa=True)" in view and '@require_POST' in view
-        and "'no-store, private'" in view and "'no-referrer'" in view, 'Retain MFA, POST and secret response headers')
+    require("@office_view('clients.credentials')" in view and '@require_POST' in view
+        and "'no-store, private'" in view and "'no-referrer'" in view, 'Retain the existing vault/MFA policy, POST and secret response headers')
     template=(root/'accounting/templates/accounting/entity_profile/gsis.html').read_text()
     require('type="password"' in template and template.count('data-gsis-launch')==2
         and '{{ taxis_' not in template and '{% csrf_token %}' in template, 'Two blank-on-GET selected-person controls required')

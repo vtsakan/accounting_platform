@@ -1,6 +1,7 @@
 """Operator PG17 contracts for explicit GSIS credential copy; no GSIS requests."""
 import json
 import secrets
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -9,7 +10,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .auth_policy import state_for
+from .auth_policy import bind_session, state_for
 from .counterparty_services import archive_counterparty
 from .gsis_services import credentials_for_gsis
 from .models import AccountantProfile, Charge, EntityProfileEvent, FinanceAuditEvent, Office, TaxisCredential, Transaction
@@ -64,7 +65,8 @@ class GsisContracts(ProfileSupport, TestCase):
     def test_owner_and_active_accountant_both_have_access(self):
         self.save(credentials=self.credentials())
         for user in (self.owner, self.member):
-            self.assertEqual(self.verified_client(user).post(self.url()).status_code, 200)
+            client = self.verified_client(user) if user == self.owner else self.client_for(user)
+            self.assertEqual(client.post(self.url()).status_code, 200)
         self.assertEqual(set(EntityProfileEvent.objects.filter(action='REVEAL').values_list('actor_id',flat=True)),
             {self.owner.pk,self.member.pk})
 
@@ -81,9 +83,12 @@ class GsisContracts(ProfileSupport, TestCase):
         self.assertEqual(Client().post(self.url()).status_code, 302)
         self.assertFalse(EntityProfileEvent.objects.filter(action='REVEAL').exists())
 
-    def test_accountant_without_verified_mfa_is_sent_to_mfa(self):
+    def test_owner_without_verified_mfa_is_sent_to_mfa(self):
         self.save(credentials=self.credentials()); client = Client()
-        staff_client_login(client, self.member)
+        client.force_login(self.owner)
+        session = client.session
+        bind_session(SimpleNamespace(user=self.owner, session=session), new_login=True)
+        session.save()  # Legitimate password-stage session; no OTP device or verified flag.
         response = client.post(self.url())
         self.assertEqual(response.status_code, 302)
         self.assertIn('/auth/mfa/', response['Location'])

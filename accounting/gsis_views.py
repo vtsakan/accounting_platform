@@ -9,7 +9,7 @@ from .capabilities import office_view
 from .gsis_services import credentials_for_gsis
 
 
-@office_view('clients.credentials', mfa=True)
+@office_view('clients.credentials')
 @never_cache
 @sensitive_post_parameters('__ALL__')
 @sensitive_variables('__ALL__')

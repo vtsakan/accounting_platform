@@ -10,7 +10,8 @@ pair inside the authenticated application for explicit copy/paste. Missing pair
 means two blank fields. It does not fill or submit the external site's form.
 
 Reuse the existing sealed vault and owner/active-accountant authority; add a
-POST/CSRF/MFA-only same-office read with attributed value-free REVEAL audit.
+POST/CSRF-only same-office read under the existing session/MFA policy, with
+attributed value-free REVEAL audit.
 No plaintext in GET/URLs/logs/storage/exports; mask password, clear the transient
 panel on close/pagehide/90seconds and reject stale asynchronous results. GSIS
 receives credentials only when the human pastes and submits its official form.
@@ -18,8 +19,9 @@ receives credentials only when the human pastes and submits its official form.
 No migration, financial change, account/key reset or external connector API.
 Keep36 old migrations,1186 original test methods/assertions and every actual
 prior receipt/binding. A new source lock declares six necessary old integration
-changes and one appended non-secret scan review for the typeof literal "string";
-all earlier review rows remain unchanged. Bind all new source. Supply24 new PG17 contracts.
+changes and two precise public literal scan reviews (typeof "string" and a
+public metadata review note). All earlier rows remain unchanged. Bind all new
+source. Supply24 new PG17 contracts.
 Fresh production image/full1210 suite/36 finance cases, real file antivirus/
 recovery and monthly worker are OPERATOR gates. Actual GSIS/window/clipboard
 browser acceptance remains separate and Pending. Agent static checks only.

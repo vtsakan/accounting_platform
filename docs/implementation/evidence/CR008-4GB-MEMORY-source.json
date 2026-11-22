@@ -12,9 +12,9 @@
   "application_inputs": 371,
   "retained_migrations": 36,
   "retained_original_source_bindings": 824,
-  "retained_native_tool_guard_methods": 81,
-  "additional_native_tool_guard_methods_supplied": 20,
-  "native_tool_guard_methods_supplied": 101,
+  "retained_native_tool_guard_methods": 101,
+  "additional_native_tool_guard_methods_supplied": 14,
+  "native_tool_guard_methods_supplied": 115,
   "agent_tests_executed": false,
   "agent_runtime_executed": false,
   "vm_resized": false,
@@ -33,7 +33,7 @@
   },
   "actual_new_cgroup_oom_counters_required": "Zero oom/oom_kill/oom_group_kill for the new web/worker/scheduler/scanner containers",
   "actual_report_files_bound_exclusively": 19,
-  "actual_new_profile_execution": "Pending operator execution",
+  "actual_new_profile_execution": "Pending operator execution after Compose JSON correction",
   "full_requirement_acceptances_pending": 85,
   "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
   "sha256": {
@@ -41,10 +41,18 @@
     "docs/implementation/cr008_memory_retry_el.md": "sha256:76e4e6dbee2c3b9abcd1e172fc8d89663558939eb62c1881ea9a12209eb1aa96",
     "docs/implementation/evidence/CR008-4GB-MEMORY-observed-failure.json": "sha256:9dd83eb3362ae053741cf4e4b1e8eab04ffd41b55b9d70363b2aecc81a318ada",
     "docs/implementation/evidence/CR008-4GB-source.json": "sha256:b98782d1914cbf60e6241bd09e2d63b5aa780767e255c2437a9b79036c47112e",
-    "tools/preview_cr008_memory_host.py": "sha256:0989ee2f2c15d744cc367cc9f39726f58051ac07847567a8414c454817ce1ffb",
+    "tools/preview_cr008_memory_host.py": "sha256:bdc46a90137acdd93bb3f379ecc8700ae8f557829194523575876c312a5c43f5",
     "tools/preview_cr008_memory_policy.py": "sha256:85ab12d276381de25151a93a93790d2fae607b62684efd990e6d91a4ae897907",
     "tools/preview_cr008_memory_release.py": "sha256:65a25b5d1ed66e832fb5a348c00a8166988a46232d189dc98c99b226abc063ea",
     "tools/preview_cr008_memory_runtime.py": "sha256:f26f136a7b09086df8c99c44f2f99f6d3c4a5f328ca31e9f673a44e624f1b19a",
-    "tools/test_preview_cr008_memory.py": "sha256:37f895ffb0bb40c307d747674835d0b11c5e038e62c85a30189b53f0f3cfdbde"
-  }
+    "tools/test_preview_cr008_memory.py": "sha256:37f895ffb0bb40c307d747674835d0b11c5e038e62c85a30189b53f0f3cfdbde",
+    "tools/preview_cr008_memory_json_retry.py": "sha256:57bd56613f8a09bf94f64406036a7f509ed0b8492a7384959eb85582ed326870",
+    "tools/test_preview_cr008_memory_json.py": "sha256:87996ae368c5668a16eb469d2a8cc9e5cc21fa144fb9d181ea9cb5d41203bdf1",
+    "docs/implementation/cr008_compose_memory_json_fix_el.md": "sha256:9c018cd659ad6d505ed14e729b43f613646076921c742068e2e82574c7630a22",
+    "docs/implementation/evidence/CR008-4GB-MEMORY-json-prior-source.json": "sha256:f789a259cbba0710d1a9b06c2a8e420d7997bfe58f0078c93283a1ea9faed4a4",
+    "docs/implementation/evidence/CR008-4GB-MEMORY-json-correction.json": "sha256:ad34ceac913b1d85c6ed7120cfb804e82ac86c2ade4ec5512c493cc5a35b0a68"
+  },
+  "json_correction_reference_commit": "git:4db1786ec0ce1517ba79ea2f6f2bc44e098a22e7",
+  "preceding_prepared_source_manifest": "docs/implementation/evidence/CR008-4GB-MEMORY-json-prior-source.json",
+  "compose_memory_json_integer_and_decimal_string_supported": true
 }

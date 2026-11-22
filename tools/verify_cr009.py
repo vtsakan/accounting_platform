@@ -19,12 +19,20 @@ from r1_gate import digest_bytes, require
 from verify_cr008 import retained_assertion_dump
 
 LOCK=ROOT/'docs/implementation/evidence/CR009-source-lock.json'
+MANIFEST=ROOT/'docs/implementation/evidence/CR009-source.json'
 REPORT='docs/implementation/evidence/CR009-verification.json'
 STATE='docs/implementation/state.md'
 
 
 def source_check():
     static=inspect(ROOT); policy=json.loads(LOCK.read_text()); expected={}
+    manifest=json.loads(MANIFEST.read_text())
+    require(not LOCK.is_symlink() and not MANIFEST.is_symlink()
+        and manifest['change']==policy['change']=='CR-009' and manifest['status']==policy['status']=='Prepared'
+        and manifest['source_lock_sha256']==digest_bytes(LOCK.read_bytes()), 'The prepared GSIS source-lock identity differs')
+    require(policy['retained_test_count']==1186 and policy['new_test_methods']==24 and policy['expected_suite']==1210
+        and policy['application_inputs']==377 and policy['retained_migrations']==36 and policy['new_migrations']==0,
+        'Keep the exact selected GSIS source, retained suite and migration scope')
     for section in ('unchanged_files','changed_files','added_files'):
         entries=policy[section]
         require(isinstance(entries,dict) and bool(entries),'Missing source binding section')

@@ -1,0 +1,255 @@
+#!/usr/bin/env python3
+"""Change the completed CR008 runtime profile; never clone, migrate or rewind DBs."""
+import argparse
+import fcntl
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+import operations_common as oc
+import operations_host as ops
+import preview_common as common
+import preview_host as host
+import preview_cr008_host as runtime
+import preview_cr008_scanner as scanner
+import preview_cr008_profile_policy as policy
+from r1_gate import digest_bytes, digest_object, require
+from vm_material_common import release_context
+from vm_material_host import runtime_secrets, web_identity
+from vm_upgrade_host import inventory, migrations, pause_timers, wait_web
+
+PLAN=Path('/etc/accounting/cr008-4gb-profile-plan.json')
+STATE=Path('/etc/accounting/cr008-4gb-profile-state.json')
+HOLD=Path('/etc/accounting/cr008-4gb-profile-in-progress')
+LEGACY_STATE=Path('/etc/accounting/cr008-preview-state.json')
+
+
+def checkpoint(state, phase):
+    state['phase']=phase;common.private_json(STATE,state)
+    print('CR008PROFILE-DIAG '+json.dumps({'phase':phase}),file=sys.stderr,flush=True)
+
+
+def legacy_unchanged(state):
+    require(LEGACY_STATE.is_file() and digest_bytes(LEGACY_STATE.read_bytes())==state['legacy_journal_sha256'],
+        'The previous completed journal changed; it was not overwritten')
+    runtime.same_database_process(state)
+
+
+def stage(value,bundle):
+    require(not STATE.exists() and not HOLD.exists(),'A profile journal exists; retain it and use status/resume/rollback')
+    require(value.get('profile')==policy.PROFILE,'A concrete existing-database profile is required')
+    source,target=value['source'],value['target'];policy.transition(source,target)
+    runtime.source_check(source)
+    require(LEGACY_STATE.is_file() and not LEGACY_STATE.is_symlink(),'Retain the actual previous completed journal')
+    legacy=LEGACY_STATE.read_bytes();policy.completed_journal(json.loads(legacy),source)
+    require(not runtime.HOLD.exists(),'The prior deployment has an active hold; retain its recovery path')
+    for service in ('db','web','caddy','redis','worker','scheduler'):
+        item=runtime.container(source,service)
+        require(item['State']['Running'],'An existing service is stopped: '+service)
+        if service in ('web','redis','worker','scheduler'):
+            require(item['State'].get('Health',{}).get('Status')=='healthy','An existing service is unhealthy: '+service)
+    for service in ('web','worker','scheduler'):
+        env=dict(s.split('=',1) for s in runtime.container(source,service)['Config']['Env'] if '=' in s)
+        require(env.get('ATTACHMENT_SCANNER_HOST')=='','The observed previous uploads-disabled source differs')
+    host.running_image_check(source,host.image_check(source),runtime.container(source,'web'))
+    queue=runtime.queue_storage(source);capacity=runtime.capacity(source)
+    release=host.unpack(bundle,value['bundle_sha256'],common.deployment_commit(target))
+    previous=host.release_path(source)
+    require(release_context(previous)==release_context(release)==policy.prior.CONTEXT,
+        'Reuse the identical application context; no build or image substitution')
+    expected=sorted(p.stem for p in (release/'accounting/migrations').glob('[0-9]*.py'))
+    require(len(expected)==36 and migrations(source)==expected,'The current database must already have the exact36 migrations')
+    for name in expected:
+        relative='accounting/migrations/'+name+'.py'
+        require((release/relative).read_bytes()==(previous/relative).read_bytes(),'A retained migration changed')
+    for name in ('docker/preview-pins.json','infrastructure/Caddyfile',*policy.prior.QUEUE_CODE):
+        require((release/name).read_bytes()==(previous/name).read_bytes(),'An existing queue/database/proxy foundation changed')
+    host.image_check(target);host.environment_file(target)
+    runtime.compose(target,'config','--quiet')
+    resolved=runtime.compose(target,'config','--format','json',json_output=True)
+    require(set(resolved['services'])=={'db','web','caddy','redis','worker','scheduler','scanner'},'Expected exactly seven bounded services')
+    require(resolved['services']['scanner']['image']==scanner.IMAGE
+        and resolved['services']['web']['environment']['GUNICORN_WORKERS']=='2','Pinned scanner/two-worker profile differs')
+    resources=scanner.prepare(target)
+    runtime.compose(target,'run','--rm','--no-deps','-T','--entrypoint','caddy','caddy','validate',
+        '--config','/etc/caddy/Caddyfile','--adapter','caddyfile')
+    value.update(created_at=oc.now(),source_operations=ops.load(),capacity=capacity,scanner_resources=resources,
+        database_process=runtime.database_identity(source),runtime_secrets=runtime_secrets(),queue_storage=queue,
+        static_assets=runtime.journal_static_assets(target),legacy_journal_sha256=digest_bytes(legacy),
+        source_boot_wrapper=Path('/usr/local/sbin/accounting-preview').read_text(),public_cutover_started=False)
+    common.private_json(PLAN,value)
+    return {'status':'Planned','plan_sha256':digest_object(value),'schema_before':36,'schema_after':36,
+        'same_current_database':True,'database_cloned_or_migrated':False,'services_restarted':False}
+
+
+def hold():
+    HOLD.write_text('Same-current-database CR008 runtime profile in progress\n');HOLD.chmod(0o600)
+    for unit in ('accounting-preview.service','accounting-backup.service','accounting-monitor.service'):
+        path=Path('/etc/systemd/system')/(unit+'.d')/'cr008-4gb-profile.conf'
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_text('[Unit]\nConditionPathExists=!'+str(HOLD)+'\n')
+    common.run(['systemctl','daemon-reload'])
+
+
+def resume_operations(*,active):
+    HOLD.unlink(missing_ok=True)
+    common.run(['systemctl','start',*oc.UNITS])
+    if active:scanner.start_timer()
+    else:scanner.stop_timer()
+
+
+def bind_target(state):
+    runtime.bind(state['target'],state['target_operations'],new_boot=False)
+    wrapper=Path('/usr/local/sbin/accounting-preview')
+    wrapper.write_text('#!/bin/sh\nexec /usr/bin/python3 /usr/local/lib/accounting/preview_cr008_profile_host.py "$@"\n')
+    wrapper.chmod(0o755)
+    scanner.install_timer()
+    drop=Path('/etc/systemd/system')/(scanner.SERVICE+'.d')/'cr008-profile-hold.conf'
+    drop.parent.mkdir(parents=True,exist_ok=True)
+    drop.write_text('[Unit]\nConditionPathExists=!'+str(HOLD)+'\n')
+    common.run(['systemctl','daemon-reload'])
+
+
+def prepare(expected):
+    require(not STATE.exists(),'A profile attempt exists; do not overwrite its journal')
+    state=json.loads(PLAN.read_text());require(digest_object(state)==expected,'The reviewed profile plan changed')
+    policy.transition(state['source'],state['target']);runtime.source_check(state['source']);legacy_unchanged(state)
+    require((host.release_path(state['target'])/'.bundle.sha256').read_text().strip()==state['bundle_sha256'],
+        'Staged profile source differs')
+    checkpoint(state,'preparing')
+    try:
+        hold();pause_timers();runtime.stop_writers(state['source'])
+        state['frozen_snapshot']=inventory(state['source'])
+        require(len(state['frozen_snapshot'])==61,'Compare every61 current public tables')
+        checkpoint(state,'current_database_frozen')
+        state['before_backup']=ops.backup(state['source_operations'])['receipt']
+        require(inventory(state['source'])==state['frozen_snapshot'],'Current rows changed during the before backup')
+        state['target_operations']=policy.prior.rebound_operations(state['source_operations'],state['target'])
+        oc.validate(state['target_operations']);checkpoint(state,'binding_same_database_profile')
+        bind_target(state)
+        scanner.update(state['target'],runtime.compose,staging=True);scanner.wait(state['target'],runtime.container)
+        runtime.compose(state['target'],'up','--detach','--no-deps','--force-recreate','--pull','never','web',staging=True)
+        wait_web(state['target']);web_identity(state['target'])
+        state['scanner_pre_activation']=scanner.proof(state['target'],runtime.compose)
+        require(inventory(state['target'])==state['frozen_snapshot'],'Original current rows changed during profile preparation')
+        legacy_unchanged(state)
+        state['after_backup']=ops.backup(state['target_operations'])['receipt']
+        require(inventory(state['target'])==state['frozen_snapshot'],'Current rows changed during the after backup')
+        checkpoint(state,'awaiting_off_vm_restore');return state
+    except Exception:
+        checkpoint(state,'prepare_failed')
+        try:rollback()
+        except Exception:checkpoint(state,'needs_profile_recovery')
+        raise
+
+
+def rollback():
+    state=json.loads(STATE.read_text());policy.rollback_database(state['source'],state['target']);legacy_unchanged(state)
+    require(host.load() in (state['source'],state['target']),'Installed configuration belongs to a different attempt')
+    hold();pause_timers();scanner.stop_timer()
+    runtime.compose(state['target'],'stop','--timeout','90','scheduler','worker','caddy','web','scanner')
+    runtime.bind(state['source'],state['source_operations'],new_boot=False)
+    wrapper=Path('/usr/local/sbin/accounting-preview');wrapper.write_text(state['source_boot_wrapper']);wrapper.chmod(0o755)
+    runtime.compose(state['source'],'up','--detach','--no-deps','--pull','never','redis','web');wait_web(state['source'])
+    runtime.compose(state['source'],'up','--detach','--no-deps','--pull','never','worker','scheduler','caddy')
+    legacy_unchanged(state)
+    checkpoint(state,'configuration_rolled_back_current_database_retained');resume_operations(active=False)
+    return summary(state)
+
+
+def activate(restored):
+    state=json.loads(STATE.read_text());target=state['target']
+    require(host.load()==target and ops.load()==state['target_operations'],'The active profile/backup binding differs')
+    legacy_unchanged(state)
+    if not state['public_cutover_started']:
+        policy.ready(state,restored)
+        require(inventory(target)==state['frozen_snapshot'],'Current rows changed before activation')
+        state['off_vm_restored']=restored;state['public_cutover_started']=True;checkpoint(state,'public_cutover_started')
+    else:require(state.get('off_vm_restored')==restored,'Retain the exact original recovery proof pair')
+    try:
+        runtime.compose(target,'up','--detach','--no-deps','--pull','never','web','redis','scanner')
+        wait_web(target);scanner.wait(target,runtime.container);scanner.start_timer()
+        runtime.compose(target,'up','--detach','--no-deps','--pull','never','worker','scheduler')
+        for _ in range(90):
+            if all(runtime.container(target,s)['State'].get('Health',{}).get('Status')=='healthy' for s in ('worker','scheduler')):break
+            time.sleep(2)
+        else:raise RuntimeError('The retained worker/scheduler did not become healthy')
+        runtime.compose(target,'up','--detach','--no-deps','--pull','never','caddy')
+        state['runtime']=runtime.runtime_check(state)
+        checkpoint(state,'needs_public_check');resume_operations(active=True);return state
+    except Exception:
+        checkpoint(state,'activation_failed')
+        try:rollback()  # Same image/schema/CURRENT DB, including any new public writes.
+        except Exception:checkpoint(state,'needs_profile_recovery')
+        raise
+
+
+def complete(checks):
+    state=json.loads(STATE.read_text());require(state['public_cutover_started'] and state.get('off_vm_restored'),'No restored active profile')
+    names=('public_https_readiness','greek_login','same_origin_form_post','null_foreign_origin_denied',
+        'missing_csrf_denied','certificate_chain_and_hostname_verified','material_login')
+    require(all(checks.get(k) is True for k in names) and checks.get('immutable_image_static_assets_verified')==10,
+        'Public HTTPS/CSRF/static proof is incomplete')
+    legacy_unchanged(state);state['runtime']=runtime.runtime_check(state)
+    state.update(public_checks=checks,completed_at=oc.now());state['monitor']=ops.monitor(state['target_operations'])
+    checkpoint(state,'profile_verified');resume_operations(active=True);return state
+
+
+def summary(state):
+    return {'status':state['phase'],'profile':policy.PROFILE,'same_current_database':True,
+        'database_cloned_or_migrated':False,'public_cutover_started':state['public_cutover_started'],
+        'hold_active':HOLD.exists(),'attachment_uploads_enabled':state.get('runtime',{}).get('attachment_uploads_enabled'),
+        'completed_at':state.get('completed_at'),'old_completed_journal_retained':True}
+
+
+def boot():
+    require(not HOLD.exists(),'Profile hold is active; startup cannot promote or migrate anything')
+    state=json.loads(STATE.read_text());require(state['public_cutover_started'] and host.load()==state['target'],'No active profile binding')
+    host.mounted(state['target']);scanner.ensure_swap();scanner.volume()
+    require((common.HOST_DATA/'postgres17/PG_VERSION').read_text().strip()=='17','Retained PG17 data is missing')
+    require(digest_bytes(LEGACY_STATE.read_bytes())==state['legacy_journal_sha256'],'Previous completed journal changed')
+    db=runtime.container(state['target'],'db')
+    if not db['State']['Running']:common.run(['docker','start',db['Id']])
+    runtime.compose(state['target'],'up','--detach','--no-deps','--wait','--wait-timeout','900','--pull','never',
+        'redis','web','worker','scheduler','scanner','caddy')
+    scanner.start_timer();return {'status':'Resumed same current schema36 database; no migrations or account reset'}
+
+
+def refresh_scanner():
+    state=json.loads(STATE.read_text());require(not HOLD.exists() and state['public_cutover_started']
+        and host.load()==state['target'],'Only refresh the active existing-database profile')
+    scanner.update(state['target'],runtime.compose);scanner.wait(state['target'],runtime.container)
+    proof=scanner.proof(state['target'],runtime.compose)
+    common.private_json(Path('/etc/accounting/cr008-profile-scanner-refresh.json'),{'at':oc.now(),**proof});return proof
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('action',choices=('plan','prepare','state','status','activate','complete','rollback','resume','secrets','scanner-refresh'))
+    parser.add_argument('--input',type=Path);parser.add_argument('--bundle',type=Path)
+    parser.add_argument('--plan-sha256');parser.add_argument('--proof',type=Path);args=parser.parse_args()
+    try:
+        require(os.geteuid()==0,'Use the existing root-operated VM helper')
+        os.environ.pop('DOCKER_HOST',None);os.environ.pop('DOCKER_CONTEXT',None)
+        with open('/run/accounting-preview.lock','a') as lock:
+            fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            if args.action=='plan':result=stage(json.loads(args.input.read_text()),args.bundle)
+            elif args.action=='prepare':result=prepare(args.plan_sha256)
+            elif args.action=='state':result=json.loads(STATE.read_text())
+            elif args.action=='status':result=summary(json.loads(STATE.read_text())) if STATE.exists() else {'status':'Not applied'}
+            elif args.action=='activate':result=activate(json.loads(args.proof.read_text()))
+            elif args.action=='complete':result=complete(json.loads(args.proof.read_text()))
+            elif args.action=='rollback':result=rollback()
+            elif args.action=='secrets':host.refresh(host.load());result={'status':'Existing pinned runtime material loaded'}
+            elif args.action=='scanner-refresh':result=refresh_scanner()
+            else:result=boot()
+        print(json.dumps(result,ensure_ascii=False))
+    except Exception as error:
+        reason=str(error) if isinstance(error,RuntimeError) else 'Profile operation stopped; private provider output omitted'
+        print(json.dumps({'status':'Stopped','reason':reason,'error':type(error).__name__}));sys.exit(1)
+
+
+if __name__=='__main__':main()

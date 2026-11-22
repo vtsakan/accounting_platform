@@ -1,0 +1,21 @@
+{
+  "step": "CR008-4GB",
+  "status": "Prepared",
+  "observed_at": "2026-11-22",
+  "source": "GitHub connector read of the actual published committed report",
+  "actual_record_commit": "git:24b32799871d887878e06247bd1c351c16391527",
+  "actual_deployment_commit": "git:ab10d6fc285be6b2be69b8891123e38e9ad57202",
+  "actual_report_git_blob": "git-blob:3fb2d9c2bf55dcc158c86975a365619361f3444f",
+  "actual_report_canonical_sha256": "sha256:bb3fe31f400807469bd61fe0498fc1807af65be2fc50c0b6746c080702a0dd36",
+  "actual_report_raw_sha256": "sha256:23528beb7bceae0db9b503aac9e303c279cedec3a139736c8572f8821563af8c",
+  "previous_vm_status": "Verified",
+  "previous_schema": 36,
+  "previous_uploads_enabled": false,
+  "previous_vm_actual_memory_kib": 4001148,
+  "new_profile_execution": "Pending operator",
+  "operator_latest_failure": "Retained previous deployment configuration has a different profile",
+  "explanation": "Old configuration is the completed deployment; change the current schema36 database profile using a separate namespace, not another30-to36 clone",
+  "agent_runtime_executed": false,
+  "old_receipts_or_private_config_reconstructed_or_overwritten": false,
+  "full_requirement_acceptances_pending": 85
+}

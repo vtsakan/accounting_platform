@@ -1,0 +1,28 @@
+{
+  "step": "CR008-4GB-duration-fix",
+  "status": "Prepared",
+  "observed_on": "2026-11-22",
+  "operator_observed_failure": {
+    "command": "docker compose config --quiet",
+    "compose_version": "5.7.0",
+    "stderr": "decoding failed due to the following error(s):\n\n'services[scanner].healthcheck.start_period' time: unknown unit \"min\" in duration \"10min\"\n",
+    "host_module": "preview_cr008_profile_host.py",
+    "function": "stage",
+    "line": 71
+  },
+  "correction": {
+    "path": "compose.preview-cr008.yml",
+    "before": "10min",
+    "after": "10m",
+    "seconds": 600
+  },
+  "existing_operator_guards_previously_passed": 73,
+  "additional_operator_guards_supplied": 8,
+  "new_runtime_execution": "Pending operator",
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "same_current_database": true,
+  "new_image_or_build": false,
+  "new_migrations": 0,
+  "full_requirement_acceptances_pending": 85
+}

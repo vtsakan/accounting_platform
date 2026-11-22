@@ -133,6 +133,8 @@ def deploy(config,identity):
         print('[CR008-4GB] Αλλαγή προφίλ στην ίδια τρέχουσα βάση36, χωρίς migration ή clone.',flush=True)
         state=host_action(config,'prepare','--plan-sha256',plan['plan_sha256'])
     else:state=host_action(config,'state')
+    require(state.get('source')==config['source'] and state.get('target')==config['target'],
+        'The retained profile attempt belongs to another configuration; preserve its recovery path')
     require(state['phase'] in ('awaiting_off_vm_restore','public_cutover_started','needs_public_check','profile_verified'),
         'The retained profile attempt requires review: '+state['phase'])
     if state['phase']!='profile_verified':

@@ -12,11 +12,7 @@ new operator retry Pending. VM/GitHub stayCR005; all85 acceptances Pending.
 ## Current selected change — CR007 fiscal entity editor, 2026-11-21
 
 <!-- CR007-RESULT -->
-CR007 source Prepared: four tabs, canonical per-role balances, separate contact
-state, six person kinds, AMKA/spouse/inherited contacts, flags/tags/observations,
-sealed attributable TaxisNet access for owner AND active accountants, grouped
-directory PDF/CSV. New operator gate and browser/business acceptance Pending.
-User explicitly HOLDS VM/GitHub on actual CR005. All85 full acceptances Pending.
+CR-007 source Prepared; operator technical gate Verified: 1140 tests, 36 financial cases, entity-profile/balance/spouse/flags/tags/sealed-credentials/export contracts and retained real monthly-worker/ack-loss gate passed. VM/GitHub explicitly held on CR005 by user; accountant/browser acceptance remain Pending. All 85 full acceptances remain Pending.
 <!-- /CR007-RESULT -->
 
 Actual CR006 delivery1085/1085 and36 finance passed21/11/2026 at21:37:39 Athens,

@@ -1,7 +1,7 @@
 {
   "change": "CR008",
   "status": "Prepared",
-  "implementation_reference_commit": "git:c7eb24c002bbe119b188d38eedab5b1b512f0221",
+  "implementation_reference_commit": "git:7f60054015be27cbf28f79a2d906192f764082e6",
   "actual_prior_operator_record_commit_prefix": "02e3907",
   "actual_prior_operator_source_commit_prefix": "e1523b9",
   "actual_prior_delivery_tests_passed": 1140,
@@ -9,7 +9,7 @@
   "actual_prior_full_cr007_status": "Verified; full raw receipt bound only on operator machine",
   "prior_application_context_digest": "sha256:15e6f913692f72784d708e3b5e6c29caea5189004fc135158102c27f6b61092a",
   "prior_application_inputs": 351,
-  "application_context_digest": "sha256:b392cd37b50c1dac43ff8e39bddf4863ca5d24575761e41ab56424a4b2ca3456",
+  "application_context_digest": "sha256:775fca3b51d03d8e30abc200847bfa9ac1d6a16e4daef5865013e727ee1ca268",
   "application_inputs": 371,
   "retained_test_count": 1140,
   "retained_method_ast_nodes": 1142,
@@ -61,5 +61,5 @@
   "full_requirement_acceptances_pending": 85,
   "requirements": "docs/requirements/CR-008-Client-attachments.md",
   "operator_command": "python3 tools/verify_cr008.py --record --host-dns",
-  "source_lock_sha256": "sha256:5d486f4822b706b900e67278d063968afac13f5df3829edf73ece23d9c48212f"
+  "source_lock_sha256": "sha256:9a37e0065329e69d505935fedcbda5823738f79fedbb36b2f23d2f7dfc9c7fe3"
 }

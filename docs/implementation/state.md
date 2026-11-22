@@ -843,3 +843,8 @@ Verified: 46 S18 tests; 428 total; 13 corrected known cases, 13 still reproduced
 <!-- S19-RESULT -->
 Prepared: 67 S19 tests; 495 total; BAL-001–003 corrected, 10 known failures still reproduced, no unexpected outcomes. All 784 current boundary cases passed, retaining the original 652. Docker execution: False. Legacy amounts and history remain; opening dates require explicit owner/password/recent-MFA review. Signed adjustments are immutable and do not create operating cash. No existing demo/VM migration performed by verification.
 <!-- /S19-RESULT -->
+
+
+<!-- CR008-4GB-MEMORY -->
+Status: **Verified**. Existing CR008 schema36 database and identical image retained; 4GiB test uploads use a real private bounded scanner,2GiB swap and two web workers and the previously healthy Python-service memory limits. No clone/migration or database rewind; actual61/61-table off-VM restores and clean/EICAR/memory proof required. Previous completed CR008 evidence and all85 acceptances/browser/business gates remain unchanged.
+<!-- /CR008-4GB-MEMORY -->

@@ -1,0 +1,136 @@
+{
+  "step": "CR008-4GB-MEMORY",
+  "status": "Verified",
+  "verified_at": "2026-11-22T18:34:06+00:00",
+  "scope": "existing-current-schema36-database-profile-only",
+  "previous_completed_vm_record": "git:24b32799871d887878e06247bd1c351c16391527",
+  "application_commit": "git:b493521e711f340f45aac16535e5935df52cce3b",
+  "deployment_commit": "git:679ad0ac1223b64cc6b345b1093766f2d1a83063",
+  "image": "europe-west1-docker.pkg.dev/accounting-514109/accounting-platform/web@sha256:5e787ba92a958a8928d72e321646466ee77b5e8e9f1589f4e2a11b2d1ad995e5",
+  "application_context_digest": "sha256:9a530ae7855d8e5436dfbaf2a53c58591f62ff644fe2266e526948cf1d073248",
+  "same_current_database": true,
+  "database_cloned": false,
+  "database_migrated": false,
+  "schema_before": 36,
+  "schema_after": 36,
+  "previous_completed_journal_unchanged": true,
+  "old_local_deployment_config_unchanged": true,
+  "previous_failed_deployment": "git:05861501f23b7d26c7259011119b8ce6de41632d",
+  "previous_failed_journal_unchanged": true,
+  "previous_failed_journal_sha256": "sha256:791744c1ef6825c6b1c5652914c63e59c93ef49b776c2d8ee3d2a10e17c68d5e",
+  "database_container_restarted": false,
+  "accounts_mfa_or_keys_reset": false,
+  "durable_queue_retained": true,
+  "original_current_rows_preserved_during_maintenance": true,
+  "runtime": {
+    "python_memory_cgroups": {
+      "web": {
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "worker": {
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "scheduler": {
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "scanner": {
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      }
+    },
+    "web_workers": 2,
+    "worker_concurrency": 1,
+    "scheduler_containers": 1,
+    "observed_memory_caps_mib": {
+      "web": 512,
+      "redis": 192,
+      "worker": 256,
+      "scheduler": 192,
+      "caddy": 128,
+      "scanner": 2560,
+      "db": 768
+    },
+    "web_cpu_cap": 1,
+    "broker": true,
+    "worker_healthy": true,
+    "scheduler_healthy": true,
+    "internal_ports_private": true,
+    "same_database_container_and_start_time": true,
+    "pinned_signing_and_database_material_retained": true,
+    "durable_queue_storage_retained": true,
+    "production_settings": {
+      "debug": false,
+      "hosts": [
+        "totalaccounting.duckdns.org"
+      ],
+      "origins": [
+        "https://totalaccounting.duckdns.org"
+      ],
+      "secure_cookies": true,
+      "proxy": [
+        "HTTP_X_FORWARDED_PROTO",
+        "https"
+      ],
+      "media": "/app/media",
+      "uid": 10001
+    },
+    "attachment_uploads_enabled": true,
+    "scanner_containers": 1,
+    "scanner_memory_cap_mib": 2560,
+    "scanner_memory_plus_swap_cap_mib": 4096,
+    "scanner_proof": {
+      "attachment_uploads_enabled": true,
+      "real_clean_stream_accepted": true,
+      "real_eicar_denied": true,
+      "scanner_unavailable_denied_without_writes": true,
+      "scanner_version": "ClamAV 1.5.5/28191/Sun Nov 22 06:27:13 2026",
+      "memory_observed_kib": {
+        "MemTotal": 4001148,
+        "MemAvailable": 1668120,
+        "SwapTotal": 2097148,
+        "SwapFree": 2085436
+      },
+      "scanner_memory_cap_mib": 2560,
+      "scanner_memory_plus_swap_cap_mib": 4096,
+      "full_workload_acceptance": "Pending D06"
+    },
+    "scanner_unavailable_denied_without_writes": true,
+    "vm_resized": false,
+    "retained_memory_kib": 4001148,
+    "vm_capacity_acceptance": "Pending D06; preview health only, no 50-session VM load claim"
+  },
+  "off_vm_source_restore_tables": 61,
+  "off_vm_target_restore_tables": 61,
+  "both_off_vm_restores_matched": true,
+  "separate_recovered_key_used": true,
+  "plaintext_removed": true,
+  "public_checks": {
+    "public_https_readiness": true,
+    "greek_login": true,
+    "same_origin_form_post": true,
+    "null_foreign_origin_denied": true,
+    "missing_csrf_denied": true,
+    "certificate_chain_and_hostname_verified": true,
+    "actual_browser_mfa_acceptance": "Pending operator login",
+    "material_login": true,
+    "immutable_image_static_assets_verified": 10
+  },
+  "production_suite_previously_passed": 1186,
+  "financial_cases_previously_passed": 36,
+  "production_suite_rerun": false,
+  "attachment_uploads_enabled": true,
+  "vm_resized": false,
+  "retained_vm_memory_choice": "4GiB",
+  "agent_native_execution": false,
+  "full_requirement_acceptances_pending": 85,
+  "actual_browser_login_mfa": "Pending operator login",
+  "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
+  "full_document_recovery_acceptance": "Pending S38; sealed bytes included in encrypted DB backups"
+}

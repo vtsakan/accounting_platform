@@ -1,5 +1,25 @@
 # Accounting platform implementation instructions
 
+## CR008 retry failure — test-client streaming response lifecycle
+
+The actual fixture-corrected operator image4f1bd5a5 ran1186 tests and ended
+with13 errors (closed psycopg connection); no full CR008 success, scanner/file
+recovery or retained real worker gate was reached. The available diagnostic
+is a truncated tail, not the first error. Source analysis identifies the first
+alphabetical HTTP case directly closing its streaming response inside TestCase;
+request_finished then closes its enclosing transaction, poisoning later cases.
+Use Django5.2.19's own closing_iterator_wrapper for direct response.close in
+the attachment test-client helper. Do not suppress resource cleanup/signals,
+mock database health, reconnect a broken transaction or change the production
+download, database settings, security or any expected HTTP/content outcome.
+Only accounting/tests_attachments.py may change among the371 image inputs;
+keep the other370, all46 test-method ASTs/assertions and all36 migrations exact
+to the fixture-corrected source. Retain both earlier snapshots/failure evidence
+and exclusively preserve all14 actual old files and any existing CR008 binding.
+Retry accepts exact fixture-corrected CR008, initial CR008 or successful CR007.
+Source Prepared; fresh1186/36/files/worker proof Pending. VM/GitHub stillCR005.
+Agent STATIC AST/source/Git/archive only; no tests/app/Docker/DB/browser/cloud.
+
 ## CR008 operator failure — explicit archive intent and real MFA fixture
 
 The actual user console ran1186 tests:1 failure and3 errors, image10c74f7f.

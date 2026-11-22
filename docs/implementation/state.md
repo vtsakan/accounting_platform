@@ -1,5 +1,18 @@
 # Implementation state
 
+## CR008 actual retry failure — streaming response cleanup, 2026-11-22
+
+Fixture-corrected operator image4f1bd5a5 ran1186 tests in326.564s and ended
+with13 errors (closed connection); the captured tail omits the first error.
+Source analysis identifies direct streaming-response close inside TestCase as
+the cause of the cascading closed transaction. Correct only the attachment
+test-client lifecycle using Django's own closing wrapper. All46 test-method
+ASTs/assertions, all36 migrations and370/371 app inputs remain exact to the
+fixture-corrected source. Preserve both failed-source snapshots and failure
+records. Source Prepared; new full1186/36/files/worker proof Pending. No CR008
+Verified report or scanner/recovery/broker success is claimed. VM/GitHub stay
+CR005; all85 full acceptances Pending. Agent static checks only.
+
 ## CR008 actual operator failure — fixture correction, 2026-11-22
 
 Initial image10c74f7f ran1186 tests and stopped with1 failure/3 errors. Three

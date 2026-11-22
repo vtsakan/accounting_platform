@@ -15,6 +15,7 @@ from django.core.exceptions import PermissionDenied,ValidationError,RequestDataT
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError,connection,transaction,close_old_connections
 from django.test import TestCase,SimpleTestCase,TransactionTestCase,Client,override_settings
+from django.test.client import closing_iterator_wrapper
 from django.urls import reverse
 from django.utils import timezone as django_timezone
 
@@ -34,6 +35,26 @@ from .schema_test_support import restore_current_test_schema
 from .tests_auth_support import staff_client_login
 from .tests_finance_posting import Fixtures
 from .tests_attachment_support import file,pdf_bytes,docx_bytes,doc_bytes,image_bytes,SCANNER
+
+
+class AttachmentTestClient(Client):
+    """Keep direct stream cleanup inside Django's test-client lifecycle."""
+
+    def request(self,**request):
+        response=super().request(**request)
+        if response.streaming:
+            close=response.close
+
+            def close_stream():
+                # ClientHandler guards request_finished while consuming a stream.
+                # A direct response.close() must use that same test-only guard;
+                # otherwise it closes the surrounding TestCase DB transaction.
+                # The actual response/file close and every other signal still run.
+                for _ in closing_iterator_wrapper((),close):
+                    pass
+
+            response.close=close_stream
+        return response
 
 
 class AttachmentSupport(Fixtures):
@@ -58,7 +79,7 @@ class AttachmentSupport(Fixtures):
     def client_for(self,user=None,csrf=False):
         actor=user or self.member
         state=state_for(actor);state.enrolled_at=django_timezone.now();state.save(update_fields=['enrolled_at'])
-        client=Client(enforce_csrf_checks=csrf)
+        client=AttachmentTestClient(enforce_csrf_checks=csrf)
         if csrf:
             client.get('/login/');client.defaults['HTTP_X_CSRFTOKEN']=client.cookies[settings.CSRF_COOKIE_NAME].value
         try:staff_client_login(client,actor)

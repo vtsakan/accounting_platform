@@ -47,7 +47,7 @@ def prepare():
     # The official fixture is the entire68-byte file, not text appended to a PDF.
     # Keep it in memory and require a genuine infected response from the scanner.
     marker=base64.b64decode('WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=')
-    if len(marker)!=68 or hashlib.sha256(marker).hexdigest()!='275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f':
+    if len(marker)!=68 or 'sha256:'+hashlib.sha256(marker).hexdigest()!='sha256:275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f':
         raise RuntimeError('The canonical antivirus fixture bytes changed')
     print('[CR008-FILES] Πραγματική απόρριψη κανονικού δείγματος antivirus68 bytes.',flush=True)
     try:scan_content(marker)

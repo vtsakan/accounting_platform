@@ -86,3 +86,12 @@ def scan_current_source(directory):
     need(scan.get('scanner')=='detect-secrets' and scan.get('version')=='1.5.0'
         and scan.get('unreviewed_findings')==0,'Ο νέος έλεγχος πηγής δεν ολοκληρώθηκε.')
     return scan
+
+
+if __name__=='__main__':
+    try:
+        policy=json.loads((ROOT/'docs/implementation/evidence/CR008-source-lock.json').read_text())
+        _,proof=load_retained_delivery(policy)
+        print(json.dumps({'status':'Retained native delivery validated','proof':proof},ensure_ascii=False))
+    except (RuntimeError,OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
+        raise SystemExit('CR008 retained delivery stopped: '+str(error))

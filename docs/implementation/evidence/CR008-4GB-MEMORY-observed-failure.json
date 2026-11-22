@@ -1,0 +1,42 @@
+{
+  "step": "CR008-4GB-MEMORY",
+  "status": "Prepared",
+  "observed_on": "2026-11-22",
+  "operator_verified_tool_tests": 81,
+  "operator_failed_deployment": "git:05861501f23b7d26c7259011119b8ce6de41632d",
+  "operator_observed_rollback": {
+    "same_current_database": true,
+    "database_process_unchanged": true,
+    "installed_binding": "source",
+    "hold_active": false,
+    "old_completed_journal_unchanged": true,
+    "off_vm_before_tables": 61,
+    "off_vm_after_tables": 61,
+    "both_restore_matches": true
+  },
+  "operator_observed_memory_failure": {
+    "memcg_kills": 18,
+    "global_oom_events": 0,
+    "process": "python",
+    "uid": 10001,
+    "limit_kib": 131072,
+    "service_attribution": "scheduler from128MiB limit and Python UID10001; other128MiB service is Caddy without a Python process"
+  },
+  "observed_healthy_rollback_scheduler": {
+    "memory_mib": 192,
+    "memory_plus_swap_mib": 384
+  },
+  "proposed_scheduler": {
+    "memory_mib": 192,
+    "memory_plus_swap_mib": 384
+  },
+  "other_existing_service_limits_changed": false,
+  "new_namespace": "cr008-4gb-memory",
+  "old_failed_journal_replaced": false,
+  "fresh61_table_restores_required": true,
+  "cgroup_pid1_and_child_oom_evidence_required": true,
+  "agent_tests_executed": false,
+  "agent_runtime_executed": false,
+  "full_requirement_acceptances_pending": 85,
+  "actual_new_attempt": "Pending operator execution"
+}

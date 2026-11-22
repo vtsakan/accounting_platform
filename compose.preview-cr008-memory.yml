@@ -1,0 +1,6 @@
+# Same4GiB VM and scanner; restore the observed healthy scheduler budget.
+# Only the scheduler changes: allow bounded swap for Python health-probe overlap.
+services:
+  scheduler:
+    mem_limit: 192m
+    memswap_limit: 384m

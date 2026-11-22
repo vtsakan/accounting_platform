@@ -1,7 +1,7 @@
 {
   "change": "CR008",
   "status": "Prepared",
-  "implementation_reference_commit": "git:d5d5168e6b3042d852e1508ac7d30fb1a129e2e3",
+  "implementation_reference_commit": "git:ce6c99886c0c53ee5feca41b40f84894474ae90e",
   "actual_prior_operator_record_commit_prefix": "02e3907",
   "actual_prior_operator_source_commit_prefix": "e1523b9",
   "actual_prior_delivery_tests_passed": 1140,
@@ -972,10 +972,10 @@
     "docs/implementation/evidence/CR008-streaming-runtime-failure.json": "sha256:72ada44e8df6ab3a7ca03cd20be8ddb5079d8de13639b6e35e22eaeb260a4c43",
     "docs/implementation/evidence/CR008-streaming-source-lock.json": "sha256:479ebfa86a6cc997212ccf47a317d1ea4b2e364edf3e00a1fbfb854c9a99b2a1",
     "docs/requirements/CR-008-Client-attachments.md": "sha256:6684fabf4baebe4e9ae91c0467afecba3a5f7a318fad6492e129a1018aad38e1",
-    "tools/cr008_delivery_resume.py": "sha256:06d4175d974a5b8a5d02357930056010cbe238401a336b3b219fb5b516a906d4",
+    "tools/cr008_delivery_resume.py": "sha256:a46c40c8ae4e39727d9ad70a38f7bc28ac21397cf25e5b4c1611c2dfeedc0a82",
     "tools/cr008_files_gate.py": "sha256:a0244dd6f50715dbb2ac3f78c088079b40da3070744b55cc26d860d419e1f135",
     "tools/cr008_receipts.py": "sha256:a178d3398e3f10b32115aa7341ea74527145ccb4a10dea336da8b99c5e63a5f8",
-    "tools/cr008_runtime_probe.py": "sha256:e1fc4467255ab8cab5f82e42de1f05659c176ed844b94ae362dcb36e100ea355",
+    "tools/cr008_runtime_probe.py": "sha256:7678ed4258ec3aaac67aae4e4e89580a81e808973ed65f8fb564ae4cca9cd708",
     "tools/cr008_static_inputs.py": "sha256:3aeb7aea3e734e3ccce612c1418db40b8f826bfd0a8da77dff4c358270594610",
     "tools/record_cr008.py": "sha256:a9acf81494b65f06616060de90d09fb665fc9b0694ca6f68d4d95d56a05fa92d",
     "tools/verify_cr008.py": "sha256:22c0b0ad3ee4defbcb2c3006690bacec450465df5bdbce87e89f0d7c2748b00c"

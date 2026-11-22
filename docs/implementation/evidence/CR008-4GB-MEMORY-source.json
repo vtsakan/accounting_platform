@@ -41,7 +41,7 @@
     "docs/implementation/cr008_memory_retry_el.md": "sha256:76e4e6dbee2c3b9abcd1e172fc8d89663558939eb62c1881ea9a12209eb1aa96",
     "docs/implementation/evidence/CR008-4GB-MEMORY-observed-failure.json": "sha256:9dd83eb3362ae053741cf4e4b1e8eab04ffd41b55b9d70363b2aecc81a318ada",
     "docs/implementation/evidence/CR008-4GB-source.json": "sha256:b98782d1914cbf60e6241bd09e2d63b5aa780767e255c2437a9b79036c47112e",
-    "tools/preview_cr008_memory_host.py": "sha256:de374acab44fcdf87921afd156a723d1a50977b6ad63975223a50ae1ceddad23",
+    "tools/preview_cr008_memory_host.py": "sha256:0989ee2f2c15d744cc367cc9f39726f58051ac07847567a8414c454817ce1ffb",
     "tools/preview_cr008_memory_policy.py": "sha256:85ab12d276381de25151a93a93790d2fae607b62684efd990e6d91a4ae897907",
     "tools/preview_cr008_memory_release.py": "sha256:65a25b5d1ed66e832fb5a348c00a8166988a46232d189dc98c99b226abc063ea",
     "tools/preview_cr008_memory_runtime.py": "sha256:f26f136a7b09086df8c99c44f2f99f6d3c4a5f328ca31e9f673a44e624f1b19a",

@@ -67,6 +67,11 @@ def source_check():
         observed = 'sha256:'+hashlib.sha256(json.dumps(assertions,separators=(',',':')).encode()).hexdigest()
         if observed != expected_assertions:
             raise RuntimeError('Άλλαξαν αρχικές δοκιμαστικές απαιτήσεις: '+name)
+    for name, digest in policy['retained_test_methods'].items():
+        methods=[retained_assertion_dump(node) for node in ast.walk(ast.parse((ROOT/name).read_text()))
+            if isinstance(node,ast.FunctionDef) and node.name.startswith('test_')]
+        observed='sha256:'+hashlib.sha256(json.dumps(methods,separators=(',',':')).encode()).hexdigest()
+        if observed!=digest:raise RuntimeError('Άλλαξε διατηρούμενη μέθοδος δοκιμής: '+name)
     for path in (ROOT/'accounting').glob('*.py'):
         if not path.name.startswith('tests') and any(name in path.read_text() for name in ('tests_cr005_support','tests_entity_profile_support','tests_attachment_support')):
             raise RuntimeError('Ιστορικά fixtures δεν επιτρέπονται σε κώδικα εφαρμογής.')

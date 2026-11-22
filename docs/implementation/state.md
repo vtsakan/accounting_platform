@@ -44,12 +44,7 @@ VM/GitHub stayCR005; all85 full acceptances Pending.
 ## Current selected change — CR008 private classified client attachments, 2026-11-22
 
 <!-- CR008-RESULT -->
-CR008 source Prepared: main-card private PDF/DOC/DOCX/raster attachments,
-shared office category catalogue plus free description, attributed time/user,
-metadata filters and protected downloads; sealed transactional bytes and
-value-free audit. New complete operator suite, actual antivirus and encrypted
-file recovery and retained real monthly-worker gate Pending. VM/GitHub held
-on actualCR005. All85 full requirement and browser/business acceptances Pending.
+CR-008 source Prepared; operator technical gate Verified: 1186 tests, 36 financial cases, private classified attachments, real antivirus and encrypted file recovery passed; retained monthly-worker/ack-loss gate passed. VM/GitHub explicitly held on CR005 by user; browser/business acceptance and all 85 full acceptances remain Pending.
 <!-- /CR008-RESULT -->
 
 Actual CR007 console confirmed1140/1140,36 financial cases and worker; its two

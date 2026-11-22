@@ -1,7 +1,7 @@
 {
   "change": "CR-009",
   "status": "Prepared",
-  "implementation_reference_commit": "git:e7c8a5f98f171b6d53164167eb6c7b3f7476779b",
+  "implementation_reference_commit": "git:cc3012a64119d3cf168099043ed9aa35e82482e5",
   "previous_application_context_digest": "sha256:9a530ae7855d8e5436dfbaf2a53c58591f62ff644fe2266e526948cf1d073248",
   "previous_application_inputs": 371,
   "application_context_digest": "sha256:4192f947515a2327aeb08a800644db86e06f61f07e3afb2428e02559802fd6fc",
@@ -58,7 +58,8 @@
     "accounting/templates/accounting/entity_detail.html",
     "accounting/templates/accounting/entity_profile/editor.html",
     "accounting/tests_boundary.py",
-    "accounting/urls.py"
+    "accounting/urls.py",
+    "docs/security/secret_scan_allowlist.csv"
   ],
   "unchanged_files": {
     ".dockerignore": "sha256:b1e4f81e4f83b2998c14d55324e3379f9a1c2f5136c94d73f0ec29fece9b1e32",
@@ -707,7 +708,6 @@
     "docs/requirements/CR-007-Entity-fiscal-profile.md": "sha256:fca84091fcd0cf58fe848602455f432a0e5f5ac138df9cc02808fc5126f047fc",
     "docs/requirements/CR-008-Client-attachments.md": "sha256:6684fabf4baebe4e9ae91c0467afecba3a5f7a318fad6492e129a1018aad38e1",
     "docs/security/README.md": "sha256:56546e3eb26cf24c6bd700e0019f082903daf979c1e94e705ec62aa9a2bfad79",
-    "docs/security/secret_scan_allowlist.csv": "sha256:3cb14a8a230f8708d01174321d88a2c879e5235c802e261985cf51c64e322b2a",
     "gunicorn.conf.py": "sha256:6ff7e4c6d918f9ed5819acbdfe4711abb56a9553b3f6fb273dc804d0a0b946aa",
     "infrastructure/Caddyfile": "sha256:f2a5cd80a5df5cdb5fe4f1933303e1543acbd4c9873ba337610f875f98abb975",
     "infrastructure/Caddyfile.cr008-test": "sha256:06cd9d32b12bf503fbf5ab1c6f483d47edbbdf8c4df1283b94fdd438131ffd4b",
@@ -901,7 +901,8 @@
     "accounting/templates/accounting/entity_detail.html": "sha256:5ba399b0d6d00fdff5d707130e9a4fee7441f51e78efb6f38b6fcb735e900f41",
     "accounting/templates/accounting/entity_profile/editor.html": "sha256:4ee3b70a93c5b253676ae620b0a2639a0fca8462c056af092914fd18fd69ce31",
     "accounting/tests_boundary.py": "sha256:edba1a93fa463f24fc014e44e7023477bf9b6899af2033f25b14a42db9e39652",
-    "accounting/urls.py": "sha256:01c92d4901e2a3387e0f8082fadc2f173470db1b9ed76488e0b3f94d922c724b"
+    "accounting/urls.py": "sha256:01c92d4901e2a3387e0f8082fadc2f173470db1b9ed76488e0b3f94d922c724b",
+    "docs/security/secret_scan_allowlist.csv": "sha256:7891a9c2cf5f5a93e68f092356ca0b4f5bef9d690fc34db491381ebaa39c53f4"
   },
   "added_files": {
     "accounting/gsis_services.py": "sha256:3e54569849845c596c3280782b322bda3516729936a87994d546962835976c3f",
@@ -910,7 +911,7 @@
     "accounting/static/accounting/workspace/gsis.js": "sha256:b379e254d5f81f5b6a3a9705eb03203ef37256608e05cbe2c766e628e0db7a01",
     "accounting/templates/accounting/entity_profile/gsis.html": "sha256:706b7bc50fc80cbbffb702868b1c67c3257e417017c369b656353c16be6d32f1",
     "accounting/tests_gsis.py": "sha256:9f67473e3824ac1e38a6e38f7182277b7f950f5b304fdccd029dc2d62b687d2d",
-    "docs/implementation/CR-009-GSIS-access.md": "sha256:bd21fe0cafa2b74f4951aca26944da27e5ca42effc11a99b40aa00bc61db9e95",
+    "docs/implementation/CR-009-GSIS-access.md": "sha256:49e30602b10666715db968ffc7f9958d84d3075d4d31ce7732a5a10030008982",
     "docs/implementation/gsis_access_el.md": "sha256:c44cdbee83438cabe290345e63426b622d03e3924cf292df832e2527276310da",
     "tools/cr009_receipts.py": "sha256:51c412fef225390577596ec04a4e8fb7cdef6dcaa8aa8aa85cb7447c6ca0a08e",
     "tools/cr009_static_inputs.py": "sha256:e6598e89d9285e089bdf01cef516885debce1a78922e633c4778a4bb05d22671",
@@ -923,5 +924,6 @@
   "actual_prior_reports_bound_exclusively": 18,
   "agent_runtime_executed": false,
   "vm_github_hold_by_user": true,
-  "browser_gsis_clipboard_acceptance": "Pending"
+  "browser_gsis_clipboard_acceptance": "Pending",
+  "non_secret_review": "One appended exact Secret Keyword fingerprint for public JavaScript typeof literal string; prior review bytes retained"
 }

@@ -1,7 +1,7 @@
 {
   "change": "CR-009",
   "status": "Prepared",
-  "implementation_reference_commit": "git:e7c8a5f98f171b6d53164167eb6c7b3f7476779b",
+  "implementation_reference_commit": "git:cc3012a64119d3cf168099043ed9aa35e82482e5",
   "previous_application_context_digest": "sha256:9a530ae7855d8e5436dfbaf2a53c58591f62ff644fe2266e526948cf1d073248",
   "application_context_digest": "sha256:4192f947515a2327aeb08a800644db86e06f61f07e3afb2428e02559802fd6fc",
   "application_inputs": 377,
@@ -20,11 +20,12 @@
   "main_and_spouse_on_central_card_and_editor": true,
   "plain_credentials_in_get_or_urls_or_browser_storage": false,
   "full_requirement_acceptances_pending": 85,
-  "source_lock_sha256": "sha256:551a9c3608153dc93fcee986ed97807affdc47b80e207272686c01448134c81f",
+  "source_lock_sha256": "sha256:6e47a98a9b1ad4be08da0b4450ba9fa88bc1b5643d340c3796788f86b18dfab6",
   "old_source_files_bound": 839,
-  "old_source_files_changed": 6,
+  "old_source_files_changed": 7,
   "old_test_files_with_all_methods_preserved": 39,
   "new_source_files_bound": 11,
   "unchanged_52_deployment_tool_guard_bodies": true,
-  "recorded_source_commit_is_agent_preparation_only": true
+  "recorded_source_commit_is_agent_preparation_only": true,
+  "non_secret_review": "One appended exact Secret Keyword fingerprint for public JavaScript typeof literal string; prior review bytes retained"
 }

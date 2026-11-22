@@ -3,18 +3,7 @@
 <!-- CR008-PREVIEW -->
 ## Existing preview update — CR008
 
-Status: **Prepared**. The actual operator CR008 technical gate passed on
-2026-11-22 at 10:32:59 Europe/Athens: 1186/1186 tests, 36 financial cases,
-real antivirus, 61-table/10-file encrypted recovery and retained monthly worker.
-The original successful report and its real native Git lineage remain untouched.
-The owner now authorises GitHub and the existing VM update and selected the same
-4 GiB VM with new attachment uploads temporarily disabled. No resize or scanner.
-Reuse the identical 371-input image; clone CURRENT schema 30 to 36 and preserve
-all original data, people, MFA, sessions, keys and durable queue. Require both
-encrypted off-VM restores before activation and ordinary GitHub fast-forward.
-Agent checks are static only; deployment and its new guard tests are operator-run.
-Browser/business acceptance, real-client release and all 85 full acceptances
-remain Pending. See [the procedure](cr008_preview_upgrade_el.md).
+Status: **Verified**. Reuse the actual1186/36 plus antivirus/file-recovery/worker verified image. Clone the CURRENT30-migration database and migrate only the clone to36, preserving all original data, people, MFA, sessions, pinned keys and durable queue. Both encrypted backups must restore off-VM before activation. Explicit user choice: keep the same4GiB VM, no resize or scanner; new attachment uploads disabled, task and fiscal/profile functions enabled. GitHub publication is ordinary fast-forward only. Browser/MFA acceptance, real-client release and all85 full acceptances remain Pending. See [the procedure](cr008_preview_upgrade_el.md).
 <!-- /CR008-PREVIEW -->
 
 ## CR008 actual full suite passed; antivirus probe correction,2026-11-22

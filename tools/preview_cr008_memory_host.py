@@ -5,6 +5,7 @@ import fcntl
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -120,6 +121,22 @@ def legacy_unchanged(state):
     runtime.same_database_process(state)
 
 
+def scheduler_memory_limits(service):
+    # compose-go UnitBytes.MarshalJSON returns decimal strings; Docker inspect
+    # uses integers. Accept both exact representations without coercing floats,
+    # booleans, units, fractions, missing values or unbounded memory limits.
+    require(type(service) is dict,'The scheduler memory retry must resolve to192/384MiB')
+    result={}
+    for name,expected in (('mem_limit',192*1024**2),('memswap_limit',384*1024**2)):
+        value=service.get(name)
+        if type(value) is str and re.fullmatch(r'[0-9]{1,12}',value):
+            value=int(value)
+        require(type(value) is int and value==expected,
+            'The scheduler memory retry must resolve to192/384MiB')
+        result[name]=value
+    return result
+
+
 def stage(value,bundle):
     require(not STATE.exists() and not HOLD.exists(),'A profile journal exists; retain it and use status/resume/rollback')
     failed_journal_unchanged(value)
@@ -156,9 +173,7 @@ def stage(value,bundle):
     require(set(resolved['services'])=={'db','web','caddy','redis','worker','scheduler','scanner'},'Expected exactly seven bounded services')
     require(resolved['services']['scanner']['image']==scanner.IMAGE
         and resolved['services']['web']['environment']['GUNICORN_WORKERS']=='2','Pinned scanner/two-worker profile differs')
-    require(resolved['services']['scheduler'].get('mem_limit')==192*1024**2
-        and resolved['services']['scheduler'].get('memswap_limit')==384*1024**2,
-        'The scheduler memory retry must resolve to192/384MiB')
+    scheduler_memory_limits(resolved['services']['scheduler'])
     resources=scanner.prepare(target)
     runtime.compose(target,'run','--rm','--no-deps','-T','--entrypoint','caddy','caddy','validate',
         '--config','/etc/caddy/Caddyfile','--adapter','caddyfile')

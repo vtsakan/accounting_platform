@@ -848,3 +848,8 @@ Prepared: 67 S19 tests; 495 total; BAL-001–003 corrected, 10 known failures st
 <!-- CR008-4GB-MEMORY -->
 Status: **Verified**. Existing CR008 schema36 database and identical image retained; 4GiB test uploads use a real private bounded scanner,2GiB swap and two web workers and the previously healthy Python-service memory limits. No clone/migration or database rewind; actual61/61-table off-VM restores and clean/EICAR/memory proof required. Previous completed CR008 evidence and all85 acceptances/browser/business gates remain unchanged.
 <!-- /CR008-4GB-MEMORY -->
+
+
+<!-- CR009-RESULT -->
+Verified: 1210 isolated PG17 tests,36 financial cases, real file antivirus/recovery and retained monthly worker. GSIS opens with explicit selected-person copy; no extension or cross-origin autofill. Native GSIS/browser/clipboard acceptance Pending. Current4GiB deployment115 guards retained and passed; rollout authorised after this gate, VM upgrade Pending; all85 full acceptances Pending.
+<!-- /CR009-RESULT -->

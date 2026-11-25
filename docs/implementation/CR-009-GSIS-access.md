@@ -1,6 +1,6 @@
 # CR-009 — Πρόσβαση GSIS και αντιγραφή αποθηκευμένων στοιχείων
 
-Status: Prepared. Selected22/11/2026 before the pending VM update.
+Status: Prepared. Selected22/11/2026; rollout authorised25/11/2026 on the successful current4GiB CR008.
 
 The product owner confirmed two controls on the CENTRAL client card as well as
 the editor: GSIS for the client and GSIS for the spouse. They selected NO browser
@@ -26,6 +26,9 @@ Fresh production image/full1210 suite/36 finance cases, real file antivirus/
 recovery and monthly worker are OPERATOR gates. Actual GSIS/window/clipboard
 browser acceptance remains separate and Pending. Agent static checks only.
 
-GitHub and VM deployment are explicitly HELD. After the new gate, a separately
-bound update must deploy the NEW image while retaining the4GB test-upload choice.
+GitHub and VM rollout is authorised after the fresh native gate. The exact
+current3eacfda report and21 prior files are exclusively bound; all115 corrected
+CR008 tool guards and the4GiB scheduler192/384 budget remain unchanged.
+After the new gate, a separately bound update must deploy the NEW image on
+the same CURRENT schema36 database, retaining uploads, scanner and recovery.
 All85 full requirement acceptances and D06/S38/R1/G2 remain Pending.

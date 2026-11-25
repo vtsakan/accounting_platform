@@ -33,6 +33,9 @@ def source_check():
     require(policy['retained_test_count']==1186 and policy['new_test_methods']==24 and policy['expected_suite']==1210
         and policy['application_inputs']==377 and policy['retained_migrations']==36 and policy['new_migrations']==0,
         'Keep the exact selected GSIS source, retained suite and migration scope')
+    require(policy.get('retained_deployment_guard_methods')==115
+        and policy.get('actual_prior_reports_bound_exclusively')==21,
+        'Retain the current4GiB deployment corrections and actual21-file history')
     for section in ('unchanged_files','changed_files','added_files'):
         entries=policy[section]
         require(isinstance(entries,dict) and bool(entries),'Missing source binding section')
@@ -52,6 +55,13 @@ def source_check():
             if isinstance(n,ast.FunctionDef) and n.name.startswith('test_')]
         require(digest_bytes(json.dumps(methods,separators=(',',':')).encode())==value,
             'An original test method changed: '+name)
+    for name,value in policy['retained_deployment_guard_files'].items():
+        require(digest_bytes((ROOT/name).read_bytes())==value,
+            'A retained current4GiB deployment guard changed: '+name)
+    tools_methods=sum(isinstance(node,ast.FunctionDef) and node.name.startswith('test_')
+        for name in policy['retained_deployment_guard_files']
+        for node in ast.walk(ast.parse((ROOT/name).read_text())))
+    require(tools_methods==115,'Retain all115 deployed CR008 tool guard methods')
     context=image.candidate_context()[1]
     require(context['digest']==policy['application_context_digest'] and context['file_count']==policy['application_inputs'],
         'The prepared GSIS image inputs changed')
@@ -72,7 +82,8 @@ def track(report):
     block=(start.decode()+'\nVerified: '+str(report['suite']['tests_passed'])+' isolated PG17 tests,36 financial cases, '
         'real file antivirus/recovery and retained monthly worker. GSIS opens with explicit selected-person copy; '
         'no extension or cross-origin autofill. Native GSIS/browser/clipboard acceptance Pending. '
-        'VM/GitHub held by user; all85 full acceptances Pending.\n'+end.decode()).encode()
+        'Current4GiB deployment115 guards retained and passed; rollout authorised after this gate, '
+        'VM upgrade Pending; all85 full acceptances Pending.\n'+end.decode()).encode()
     if start in before:
         a=before.index(start);b=before.index(end)+len(end);require(a<b,'Unordered CR009 tracking markers')
         after=before[:a]+block+before[b:]
@@ -88,8 +99,12 @@ def record(report, policy):
         and report['application_context_digest']==policy['application_context_digest']
         and report['actual_prior_receipt_files_sha256']==bound['files']
         and all(report[k] is True for k in ('real_monthly_worker_and_commit_before_ack','revocation_blocks_execution',
-            'second_scheduler_rejected','restricted_role_migrations','historical_receipts_unchanged','vm_github_hold_by_user'))
-        and all(report[k] is False for k in ('local_demo_or_vm_changed','github_updated','human_accounts_or_mfa_changed','agent_native_execution')),
+            'second_scheduler_rejected','restricted_role_migrations','historical_receipts_unchanged',
+            'deployment_guard_suite_passed','vm_github_upgrade_authorized_after_verification'))
+        and report.get('deployment_guard_tests_passed')==115
+        and report.get('prior_completed_vm_record')==bound['previous_completed_vm_record']
+        and all(report[k] is False for k in ('local_demo_or_vm_changed','github_updated','human_accounts_or_mfa_changed',
+            'agent_native_execution','vm_github_hold_by_user')),
         'Record only the exact current successful operator result')
     destination=ROOT/REPORT
     require(not destination.exists() and not destination.is_symlink(),'A prior CR009 result exists; retain it for review')
@@ -116,9 +131,12 @@ def main():
         if args.source_only:
             print(json.dumps({'change':'CR-009','status':'Prepared','source_files_checked':count,
                 'application_inputs':policy['application_inputs'],'runtime_executed':False,
-                'actual18_prior_reports_bound':bound is not None,'static':static},ensure_ascii=False));return
+                'actual21_prior_reports_bound':bound is not None,'static':static},ensure_ascii=False));return
         clean_source();bound=verify_binding(ROOT);require_local_docker()
         revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+        stage='retained115-current4gib-tool-guards'
+        subprocess.run([sys.executable,'-m','unittest','discover','-s','tools','-p','test_preview_cr008*.py'],
+            cwd=ROOT,check=True)
         stage='new-production-image'
         if args.image:selected=image.reuse_for_verification(args.image)
         elif args.host_dns:
@@ -164,8 +182,12 @@ def main():
             'second_scheduler_rejected':broker['second_scheduler_rejected'],'restricted_role_migrations':broker['restricted_role_migrations'],
             'original_36_migrations_unchanged':True,'new_migrations':0,'historical_receipts_unchanged':True,
             'actual_prior_receipt_files_sha256':bound['files'],'docker_execution_by_operator':True,'agent_native_execution':False,
+            'prior_completed_vm_record':bound['previous_completed_vm_record'],
+            'deployment_guard_suite_passed':True,'deployment_guard_tests_passed':115,
             'local_demo_or_vm_changed':False,'github_updated':False,'human_accounts_or_mfa_changed':False,
-            'vm_github_hold_by_user':True,'owned_resources_removed':True,'full_requirement_acceptances_pending':85,
+            'vm_github_hold_by_user':False,'vm_github_upgrade_authorized_after_verification':True,
+            'vm_rollout_status':'Pending this new image verification and separate deployment binding',
+            'owned_resources_removed':True,'full_requirement_acceptances_pending':85,
             'gsis_browser_extension_required':False,'gsis_cross_origin_autofill':False,'gsis_login_automatically_submitted':False,
             'actual_gsis_browser_clipboard_acceptance':'Pending operator test; no real GSIS credentials used by verifier',
             'accountant_browser_acceptance':'Pending','g2_release_acceptance':'Pending'}

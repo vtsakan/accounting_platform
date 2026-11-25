@@ -853,3 +853,8 @@ Status: **Verified**. Existing CR008 schema36 database and identical image retai
 <!-- CR009-RESULT -->
 Verified: 1210 isolated PG17 tests,36 financial cases, real file antivirus/recovery and retained monthly worker. GSIS opens with explicit selected-person copy; no extension or cross-origin autofill. Native GSIS/browser/clipboard acceptance Pending. Current4GiB deployment115 guards retained and passed; rollout authorised after this gate, VM upgrade Pending; all85 full acceptances Pending.
 <!-- /CR009-RESULT -->
+
+
+<!-- CR009-VM -->
+Status: **Verified**. CR009 verified1210/36 GSIS image, same CURRENTschema36 database and4GiB memory/AV profile. Fresh61/61 independent-key restores and liveAV/OOM/HTTPS proof required. No migration, clone, resize, account/MFA reset or history overwrite. All85 full acceptances and actual GSIS/browser/clipboard/D06/S38/R1/G2 remain Pending.
+<!-- /CR009-VM -->

@@ -868,3 +868,8 @@ Verified: 1254 isolated PG17 contracts, 36 financial cases, 140 retained deploym
 <!-- CR011-RESULT -->
 Verified: 1307 isolated PG17 contracts, 36 financial cases, 140 retained deployment guards, direct credential first-login/reset contracts, real Excel/file antivirus and 64-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.
 <!-- /CR011-RESULT -->
+
+
+<!-- CR011-VM -->
+Verified CR010/011 preview upgrade: exact1307/36/140 image, CURRENT36 clone to40, original retained,61/64 independent-key off-VM restores,4GiB private scanner/memory/HTTPS proof. People/MFA/keys/queue retained. All85 full acceptances and browser/business/G2 Pending.
+<!-- /CR011-VM -->

@@ -1,0 +1,18 @@
+{
+  "change": "CR-011",
+  "status": "Failed",
+  "evidence": "Actual operator-supplied console; diagnostic tail only",
+  "observed_on": "2026-11-26",
+  "console_sha256": "sha256:c76442904294d30ef125d69fab4dac0e96195ddc56b42a666530fcee296546f0",
+  "image_id": "sha256:6f4f53be0068fa337b38d23fffa31d0077867f75c8e1e8f84eb08e8fd20c642d",
+  "tests_run": 1255,
+  "reported_errors": 1,
+  "stage": "full-production-pg17-delivery",
+  "discovery_failure": "accounting.tests_direct_staff: from django.contrib import mail; mail belongs to django.core",
+  "new_test_methods_not_discovered": 53,
+  "successful_cr011_receipt": false,
+  "native_source_commit": "Not printed; not reconstructed",
+  "vm_changed": false,
+  "github_updated": false,
+  "native_gate_retry": "Fresh full1307 suite required; no reuse of failed delivery"
+}

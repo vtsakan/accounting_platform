@@ -5,7 +5,7 @@ import hashlib,json,secrets,uuid
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from django.contrib import mail
+from django.core import mail
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied,ValidationError
 from django.db import connection,transaction,IntegrityError,DatabaseError,close_old_connections

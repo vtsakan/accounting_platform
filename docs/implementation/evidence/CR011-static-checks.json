@@ -4,7 +4,7 @@
   "agent_native_execution": false,
   "application_or_tests_executed": false,
   "old_migrations_unchanged": 38,
-  "retained_method_asts": 1766,
+  "retained_method_asts": 1819,
   "new_test_methods_supplied": 53,
   "expected_native_suite": 1307,
   "native_suite": "Pending operator execution",
@@ -23,5 +23,11 @@
   "previous_cr010_success": "Observed actual operator console; native report/commit bound only on operator machine",
   "github_updated": false,
   "vm_changed": false,
-  "full_requirement_acceptances_pending": 85
+  "full_requirement_acceptances_pending": 85,
+  "retained_initial_cr011_method_asts": 53,
+  "mail_import_corrected": true,
+  "pinned_django_external_import_symbols": 152,
+  "pinned_django_source_version": "5.2.19",
+  "django_or_app_import_executed": false,
+  "initial_failed_suite_preserved": "1255 tests,1 discovery import error; not a successful CR011 gate"
 }

@@ -14,6 +14,10 @@ from r1_gate import require
 def inspect(root):
     root=Path(root).resolve();retained=retained_inspect(root);imports=0
     files=[*sorted((root/'accounting').glob('staff_access*.py')),root/'accounting/tests_direct_staff.py']
+    mail_imports=[node for node in ast.parse((root/'accounting/tests_direct_staff.py').read_text()).body
+        if isinstance(node,ast.ImportFrom) and any(alias.name=='mail' for alias in node.names)]
+    require(len(mail_imports)==1 and mail_imports[0].module=='django.core' and mail_imports[0].level==0,
+        'The real Django mail package is django.core.mail; test discovery must not import django.contrib.mail')
     for path in files:
         text=path.read_text();tree=ast.parse(text)
         table=symtable.symtable(text,str(path),'exec');known=set(table.get_identifiers())|set(dir(builtins))|{'__name__','__file__','__package__'}

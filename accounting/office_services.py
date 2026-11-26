@@ -25,7 +25,9 @@ AUDIT_LABELS = {"office.settings": "Ενημέρωση στοιχείων γρα
     "invite.cancel": "Ακύρωση πρόσκλησης", "invite.reject": "Απόρριψη αίτησης",
     "member.deactivate": "Απενεργοποίηση λογιστή", "member.reactivate": "Επανενεργοποίηση λογιστή",
     "handover.propose": "Πρόταση παράδοσης ευθύνης", "handover.accept": "Αποδοχή ευθύνης",
-    "handover.cancel": "Ακύρωση παράδοσης ευθύνης", "client.delete": "Διαγραφή αρχειοθετημένης εγγραφής"}
+    "handover.cancel": "Ακύρωση παράδοσης ευθύνης", "client.delete": "Διαγραφή αρχειοθετημένης εγγραφής",
+    "staff.create": "Άμεση δημιουργία χρήστη", "staff.password_reset": "Επαναφορά προσωρινού κωδικού",
+    "staff.password_change": "Αλλαγή προσωρινού κωδικού"}
 OFFICE_FIELDS = ("name", "vat_number", "email", "phone", "address", "city", "postal_code")
 INVITATION_ERROR = "Η πρόσκληση δεν είναι διαθέσιμη, έχει λήξει ή έχει ήδη χρησιμοποιηθεί."
 

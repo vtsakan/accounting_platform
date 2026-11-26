@@ -72,6 +72,9 @@ class StaffLoginView(django_auth.LoginView):
         bind_session(self.request, new_login=True)
         self.request.session.pop("s13_next", None)
         self.request.session["s13_next"] = safe_next(self.request, self.get_redirect_url())
+        from .staff_access_selectors import password_change_required
+        if password_change_required(self.request.user):
+            return redirect('password-change-required')
         if requires_mfa(self.request.user):
             state = state_for(self.request.user)
             first = not state.enrolled_at and not AuthenticatorDevice.objects.filter(user=self.request.user, confirmed=True).exists()
@@ -110,6 +113,8 @@ class StaffPasswordResetConfirmView(django_auth.PasswordResetConfirmView):
         # Recheck the token while holding the user lock: two concurrent resets
         # cannot both consume the same link with different new passwords.
         with transaction.atomic():
+            from .staff_access_services import lock_password_reset_office
+            lock_password_reset_office(self.user)
             lock_state(self.user)
             self.user.refresh_from_db()
             token = self.request.session.get(django_auth.INTERNAL_RESET_SESSION_TOKEN)

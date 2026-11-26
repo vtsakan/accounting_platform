@@ -36,6 +36,7 @@ def office_view(capability, *, mfa=False):
 # These entry points establish identity or recipient proof before an office can
 # exist. Exemptions bind both the implementation module and the route name.
 IDENTITY_ROUTES = {
+    "accounting.staff_access_views": frozenset({"password-change-required"}),
     "accounting.auth_views": frozenset({"login", "password-reset", "password-reset-confirm",
         "mfa-setup", "mfa-qr", "mfa-verify", "mfa-recover", "security-settings"}),
     "accounting.invite_views": frozenset({"staff-join-token", "staff-join"}),

@@ -203,6 +203,7 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'category-edit','category-retire'}:kwargs={'pk':getattr(self,'category_'+suffix).pk}
         if name=='office-invitation-action':kwargs={'key':getattr(self,'invite_'+suffix).pk,'action':'cancel'}
         if name=='office-member-action':kwargs={'user_id':(self.member_b if foreign else self.member).pk,'action':'deactivate'}
+        if name=='staff-direct-reset':kwargs={'user_id':(self.member_b if foreign else self.member).pk}
         if name=='office-handover-detail':kwargs={'key':getattr(self,'handover_'+suffix).pk}
         if name in {'cash-allocation-add','cash-correction','cash-refund'}:kwargs={'pk':getattr(self,'movement_'+suffix).pk}
         if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}

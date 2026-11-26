@@ -1,12 +1,15 @@
 {% extends 'accounting/office/base.html' %}
 {% block title %}Λογιστές και προσκλήσεις{% endblock %}
 {% block office_content %}<h1 class="h3">Λογιστές του γραφείου</h1>
+<p><a class="btn btn-primary" href="{% url 'staff-direct-create' %}">Νέος χρήστης χωρίς πρόσκληση</a></p>
 {% include 'accounting/office/proof_help.html' %}
 <p>Οι λογιστές διαχειρίζονται τους πελάτες και τις οικονομικές εγγραφές του γραφείου. Οι υπεύθυνοι διαχειρίζονται τα στοιχεία, τις προσκλήσεις και την πρόσβαση.</p>
 <div class="table-responsive"><table class="table align-middle"><caption>Υφιστάμενα προφίλ λογιστών</caption><thead><tr><th scope="col">Όνομα χρήστη</th><th scope="col">Ηλεκτρονική διεύθυνση</th><th scope="col">Ρόλος</th><th scope="col">Κατάσταση</th><th scope="col">Αλλαγή πρόσβασης</th></tr></thead><tbody>
 {% for member in members %}<tr><td>{{ member.user.username }}</td><td>{{ member.user.email }}</td><td>{{ member.get_role_display }}</td><td>{% if member.is_active %}Ενεργό προφίλ{% else %}Ανενεργό προφίλ{% endif %}</td><td>
 <form method="post" action="{% if member.is_active %}{% url 'office-member-action' member.user_id 'deactivate' %}{% else %}{% url 'office-member-action' member.user_id 'reactivate' %}{% endif %}">{% csrf_token %}{{ member.proof_form.as_p }}
-<button class="btn btn-outline-secondary btn-sm" type="submit">{% if member.is_active %}Απενεργοποίηση{% else %}Επανενεργοποίηση ως λογιστή{% endif %}</button></form></td></tr>
+<button class="btn btn-outline-secondary btn-sm" type="submit">{% if member.is_active %}Απενεργοποίηση{% else %}Επανενεργοποίηση ως λογιστή{% endif %}</button></form>
+{% if member.user_id != request.user.pk and not member.user.is_staff and not member.user.is_superuser %}<a class="btn btn-outline-primary btn-sm" href="{% url 'staff-direct-reset' member.user_id %}">Επαναφορά κωδικού</a>{% endif %}
+{% if member.credential_change_required %}<span class="badge">Αναμονή αλλαγής κωδικού</span>{% endif %}</td></tr>
 {% empty %}<tr><td colspan="5">Δεν υπάρχουν προφίλ λογιστών.</td></tr>{% endfor %}</tbody></table></div>
 <section class="col-lg-6 my-4"><h2 class="h4">Πρόσκληση συναδέλφου</h2><p>Η πρόσκληση ισχύει για 24 ώρες. Μετά την αποδοχή χρειάζεται δική σας έγκριση για να ενεργοποιηθεί η πρόσβαση.</p>
 <form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary" type="submit">Δημιουργία πρόσκλησης</button></form></section>

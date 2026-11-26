@@ -895,6 +895,33 @@
       "methods": [
         "POST"
       ]
+    },
+    {
+      "route": "staff-direct-create",
+      "realm": "office-business",
+      "capability": "staff.manage",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "staff-direct-reset",
+      "realm": "office-business",
+      "capability": "staff.manage",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "password-change-required",
+      "realm": "identity-or-recipient-proof",
+      "capability": null,
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "public_probes": [

@@ -8,6 +8,7 @@ from core.referrer import referrer_policy
 
 from .auth_policy import bind_session, eligible, recovery_authorized, requires_mfa, session_valid, state_for
 from .auth_models import AuthenticatorDevice
+from .staff_access_selectors import password_change_required
 
 
 class StaffSecurityMiddleware:
@@ -27,7 +28,7 @@ class StaffSecurityMiddleware:
         if admin and match.url_name == "login":
             return HttpResponseRedirect(reverse("login") + "?next=/admin/")
         # Django's reset-token flow is available independently of stale sessions.
-        if match and (match.url_name or "").startswith("password-reset"):
+        if match and (match.url_name or "").startswith("password-reset") and not password_change_required(request.user):
             return None
         protected = bool(hasattr(request, "accountant_profile") or admin or request.path.startswith("/auth/"))
         if not protected or not request.user.is_authenticated:
@@ -44,6 +45,10 @@ class StaffSecurityMiddleware:
             if time.time() >= request.session.get("s13_mfa_deadline", 0) and must_verify:
                 logout(request)
                 return HttpResponseRedirect(reverse("login") + "?expired=1")
+        if password_change_required(request.user):
+            if match and match.url_name == 'password-change-required':
+                return None
+            return HttpResponseRedirect(reverse('password-change-required'))
         if request.path.startswith("/auth/"):
             return None  # Individual auth views still require eligibility/proof.
         global_auth = admin and ((match.url_name or "").startswith("auth_") or

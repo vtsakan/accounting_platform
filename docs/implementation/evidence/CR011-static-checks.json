@@ -1,0 +1,27 @@
+{
+  "change": "CR-011",
+  "status": "Prepared",
+  "agent_native_execution": false,
+  "application_or_tests_executed": false,
+  "old_migrations_unchanged": 38,
+  "retained_method_asts": 1766,
+  "new_test_methods_supplied": 53,
+  "expected_native_suite": 1307,
+  "native_suite": "Pending operator execution",
+  "financial_cases": 36,
+  "retained_deployment_guards": 140,
+  "template_compilation": {
+    "templates": 7,
+    "app_setup": false
+  },
+  "sql_grammar": {
+    "forward_statements": 4,
+    "reverse_statements": 5,
+    "database_execution": false
+  },
+  "native_encrypted_recovery": "Pending64 tables including synthetic pending/completed credential requirements",
+  "previous_cr010_success": "Observed actual operator console; native report/commit bound only on operator machine",
+  "github_updated": false,
+  "vm_changed": false,
+  "full_requirement_acceptances_pending": 85
+}

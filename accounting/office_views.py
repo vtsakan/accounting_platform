@@ -77,6 +77,11 @@ def members_view(request):
                 "test": "Δοκιμαστικό μήνυμα", "submitted": "Υποβλήθηκε στον διακομιστή αλληλογραφίας", "failed": "Η υποβολή δεν ολοκληρώθηκε"}
     for member in members:
         member.proof_form = PasswordProofForm(auto_id="id_member_" + str(member.pk) + "_%s")
+    from .staff_access_selectors import credentials_installed
+    from .staff_access_models import StaffCredentialRequirement
+    pending = set(StaffCredentialRequirement.objects.filter(office=office,required=True).values_list('user_id',flat=True)) if credentials_installed() else set()
+    for member in members:
+        member.credential_change_required = member.user_id in pending
     for invite in invites:
         invite.proof_form = PasswordProofForm(auto_id="id_invite_" + str(invite.pk) + "_%s")
         invite.mail_label = statuses.get(invite.mail_status, "Η υποβολή δεν επιβεβαιώθηκε")

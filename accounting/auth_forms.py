@@ -46,13 +46,24 @@ class StaffPasswordResetForm(PasswordResetForm):
 
 
 class StaffSetPasswordForm(SetPasswordForm):
+    def clean(self):
+        data=super().clean()
+        from .staff_access_selectors import password_change_required
+        candidate=data.get('new_password1')
+        if candidate and password_change_required(self.user) and self.user.check_password(candidate):
+            self.add_error('new_password1','Ο νέος κωδικός πρέπει να διαφέρει από τον προσωρινό.')
+        return data
+
     def save(self, commit=True):
         with transaction.atomic():
+            from .staff_access_services import lock_password_reset_office,complete_email_password_change
+            lock_password_reset_office(self.user)
             state = lock_state(self.user)
             user = super().save(commit=commit)
             if commit:
                 state.revision += 1
                 state.save(update_fields=["revision"])
+                complete_email_password_change(user,state)
             return user
 
 

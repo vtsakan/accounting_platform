@@ -364,3 +364,4 @@ from .counterparty_retirement_models import CounterpartyDeletion
 from .counterparty_retirement_models import CounterpartyDeletion
 
 from .attachment_models import AttachmentCategory,ClientAttachment,AttachmentEvent
+from .staff_access_models import StaffCredentialRequirement

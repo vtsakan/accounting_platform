@@ -1,0 +1,10 @@
+{% extends 'accounting/office/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block office_content %}
+<h1 class="h3">{{ title }}</h1>
+{% if target_username %}<p>Χρήστης: <strong>{{ target_username }}</strong></p>{% endif %}
+<p>Ο κωδικός είναι προσωρινός. Ο χρήστης θα ορίσει τον προσωπικό του κωδικό πριν ανοίξει το γραφείο. Δεν αποστέλλεται μήνυμα ηλεκτρονικού ταχυδρομείου.</p>
+{% include 'accounting/office/proof_help.html' %}
+<form method="post" class="col-lg-6">{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn btn-primary">Αποθήκευση προσωρινού κωδικού</button></form>
+<a href="{% url 'office-members' %}">Επιστροφή στους χρήστες</a>
+{% endblock %}

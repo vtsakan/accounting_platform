@@ -19,8 +19,12 @@ from . import entity_profile_views
 from . import attachment_views
 from . import gsis_views
 from . import client_import_views
+from . import staff_access_views
 
 urlpatterns = [
+    path('office/members/create/',staff_access_views.direct_create,name='staff-direct-create'),
+    path('office/members/<int:user_id>/password/',staff_access_views.direct_reset,name='staff-direct-reset'),
+    path('auth/password/change-required/',staff_access_views.required_change,name='password-change-required'),
     path('counterparties/import/', client_import_views.upload, name='counterparty-import'),
     path('counterparties/import/<uuid:key>/', client_import_views.preview, name='counterparty-import-preview'),
     path('counterparties/import/<uuid:key>/confirm/', client_import_views.confirm, name='counterparty-import-confirm'),

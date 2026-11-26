@@ -32,6 +32,7 @@ from .office_access import records
 from .schema_test_support import restore_current_test_schema
 from .settlement_services import allocate_cash
 from .tests_auth_support import staff_client_login
+from .tests_cr010_historical_notes import HistoricalNoteMigrationSupport
 from .tests_finance_posting import DAY, Fixtures
 
 
@@ -426,7 +427,7 @@ class OwnerDeletionContracts(RetirementSupport, TestCase):
         self.assertContains(response,'Διαγραφή αρχειοθετημένης εγγραφής')
 
 
-class RetirementMigrationContracts(RetirementSupport, TransactionTestCase):
+class RetirementMigrationContracts(HistoricalNoteMigrationSupport, RetirementSupport, TransactionTestCase):
     def setUp(self):
         MigrationExecutor(connection).migrate([('accounting','0028_counterparty_note_guards')])
         self.seed_retirement()

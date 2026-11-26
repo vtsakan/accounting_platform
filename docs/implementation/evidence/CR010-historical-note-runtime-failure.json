@@ -1,0 +1,23 @@
+{
+  "change": "CR-010",
+  "status": "Failed",
+  "source": "Actual operator console attachment Pasted text(20261126-073457).txt",
+  "stage": "full-production-pg17-delivery",
+  "image": "sha256:e4c7b2739b6fe1a3c5a7133a1fb05cff2bf514ddbaa2b838a677d52428eb2f4b",
+  "tests_run": 1254,
+  "reported_errors": 4,
+  "reported_failures": 0,
+  "successful_full_suite": false,
+  "exception": "django.db.utils.ProgrammingError: column accounting_counterpartynote.subject does not exist",
+  "visible_error_headers": [
+    "accounting.tests_counterparty_journal.NoteMigrationTests.test_downgrade_with_notes_refuses_to_erase_history",
+    "accounting.tests_counterparty_journal.NoteMigrationTests.test_forward_adds_empty_note_table_and_preserves_all_preexisting_rows",
+    "accounting.tests_counterparty_retirement.RetirementMigrationContracts.test_upgrade_preserves_existing_archived_open_history_and_people"
+  ],
+  "log_limitation": "The retained diagnostic tail truncates the first error header and part of its traceback",
+  "additional_matching_fixture_identified_statically": "accounting.tests_client_tasks.TaskMigrationContracts.test_current_30_to_32_upgrade_preserves_original_people_and_notes",
+  "real_files_and_worker_gate_reached": false,
+  "agent_runtime_executed": false,
+  "vm_changed": false,
+  "github_updated": false
+}

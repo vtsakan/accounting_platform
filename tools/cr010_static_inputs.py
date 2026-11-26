@@ -14,7 +14,7 @@ def inspect(root):
     files = ['accounting/cr010_models.py', 'accounting/manual_agreement_creation.py',
         'accounting/client_import_services.py', 'accounting/client_import_views.py',
         'accounting/tests_cr010_import.py', 'accounting/tests_cr010_workflow.py',
-        'core/client_xlsx.py', 'core/import_crypto.py']
+        'core/client_xlsx.py', 'core/import_crypto.py', 'accounting/tests_cr010_historical_notes.py']
     imports = 0
     for name in files:
         path = root/name
@@ -45,5 +45,23 @@ def inspect(root):
     for name, methods in {'task-pending': ['POST'], 'task-resume': ['POST'], 'counterparty-import': ['GET', 'POST'],
             'counterparty-import-preview': ['GET'], 'counterparty-import-confirm': ['POST'], 'counterparty-import-cancel': ['POST']}.items():
         require(routes[name]['methods'] == methods and routes[name]['realm'] == 'office-business', 'Declare new route: '+name)
+    legacy_classes = {'accounting/tests_counterparty_journal.py': 'NoteMigrationTests',
+        'accounting/tests_counterparty_retirement.py': 'RetirementMigrationContracts',
+        'accounting/tests_client_tasks.py': 'TaskMigrationContracts'}
+    for name, selected in legacy_classes.items():
+        classes = [node for node in ast.parse((root/name).read_text()).body if isinstance(node, ast.ClassDef)]
+        actual = [node.name for node in classes if any(isinstance(base, ast.Name)
+            and base.id == 'HistoricalNoteMigrationSupport' for base in node.bases)]
+        require(actual == [selected], 'Historical note fixtures must be limited to the selected migration class: '+name)
+    helper = (root/'accounting/tests_cr010_historical_notes.py').read_text()
+    require('project_state(NOTE_TARGET).apps' in helper and "'0028_counterparty_note_guards'" in helper
+        and 'columns != expected_columns' in helper and 'cls.enterClassContext(' in helper
+        and 'note.refresh_from_db()' in helper and 'DISABLE TRIGGER' not in helper
+        and 'MigrationExecutor(connection).migrate' not in helper,
+        'Historical fixtures must use the exact old model and retain real guards and migration targets')
+    for path in (root/'accounting').glob('*.py'):
+        if not path.name.startswith('tests'):
+            require('tests_cr010_historical_notes' not in path.read_text(), 'Business code cannot import a historical test fixture')
     return {'local_import_symbols': imports, 'local_calls_checked': required_call_arguments(root, [root/n for n in files]),
+        'historical_note_fixture_classes_checked': len(legacy_classes),
         'retained_gsis_attachment_checks': retained, 'application_or_tests_executed': False}

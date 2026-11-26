@@ -24,6 +24,7 @@ from .models import (AccountantProfile, Agreement, AgreementTermsVersion,
     AllocationRelease, CashAllocation, Charge, CounterpartyNote, Entity,
     FinanceAuditEvent, FinanceCommand, Office, SettlementCommand, Transaction)
 from .tests_auth_support import staff_client_login
+from .tests_cr010_historical_notes import HistoricalNoteMigrationSupport
 from .tests_cash_agreement_entry import DAY, ReceiptSupport
 from .cash_entry_services import post_agreement_cash
 from .finance_services import post_cash
@@ -456,7 +457,7 @@ class NoteRaceTests(JournalSupport, TransactionTestCase):
         self.assertFalse(CounterpartyNote.objects.exists())
 
 
-class NoteMigrationTests(JournalSupport, TransactionTestCase):
+class NoteMigrationTests(HistoricalNoteMigrationSupport, JournalSupport, TransactionTestCase):
     def setUp(self):
         MigrationExecutor(connection).migrate([('accounting','0026_fee_generation_guards')])
         self.seed_journal()

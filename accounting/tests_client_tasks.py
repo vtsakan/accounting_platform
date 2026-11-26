@@ -31,6 +31,7 @@ from .models import (AccountantProfile, ClientTask, ClientTaskActivity, Counterp
     Entity, Office, Transaction, Charge, FinanceAuditEvent, OfficeAuditEvent)
 from .schema_test_support import restore_current_test_schema
 from .tests_auth_support import staff_client_login
+from .tests_cr010_historical_notes import HistoricalNoteMigrationSupport
 from .tests_finance_posting import Fixtures
 
 
@@ -446,7 +447,7 @@ class TaskArchiveContracts(TaskSupport, TestCase):
         self.assertEqual(self.login(self.owner).get(reverse('task-detail',args=[self.task.pk])).status_code,404)
 
 
-class TaskMigrationContracts(TaskSupport, TransactionTestCase):
+class TaskMigrationContracts(HistoricalNoteMigrationSupport, TaskSupport, TransactionTestCase):
     def tearDown(self):restore_current_test_schema(); super().tearDown()
 
     def test_current_30_to_32_upgrade_preserves_original_people_and_notes(self):

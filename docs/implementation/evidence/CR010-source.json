@@ -1,9 +1,9 @@
 {
   "change": "CR-010",
   "status": "Prepared",
-  "source_lock_sha256": "sha256:8021b758e7010f9169988be5a23a8650ff818c8084a5439d76535d7206d9a987",
-  "application_inputs": 389,
-  "application_context_digest": "sha256:26dda27dfdeb48a3aebe6ed39e633159888aa58caf375883dd2d026322a04396",
+  "source_lock_sha256": "sha256:9475befe028bf428eb92dd751a5afecf130b135736925207ddfa66b2ecd713eb",
+  "application_inputs": 390,
+  "application_context_digest": "sha256:ea036ea033b7a897b96352d041254d4ef4f6272cf55c02f5f31399a1f9cdcee8",
   "native_suite_pending": 1254,
   "runtime_executed": false,
   "vm_changed": false,
@@ -13,5 +13,6 @@
     "AGENTS.md",
     "docs/implementation/state.md"
   ],
-  "python_portability_correction": "Explicit show_empty retains all1717 original method digests on Python3.13 and later"
+  "python_portability_correction": "Explicit show_empty retains all1717 original method digests on Python3.13 and later",
+  "fixture_correction": "Use historical note fields only in three migration fixture classes; all methods and38 migrations unchanged"
 }

@@ -88,7 +88,7 @@ def agreement_from_service(request, key):
         except (ValidationError, DatabaseError) as error:
             failed(form, error)
         else:
-            messages.success(request, 'Η συμφωνία και η πρώτη μηνιαία χρέωση καταχωρίστηκαν. Συνεχίστε με το πρόγραμμα των επόμενων μηνών.')
+            messages.success(request, 'Η συμφωνία καταχωρίστηκε. Προσθέστε χρέωση χωριστά ή δημιουργήστε μηνιαίο πρόγραμμα.')
             return redirect('fee-schedule-add')
     return render(request, 'accounting/fees/agreement.html', {'form':form, 'service':service, 'price':price})
 

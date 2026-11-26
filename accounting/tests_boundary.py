@@ -106,6 +106,7 @@ class BoundaryFixtures:
                 setattr(cls,name+'_'+suffix,obj)
 
     def client_for(self,user):
+        self._route_user = user
         client=Client()
         if user is not None:
             # Every positive matrix actor proves MFA through the actual view;
@@ -189,6 +190,8 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         seed_task_routes(cls)
         from .tests_attachment_support import seed_attachment_routes
         seed_attachment_routes(cls)
+        from .tests_cr010_import import seed_import_routes
+        seed_import_routes(cls)
 
     def url(self,name,foreign=False):
         suffix='b' if foreign else 'a'
@@ -205,12 +208,13 @@ class BoundaryHTTPTests(BoundaryFixtures,TestCase):
         if name in {'allocation-release','charge-correction'}:kwargs={'key':'00000000-0000-4000-8000-00000000000'+('b' if foreign else 'a')}
         if name in {'service-price-edit','service-agreement-add'}:kwargs={'key':getattr(self,'service_'+suffix).pk}
         if name in {'fee-schedule-detail','fee-schedule-change','fee-automation'}:kwargs={'key':getattr(self,'fee_'+suffix).pk}
-        if name in {'task-detail','task-edit','task-complete','task-reopen'}:kwargs={'key':getattr(self,'task_'+suffix).pk}
+        if name in {'task-detail','task-edit','task-complete','task-reopen','task-pending','task-resume'}:kwargs={'key':getattr(self,'task_'+suffix).pk}
         if name=='note-to-task':kwargs={'pk':getattr(self,'entity_'+suffix).pk,'note_key':getattr(self,'task_note_'+suffix).pk}
         if name=='counterparty-directory-export':kwargs={'filetype':'csv'}
         if name in {'entity-credentials-reveal','entity-gsis-credentials'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk,'subject':'MAIN'}
         if name in {'attachment-upload','attachment-edit','attachment-remove','attachment-download'}:kwargs={'pk':getattr(self,'entity_'+suffix).pk}
         if name in {'attachment-edit','attachment-remove','attachment-download'}:kwargs['key']=getattr(self,'attachment_'+suffix).pk
+        if name in {'counterparty-import-preview','counterparty-import-confirm','counterparty-import-cancel'}:kwargs={'key':getattr(self,'client_imports_'+suffix).get(str(getattr(getattr(self,'_route_user',None),'pk','')), next(iter(getattr(self,'client_imports_'+suffix).values())))}
         if name=='attachment-category-edit':kwargs={'key':getattr(self,'attachment_category_'+suffix).pk}
         return reverse(name,kwargs=kwargs)
 

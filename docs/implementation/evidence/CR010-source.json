@@ -1,0 +1,17 @@
+{
+  "change": "CR-010",
+  "status": "Prepared",
+  "source_lock_sha256": "sha256:8021b758e7010f9169988be5a23a8650ff818c8084a5439d76535d7206d9a987",
+  "application_inputs": 389,
+  "application_context_digest": "sha256:26dda27dfdeb48a3aebe6ed39e633159888aa58caf375883dd2d026322a04396",
+  "native_suite_pending": 1254,
+  "runtime_executed": false,
+  "vm_changed": false,
+  "real_workbook_imported": false,
+  "packaging_correction": "Preserve and bind actual operator AGENTS.md; application context unchanged",
+  "operator_preserved_paths": [
+    "AGENTS.md",
+    "docs/implementation/state.md"
+  ],
+  "python_portability_correction": "Explicit show_empty retains all1717 original method digests on Python3.13 and later"
+}

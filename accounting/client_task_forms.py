@@ -11,6 +11,8 @@ from .client_task_selectors import active_members, tasks_installed, today
 class TaskFields(forms.Form):
     request_key = forms.UUIDField(widget=forms.HiddenInput, label='Αναγνωριστικό υποβολής',
         error_messages={'required': 'Ανανεώστε τη φόρμα και δοκιμάστε ξανά.', 'invalid': 'Ανοίξτε νέα φόρμα πριν υποβάλετε ξανά.'})
+    subject = forms.CharField(label='Θέμα', max_length=200, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Σύντομο θέμα'}))
     body = forms.CharField(label='Περιγραφή εργασίας', max_length=5000,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
     due_date = forms.DateField(label='Ημερομηνία λήξης', input_formats=['%Y-%m-%d', '%d/%m/%Y'],
@@ -87,10 +89,10 @@ def note_form(user, data=None, *, as_task=False):
 
 
 class TaskFilterForm(forms.Form):
-    status = forms.ChoiceField(required=False, label='Κατάσταση', choices=[('OPEN', 'Ανοιχτές'), ('DONE', 'Ολοκληρωμένες'), ('ALL', 'Όλες')], widget=forms.Select(attrs={'class': 'form-select'}))
+    status = forms.ChoiceField(required=False, label='Κατάσταση', choices=[('ACTIVE', 'Μη ολοκληρωμένες'), ('OPEN', 'Ανοιχτές'), ('WAIT', 'Σε εκκρεμότητα'), ('DONE', 'Ολοκληρωμένες'), ('ALL', 'Όλες')], widget=forms.Select(attrs={'class': 'form-select'}))
 
     def __init__(self, data=None, **kwargs):
         values = data.copy() if data is not None else {}
         if not values.get('status'):
-            values['status'] = 'OPEN'
+            values['status'] = 'ACTIVE'
         super().__init__(values, **kwargs)

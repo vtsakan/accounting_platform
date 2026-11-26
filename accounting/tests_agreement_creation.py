@@ -61,16 +61,16 @@ class AgreementCreationTests(CreationSupport, TestCase):
         self.assertEqual((form.initial['billing_mode'], form.initial['lifecycle']), ('ONE_OFF', 'ACTIVE'))
         self.assertEqual(form.initial['start_date'], timezone.localdate())
         self.assertIn('creation_key', form.fields)
-        self.assertContains(response, 'Αποθήκευση συμφωνίας και χρέωσης')
+        self.assertContains(response, 'Αποθήκευση συμφωνίας')
         self.assertEqual(self.counts(), before)
 
-    def test_new_customer_agreement_immediately_shows_400_debt_and_no_cash(self):
+    def test_new_customer_agreement_saves_terms_without_charge_or_cash(self):
         response = self.client.post(reverse('add-agreement'), self.form_data())
         self.assertEqual(response.status_code, 302)
         agreement = Agreement.objects.get(description='ΔΟΚΙΜΑΣΤΙΚΗ ΝΕΑ ΣΥΜΦΩΝΙΑ CR002')
         self.assertRedirects(response, reverse('agreement-detail', args=[agreement.pk]))
         projection = agreement_projection(agreement)
-        self.assertEqual((projection['charge_total'], projection['remaining_obligation']), (Decimal('400.00'), Decimal('400.00')))
+        self.assertEqual((projection['charge_total'], projection['remaining_obligation']), (Decimal('0.00'), Decimal('0.00')))
         self.assertEqual((Transaction.objects.count(), FinanceCommand.objects.count()), (0, 0))
 
     def test_supplier_agreement_creates_payable_without_payment(self):
@@ -99,7 +99,7 @@ class AgreementCreationTests(CreationSupport, TestCase):
         self.assertTrue(second[2])
         self.assertEqual(self.counts(), before)
 
-    def test_http_double_submission_creates_only_one_agreement_and_charge(self):
+    def test_http_double_submission_creates_one_terms_only_agreement(self):
         data = self.form_data()
         first = self.client.post(reverse('add-agreement'), data)
         before = self.counts()

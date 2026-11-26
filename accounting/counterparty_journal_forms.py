@@ -15,6 +15,8 @@ KINDS = [('', 'Όλες οι εγγραφές'), ('agreement', 'Συμφωνίε
 
 class NoteForm(forms.Form):
     request_key = forms.UUIDField(widget=forms.HiddenInput, label='Αναγνωριστικό υποβολής')
+    subject = forms.CharField(label='Θέμα', max_length=200, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Σύντομο θέμα'}))
     body = forms.CharField(label='Νέα σημείωση', max_length=5000,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4,
             'placeholder': 'Τι θέλετε να καταγράψετε για αυτή την καρτέλα;'}))

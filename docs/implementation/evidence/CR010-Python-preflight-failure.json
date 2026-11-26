@@ -1,0 +1,13 @@
+{
+  "change": "CR-010",
+  "status": "Stopped",
+  "source": "Actual operator console supplied by user",
+  "stage": "source-preflight-after-patch-and-binding-before-commit",
+  "message": "An original contract method changed: accounting/tests_agreement_charges.py",
+  "branch": "change/cr010-manual-import",
+  "patch_applied_and_staged": true,
+  "exclusive_cr010_binding_created": true,
+  "application_or_tests_executed": false,
+  "vm_changed": false,
+  "github_updated": false
+}

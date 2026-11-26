@@ -130,9 +130,9 @@ def add_agreement_view(request):
             except DatabaseError as error:
                 if getattr(error.__cause__, 'sqlstate', None) not in {'23505', '23514', '40001', '40P01'}:
                     raise
-                form.add_error(None, 'Η συμφωνία και η χρέωση δεν ολοκληρώθηκαν. Επαναλάβετε την ίδια υποβολή.')
+                form.add_error(None, 'Η συμφωνία δεν ολοκληρώθηκε. Επαναλάβετε την ίδια υποβολή.')
             else:
-                messages.success(request, 'Η συμφωνία και η αρχική χρέωση καταχωρίστηκαν. Το ανεξόφλητο ενημερώθηκε.')
+                messages.success(request, 'Η συμφωνία καταχωρίστηκε. Μπορείτε να προσθέσετε χρέωση από την καρτέλα της.')
                 return redirect('agreement-detail', pk=agreement.pk)
     else:
         # --- THIS IS THE 'GET' REQUEST PART - START OF CHANGES ---

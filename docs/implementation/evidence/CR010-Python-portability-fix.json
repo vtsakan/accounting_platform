@@ -1,0 +1,34 @@
+{
+  "change": "CR-010",
+  "status": "Prepared",
+  "correction": "Preserve the Python 3.12 AST dump with explicit show_empty on Python 3.13 and later",
+  "failure": "docs/implementation/evidence/CR010-Python-preflight-failure.json",
+  "previous_source_lock": "docs/implementation/evidence/CR010-before-Python-fix-source-lock.json",
+  "original_method_hashes_replaced": false,
+  "original_method_hashes_retained": 1717,
+  "static_formatter_comparison": {
+    "python_3_12_14": {"old_default_mismatches": 0, "corrected_matches": 1717},
+    "python_3_13_5": {"old_default_mismatches": 1717, "corrected_matches": 1717},
+    "cpython_3_14_formatter_on_3_12_parsed_nodes": {
+      "corrected_matches": 1717,
+      "limitation": "Static formatter comparison, not a Python 3.14 interpreter run",
+      "official_source": "https://github.com/python/cpython/blob/3.14/Lib/ast.py",
+      "retrieved_blob": "2f11683ecf7c681d4c76cb0c234587370aea08d5"
+    }
+  },
+  "application_inputs_unchanged": 389,
+  "application_context_digest": "sha256:26dda27dfdeb48a3aebe6ed39e633159888aa58caf375883dd2d026322a04396",
+  "old_migrations_unchanged": 36,
+  "new_native_methods_unchanged": 44,
+  "expected_suite": 1254,
+  "financial_cases": 36,
+  "retained_tool_guards": 140,
+  "existing_cr010_binding_refreshed": false,
+  "historical_receipt_files_retained": 25,
+  "operator_instruction_and_state_bytes_preserved": true,
+  "agent_application_or_tests_executed": false,
+  "native_suite": "Pending operator",
+  "vm_changed": false,
+  "github_updated": false,
+  "full_requirement_acceptances_pending": 85
+}

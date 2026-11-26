@@ -308,7 +308,7 @@ class FeeContracts(FeeFixtures, TestCase):
         self.assertIn('no-store',response.headers['Cache-Control'])
         self.assertEqual((Charge.objects.count(),FeeScheduleVersion.objects.count()),before)
 
-    def test_catalogue_quote_creates_reviewed_terms_and_first_charge(self):
+    def test_catalogue_quote_creates_reviewed_terms_without_initial_charge(self):
         price=self.price();client=self.client_for(self.member)
         response=client.post(reverse('service-agreement-add',args=[price.service_id]),{
             'price_version':price.pk,'entity':self.customer.pk,'agreement_type':'RECEIVABLE','description':price.description,
@@ -317,8 +317,8 @@ class FeeContracts(FeeFixtures, TestCase):
         self.assertEqual(response.status_code,302)
         terms=Agreement.objects.order_by('-pk').first().terms_versions.first()
         self.assertEqual((terms.agreed_amount,terms.description),(price.amount,price.description))
-        self.assertEqual(Charge.objects.count(),1)
-        self.assertEqual((Charge.objects.get().terms_id,Charge.objects.get().amount),(terms.pk,price.amount))
+        self.assertEqual(Charge.objects.count(),0)
+        self.assertFalse(Charge.objects.filter(agreement=terms.agreement).exists())
         self.assertEqual(Transaction.objects.count(),0)
 
 

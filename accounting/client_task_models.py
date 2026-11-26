@@ -13,6 +13,7 @@ class ClientTask(OfficeOwned):
     class Status(models.TextChoices):
         OPEN = 'OPEN', 'Ανοιχτή'
         DONE = 'DONE', 'Ολοκληρωμένη'
+        PENDING = 'WAIT', 'Σε εκκρεμότητα'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     entity = models.ForeignKey('accounting.Entity', on_delete=models.PROTECT, related_name='work_tasks', editable=False)
@@ -21,6 +22,7 @@ class ClientTask(OfficeOwned):
     creator_label = models.CharField(max_length=150, editable=False)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_client_tasks', verbose_name='Ανάθεση σε')
     assignee_label = models.CharField(max_length=150, editable=False)
+    subject = models.CharField(max_length=200, blank=True, default='', verbose_name='Θέμα')
     body = models.TextField(max_length=5000, verbose_name='Περιγραφή εργασίας')
     due_date = models.DateField(verbose_name='Ημερομηνία λήξης')
     status = models.CharField(max_length=4, choices=Status.choices, default=Status.OPEN, editable=False)
@@ -38,9 +40,9 @@ class ClientTask(OfficeOwned):
         verbose_name = 'Εργασία πελάτη'
         verbose_name_plural = 'Εργασίες πελατών'
         constraints = [
-            models.CheckConstraint(condition=models.Q(status__in=['OPEN', 'DONE']), name='cr006_task_status'),
+            models.CheckConstraint(condition=models.Q(status__in=['OPEN', 'WAIT', 'DONE']), name='cr006_task_status'),
             models.CheckConstraint(condition=~models.Q(body__regex=r'^\s*$'), name='cr006_task_nonempty'),
-            models.CheckConstraint(condition=(models.Q(status='OPEN', completed_at__isnull=True, completed_by__isnull=True) |
+            models.CheckConstraint(condition=(models.Q(status__in=['OPEN', 'WAIT'], completed_at__isnull=True, completed_by__isnull=True) |
                 models.Q(status='DONE', completed_at__isnull=False, completed_by__isnull=False)), name='cr006_task_completion'),
         ]
         indexes = [models.Index(fields=['office', 'assignee', 'status', 'due_date'], name='cr006_task_assigned_due'),
@@ -56,7 +58,7 @@ class ClientTaskActivity(OfficeOwned):
     actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, editable=False)
     actor_label = models.CharField(max_length=150, editable=False)
     action = models.CharField(max_length=8, choices=[('NOTE', 'Σημείωση'), ('CREATE', 'Δημιουργία εργασίας'),
-        ('UPDATE', 'Αλλαγή εργασίας'), ('COMPLETE', 'Ολοκλήρωση εργασίας'), ('REOPEN', 'Εκ νέου άνοιγμα')], editable=False)
+        ('UPDATE', 'Αλλαγή εργασίας'), ('COMPLETE', 'Ολοκλήρωση εργασίας'), ('REOPEN', 'Εκ νέου άνοιγμα'), ('PENDING', 'Σε εκκρεμότητα'), ('RESUME', 'Συνέχιση εργασίας')], editable=False)
     task_version = models.PositiveBigIntegerField(null=True, editable=False)
     before = models.JSONField(default=dict, editable=False)
     after = models.JSONField(default=dict, editable=False)

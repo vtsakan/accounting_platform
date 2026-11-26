@@ -1,4 +1,4 @@
 {% extends 'accounting/base.html' %}{% block title %}Νέα συμφωνία από υπηρεσία{% endblock %}{% block content %}
-<h1>Νέα μηνιαία συμφωνία</h1><p>Υπηρεσία {{ service.code }}, έκδοση {{ price.revision }}: {{ price.description }} · {{ price.amount }} €. Ελέγξτε και επιβεβαιώστε την περιγραφή και τη συμφωνημένη μικτή αμοιβή. Με την αποθήκευση καταχωρίζεται και η πρώτη μηνιαία χρέωση, με ημερομηνία την έναρξη της συμφωνίας.</p>
-<p>Η είσπραξη καταχωρίζεται όταν ληφθούν χρήματα. Στο επόμενο βήμα ρυθμίζετε το πρόγραμμα των επόμενων μηνών. Ο πρώτος μήνας χρεώνεται μία φορά.</p>
-<form method="post" class="card card-body">{% csrf_token %}<input type="hidden" name="price_version" value="{{ price.pk }}">{{ form.as_p }}<button type="submit" class="btn btn-primary">Αποθήκευση συμφωνίας και πρώτης χρέωσης</button></form>{% endblock %}
+<h1>Νέα μηνιαία συμφωνία</h1><p>Υπηρεσία {{ service.code }}, έκδοση {{ price.revision }}: {{ price.description }} · {{ price.amount }} €. Ελέγξτε και επιβεβαιώστε την περιγραφή και τη συμφωνημένη μικτή αμοιβή. Η αποθήκευση καταχωρίζει τους όρους της συμφωνίας. Προσθέστε χωριστά χρέωση όταν απαιτείται.</p>
+<p>Η είσπραξη καταχωρίζεται όταν ληφθούν χρήματα. Στο επόμενο βήμα μπορείτε να ρυθμίσετε ξεχωριστό μηνιαίο πρόγραμμα χρεώσεων.</p>
+<form method="post" class="card card-body">{% csrf_token %}<input type="hidden" name="price_version" value="{{ price.pk }}">{{ form.as_p }}<button type="submit" class="btn btn-primary">Αποθήκευση συμφωνίας</button></form>{% endblock %}

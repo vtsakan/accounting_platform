@@ -1,0 +1,22 @@
+{
+  "change": "CR-010",
+  "status": "Prepared",
+  "observed_operator_failure": "CR010 stopped: Άλλαξε αρχικό αρχείο: AGENTS.md",
+  "observed_stage": "baseline-preflight-before-patch",
+  "application_and_tests_started": false,
+  "operator_instruction_file_is_not_an_image_input": true,
+  "correction": "Preserve AGENTS.md and state.md byte-for-byte; record actual operator instruction digest in a new schema2 binding",
+  "historical_receipt_bindings_refreshed": false,
+  "retained_historical_receipt_files": 25,
+  "application_inputs": 389,
+  "application_source_changed_by_correction": false,
+  "retained_original_migrations": 36,
+  "retained_original_test_method_hashes": 1717,
+  "new_test_methods": 44,
+  "expected_native_suite": 1254,
+  "native_suite_execution": "Pending operator",
+  "native_history_fabricated": false,
+  "agent_runtime_executed": false,
+  "vm_changed": false,
+  "github_updated": false
+}

@@ -18,8 +18,15 @@ from . import counterparty_retirement_views
 from . import entity_profile_views
 from . import attachment_views
 from . import gsis_views
+from . import client_import_views
 
 urlpatterns = [
+    path('counterparties/import/', client_import_views.upload, name='counterparty-import'),
+    path('counterparties/import/<uuid:key>/', client_import_views.preview, name='counterparty-import-preview'),
+    path('counterparties/import/<uuid:key>/confirm/', client_import_views.confirm, name='counterparty-import-confirm'),
+    path('counterparties/import/<uuid:key>/cancel/', client_import_views.cancel, name='counterparty-import-cancel'),
+    path('tasks/<uuid:key>/pending/', client_task_views.pending, name='task-pending'),
+    path('tasks/<uuid:key>/resume/', client_task_views.resume, name='task-resume'),
     path('attachments/categories/',attachment_views.catalogue,name='attachment-categories'),
     path('attachments/categories/add/',attachment_views.category_edit,name='attachment-category-add'),
     path('attachments/categories/<uuid:key>/',attachment_views.category_edit,name='attachment-category-edit'),

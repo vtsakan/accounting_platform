@@ -1,0 +1,26 @@
+{% extends 'accounting/base.html' %}
+{% block title %}Προεπισκόπηση εισαγωγής πελατών{% endblock %}
+{% block content %}
+<h1>Προεπισκόπηση εισαγωγής πελατών</h1>
+{% if batch.state == 'DONE' %}<div class="alert alert-success" role="status">Η εισαγωγή ολοκληρώθηκε. Νέες καρτέλες: {{ batch.outcome.created }}. Ενημερώσεις: {{ batch.outcome.updated }}. Παραλείψεις: {{ batch.outcome.skipped }}. Σημειώσεις: {{ batch.outcome.notes }}.</div>
+{% elif batch.state == 'CANCELLED' %}<p>Η προεπισκόπηση έχει ακυρωθεί.</p>
+{% else %}
+<p>Καμία καρτέλα δεν έχει αλλάξει. Η προεπισκόπηση ισχύει για 30 λεπτά. Ελέγξτε την κατηγορία προσώπου και επιλέξτε ενέργεια ανά γραμμή.</p>
+<p>Υπάρχον ΑΦΜ: αρχική επιλογή «Παράλειψη». Η «Ενημέρωση» αλλάζει όνομα, μη κενό ΑΜΚΑ και την επιλεγμένη κατηγορία, διατηρώντας επαφές, ρόλους και ιστορικό. Τα κενά κελιά διατηρούν τις υπάρχουσες τιμές. Οι υπάρχοντες κωδικοί αλλάζουν μόνο με τη σχετική επιλογή.</p>
+{% if error %}<div role="alert" class="alert alert-danger">{{ error }}</div>{% endif %}
+<details><summary>Αντιστοίχιση στηλών</summary>{% for sheet in mappings %}<h2>{{ sheet.sheet }}</h2><ul>{% for col in sheet.columns %}<li>{{ col.column }} · {{ col.label }} → {% if col.field %}{% if col.field == 'username' or col.field == 'password' %}Κρυπτογραφημένοι κωδικοί υπόχρεου{% else %}Στοιχεία καρτέλας{% endif %}{% else %}Σημείωση{% endif %}</li>{% endfor %}</ul>{% endfor %}</details>
+<form method="post" action="{% url 'counterparty-import-confirm' batch.pk %}">{% csrf_token %}
+{% for row in rows %}<article class="card card-body mb-3">
+<h2>{{ row.name|default:'Χωρίς όνομα' }}</h2><p>Φύλλο {{ row.sheet }} · Γραμμή {{ row.row }} · ΑΦΜ {{ row.vat_number|default:'—' }} · ΑΜΚΑ {{ row.main_amka|default:'—' }}</p>
+{% if row.match_id %}<p>Υπάρχουσα καρτέλα: <a href="{% url 'entity-detail' row.match_id %}" target="_blank" rel="noopener noreferrer">{{ row.before_name }}</a>. Υπάρχον ΑΜΚΑ: {{ row.before_amka|default:'—' }}.</p>{% else %}<p>Νέα καρτέλα πελάτη.</p>{% endif %}
+{% for warning in row.warnings %}<p class="alert alert-warning">{{ warning }}</p>{% endfor %}{% for error in row.errors %}<p class="alert alert-danger">{{ error }}</p>{% endfor %}
+<label for="action_{{ row.key }}">Ενέργεια</label><select id="action_{{ row.key }}" name="row_{{ row.key }}_action" class="form-select">
+{% if row.errors %}<option value="SKIP">Παράλειψη — χρειάζεται διόρθωση στο αρχείο</option>{% elif row.match_id %}<option value="SKIP">Παράλειψη</option><option value="UPDATE">Ενημέρωση υπάρχουσας καρτέλας</option>{% else %}<option value="CREATE">Δημιουργία νέου πελάτη</option><option value="SKIP">Παράλειψη</option>{% endif %}</select>
+<label for="kind_{{ row.key }}">Κατηγορία προσώπου</label><select id="kind_{{ row.key }}" name="row_{{ row.key }}_kind" class="form-select"><option value="">Επιλέξτε κατηγορία για εισαγωγή ή ενημέρωση</option>{% for key,label in person_kinds %}<option value="{{ key }}"{% if key == row.kind %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+{% if row.has_credentials %}<p>Υπάρχει ζεύγος κωδικών υπόχρεου στο αρχείο. Θα αποθηκευτεί κρυπτογραφημένο για νέα καρτέλα.</p>{% if row.match_id %}<label><input type="checkbox" name="row_{{ row.key }}_replace" value="yes"> Χρήση των κωδικών του αρχείου στην υπάρχουσα καρτέλα{% if row.existing_credentials %}, αντικαθιστώντας τους αποθηκευμένους{% endif %}</label>{% endif %}{% endif %}
+{% if row.extras %}<details><summary>Στήλες που θα αποθηκευτούν ως σημειώσεις</summary><dl>{% for label,value in row.extras %}<dt>{{ label }}</dt><dd class="client-note-text">{{ value }}</dd>{% endfor %}</dl></details>{% endif %}
+</article>{% endfor %}
+<button type="submit" class="btn btn-primary">Οριστική εισαγωγή επιλεγμένων γραμμών</button></form>
+<form method="post" action="{% url 'counterparty-import-cancel' batch.pk %}" class="mt-3">{% csrf_token %}<button type="submit" class="btn btn-outline-secondary">Ακύρωση προεπισκόπησης</button></form>
+{% endif %}<p><a href="{% url 'counterparty-list' %}">Συναλλασσόμενοι</a> · <a href="{% url 'counterparty-import' %}">Νέα εισαγωγή</a></p>
+{% endblock %}

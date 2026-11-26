@@ -76,7 +76,7 @@ WITH scope AS (SELECT %s::uuid AS office_id, %s::bigint AS entity_id), journal A
  LEFT JOIN auth_user u ON u.id=cmd.actor_id
  UNION ALL
  SELECT 'note:'||n.id::text, 'note', (n.created_at AT TIME ZONE 'Europe/Athens')::date,
-  n.created_at, 'NOTE', 'Σημείωση', '', NULL::numeric, n.actor_label,
+  n.created_at, 'NOTE', 'Σημείωση', coalesce(nullif(to_jsonb(n)->>'subject',''),''), NULL::numeric, n.actor_label,
   NULL::bigint, NULL::bigint, '', n.body
  FROM accounting_counterpartynote n JOIN scope s ON n.office_id=s.office_id AND n.entity_id=s.entity_id
 )
@@ -90,9 +90,9 @@ TASK_ARM = """
  SELECT 'task:'||t.id::text||':'||a.id::text, 'task',
   (a.created_at AT TIME ZONE 'Europe/Athens')::date, a.created_at, 'TASK',
   CASE a.action WHEN 'CREATE' THEN 'Νέα εργασία' WHEN 'UPDATE' THEN 'Αλλαγή εργασίας'
-   WHEN 'COMPLETE' THEN 'Ολοκλήρωση εργασίας' ELSE 'Εκ νέου άνοιγμα εργασίας' END,
-  a.after->>'body', NULL::numeric, a.actor_label, NULL::bigint, NULL::bigint,
-  'Υπεύθυνος: '||(a.after->>'assignee_label')||' · Λήξη: '||to_char((a.after->>'due_date')::date,'DD/MM/YYYY'), ''
+   WHEN 'COMPLETE' THEN 'Ολοκλήρωση εργασίας' WHEN 'PENDING' THEN 'Σε εκκρεμότητα' WHEN 'RESUME' THEN 'Συνέχιση εργασίας' ELSE 'Εκ νέου άνοιγμα εργασίας' END,
+  coalesce(nullif(a.after->>'subject',''),a.after->>'body'), NULL::numeric, a.actor_label, NULL::bigint, NULL::bigint,
+  'Υπεύθυνος: '||(a.after->>'assignee_label')||' · Λήξη: '||to_char((a.after->>'due_date')::date,'DD/MM/YYYY'), a.after->>'body'
  FROM accounting_clienttaskactivity a JOIN accounting_clienttask t ON t.id=a.task_id AND t.office_id=a.office_id
  JOIN scope s ON t.office_id=s.office_id AND t.entity_id=s.entity_id
  WHERE a.action<>'NOTE'

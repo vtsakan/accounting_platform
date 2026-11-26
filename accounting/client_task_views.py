@@ -25,8 +25,11 @@ def listing(request, *, office=False):
             rows = rows.filter(assignee_id=request.user.pk)
         form = TaskFilterForm(request.GET)
         if form.is_valid():
-            if form.cleaned_data['status'] != 'ALL':
-                rows = rows.filter(status=form.cleaned_data['status'])
+            status = form.cleaned_data['status']
+            if status == 'ACTIVE':
+                rows = rows.filter(status__in=['OPEN', 'WAIT'])
+            elif status != 'ALL':
+                rows = rows.filter(status=status)
         else:
             rows = rows.none()
         context = page_context(request.user, rows, request.GET.get('page'))
@@ -79,7 +82,7 @@ def from_note(request, pk, note_key):
     if existing is not None and request.method == 'GET':
         return redirect('task-detail', key=existing.pk)
     form = TaskFields(request.POST if request.method == 'POST' else None, user=request.user,
-        initial={'body': note.body})
+        initial={'subject': note.subject, 'body': note.body})
     if request.method == 'POST' and form.is_valid():
         try:
             task, _ = convert_note(request.user, entity.pk, note.pk, **form.cleaned_data)
@@ -100,7 +103,7 @@ def edit(request, key):
     if not may_change(task, request.user, require_capability(request.user, 'tasks.write')):
         raise PermissionDenied('Η εργασία αλλάζει μόνο από τον δημιουργό, τον υπεύθυνο ή τον ιδιοκτήτη.')
     form = TaskEditForm(request.POST if request.method == 'POST' else None, user=request.user,
-        initial={'body': task.body, 'due_date': task.due_date, 'assignee': task.assignee_id, 'version': task.version})
+        initial={'subject': task.subject, 'body': task.body, 'due_date': task.due_date, 'assignee': task.assignee_id, 'version': task.version})
     if request.method == 'POST' and form.is_valid():
         try:
             task, _ = change_task(request.user, key, action='UPDATE', **form.cleaned_data)
@@ -125,7 +128,8 @@ def transition(request, key, action):
             form_error(form, error)
         else:
             messages.success(request, 'Η ενέργεια είχε ήδη καταγραφεί.' if replay else (
-                'Η εργασία ολοκληρώθηκε.' if action == 'COMPLETE' else 'Η εργασία άνοιξε ξανά.'))
+                {'COMPLETE': 'Η εργασία ολοκληρώθηκε.', 'PENDING': 'Η εργασία τέθηκε σε εκκρεμότητα.',
+                 'RESUME': 'Η εργασία συνεχίζεται.', 'REOPEN': 'Η εργασία άνοιξε ξανά.'}[action]))
             return redirect('task-detail', key=task.pk)
     return render(request, 'accounting/tasks/action_error.html', {'task': task, 'form': form}, status=409)
 
@@ -142,3 +146,17 @@ def complete(request, key):
 @require_POST
 def reopen(request, key):
     return transition(request, key, 'REOPEN')
+
+
+@office_view('tasks.write')
+@never_cache
+@require_POST
+def pending(request, key):
+    return transition(request, key, 'PENDING')
+
+
+@office_view('tasks.write')
+@never_cache
+@require_POST
+def resume(request, key):
+    return transition(request, key, 'RESUME')

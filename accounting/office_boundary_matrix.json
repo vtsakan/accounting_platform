@@ -846,6 +846,55 @@
         "key"
       ],
       "description": "CR008 private client attachment; same-office fresh authority"
+    },
+    {
+      "route": "task-pending",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "task-resume",
+      "realm": "office-business",
+      "capability": "tasks.write",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "counterparty-import",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "route": "counterparty-import-preview",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "counterparty-import-confirm",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "route": "counterparty-import-cancel",
+      "realm": "office-business",
+      "capability": "clients.write",
+      "methods": [
+        "POST"
+      ]
     }
   ],
   "public_probes": [

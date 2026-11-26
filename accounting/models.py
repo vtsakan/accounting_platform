@@ -356,6 +356,7 @@ from .fee_generation_models import FeeAutomationVersion, FeeGenerationRun
 
 from .counterparty_note_models import CounterpartyNote
 from .client_task_models import ClientTask, ClientTaskActivity
+from .cr010_models import AgreementCreationReceipt, CounterpartyImport
 from .entity_profile_models import EntityProfile, TaxisCredential, EntityProfileEvent
 
 from .counterparty_retirement_models import CounterpartyDeletion

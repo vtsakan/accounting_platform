@@ -4,7 +4,7 @@ from zoneinfo import ZoneInfo
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db import connection
-from django.db.models import Count, Q
+from django.db.models import Case, Count, IntegerField, Q, Value, When
 from django.http import Http404
 from django.utils import timezone
 
@@ -68,8 +68,8 @@ def decorate(task, user, profile, day):
 
 def page_context(user, queryset, number=None):
     profile = require_capability(user, 'tasks.read'); day = today()
-    totals = queryset.aggregate(total=Count('pk'), open=Count('pk', filter=Q(status='OPEN')),
-        overdue=Count('pk', filter=Q(status='OPEN', due_date__lt=day)), due_today=Count('pk', filter=Q(status='OPEN', due_date=day)))
+    totals = queryset.aggregate(total=Count('pk'), open=Count('pk', filter=Q(status__in=['OPEN', 'WAIT'])),
+        overdue=Count('pk', filter=Q(status__in=['OPEN', 'WAIT'], due_date__lt=day)), due_today=Count('pk', filter=Q(status__in=['OPEN', 'WAIT'], due_date=day)))
     page = Paginator(queryset, 25).get_page(number)
     page.object_list = [decorate(t, user, profile, day) for t in page.object_list]
     return {'task_page': page, 'task_totals': totals, 'task_today': day, 'task_owner': profile.role == 'owner'}
@@ -77,7 +77,7 @@ def page_context(user, queryset, number=None):
 
 def dashboard_tasks(user):
     profile = require_capability(user, 'tasks.read')
-    rows = task_rows(user).filter(assignee_id=user.pk, status='OPEN'); day = today()
+    rows = task_rows(user).filter(assignee_id=user.pk, status__in=['OPEN', 'WAIT']); day = today()
     totals = rows.aggregate(total=Count('pk'), overdue=Count('pk', filter=Q(due_date__lt=day)),
         due_today=Count('pk', filter=Q(due_date=day)))
     return {'my_tasks': [decorate(t, user, profile, day) for t in rows[:8]], 'my_task_totals': totals,
@@ -85,10 +85,10 @@ def dashboard_tasks(user):
 
 
 def client_tasks(user, entity, number=None):
-    return page_context(user, task_rows(user).filter(entity=entity).order_by('-status', 'due_date', 'created_at', 'pk'), number)
+    return page_context(user, task_rows(user).filter(entity=entity).annotate(finished_order=Case(When(status='DONE', then=Value(1)), default=Value(0), output_field=IntegerField())).order_by('finished_order', 'due_date', 'created_at', 'pk'), number)
 
 
 def open_client_tasks(entity):
     if not tasks_installed():
         return ClientTask.objects.none()
-    return ClientTask.objects.filter(office_id=entity.office_id, entity=entity, status='OPEN').order_by('due_date', 'created_at', 'pk')
+    return ClientTask.objects.filter(office_id=entity.office_id, entity=entity, status__in=['OPEN', 'WAIT']).order_by('due_date', 'created_at', 'pk')

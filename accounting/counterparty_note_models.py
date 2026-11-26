@@ -19,6 +19,7 @@ class CounterpartyNote(OfficeOwned):
         editable=False, verbose_name='Λογιστής')
     actor_label = models.CharField(max_length=150, editable=False, verbose_name='Όνομα λογιστή κατά την καταχώριση')
     request_key = models.UUIDField(editable=False)
+    subject = models.CharField(max_length=200, blank=True, default='', verbose_name='Θέμα')
     body = models.TextField(max_length=5000, verbose_name='Σημείωση')
     created_at = models.DateTimeField(default=timezone.now, editable=False, verbose_name='Καταχωρίστηκε')
 

@@ -3,6 +3,7 @@
 {% block content %}
 <div class="page-heading">
   <div><span class="page-eyebrow">Άνθρωποι &amp; συνεργασίες</span><h1>{{ workspace_title|default:'Συναλλασσόμενοι' }}</h1><p>Όλες οι συνεργασίες σας, με ενιαίο και διατηρημένο ιστορικό.</p></div>
+  <a class="btn btn-outline-primary" href="{% url 'counterparty-import' %}">Εισαγωγή αρχείου πελατών</a>
   <a class="btn btn-primary" href="{% url 'add-entity' %}{% if fixed_role %}?role={{ fixed_role }}{% endif %}">Νέος συναλλασσόμενος</a>
 </div>
 <p>Η ίδια εγγραφή μπορεί να είναι πελάτης και προμηθευτής. Το ιστορικό της παραμένει ενιαίο.</p>

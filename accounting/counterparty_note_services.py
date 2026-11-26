@@ -19,10 +19,19 @@ def note_text(value):
     return value
 
 
+def note_subject(value):
+    if not isinstance(value, str):
+        raise ValidationError({'subject': 'Γράψτε έγκυρο θέμα.'})
+    value = value.strip()
+    if len(value) > 200 or any(ord(c) < 32 or ord(c) == 127 for c in value):
+        raise ValidationError({'subject': 'Το θέμα έχει έως 200 χαρακτήρες, σε μία γραμμή.'})
+    return value
+
+
 @transaction.atomic
-def add_note(user, entity_id, *, body, request_key):
+def add_note(user, entity_id, *, body, request_key, subject=''):
     office = locked_office(user, 'clients.write')
-    body = note_text(body)
+    body = note_text(body); subject = note_subject(subject)
     try:
         key = uuid.UUID(str(request_key))
     except (ValueError, TypeError, AttributeError):
@@ -34,7 +43,7 @@ def add_note(user, entity_id, *, body, request_key):
         raise Http404('Η καρτέλα δεν βρέθηκε.') from None
     existing = CounterpartyNote.objects.filter(office=office, request_key=key).first()
     if existing:
-        if existing.entity_id != entity.pk or existing.actor_id != user.pk or existing.body != body:
+        if existing.entity_id != entity.pk or existing.actor_id != user.pk or existing.body != body or existing.subject != subject:
             raise ValidationError('Η υποβολή έχει ήδη χρησιμοποιηθεί για διαφορετική σημείωση. Ανοίξτε νέα φόρμα.')
         return existing, True
     if entity.is_archived:
@@ -42,6 +51,6 @@ def add_note(user, entity_id, *, body, request_key):
     # The PG insert guard supplies its own clock and the fresh username; no
     # client date, actor, office or label is accepted by this service.
     note = CounterpartyNote.objects.create(office=office, entity=entity,
-        actor_id=user.pk, actor_label='', request_key=key, body=body)
+        actor_id=user.pk, actor_label='', request_key=key, subject=subject, body=body)
     note.refresh_from_db()
     return note, False

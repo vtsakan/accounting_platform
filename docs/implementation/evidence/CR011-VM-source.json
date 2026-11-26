@@ -1,0 +1,26 @@
+{
+  "step": "CR011-VM",
+  "status": "Prepared",
+  "profile": "cr011-current36-to40-clone-4GiB-uploads",
+  "source_migrations": 36,
+  "target_migrations": 40,
+  "application_context_digest": "sha256:0bbecb9086d84220a89a8b2bbe0c4d3582a852a5e3a1f148ccc82580e887b9aa",
+  "application_inputs": 400,
+  "operator_source": "git:4fb2f5d454e6f96630c1e2960c5aa65243543eed",
+  "operator_record_short": "81da3bc",
+  "operator_report_canonical_sha256": "sha256:faa2cc0cdb2ccfd62848c65df9632d1013ef74a253e47035f632ef00ebede959",
+  "runtime_executed": false,
+  "github_updated": false,
+  "vm_changed": false,
+  "sha256": {
+    "docs/implementation/cr011_preview_upgrade_el.md": "sha256:8bb6b682daa4ce975b4f433d5b459a429f45e1cd7e3ae3fc4d3e3f1f1dbe661d",
+    "docs/implementation/evidence/CR011-VM-preflight.json": "sha256:e771ea5d3bce14a2c640016dbe6cb0ecb97780ea720745ef9b25c5fe495d5e32",
+    "tools/cr011_vm_static.py": "sha256:ce8e72e66046f9c027ed87d6a55bd0a251e128f55b656dd4f52c6775f212f138",
+    "tools/preview_cr011_host.py": "sha256:99b76b4c2775f47479af74597d5cfbcca497c6c550c1caf755d29c9ee2dc30a3",
+    "tools/preview_cr011_migrate.py": "sha256:3b7f3367e466fcd8d01303749e24b9109cf7d37cbf7ae7c74561005319e000e3",
+    "tools/preview_cr011_policy.py": "sha256:14e11823892e3ea02b88aea62c31984fe65bdf27e866ad69a7847aff7d141bcb",
+    "tools/preview_cr011_release.py": "sha256:ce116fa27a803eae50b3eb0321804edc3a31759c87b8d7e1c058850d6e0f728c",
+    "tools/preview_cr011_runtime.py": "sha256:78640de801e2f1f664f932e61404639007b11f18250c66b739254df386a741b6",
+    "tools/test_preview_cr011_vm.py": "sha256:d5f93e8aa61f222bfb57c7228a8c41ea1d0c02ae34b3b8b5f0a3bca2cd4125cd"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "step": "CR011-VM-preflight",
+  "status": "Prepared",
+  "reviewed_at": "2026-11-26",
+  "agent_runtime_executed": false,
+  "actual_operator_gate": {
+    "source_commit": "git:4fb2f5d454e6f96630c1e2960c5aa65243543eed",
+    "record_short": "81da3bc",
+    "full_record_id": "Resolved and proven only in native operator history",
+    "tests_passed": 1307,
+    "financial_cases": 36,
+    "retained_tool_guards": 140,
+    "all_public_tables_restored": 64,
+    "files_restored": 10,
+    "report_canonical_sha256": "sha256:faa2cc0cdb2ccfd62848c65df9632d1013ef74a253e47035f632ef00ebede959"
+  },
+  "retained_source_files": 942,
+  "static": {
+    "python_modules": 7,
+    "local_import_symbols": 30,
+    "local_module_calls": 229,
+    "local_calls_checked": 145,
+    "original_deployment_guards": 140,
+    "new_operator_guards": 36,
+    "runtime_or_tests_executed": false
+  },
+  "application_inputs_unchanged": 400,
+  "migrations_unchanged": 40,
+  "native_tool_gate": {
+    "previous": 140,
+    "additional": 36,
+    "total": 176,
+    "status": "Pending operator execution"
+  },
+  "current_github_main_observed": "git:9dc666bf75aa597747ecd040da1e18fe32273675",
+  "database_transition": {
+    "current_source_migrations": 36,
+    "clone_target_migrations": 40,
+    "source_tables": 61,
+    "target_tables": 64,
+    "only_clone_migrated": true
+  },
+  "vm_memory": "4GiB",
+  "vm_resize": false,
+  "real_native_history_files_required": 29,
+  "rollback_after_public_cutover": false,
+  "real_client_release": "Blocked; R1/D05/D06/D07/G2 Pending",
+  "full_acceptances_pending": 85,
+  "actual_native_vm_run": "Pending operator UPDATE_GITHUB_AND_VM.sh"
+}

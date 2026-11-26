@@ -4,7 +4,7 @@ from django import forms
 from django.utils import timezone
 from core.locale import format_euro
 
-from .cash_entry_selectors import receipt_agreements,receipt_charges
+from .cash_entry_selectors import receipt_agreements,receipt_charges,legacy_unbilled_agreement
 from .models import Agreement,Charge
 from .settlement_services import cash_key
 
@@ -79,10 +79,17 @@ class AgreementCashFormMixin:
                 if len(self.data.getlist(name))>1:self.add_error(name,'Υποβάλετε μία μόνο τιμή για αυτό το πεδίο.')
         agreement = values.get('agreement')
         chosen=values.get('charge')
+        # Older clients predate both controls. This compatibility case never
+        # creates an allocation: only unreviewed agreements with no charges
+        # qualify, and the posting service repeats the check under the lock.
+        self.legacy_unbilled_cash=bool(agreement and self.is_bound and self.actor
+            and 'charge' not in self.data and 'settle_agreement' not in self.data
+            and legacy_unbilled_agreement(agreement))
         wants_agreement = bool(values.get('settle_agreement') or agreement or chosen)
         if wants_agreement and agreement is None and 'agreement' not in self.errors:
             self.add_error('agreement', 'Επιλέξτε τη συμφωνία που αφορά η είσπραξη ή πληρωμή.')
-        if wants_agreement and chosen is None and 'charge' not in self.errors and not getattr(self,'legacy_cash_replay',False):
+        if wants_agreement and chosen is None and 'charge' not in self.errors and not (
+                getattr(self,'legacy_cash_replay',False) or self.legacy_unbilled_cash):
             self.add_error('charge','Επιλέξτε τη συγκεκριμένη χρέωση προς εξόφληση.')
         if chosen and (not agreement or chosen.agreement_id!=agreement.pk or not values.get('entity') or chosen.entity_id!=values['entity'].pk):
             self.add_error('charge','Η χρέωση πρέπει να ανήκει στον ίδιο συναλλασσόμενο και στην επιλεγμένη συμφωνία.')

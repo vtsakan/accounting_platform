@@ -252,3 +252,58 @@ class DemandHttpContracts(DemandSupport,TestCase):
             'expected_revision':'1','description':'Νέοι ελεγμένοι όροι','amount':'300,00','lifecycle':'ACTIVE',
             'effective_date':timezone.localdate().isoformat(),'password':self.password,'reason':WHY})
         self.assertEqual(response.status_code,200);self.assertContains(response,'συμφωνημένο όριο');self.assertEqual(self.state(),before)
+
+
+class LegacyCashCompatibilityContracts(DemandSupport,TestCase):
+    def setUp(self):
+        super().setUp();staff_client_login(self.client,self.member)
+
+    def legacy_data(self,**changes):
+        # This is the real pre-control payload, without either modern selector.
+        return {'posting_key':str(uuid.uuid4()),'transaction_date':DAY.isoformat(),'amount':'25,00',
+            'cash_account':str(self.account.pk),'category':'','entity':str(self.customer.pk),
+            'agreement':str(self.agreement.pk),'description':'Δοκιμαστική παλιά σύνδεση κίνησης','remarks':''}|changes
+
+    def test_unreviewed_uncharged_receipt_and_completed_uuid_replay_preserve_no_obligations(self):
+        data=self.legacy_data(amount='100,00')
+        self.assertEqual(self.client.post(reverse('add-income'),data).status_code,302)
+        self.agreement.refresh_from_db();self.assertEqual(self.agreement.status,'COMPLETED')
+        self.assertEqual((Charge.objects.count(),CashAllocation.objects.count(),CashChargeSelection.objects.count()),(0,0,0))
+        before=self.state();self.assertEqual(self.client.post(reverse('add-income'),data).status_code,302)
+        self.assertEqual(self.state(),before);self.assertEqual(Transaction.objects.count(),1)
+
+    def test_unreviewed_uncharged_supplier_payment_preserves_original_link_without_allocating(self):
+        row=Agreement.objects.create(office=self.office,entity=self.supplier,agreement_type='PAYABLE',
+            description='Δοκιμαστική παλιά συμφωνία προμηθευτή',total_amount='100.00',start_date=DAY)
+        response=self.client.post(reverse('add-expense'),self.legacy_data(entity=str(self.supplier.pk),agreement=str(row.pk),amount='40,00'))
+        self.assertEqual(response.status_code,302);entry=Transaction.objects.get()
+        self.assertEqual((entry.transaction_type,entry.agreement_id,entry.entity_id,entry.amount),('EXPENSE',row.pk,self.supplier.pk,Decimal('40.00')))
+        self.assertEqual((Charge.objects.count(),CashAllocation.objects.count(),CashChargeSelection.objects.count()),(0,0,0))
+
+    def test_old_shaped_payload_cannot_skip_selection_on_reviewed_agreement_with_or_without_charges(self):
+        for charged in (False,True):
+            with self.subTest(charged=charged):
+                if charged:self.charge('100.00')
+                before=self.state();response=self.client.post(reverse('add-income'),self.legacy_data(agreement=str(self.target.pk)))
+                self.assertEqual(response.status_code,200);self.assertIn('charge',response.context['form'].errors)
+                self.assertEqual(self.state(),before)
+
+    def test_modern_empty_selection_is_not_accepted_as_legacy_even_on_unreviewed_agreement(self):
+        for changes in ({'charge':''},{'settle_agreement':'on'},{'charge':'','settle_agreement':''}):
+            with self.subTest(changes=changes):
+                before=self.state();response=self.client.post(reverse('add-income'),self.legacy_data(**changes))
+                self.assertEqual(response.status_code,200);self.assertIn('charge',response.context['form'].errors)
+                self.assertEqual(self.state(),before)
+
+    def test_locked_service_rechecks_legacy_eligibility_after_form_validation(self):
+        before=self.state()
+        with patch('accounting.cash_entry_forms.legacy_unbilled_agreement',return_value=True):
+            response=self.client.post(reverse('add-income'),self.legacy_data(agreement=str(self.target.pk)))
+        self.assertEqual(response.status_code,200);self.assertIn('charge',response.context['form'].errors)
+        self.assertContains(response,'ελεγμένους όρους');self.assertEqual(self.state(),before)
+
+    def test_changed_legacy_uuid_payload_does_not_add_cash_or_allocations(self):
+        data=self.legacy_data();self.assertEqual(self.client.post(reverse('add-income'),data).status_code,302)
+        before=self.state();response=self.client.post(reverse('add-income'),data|{'amount':'26,00'})
+        self.assertEqual(response.status_code,200);self.assertTrue(response.context['form'].errors)
+        self.assertEqual(self.state(),before);self.assertEqual(Transaction.objects.get().amount,Decimal('25.00'))

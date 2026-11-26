@@ -4,13 +4,25 @@ from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-from .cash_entry_selectors import settlement_capacity
+from .cash_entry_selectors import settlement_capacity,legacy_unbilled_agreement
 from .finance_money import money
 from .finance_services import audit_context,canonical,fingerprint,post_cash,scoped_lock
-from .models import CashChargeSelection,Charge,ChargeReversal,FinanceCommand,Transaction
+from .models import Agreement,CashChargeSelection,Charge,ChargeReversal,FinanceCommand,Transaction
 from .office_access import locked_office
 from .settlement_selectors import business_day
 from .settlement_services import allocate_cash,cash_key,event_key
+
+
+@transaction.atomic
+def post_legacy_unbilled_cash(user,*,idempotency_key,transaction_type,**inputs):
+    office=locked_office(user,'finance.write')
+    agreement=scoped_lock(Agreement,office,cash_key(inputs.get('agreement')))
+    if not legacy_unbilled_agreement(agreement):
+        raise ValidationError({'charge':'Η συμφωνία έχει ελεγμένους όρους ή χρεώσεις. Επιλέξτε συγκεκριμένη χρέωση από τη νέα φόρμα.'})
+    from .cash_entry_services import post_agreement_cash
+    # No charges exist while the office lock is held, so the retained service
+    # can record the original cash/link/retry only; it has nothing to allocate.
+    return post_agreement_cash(user,idempotency_key=idempotency_key,transaction_type=transaction_type,**inputs)
 
 
 @transaction.atomic

@@ -47,7 +47,7 @@ def source_check():
     require(not LOCK.is_symlink() and not MANIFEST.is_symlink() and policy['change'] == manifest['change'] == 'CR-012'
         and policy['status'] == manifest['status'] == 'Prepared' and manifest['source_lock_sha256'] == digest_bytes(LOCK.read_bytes()),
         'The prepared CR012 source identity differs')
-    require(policy['expected_suite'] == 1387 and policy['old_suite'] == 1307 and policy['new_test_methods'] == 80 and policy['old_migrations'] == 40
+    require(policy['expected_suite'] == 1393 and policy['old_suite'] == 1307 and policy['new_test_methods'] == 86 and policy['old_migrations'] == 40
         and policy['new_migrations'] == 2 and policy['retained_tool_guards'] == 176, 'Keep the selected source/gate scope')
     require(policy.get('operator_preserved_paths') == ['AGENTS.md', STATE]
         and 'AGENTS.md' not in policy['files'] and 'AGENTS.md' not in policy['baseline_files']
@@ -74,7 +74,7 @@ def source_check():
     count = sum(isinstance(n, ast.FunctionDef) and n.name.startswith('test_')
         for name in ('accounting/tests_demand_charges.py', 'accounting/tests_charge_cash.py', 'accounting/tests_demand_migration.py')
         for n in ast.walk(ast.parse((ROOT/name).read_text())))
-    require(count == 80, 'Keep all new native contracts')
+    require(count == 86, 'Keep all new native contracts')
     from preview_cr008_policy import unchanged_acceptances
     unchanged_acceptances(ROOT)
     return policy, len(policy['files']), inspect(ROOT)
@@ -88,7 +88,7 @@ def clean_source():
 def record(report):
     clean_source(); source_check(); bound = verify_binding(ROOT)
     require(report['source_commit'] == 'git:'+subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-        and report['status'] == 'Verified' and report['suite']['tests_run'] == report['suite']['tests_passed'] == 1387
+        and report['status'] == 'Verified' and report['suite']['tests_run'] == report['suite']['tests_passed'] == 1393
         and report['actual_prior_receipt_files_sha256'] == bound['files']
         and report['preserved_operator_files_sha256'] == bound['preserved_operator_files'], 'Record only this actual successful result')
     target = ROOT/REPORT
@@ -96,7 +96,7 @@ def record(report):
     target.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
     state = ROOT/STATE; before = state.read_bytes()
     require(b'<!-- CR012-RESULT -->' not in before, 'Keep an existing CR012 result marker')
-    state.write_bytes(before+b'\n\n<!-- CR012-RESULT -->\nVerified: 1387 isolated PG17 contracts, 36 financial cases, 176 retained deployment guards, demand charges/budget/selected-charge cash and credit contracts, retained direct credentials and real Excel/file antivirus,65-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.\n<!-- /CR012-RESULT -->\n')
+    state.write_bytes(before+b'\n\n<!-- CR012-RESULT -->\nVerified: 1393 isolated PG17 contracts, 36 financial cases, 176 retained deployment guards, demand charges/budget/selected-charge cash and credit contracts, retained direct credentials and real Excel/file antivirus,65-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.\n<!-- /CR012-RESULT -->\n')
     changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD'], cwd=ROOT, text=True).splitlines())
     untracked = set(subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines())
     allowed = {REPORT, STATE}
@@ -142,7 +142,7 @@ def main():
             retained.mkdir(parents=True, exist_ok=True, mode=0o700)
             with tempfile.NamedTemporaryFile(mode='w', prefix='delivery-'+revision+'-', suffix='.json', dir=retained, delete=False) as stream:
                 json.dump(delivery, stream, ensure_ascii=False, indent=2); stream.write('\n')
-            require(suite['tests_run'] == suite['tests_passed'] == 1387 and all(suite[k] == 0 for k in (
+            require(suite['tests_run'] == suite['tests_passed'] == 1393 and all(suite[k] == 0 for k in (
                 'known_failures_reproduced', 'unexpected_failures', 'unexpected_errors', 'unexpected_successes', 'skips')),
                 'Every retained and new contract must pass')
             require(len(suite['cases']) == 36 and all(c['outcome'] == 'passed' for c in suite['cases']), 'All36 finance cases must pass')
@@ -166,7 +166,7 @@ def main():
             'scope': 'isolated-production-pg17-demand-charges-budget-selected-cash-credit-and-retained-excel-files-worker',
             'verified_at': datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
             'source_commit': 'git:'+revision, 'image': delivery['image'], 'application_context_digest': policy['application_context_digest'],
-            'suite': suite, 'new_test_methods': 80, 'retained_source_files_checked': count, 'static': static,
+            'suite': suite, 'new_test_methods': 86, 'retained_source_files_checked': count, 'static': static,
             'secret_scan': delivery['secret_scan'], 'private_files': files,
             'real_monthly_worker_and_commit_before_ack': True, 'revocation_blocks_execution': broker['revocation_blocks_execution'],
             'second_scheduler_rejected': broker['second_scheduler_rejected'], 'restricted_role_migrations': broker['restricted_role_migrations'],

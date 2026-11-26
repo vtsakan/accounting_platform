@@ -1,12 +1,12 @@
 {
   "change": "CR-012",
   "status": "Prepared",
-  "source_lock_sha256": "sha256:9505456c41e46b914e1f2befa008ce9722b362325fe025684e6dbfb0f8f1c44d",
+  "source_lock_sha256": "sha256:d4907a8e67b1388e0b6bb638c2ac143a35fcc392e077513ab33cbffadb2b74b6",
   "runtime_executed": false,
-  "application_context_digest": "sha256:b8937c4a35d4678f1c9953408c675f835c7f966ffe1310fa1957ab97b070d2d1",
+  "application_context_digest": "sha256:8f8341cba921c7eac3c100abb8bb20fbd5d8dada82087c3be4573c3293df34ad",
   "application_inputs": 409,
-  "expected_native_suite": 1387,
-  "new_test_methods": 80,
+  "expected_native_suite": 1393,
+  "new_test_methods": 86,
   "retained_original_method_asts": 1855,
   "retained_tool_guards": 176,
   "prior_operator_source": "git:4fb2f5d454e6f96630c1e2960c5aa65243543eed",
@@ -58,5 +58,9 @@
     "tools/test_preview_cr011_vm.py"
   ],
   "github_updated": false,
-  "vm_changed": false
+  "vm_changed": false,
+  "retained_initial_method_asts": 1935,
+  "initial_prepared_migrations_unchanged": 42,
+  "correction": "legacy-unreviewed-no-charge-cash-compatibility",
+  "previous_native_attempt": "Failed4/1387; real176 deployment contracts passed; no successful CR012 receipt"
 }

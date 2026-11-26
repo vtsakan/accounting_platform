@@ -20,8 +20,12 @@ Published CR011 completion is08ad19063de7bf47de385ffdf5f30f45738d701b, actual na
 
 ## Required operator gate
 
-Full1387/1387 PG17 application contracts (1307 retained +80 new),36 finance cases,176 retained deployment guards;42 migrations and makemigrations check. Real clean/EICAR/fail-closed scanning; prior Excel, vault, direct staff first-login/reset and10 files recovered with independent material across all65 tables. Real demand500/charges200+300/cash350→selected300+credit50 and exact retry/rejected mutation proofs survive encrypted recovery. Retained real monthly worker, revocation and singleton scheduler gate.
+Full1393/1393 PG17 application contracts (1307 retained +86 new),36 finance cases,176 retained deployment guards;42 migrations and makemigrations check. Real clean/EICAR/fail-closed scanning; prior Excel, vault, direct staff first-login/reset and10 files recovered with independent material across all65 tables. Real demand500/charges200+300/cash350→selected300+credit50 and exact retry/rejected mutation proofs survive encrypted recovery. Retained real monthly worker, revocation and singleton scheduler gate.
 
 Actual result status remains Pending until this gate succeeds and --record commits only CR012-verification.json plus an appended CR012 state section. Full85 requirements and browser/business/G2 acceptance remain Pending. Native VM40→42 publication requires a later separately reviewed rollout, preserving4GiB, current people/MFA/keys and queue.
 
 User guide and invalid-request matrix: ../implementation/cr012_demand_charges_el.md.
+
+## Observed first operator failure and compatibility correction
+
+The actual initial1387 run failed4 original pre-control, unreviewed/no-charge cash cases;176 deployment guards passed. Preserve the original source locks, failure evidence, all1935 initial test method ASTs and all42 migration bytes. Six added native contracts protect the narrow no-allocation legacy link, modern required selection, locked revalidation and exact/changed retries. Native corrected1393/36/files/worker result remains Pending.

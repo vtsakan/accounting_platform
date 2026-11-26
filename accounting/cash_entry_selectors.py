@@ -7,6 +7,14 @@ from .models import Agreement
 from .office_access import records
 
 
+def legacy_unbilled_agreement(agreement):
+    """A retained unreviewed link has no modern obligation to select or settle."""
+    from .models import AgreementTermsVersion,Charge
+    terms=AgreementTermsVersion.objects.filter(office_id=agreement.office_id,agreement=agreement).first()
+    return bool(terms and terms.billing_mode=='UNREVIEWED' and terms.lifecycle=='UNREVIEWED'
+        and not Charge.objects.filter(office_id=agreement.office_id,agreement=agreement).exists())
+
+
 def receipt_charges(user,direction,*,as_of=None,include_key=None):
     from decimal import Decimal
     from django.db.models import Func,Value,DecimalField,Q

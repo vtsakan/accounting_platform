@@ -16,7 +16,7 @@ from .forms import ExpenseForm, IncomeForm
 from .finance_services import fingerprint, submission_key
 from .cash_entry_selectors import receipt_agreements,receipt_charges
 from .cash_entry_services import post_agreement_cash
-from .cash_charge_services import post_charge_cash
+from .cash_charge_services import post_charge_cash,post_legacy_unbilled_cash
 from .finance_validation import add_financial_error
 from .models import Entity, FinanceCommand, Transaction,CashChargeSelection,Agreement
 from .movement_forms import CashMovementFilterForm
@@ -106,6 +106,8 @@ def posting(request, direction):
                 inputs={name:data[name] for name in ('transaction_date','amount','cash_account','description','remarks','category','entity','agreement')}
                 if data.get('charge'):
                     entry,allocated,replayed=post_charge_cash(request.user,charge=data['charge'],idempotency_key=identity,transaction_type=direction,**inputs)
+                elif form.legacy_unbilled_cash and not getattr(form,'legacy_cash_replay',False):
+                    entry,allocated,replayed=post_legacy_unbilled_cash(request.user,idempotency_key=identity,transaction_type=direction,**inputs)
                 else:
                     entry,allocated,replayed=post_agreement_cash(request.user,idempotency_key=identity,transaction_type=direction,**inputs)
             except (ValidationError,DatabaseError) as error:
@@ -113,9 +115,11 @@ def posting(request, direction):
             else:
                 if replayed:
                     messages.success(request, 'Η ίδια κίνηση είναι ήδη καταχωρισμένη. Δεν προστέθηκε δεύτερη κίνηση ή αντιστοίχιση.')
-                elif data.get('agreement'):
+                elif data.get('charge'):
                     messages.success(request, 'Η κίνηση καταχωρίστηκε. Αντιστοιχίστηκαν ' + format_euro(allocated) +
                         ' στην επιλεγμένη χρέωση. Αδιάθετη πίστωση ή προκαταβολή: ' + format_euro(entry.amount - allocated) + '.')
+                elif data.get('agreement'):
+                    messages.success(request,'Η κίνηση καταχωρίστηκε και συνδέθηκε με τη συμφωνία.')
                 else:
                     messages.success(request, 'Η κίνηση καταχωρίστηκε. Η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.')
                 return redirect('transaction-list')

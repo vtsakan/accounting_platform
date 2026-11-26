@@ -96,7 +96,7 @@ def inspect(root):
     methods=sum(isinstance(n,ast.FunctionDef) and n.name.startswith('test_')
         for name in ('tests_demand_charges.py','tests_charge_cash.py','tests_demand_migration.py')
         for n in ast.walk(ast.parse((root/'accounting'/name).read_text())))
-    require(methods==80,'Retain all80 new native financial/HTTP/migration/concurrency contracts')
+    require(methods==86,'Retain all86 new native financial/HTTP/migration/concurrency contracts')
     return {'local_import_symbols':imports,'local_calls_checked':required_call_arguments(root,paths),
-        'new_native_contracts':methods,'expected_native_suite':1387,'retained_cr011_checks':retained,
+        'new_native_contracts':methods,'expected_native_suite':1393,'retained_cr011_checks':retained,
         'application_or_tests_executed':False}

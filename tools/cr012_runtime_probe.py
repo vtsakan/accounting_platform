@@ -10,7 +10,6 @@ import cr008_probe as retained
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import connection
-from django.test import Client
 from django.urls import reverse
 from django.utils import timezone
 
@@ -40,7 +39,7 @@ def prepare():
     office=source.accountant_profile.office;password=secrets.token_urlsafe(48);register_secret(password)
     owner=get_user_model().objects.create_user(NAME,password=password)
     create_accountant_profile(user_id=owner.pk,office_id=office.pk,role='owner')
-    client=Client();staff_client_login(client,owner)
+    client=previous.ProbeClient();staff_client_login(client,owner)
     request=client.get(reverse('office-members'),secure=True,HTTP_HOST='cr008.example.invalid').wsgi_request
     day=timezone.localdate()
     entity=Entity.objects.create(office=office,name='Συνθετικός πελάτης χρεώσεων CR012',entity_type='CUSTOMER')

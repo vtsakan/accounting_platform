@@ -29,3 +29,5 @@ User guide and invalid-request matrix: ../implementation/cr012_demand_charges_el
 ## Observed first operator failure and compatibility correction
 
 The actual initial1387 run failed4 original pre-control, unreviewed/no-charge cash cases;176 deployment guards passed. Preserve the original source locks, failure evidence, all1935 initial test method ASTs and all42 migration bytes. Six added native contracts protect the narrow no-allocation legacy link, modern required selection, locked revalidation and exact/changed retries. Native corrected1393/36/files/worker result remains Pending.
+
+Current tools-only continuation after the actual1393/36 success: see docs/implementation/cr012_probe_host_fix_el.md. Full CR012 recovery/worker proof remains Pending.

@@ -1,0 +1,31 @@
+{
+  "change": "CR-012",
+  "status": "Observed file-probe failure after successful application delivery",
+  "stage": "real-selected-charge-and-retained-excel-files-recovery",
+  "error": "Synthetic MFA client used default HTTP_HOST testserver instead of the configured HTTPS host",
+  "runtime_probe_line": 43,
+  "actual_cr012_success_receipt": false,
+  "file_recovery_and_worker_complete": false,
+  "supplied_console_sha256": "sha256:1bc455b6316035acf1acd36404abad6fe26128e16d0302f097a758b0a85d7986",
+  "successful_delivery": {
+    "status": "Verified",
+    "scope": "Production application delivery only; not complete CR012",
+    "verified_at": "2026-11-27T00:11:37+02:00",
+    "source_commit": "git:f4ce08871eae514d6d80fbf55c3d6b05c59bd227",
+    "image_id": "sha256:996ff3c2ff17afb8e8ac20f83f868cf0520f78eed1b0d972314edfefc94cd42f",
+    "application_context_digest": "sha256:8f8341cba921c7eac3c100abb8bb20fbd5d8dada82087c3be4573c3293df34ad",
+    "canonical_report_sha256": "sha256:0edbc23a740c12be55a640103eab778d2a16cabead81258148a9594ed17979f1",
+    "retained_report_glob": "private/cr012/996ff3c2ff17afb8e8ac20f83f868cf0520f78eed1b0d972314edfefc94cd42f/delivery-f4ce08871eae514d6d80fbf55c3d6b05c59bd227-*.json",
+    "tests_run": 1393,
+    "tests_passed": 1393,
+    "financial_cases_passed": 36,
+    "accounting_migrations": 42,
+    "application_inputs": 409,
+    "secret_scan_unreviewed_findings": 0
+  },
+  "correction_scope": "Tools/docs only; all409 application inputs and42 migrations unchanged",
+  "agent_native_execution": false,
+  "native_receipt_or_git_history_reconstructed": false,
+  "vm_changed": false,
+  "github_updated": false
+}

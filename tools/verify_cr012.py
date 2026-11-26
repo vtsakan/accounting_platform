@@ -108,9 +108,11 @@ def record(report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-only', action='store_true'); parser.add_argument('--record', action='store_true')
+    parser.add_argument('--resume-delivery',action='store_true',help='Reuse only the exact retained successful1393/36 delivery and unchanged image')
     option = parser.add_mutually_exclusive_group(); option.add_argument('--host-dns', action='store_true'); option.add_argument('--image')
     args = parser.parse_args()
-    if args.source_only and (args.record or args.host_dns or args.image): parser.error('--source-only accepts no runtime options')
+    if args.source_only and (args.record or args.host_dns or args.image or args.resume_delivery): parser.error('--source-only accepts no runtime options')
+    if args.resume_delivery and args.image:parser.error('--resume-delivery selects the exact passed image; do not add --image')
     stage = 'source-preflight'
     try:
         policy, count, static = source_check()
@@ -128,20 +130,33 @@ def main():
         revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
         stage = 'retained176-deployment-guards'
         subprocess.run([sys.executable, str(ROOT/'tools/run_cr012_tool_guards.py')], cwd=ROOT, check=True)
-        stage = 'new-production-image'
-        if args.image: selected = image.reuse_for_verification(args.image)
+        stage = 'new-production-image';resumed_proof=None
+        if args.resume_delivery:
+            stage='retained-successful1393-delivery'
+            from cr012_delivery_resume import load_retained_delivery
+            delivery,resumed_proof=load_retained_delivery(policy)
+            selected=image.reuse_for_verification(resumed_proof['image_id'])
+        elif args.image: selected = image.reuse_for_verification(args.image)
         elif args.host_dns:
             from build_host_dns import build
             selected = build()
         else: selected = image.build()
         with tempfile.TemporaryDirectory(prefix='accounting-cr012-') as directory:
-            folder = Path(directory); destination = folder/'delivery.json'; stage = 'full-production-pg17-delivery'
-            subprocess.run([sys.executable, str(ROOT/'tools/verify_delivery.py'), '--report', str(destination), '--image', selected['image_id']], cwd=ROOT, check=True)
-            delivery = json.loads(destination.read_text()); suite = delivery['suite']
-            retained = ROOT/'private/cr012'/selected['image_id'].removeprefix('sha256:')
-            retained.mkdir(parents=True, exist_ok=True, mode=0o700)
-            with tempfile.NamedTemporaryFile(mode='w', prefix='delivery-'+revision+'-', suffix='.json', dir=retained, delete=False) as stream:
-                json.dump(delivery, stream, ensure_ascii=False, indent=2); stream.write('\n')
+            folder = Path(directory)
+            if resumed_proof is None:
+                destination = folder/'delivery.json'; stage = 'full-production-pg17-delivery'
+                subprocess.run([sys.executable, str(ROOT/'tools/verify_delivery.py'), '--report', str(destination), '--image', selected['image_id']], cwd=ROOT, check=True)
+                delivery = json.loads(destination.read_text())
+                retained = ROOT/'private/cr012'/selected['image_id'].removeprefix('sha256:')
+                retained.mkdir(parents=True, exist_ok=True, mode=0o700)
+                with tempfile.NamedTemporaryFile(mode='w', prefix='delivery-'+revision+'-', suffix='.json', dir=retained, delete=False) as stream:
+                    json.dump(delivery, stream, ensure_ascii=False, indent=2); stream.write('\n')
+                current_scan=delivery['secret_scan']
+            else:
+                stage='fresh-source-history-scan'
+                from cr012_delivery_resume import scan_current_source
+                current_scan=scan_current_source(folder)
+            suite = delivery['suite']
             require(suite['tests_run'] == suite['tests_passed'] == 1393 and all(suite[k] == 0 for k in (
                 'known_failures_reproduced', 'unexpected_failures', 'unexpected_errors', 'unexpected_successes', 'skips')),
                 'Every retained and new contract must pass')
@@ -162,12 +177,15 @@ def main():
             broker = broker_gate(folder, selected['image_id'])
         source_check(); verify_binding(ROOT); clean_source()
         require(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == revision, 'Source moved during verification')
+        if resumed_proof is not None:
+            require(load_retained_delivery(policy)[1]==resumed_proof,'The original successful delivery changed during verification')
         report = {'change': 'CR-012', 'status': 'Verified', 'source_status': 'Prepared',
             'scope': 'isolated-production-pg17-demand-charges-budget-selected-cash-credit-and-retained-excel-files-worker',
             'verified_at': datetime.now(ZoneInfo('Europe/Athens')).isoformat(timespec='seconds'),
-            'source_commit': 'git:'+revision, 'image': delivery['image'], 'application_context_digest': policy['application_context_digest'],
+            'source_commit': 'git:'+revision, 'image': selected if resumed_proof is not None else delivery['image'], 'application_context_digest': policy['application_context_digest'],
+            'production_suite_rerun':resumed_proof is None,'retained_successful_delivery':resumed_proof,
             'suite': suite, 'new_test_methods': 86, 'retained_source_files_checked': count, 'static': static,
-            'secret_scan': delivery['secret_scan'], 'private_files': files,
+            'secret_scan': current_scan, 'private_files': files,
             'real_monthly_worker_and_commit_before_ack': True, 'revocation_blocks_execution': broker['revocation_blocks_execution'],
             'second_scheduler_rejected': broker['second_scheduler_rejected'], 'restricted_role_migrations': broker['restricted_role_migrations'],
             'original_40_migrations_unchanged': True, 'new_migrations': 2, 'historical_receipts_unchanged': True,

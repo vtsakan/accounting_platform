@@ -1,7 +1,7 @@
 {
   "change": "CR-012",
   "status": "Prepared",
-  "source_lock_sha256": "sha256:d4907a8e67b1388e0b6bb638c2ac143a35fcc392e077513ab33cbffadb2b74b6",
+  "source_lock_sha256": "sha256:0ad879b7352be86fee8d451898d90807c6df6e10808f49d93f9fff4becb9a95c",
   "runtime_executed": false,
   "application_context_digest": "sha256:8f8341cba921c7eac3c100abb8bb20fbd5d8dada82087c3be4573c3293df34ad",
   "application_inputs": 409,
@@ -61,6 +61,10 @@
   "vm_changed": false,
   "retained_initial_method_asts": 1935,
   "initial_prepared_migrations_unchanged": 42,
-  "correction": "legacy-unreviewed-no-charge-cash-compatibility",
-  "previous_native_attempt": "Failed4/1387; real176 deployment contracts passed; no successful CR012 receipt"
+  "correction": "production-probe-HTTPS-host-and-exact-retained1393-continuation",
+  "previous_native_attempt": "Production1393/36 passed; subsequent synthetic MFA file probe failed; no successful full CR012 receipt",
+  "retained_passed_method_asts": 1941,
+  "application_inputs_unchanged_from_pass": 409,
+  "actual_passed_application_source": "git:f4ce08871eae514d6d80fbf55c3d6b05c59bd227",
+  "actual_passed_delivery_canonical_sha256": "sha256:0edbc23a740c12be55a640103eab778d2a16cabead81258148a9594ed17979f1"
 }

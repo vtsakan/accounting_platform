@@ -1,0 +1,39 @@
+{
+  "local_import_symbols": 250,
+  "local_calls_checked": 274,
+  "new_native_contracts": 86,
+  "expected_native_suite": 1393,
+  "retained_cr011_checks": {
+    "local_import_symbols": 59,
+    "local_calls_checked": 94,
+    "retained_cr010_checks": {
+      "local_import_symbols": 90,
+      "local_calls_checked": 144,
+      "historical_note_fixture_classes_checked": 3,
+      "retained_gsis_attachment_checks": {
+        "local_import_symbols": 25,
+        "local_call_arguments_checked": 13,
+        "retained_attachment_static_checks": {
+          "project_local_import_symbols": 95,
+          "explicit_fixture_calls_checked": 72,
+          "application_or_tests_executed": false
+        },
+        "application_or_tests_executed": false
+      },
+      "application_or_tests_executed": false
+    },
+    "application_or_tests_executed": false
+  },
+  "application_or_tests_executed": false,
+  "change": "CR-012",
+  "status": "Prepared",
+  "scope": "Static source/AST/import/call/hash preservation checks only",
+  "all1935_initial_test_method_asts_unchanged": true,
+  "all42_initial_migrations_bytewise_unchanged": true,
+  "compatibility_contracts_added_not_executed": 6,
+  "initial_native_failure_retained": true,
+  "native_tests_executed": false,
+  "application_or_database_executed": false,
+  "github_updated": false,
+  "vm_changed": false
+}

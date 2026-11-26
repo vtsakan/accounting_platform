@@ -15,7 +15,7 @@ FILES=('agreement_budget.py','finance_validation.py','cash_charge_models.py','ca
     'cash_entry_forms.py','cash_entry_selectors.py','charge_models.py','charge_services.py','correction_services.py',
     'manual_agreement_creation.py','agreement_creation_forms.py','forms.py','movement_views.py','charge_views.py',
     'tests_demand_charges.py','tests_charge_cash.py','tests_demand_migration.py')
-TOOLS=('cr012_receipts.py','cr012_runtime_probe.py','cr012_files_gate.py','run_cr012_tool_guards.py','verify_cr012.py')
+TOOLS=('cr012_receipts.py','cr012_runtime_probe.py','cr012_files_gate.py','cr012_delivery_resume.py','run_cr012_tool_guards.py','verify_cr012.py')
 
 
 def literal_assignment(path,name):
@@ -91,6 +91,14 @@ def inspect(root):
     for version in ('008','010','011','012'):
         require('tools/cr'+version+'_runtime_probe.py' in gate and ':/app/cr'+version+'_probe.py:ro' in gate,
             'Mount every retained real native probe dependency')
+    probe=ast.parse((root/'tools/cr012_runtime_probe.py').read_text())
+    require(any(isinstance(n,ast.Call) and ast.unparse(n.func)=='previous.ProbeClient' for n in ast.walk(probe))
+        and not any(isinstance(n,ast.Call) and ast.unparse(n.func)=='Client' for n in ast.walk(probe)),
+        'The production file probe must use the real HTTPS/allowed-host MFA client')
+    client=next(n for n in ast.parse((root/'tools/cr011_runtime_probe.py').read_text()).body if isinstance(n,ast.ClassDef) and n.name=='ProbeClient')
+    body=ast.unparse(client)
+    require("kwargs['secure'] = True" in body and "kwargs['HTTP_HOST'] = 'cr008.example.invalid'" in body
+        and 'super().post(*args, **kwargs)' in body,'Keep the retained real MFA POST and allowed production host')
     require('accounting_cr012_receipt_capacity' in forward and "DROP FUNCTION accounting_cr012_receipt_capacity(uuid,date)" in reverse,
         'Dated visible choices must share the retained temporal capacity definition')
     methods=sum(isinstance(n,ast.FunctionDef) and n.name.startswith('test_')

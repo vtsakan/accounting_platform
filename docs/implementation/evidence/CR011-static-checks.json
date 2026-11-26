@@ -29,5 +29,8 @@
   "pinned_django_external_import_symbols": 152,
   "pinned_django_source_version": "5.2.19",
   "django_or_app_import_executed": false,
-  "initial_failed_suite_preserved": "1255 tests,1 discovery import error; not a successful CR011 gate"
+  "initial_failed_suite_preserved": "1255 tests,1 discovery import error; not a successful CR011 gate",
+  "latest_failed_suite_preserved": "1307 tests,1 fixture global audit-count comparison failure; not a successful CR011 gate",
+  "snapshot_scoped_to_target_user": true,
+  "full_target_audit_records_compared": true
 }

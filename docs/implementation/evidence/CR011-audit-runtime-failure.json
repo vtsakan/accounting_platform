@@ -1,0 +1,18 @@
+{
+  "change": "CR-011",
+  "status": "Failed",
+  "evidence": "Actual operator diagnostic tail, not a complete successful report",
+  "observed_on": "2026-11-26",
+  "console_sha256": "sha256:7e14dc5a28e04965c7ba4a489d1ff0fc56e258c42e575e257dcca04839406e88",
+  "image_id": "sha256:d79174436c22a0052b2bdd9e9b1cb5f42ff79830617c840d94a296078112b216",
+  "tests_run": 1307,
+  "reported_failures": 1,
+  "reported_errors": 0,
+  "stage": "full-production-pg17-delivery",
+  "case": "DirectStaffContracts.test_required_change_cannot_target_another_identity",
+  "observed_difference": "Only global OfficeAuditEvent count changed2 to3 after the acting user changed their own password",
+  "target_password_revision_requirement_unchanged_in_diagnostic": true,
+  "successful_cr011_receipt": false,
+  "native_source_commit": "Not printed; not reconstructed",
+  "native_gate_retry": "Fresh full1307 required, followed by real files/credentials/worker gates"
+}

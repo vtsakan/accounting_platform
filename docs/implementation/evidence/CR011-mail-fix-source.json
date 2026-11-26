@@ -1,0 +1,14 @@
+{
+  "change": "CR-011",
+  "status": "Prepared",
+  "source_lock_sha256": "sha256:b4b2a24b3a82d7669bd0e01d5d452c3c1784e5848530837a65a5a2e2b25c3cab",
+  "runtime_executed": false,
+  "application_context_digest": "sha256:cb241a46341a655cded327d900217f6a6acdf2b9d6beb39fa82416ff893be570",
+  "application_inputs": 400,
+  "expected_native_suite": 1307,
+  "prior_operator_source": "git:eca5b4b6db1c0d20fdedeee9bb695019b1dbab8f",
+  "prior_operator_record_short": "f72cdde",
+  "native_result_record_full_id": "Resolved and verified only on operator machine",
+  "github_updated": false,
+  "vm_changed": false
+}

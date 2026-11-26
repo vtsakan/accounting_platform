@@ -62,7 +62,8 @@ class DirectStaffSupport(Fixtures):
     def snapshot(self,user):
         user.refresh_from_db();state=state_for(user)
         row=StaffCredentialRequirement.objects.filter(user=user).values().first()
-        return user.password,state.revision,row,OfficeAuditEvent.objects.count()
+        audit_rows=list(OfficeAuditEvent.objects.filter(target_user=user).order_by('pk').values())
+        return user.password,state.revision,row,audit_rows
 
 
 class DirectStaffContracts(DirectStaffSupport,TestCase):

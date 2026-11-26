@@ -18,6 +18,13 @@ def inspect(root):
         if isinstance(node,ast.ImportFrom) and any(alias.name=='mail' for alias in node.names)]
     require(len(mail_imports)==1 and mail_imports[0].module=='django.core' and mail_imports[0].level==0,
         'The real Django mail package is django.core.mail; test discovery must not import django.contrib.mail')
+    support=next(n for n in ast.parse((root/'accounting/tests_direct_staff.py').read_text()).body
+        if isinstance(n,ast.ClassDef) and n.name=='DirectStaffSupport')
+    snapshot=next(n for n in support.body if isinstance(n,ast.FunctionDef) and n.name=='snapshot')
+    snapshot_source=ast.unparse(snapshot)
+    require('OfficeAuditEvent.objects.filter(target_user=user)' in snapshot_source
+        and ".order_by('pk').values()" in snapshot_source and 'OfficeAuditEvent.objects.count()' not in snapshot_source,
+        'An identity snapshot must compare exact target audit rows, not a global counter changed by another user')
     for path in files:
         text=path.read_text();tree=ast.parse(text)
         table=symtable.symtable(text,str(path),'exec');known=set(table.get_identifiers())|set(dir(builtins))|{'__name__','__file__','__package__'}

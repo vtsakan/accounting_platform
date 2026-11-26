@@ -7,6 +7,22 @@ from .models import Agreement
 from .office_access import records
 
 
+def receipt_charges(user,direction,*,as_of=None,include_key=None):
+    from decimal import Decimal
+    from django.db.models import Func,Value,DecimalField,Q
+    from django.db.models.functions import Coalesce
+    from .settlement_selectors import charge_balances,business_day
+    day=business_day(as_of)
+    kind='RECEIVABLE' if direction=='INCOME' else 'PAYABLE'
+    role='entity__is_customer' if direction=='INCOME' else 'entity__is_supplier'
+    rows=charge_balances(user,as_of=day).filter(direction=kind,entity__is_archived=False,**{role:True}).annotate(
+        receipt_capacity=Coalesce(Func(F('pk'),Value(day),function='accounting_cr012_receipt_capacity',output_field=DecimalField()),
+            Value(Decimal('0.00')),output_field=DecimalField()))
+    eligible=Q(receipt_capacity__gt=0,reversal_record__isnull=True)
+    if include_key is not None:eligible|=Q(pk=include_key)
+    return rows.filter(eligible)
+
+
 def receipt_agreements(user, direction):
     kind = 'RECEIVABLE' if direction == 'INCOME' else 'PAYABLE'
     role = 'entity__is_customer' if direction == 'INCOME' else 'entity__is_supplier'

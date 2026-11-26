@@ -60,7 +60,7 @@ def save_terms(user, instance, *, billing_mode='UNREVIEWED', lifecycle='UNREVIEW
         expected_revision = 0
     if type(expected_revision) is not int or expected_revision != revision:
         raise ValidationError(STALE)
-    if billing_mode not in {'UNREVIEWED', 'ONE_OFF', 'MONTHLY'} or lifecycle not in {'UNREVIEWED', 'DRAFT', 'ACTIVE', 'ENDED', 'CANCELLED'}:
+    if billing_mode not in {'UNREVIEWED', 'ONE_OFF', 'MONTHLY','ON_DEMAND'} or lifecycle not in {'UNREVIEWED', 'DRAFT', 'ACTIVE', 'ENDED', 'CANCELLED'}:
         raise ValidationError('Επιλέξτε έγκυρο τρόπο χρέωσης και κατάσταση όρων.')
     if billing_mode == 'UNREVIEWED':
         lifecycle = 'UNREVIEWED'
@@ -69,6 +69,10 @@ def save_terms(user, instance, *, billing_mode='UNREVIEWED', lifecycle='UNREVIEW
     if latest and Charge.objects.filter(office=office, agreement_id=instance.pk).exists() and (
             billing_mode != latest.billing_mode or lifecycle != latest.lifecycle):
         raise ValidationError('Υπάρχουν καταχωρισμένες χρεώσεις. Οι αλλαγές όρων απαιτούν την ειδική διαδικασία ιστορικού.')
+    if latest and Charge.objects.filter(office=office,agreement_id=instance.pk).exists() and (
+            instance.entity_id,instance.agreement_type,money(instance.total_amount),instance.description,instance.start_date)!= (
+            latest.entity_id,latest.direction,latest.agreed_amount,latest.description,latest.start_date):
+        raise ValidationError('Η συμφωνία έχει ήδη χρεώσεις. Χρησιμοποιήστε «Μελλοντική αλλαγή ή ακύρωση συμφωνίας» για νέους όρους με διατηρημένο ιστορικό.')
     if billing_mode != 'UNREVIEWED':
         if not isinstance(instance.description, str) or not instance.description.strip() or len(instance.description) > 255:
             raise ValidationError({'description': 'Συμπληρώστε έγκυρη περιγραφή συμφωνίας.'})
@@ -103,12 +107,14 @@ def period_start(value):
     raise ValidationError({'period': 'Επιλέξτε μήνα στη μορφή ΕΕΕΕ-ΜΜ.'})
 
 
-def source_identity(agreement_id, mode, period=None):
+def source_identity(agreement_id, mode, period=None, *, request_digest=None):
     """Shared by manual posting and later schedulers; no version/schedule ID."""
     if mode == 'ONE_OFF' and period is None:
         return f'agreement:{agreement_id}:one-off'
     if mode == 'MONTHLY' and type(period) is date and period.day == 1:
         return f'agreement:{agreement_id}:month:{period:%Y-%m}'
+    if mode=='ON_DEMAND' and period is None and isinstance(request_digest,str) and re.fullmatch(r'sha256:[0-9a-f]{64}',request_digest):
+        return f'agreement:{agreement_id}:demand:{request_digest[7:]}'
     raise ValidationError('Η περίοδος δεν αντιστοιχεί στον τρόπο χρέωσης της συμφωνίας.')
 
 
@@ -152,7 +158,7 @@ def post_charge(user, *, agreement_id, terms_revision, amount, effective_date, d
         raise ValidationError('Ο συναλλασσόμενος δεν έχει τον κατάλληλο ρόλο για τη χρέωση.')
     if effective_date < terms.effective_date:
         raise ValidationError({'effective_date': 'Η χρέωση δεν μπορεί να προηγείται της έναρξης των όρων.'})
-    source = source_identity(agreement.pk, terms.billing_mode, period)
+    source = source_identity(agreement.pk, terms.billing_mode, period,request_digest=key)
     duplicate = Charge.objects.filter(office=office, source_key=source).first()
     if duplicate:
         raise ValidationError('Η χρέωση αυτής της πηγής υπάρχει ήδη. Αναφορά: ' + str(duplicate.pk))
@@ -164,8 +170,12 @@ def post_charge(user, *, agreement_id, terms_revision, amount, effective_date, d
             raise ValidationError({'period': 'Ο μήνας πρέπει να αντιστοιχεί στην ημερομηνία χρέωσης και να μην προηγείται της συμφωνίας.'})
         if amount != terms.agreed_amount and not (period == first and terms.start_date.day != 1):
             raise ValidationError({'amount': 'Για πλήρη μήνα χρησιμοποιείται το ελεγμένο μηνιαίο ποσό.'})
+        if amount>terms.agreed_amount:
+            raise ValidationError({'amount':'Η χρέωση μη πλήρους μήνα δεν μπορεί να υπερβαίνει το συμφωνημένο μηνιαίο ποσό.'})
         # A partial first period uses the explicitly entered reviewed amount and
         # reason. No VAT calculation, day-count or automatic proration occurs.
+    from .agreement_budget import require_capacity
+    require_capacity(agreement,effective_date,amount=amount)
     with audit_context(user, reason):
         return Charge.objects.create(office=office, agreement=agreement, terms=terms, entity=entity,
                                      direction=terms.direction, amount=amount, currency='EUR', effective_date=effective_date,

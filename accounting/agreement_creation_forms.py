@@ -13,7 +13,7 @@ class AgreementCreationForm(AgreementForm):
     creation_key = forms.UUIDField(initial=uuid.uuid4, widget=forms.HiddenInput, label='Ταυτότητα νέας συμφωνίας')
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['billing_mode'].choices = [('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα')]
+        self.fields['billing_mode'].choices = [('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα'),('ON_DEMAND','Χρεώσεις κατά περίπτωση')]
         self.fields['billing_mode'].required = True
         self.fields['billing_mode'].help_text = 'Η συμφωνία αποθηκεύει τους όρους. Προσθέστε χρέωση χωριστά όταν απαιτείται.'
         self.fields['lifecycle'].choices = [('ACTIVE', 'Ενεργή')]

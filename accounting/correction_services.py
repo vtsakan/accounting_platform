@@ -315,6 +315,9 @@ def correct_charge(request, *, charge_id, password, effective_date, reason, idem
     releases = allocation_dates(charge, effective_date, source=False)
     if amount is not None:
         scoped_lock(Entity, office, charge.entity_id, active=True)
+        agreement=scoped_lock(Agreement,office,charge.agreement_id)
+        from .agreement_budget import replacement_capacity
+        replacement_capacity(agreement,charge,amount,effective_date)
     with audit_context(request.user, why):
         action = new_action(request, office, 'CHARGE', effective_date, why, digest, payload, source_charge=charge,
                             expected_release_count=releases, has_replacement=amount is not None)
@@ -350,6 +353,8 @@ def amend_agreement(request, *, agreement_id, expected_revision, description, am
         raise ValidationError('Η αλλαγή είναι μελλοντική και δεν προηγείται άλλης προγραμματισμένης αλλαγής. Η ακύρωση μπορεί να σταματήσει και προγραμματισμένους όρους.')
     if lifecycle == 'ACTIVE':
         scoped_lock(Entity, office, agreement.entity_id, active=True)
+    from .agreement_budget import require_capacity
+    require_capacity(agreement,effective_date,new_limit=amount)
     with audit_context(request.user, why):
         action = new_action(request, office, 'TERMS', effective_date, why, digest, payload, agreement=agreement)
         with correction_context(action):

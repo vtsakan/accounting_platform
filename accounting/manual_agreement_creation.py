@@ -23,7 +23,7 @@ def create_manual(user, instance, *, billing_mode, reason, creation_key):
         raise ValidationError('Ανοίξτε νέα φόρμα συμφωνίας.') from None
     if type(instance) is not Agreement or instance.office_id not in (None, office.pk):
         raise ValidationError('Η ενέργεια αφορά νέα συμφωνία του γραφείου.')
-    if billing_mode not in {'ONE_OFF', 'MONTHLY'} or instance.status != 'ACTIVE' or type(instance.start_date) is not date:
+    if billing_mode not in {'ONE_OFF', 'MONTHLY','ON_DEMAND'} or instance.status != 'ACTIVE' or type(instance.start_date) is not date:
         raise ValidationError('Ελέγξτε τους όρους της νέας συμφωνίας.')
     if instance.start_date > timezone.localdate():
         raise ValidationError({'start_date': 'Η ημερομηνία έναρξης πρέπει να είναι έως σήμερα.'})

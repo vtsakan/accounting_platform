@@ -49,9 +49,14 @@ class ReceiptSupport(Fixtures):
             'agreement': self.target_agreement, 'description': '', 'remarks': 'Δοκιμαστική παρατήρηση'} | changes
 
     def data(self, **changes):
-        return {'posting_key': str(uuid.uuid4()), 'transaction_date': DAY.isoformat(), 'amount': '100,00',
+        values={'posting_key': str(uuid.uuid4()), 'transaction_date': DAY.isoformat(), 'amount': '100,00',
             'cash_account': self.account.pk, 'category': '', 'entity': self.customer.pk,
             'agreement': self.target_agreement.pk, 'description': '', 'remarks': '', 'settle_agreement': 'on'} | changes
+        # The current receipt screen requires a concrete choice. Preserve every
+        # original assertion; update only this shared HTTP fixture's input.
+        choice=Charge.objects.filter(office=self.office,agreement_id=values['agreement']).order_by('effective_date','pk').first() if values['agreement'] else None
+        values['charge']=changes.get('charge',str(choice.pk) if choice else '')
+        return values
 
     def counts(self):
         return tuple(model.objects.count() for model in

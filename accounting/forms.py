@@ -9,7 +9,7 @@ from core.locale import GreekMoneyField, format_euro
 from django.core.exceptions import PermissionDenied
 from .membership import require_office_profile, DENIED
 from .office_access import records, save_for_user
-from .cash_entry_forms import AgreementCashFormMixin
+from .cash_entry_forms import AgreementCashFormMixin,CashChargeChoice
 
 
 class GreekFormMixin:
@@ -102,6 +102,7 @@ class AgreementChoiceField(forms.ModelChoiceField):
 
 class ExpenseForm(AgreementCashFormMixin, GreekFormMixin, forms.Form):
     cash_direction = 'EXPENSE'
+    charge=CashChargeChoice()
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)
@@ -119,6 +120,7 @@ class ExpenseForm(AgreementCashFormMixin, GreekFormMixin, forms.Form):
     )
 class IncomeForm(AgreementCashFormMixin, GreekFormMixin, forms.Form):
     cash_direction = 'INCOME'
+    charge=CashChargeChoice()
     transaction_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', **bootstrap_form_attrs}), label="Ημερομηνία")
     description = forms.CharField(widget=forms.TextInput(attrs=bootstrap_form_attrs), label="Περιγραφή", max_length=255)
     amount = GreekMoneyField(label="Ποσό", max_digits=12, decimal_places=2)

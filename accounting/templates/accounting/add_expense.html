@@ -11,8 +11,8 @@
                     <h2 class="mb-0">Καταχώρηση εξόδου</h2>
                 </div>
                 <div class="card-body">
-                    <p class="small text-muted">Επιλέξτε προμηθευτή και «Αφορά συμφωνία» για αυτόματη εξόφληση. Εμφανίζονται μόνο οι συμφωνίες του προμηθευτή και η περιγραφή μπορεί να μείνει κενή. Η κατηγορία και η σύνδεση με συμφωνία είναι προαιρετικά.</p>
-                    <form method="post" data-cash-entry data-direction="{{ cash_direction|default:'EXPENSE' }}" data-agreement-url="{% url 'cash-agreement-options' %}">
+                    <p class="small text-muted">Επιλέξτε προμηθευτή, συμφωνία και συγκεκριμένη χρέωση. Η είσπραξη ή πληρωμή εξοφλεί μόνο την επιλεγμένη χρέωση. Επιπλέον ποσό παραμένει αδιάθετη πίστωση ή προκαταβολή. Η περιγραφή συμπληρώνεται αυτόματα. Χωρίς αντιστοίχιση, καταχωρίστε σύντομη περιγραφή.</p>
+                    <form method="post" data-cash-entry data-direction="{{ cash_direction|default:'EXPENSE' }}" data-agreement-url="{% url 'cash-agreement-options' %}" data-charge-url="{% url 'cash-charge-options' %}">
                         {% csrf_token %}
                         {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
 

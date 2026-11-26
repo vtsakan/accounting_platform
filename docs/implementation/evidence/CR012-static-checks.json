@@ -1,0 +1,50 @@
+{
+  "local_import_symbols": 243,
+  "local_calls_checked": 268,
+  "new_native_contracts": 80,
+  "expected_native_suite": 1387,
+  "retained_cr011_checks": {
+    "local_import_symbols": 59,
+    "local_calls_checked": 94,
+    "retained_cr010_checks": {
+      "local_import_symbols": 90,
+      "local_calls_checked": 144,
+      "historical_note_fixture_classes_checked": 3,
+      "retained_gsis_attachment_checks": {
+        "local_import_symbols": 25,
+        "local_call_arguments_checked": 13,
+        "retained_attachment_static_checks": {
+          "project_local_import_symbols": 95,
+          "explicit_fixture_calls_checked": 72,
+          "application_or_tests_executed": false
+        },
+        "application_or_tests_executed": false
+      },
+      "application_or_tests_executed": false
+    },
+    "application_or_tests_executed": false
+  },
+  "application_or_tests_executed": false,
+  "sql_statements_parsed": 28,
+  "plpgsql_bodies_parsed": 7,
+  "original_test_methods_unchanged": 1855,
+  "change": "CR-012",
+  "status": "Prepared",
+  "scope": "Static AST/import/call/template/SQL grammar/source/hash review only",
+  "templates_compiled_not_rendered": 4,
+  "javascript_syntax": "Passed",
+  "new_model_fields_compared_to_migration": 8,
+  "all40_prior_migrations_bytewise_unchanged": true,
+  "all10_prior_deployment_source_files_unchanged": true,
+  "all1855_original_test_method_asts_unchanged": true,
+  "new_contracts_supplied_not_executed": 80,
+  "expected_native_application_suite": 1387,
+  "retained_native_tool_guards": 176,
+  "actual_previous_published_record": "git:08ad19063de7bf47de385ffdf5f30f45738d701b",
+  "actual_prior_reports_reconstructed": false,
+  "native_tests_executed": false,
+  "database_or_application_executed": false,
+  "vm_changed": false,
+  "github_updated": false,
+  "full_requirement_acceptances_pending": 85
+}

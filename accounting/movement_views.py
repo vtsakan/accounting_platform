@@ -14,9 +14,11 @@ from django.views.decorators.debug import sensitive_post_parameters
 from .capabilities import office_view, require_capability
 from .forms import ExpenseForm, IncomeForm
 from .finance_services import fingerprint, submission_key
-from .cash_entry_selectors import receipt_agreements
+from .cash_entry_selectors import receipt_agreements,receipt_charges
 from .cash_entry_services import post_agreement_cash
-from .models import Entity, FinanceCommand, Transaction
+from .cash_charge_services import post_charge_cash
+from .finance_validation import add_financial_error
+from .models import Entity, FinanceCommand, Transaction,CashChargeSelection,Agreement
 from .movement_forms import CashMovementFilterForm
 from .movement_selectors import filtered_movements, movement_totals
 from .office_access import record, records, validate_filter_ids
@@ -44,6 +46,13 @@ def existing_submission(form, user, direction):
     if entry is None:
         return
     form.replay_entry = entry
+    selection=CashChargeSelection.objects.filter(office_id=office,source_cash=entry).first()
+    form.legacy_cash_replay=selection is None
+    if selection is not None:
+        from .settlement_selectors import charge_balances
+        field=form.fields['charge']
+        originals=charge_balances(user,as_of=entry.transaction_date)
+        field.queryset=originals.filter(Q(pk__in=field.queryset.values('pk'))|Q(pk=selection.charge_id))
     for name in ('cash_account', 'category', 'entity', 'agreement'):
         field = form.fields[name]
         key = getattr(entry, name + '_id')
@@ -91,21 +100,22 @@ def posting(request, direction):
                 # Preserve the exact tokenless S20 payload: the new presentation
                 # checkbox must not change a legacy receipt's retry identity.
                 original_fields = ('transaction_date', 'amount', 'cash_account', 'description', 'remarks', 'category', 'entity', 'agreement', 'posting_key')
-                identity = submission_key(request, {name: data[name] for name in original_fields})
-                entry, allocated, replayed = post_agreement_cash(request.user, idempotency_key=identity, transaction_type=direction,
-                          **{name: data[name] for name in ('transaction_date', 'amount', 'cash_account', 'description', 'remarks', 'category', 'entity', 'agreement')})
-            except ValidationError as error:
-                form.add_error(None, error)
-            except DatabaseError as error:
-                if getattr(error.__cause__, 'sqlstate', None) not in {'23505', '23514', '40001', '40P01'}:
-                    raise
-                form.add_error(None, 'Η καταχώρηση δεν ολοκληρώθηκε. Ελέγξτε τα στοιχεία και επαναλάβετε με την ίδια ταυτότητα καταχώρισης.')
+                identity_inputs={name:data[name] for name in original_fields}
+                if data.get('charge'):identity_inputs['charge']=data['charge']
+                identity=submission_key(request,identity_inputs)
+                inputs={name:data[name] for name in ('transaction_date','amount','cash_account','description','remarks','category','entity','agreement')}
+                if data.get('charge'):
+                    entry,allocated,replayed=post_charge_cash(request.user,charge=data['charge'],idempotency_key=identity,transaction_type=direction,**inputs)
+                else:
+                    entry,allocated,replayed=post_agreement_cash(request.user,idempotency_key=identity,transaction_type=direction,**inputs)
+            except (ValidationError,DatabaseError) as error:
+                add_financial_error(form,error)
             else:
                 if replayed:
                     messages.success(request, 'Η ίδια κίνηση είναι ήδη καταχωρισμένη. Δεν προστέθηκε δεύτερη κίνηση ή αντιστοίχιση.')
                 elif data.get('agreement'):
                     messages.success(request, 'Η κίνηση καταχωρίστηκε. Αντιστοιχίστηκαν ' + format_euro(allocated) +
-                        ' στη συμφωνία. Αδιάθετο ποσό: ' + format_euro(entry.amount - allocated) + '.')
+                        ' στην επιλεγμένη χρέωση. Αδιάθετη πίστωση ή προκαταβολή: ' + format_euro(entry.amount - allocated) + '.')
                 else:
                     messages.success(request, 'Η κίνηση καταχωρίστηκε. Η επανάληψη της ίδιας υποβολής δεν δημιουργεί δεύτερη κίνηση.')
                 return redirect('transaction-list')
@@ -114,6 +124,13 @@ def posting(request, direction):
         try:
             form.initial['entity'] = form.fields['entity'].clean(request.GET['entity_id'])
             form.scope_agreements(form.initial['entity'])
+            if request.GET.get('agreement_id'):
+                form.initial['agreement']=form.fields['agreement'].clean(request.GET['agreement_id'])
+                form.scope_charges(form.initial['entity'],form.initial['agreement'])
+                if request.GET.get('charge_id'):
+                    form.initial['charge']=form.fields['charge'].clean(request.GET['charge_id'])
+                    form.initial['amount']=form.initial['charge'].receipt_capacity
+                    form.initial['settle_agreement']=True
         except ValidationError as error:
             form.cleaned_data = {}
             form.add_error('entity', error)
@@ -154,3 +171,31 @@ def agreement_options(request):
     rows = receipt_agreements(request.user, direction).filter(entity=party)
     options = [{'value': str(row.pk), 'label': row.description + ' — Ανεξόφλητο σήμερα: ' + format_euro(row.remaining_balance)} for row in rows]
     return JsonResponse({'entity_id': str(party.pk), 'options': options}, json_dumps_params={'ensure_ascii': False})
+
+
+@office_view('finance.write')
+@never_cache
+@require_GET
+def charge_options(request):
+    from .settlement_services import cash_key
+    from .settlement_selectors import business_day
+    from django import forms
+    direction=request.GET.get('direction','INCOME')
+    names={'direction','entity_id','agreement_id','transaction_date'}
+    if direction not in {'INCOME','EXPENSE'} or any(len(request.GET.getlist(name))>1 for name in names):
+        return JsonResponse({'error':'Ελέγξτε τα φίλτρα χρεώσεων.'},status=400)
+    if not request.GET.get('entity_id') or not request.GET.get('agreement_id'):return JsonResponse({'options':[]})
+    try:
+        party=record(Entity,request.user,cash_key(request.GET['entity_id']))
+        agreement=record(Agreement,request.user,cash_key(request.GET['agreement_id']))
+        raw=request.GET.get('transaction_date')
+        day=business_day(forms.DateField(input_formats=['%Y-%m-%d','%d/%m/%Y']).clean(raw)) if raw else business_day()
+    except ValidationError:return JsonResponse({'error':'Ελέγξτε τις επιλογές και την ημερομηνία κίνησης.'},status=400)
+    if party.is_archived or agreement.entity_id!=party.pk or agreement.agreement_type!=('RECEIVABLE' if direction=='INCOME' else 'PAYABLE') or not(party.is_customer if direction=='INCOME' else party.is_supplier):
+        return JsonResponse({'error':'Η συμφωνία δεν είναι διαθέσιμη για τον επιλεγμένο συναλλασσόμενο.'},status=400)
+    from .cash_entry_forms import CashChargeChoice
+    field=CashChargeChoice()
+    options=[]
+    for row in receipt_charges(request.user,direction,as_of=day).filter(entity=party,agreement=agreement):
+        options.append({'value':str(row.pk),'label':field.label_from_instance(row),'outstanding':str(row.outstanding),'available':str(row.receipt_capacity)})
+    return JsonResponse({'entity_id':str(party.pk),'agreement_id':str(agreement.pk),'options':options},json_dumps_params={'ensure_ascii':False})

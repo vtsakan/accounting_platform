@@ -97,7 +97,7 @@ class AgreementChange(RetainedRecord):
     version = models.OneToOneField('accounting.AgreementTermsVersion', on_delete=models.PROTECT, related_name='amendment', editable=False)
     description = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    billing_mode = models.CharField(max_length=12, choices=[('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα')])
+    billing_mode = models.CharField(max_length=12, choices=[('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα'),('ON_DEMAND','Χρεώσεις κατά περίπτωση')])
     lifecycle = models.CharField(max_length=12, choices=[('ACTIVE', 'Ενεργή'), ('ENDED', 'Έληξε'), ('CANCELLED', 'Ακυρωμένη')])
 
     class Meta:

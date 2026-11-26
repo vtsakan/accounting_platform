@@ -8,7 +8,7 @@ from django.utils import timezone
 from .ownership import OfficeOwned
 
 IMMUTABLE = 'Η καταχωρισμένη χρέωση και οι εγκεκριμένοι όροι διατηρούνται. Η διόρθωση απαιτεί συνδεδεμένο ιστορικό.'
-BILLING = [('UNREVIEWED', 'Σε αναμονή επιλογής'), ('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα')]
+BILLING = [('UNREVIEWED', 'Σε αναμονή επιλογής'), ('ONE_OFF', 'Εφάπαξ'), ('MONTHLY', 'Ανά ημερολογιακό μήνα'), ('ON_DEMAND','Χρεώσεις κατά περίπτωση')]
 LIFECYCLE = [('UNREVIEWED', 'Σε αναμονή ελέγχου'), ('DRAFT', 'Πρόχειρη'), ('ACTIVE', 'Ενεργή'), ('ENDED', 'Έληξε'), ('CANCELLED', 'Ακυρωμένη')]
 DIRECTION = [('RECEIVABLE', 'Εισπρακτέα'), ('PAYABLE', 'Πληρωτέα')]
 

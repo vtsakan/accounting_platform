@@ -17,12 +17,8 @@ from .settlement_services import allocate_cash, eligible_source, release_allocat
 
 
 def expected_error(form, error):
-    if isinstance(error, ValidationError):
-        form.add_error(None, error.messages)
-    elif getattr(error.__cause__, 'sqlstate', None) in {'23505', '23514', '40001', '40P01'}:
-        form.add_error(None, 'Η ενέργεια δεν ολοκληρώθηκε. Ανανεώστε τη σελίδα ή επαναλάβετε την ίδια επιβεβαίωση.')
-    else:
-        raise error
+    from .finance_validation import add_financial_error
+    add_financial_error(form,error)
 
 
 @office_view('finance.read')

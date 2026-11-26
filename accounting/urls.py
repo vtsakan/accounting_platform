@@ -113,6 +113,7 @@ urlpatterns = [
     path('', views.dashboard_view, name='dashboard'),
     path('transactions/', views.transaction_list_view, name='transaction-list'),
     path('cash/agreements/options/', movement_views.agreement_options, name='cash-agreement-options'),
+    path('cash/charges/options/',movement_views.charge_options,name='cash-charge-options'),
     path('customers/', views.customer_list_view, name='customer-list'),
     path('suppliers/', views.supplier_list_view, name='supplier-list'),
     path('expense/add/', views.add_expense_view, name='add-expense'),

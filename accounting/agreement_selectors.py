@@ -18,10 +18,11 @@ def agreement_projection(agreement):
     remaining = total - allocated
     state = 'NO_OBLIGATIONS' if total == 0 else 'OPEN' if allocated == 0 else 'PARTIAL' if remaining > 0 else 'SETTLED'
     label = {'NO_OBLIGATIONS': 'Χωρίς χρεώσεις', 'OPEN': 'Χρεώσεις χωρίς αντιστοιχίσεις', 'PARTIAL': 'Μερική εξόφληση',
-             'SETTLED': 'Εξοφλημένη έως τώρα' if terms and terms.billing_mode == 'MONTHLY' else 'Εξοφλημένη'}[state]
+             'SETTLED': 'Εξοφλημένη έως τώρα' if terms and terms.billing_mode in {'MONTHLY','ON_DEMAND'} else 'Εξοφλημένη'}[state]
     cancelled = agreement.status == 'CANCELLED' or bool(terms and terms.lifecycle == 'CANCELLED')
     cash_total = cash.aggregate(total=legacy_settlement())['total']
     return {'terms': terms, 'charges': charges, 'charge_total': total, 'cash_total': cash_total, 'transactions': cash,
+            'unbilled_amount':max(terms.agreed_amount-total,Decimal('0.00')) if terms and terms.billing_mode in {'ONE_OFF','ON_DEMAND'} else None,
             'settlement_label': label, 'settlement_state': state, 'allocated_total': allocated,
             'remaining_obligation': remaining, 'contract_cancelled': cancelled,
             'agreed_amount': terms.agreed_amount if terms else agreement.total_amount,

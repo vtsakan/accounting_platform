@@ -2,7 +2,8 @@
 {% block title %}Νέα χρέωση συμφωνίας{% endblock %}
 {% block content %}
 <h1>Νέα χρέωση συμφωνίας</h1>
-<p>{{ agreement.description }} · {{ agreement.entity.name }} · Συμφωνημένο ποσό: {{ agreement.total_amount|euro }}</p>
+<p>{{ agreement.description }} · {{ agreement.entity.name }} · Συμφωνημένο ποσό: {{ terms.agreed_amount|default:agreement.total_amount|euro }}</p>
+{% if finite_budget %}<div class="card card-body mb-3"><strong>Καταχωρισμένες χρεώσεις: {{ posted_total|euro }} · Υπόλοιπο συμφωνημένου ποσού σήμερα: {{ unbilled|euro }}</strong><p class="mb-0">Οι εισπράξεις μειώνουν το χρέος του πελάτη, όχι το συνολικό ποσό που έχει ήδη χρεωθεί. Ελέγχονται επίσης τα προγραμματισμένα όρια μελλοντικών όρων.</p></div>{% endif %}
 <p>Η καταχώριση δημιουργεί υποχρέωση πληρωμής. Δεν αποτελεί είσπραξη, πληρωμή ταμείου ή φορολογικό παραστατικό.</p>
 {% if not terms or terms.billing_mode == 'UNREVIEWED' %}
 <div class="alert alert-warning">Πριν από τη χρέωση, <a href="{% url 'edit-agreement' agreement.pk %}">ελέγξτε τους όρους και επιλέξτε τρόπο χρέωσης</a>.</div>
@@ -14,7 +15,7 @@
 {% for field in form %}{% if field.is_hidden %}{{ field }}{% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}{% else %}
 <div class="mb-3">{{ field.label_tag }} {{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% if field.errors %}<div class="alert alert-danger">{{ field.errors }}</div>{% endif %}</div>
 {% endif %}{% endfor %}
-<p class="small text-muted">Η ίδια υποβολή δεν καταχωρίζει δεύτερη χρέωση. Κάθε εφάπαξ υποχρέωση ή μήνας συμφωνίας χρεώνεται μία φορά, ακόμη και αν αργότερα χρησιμοποιηθεί προγραμματισμός χρεώσεων.</p>
+<p class="small text-muted">Η ίδια υποβολή δεν καταχωρίζει δεύτερη χρέωση. Στις χρεώσεις κατά περίπτωση προσθέτετε διαφορετικά ποσά και ημερομηνίες έως το συνολικό συμφωνημένο όριο. Η εφάπαξ χρέωση και κάθε μήνας διατηρούν τη μοναδικότητά τους.</p>
 <button class="btn btn-primary" type="submit">Επιβεβαίωση και καταχώριση χρέωσης</button>
 <a class="btn btn-secondary" href="{% url 'agreement-detail' agreement.pk %}">Ακύρωση</a>
 </form></div>

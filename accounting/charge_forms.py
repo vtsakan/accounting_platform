@@ -20,7 +20,10 @@ class ChargeForm(forms.Form):
     posting_key = forms.UUIDField(initial=uuid.uuid4, widget=forms.HiddenInput, label='Ταυτότητα καταχώρισης')
 
     def __init__(self, *args, **kwargs):
+        mode=kwargs.pop('billing_mode',None)
         super().__init__(*args, **kwargs)
+        if mode in {'ONE_OFF','ON_DEMAND'}:self.fields['period'].widget=forms.HiddenInput()
+        self.fields['period'].help_text='Μόνο για μηνιαία συμφωνία. Στις άλλες συμφωνίες παραμένει κενό.'
         for field in self.fields.values():
             if not field.widget.is_hidden:
                 field.widget.attrs['class'] = 'form-control'

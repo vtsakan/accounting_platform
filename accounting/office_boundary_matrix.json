@@ -652,6 +652,14 @@
       ]
     },
     {
+      "route": "cash-charge-options",
+      "realm": "office-business",
+      "capability": "finance.write",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
       "route": "entity-journal",
       "realm": "office-business",
       "capability": "clients.read",

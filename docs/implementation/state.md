@@ -863,3 +863,8 @@ Status: **Verified**. CR009 verified1210/36 GSIS image, same CURRENTschema36 dat
 <!-- CR010-RESULT -->
 Verified: 1254 isolated PG17 contracts, 36 financial cases, 140 retained deployment guards, real Excel/file antivirus and 63-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.
 <!-- /CR010-RESULT -->
+
+
+<!-- CR011-RESULT -->
+Verified: 1307 isolated PG17 contracts, 36 financial cases, 140 retained deployment guards, direct credential first-login/reset contracts, real Excel/file antivirus and 64-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.
+<!-- /CR011-RESULT -->

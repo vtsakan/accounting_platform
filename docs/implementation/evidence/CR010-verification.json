@@ -1,0 +1,1113 @@
+{
+  "change": "CR-010",
+  "status": "Verified",
+  "source_status": "Prepared",
+  "scope": "isolated-production-pg17-manual-agreement-subject-pending-and-excel-preview",
+  "verified_at": "2026-11-26T10:11:27+02:00",
+  "source_commit": "git:eca5b4b6db1c0d20fdedeee9bb695019b1dbab8f",
+  "image": {
+    "revision": "git:eca5b4b6db1c0d20fdedeee9bb695019b1dbab8f",
+    "verification_revision": "git:eca5b4b6db1c0d20fdedeee9bb695019b1dbab8f",
+    "reference": "sha256:0f27eb86899bb860629d468f433a86a17d857dbb2f9b8f867cfd938ac9247760",
+    "image_id": "sha256:0f27eb86899bb860629d468f433a86a17d857dbb2f9b8f867cfd938ac9247760",
+    "reused_existing_image": true,
+    "context": {
+      "file_count": 390,
+      "paths": [
+        ".dockerignore",
+        "Dockerfile",
+        "accounting/__init__.py",
+        "accounting/account_forms.py",
+        "accounting/account_models.py",
+        "accounting/account_services.py",
+        "accounting/account_views.py",
+        "accounting/admin.py",
+        "accounting/agreement_creation.py",
+        "accounting/agreement_creation_forms.py",
+        "accounting/agreement_selectors.py",
+        "accounting/apps.py",
+        "accounting/attachment_forms.py",
+        "accounting/attachment_models.py",
+        "accounting/attachment_selectors.py",
+        "accounting/attachment_services.py",
+        "accounting/attachment_validation.py",
+        "accounting/attachment_views.py",
+        "accounting/auth_forms.py",
+        "accounting/auth_middleware.py",
+        "accounting/auth_models.py",
+        "accounting/auth_policy.py",
+        "accounting/auth_services.py",
+        "accounting/auth_views.py",
+        "accounting/capabilities.py",
+        "accounting/cash_entry_forms.py",
+        "accounting/cash_entry_selectors.py",
+        "accounting/cash_entry_services.py",
+        "accounting/cash_selectors.py",
+        "accounting/charge_forms.py",
+        "accounting/charge_models.py",
+        "accounting/charge_services.py",
+        "accounting/charge_views.py",
+        "accounting/client_import_services.py",
+        "accounting/client_import_views.py",
+        "accounting/client_task_forms.py",
+        "accounting/client_task_models.py",
+        "accounting/client_task_selectors.py",
+        "accounting/client_task_services.py",
+        "accounting/client_task_views.py",
+        "accounting/correction_forms.py",
+        "accounting/correction_models.py",
+        "accounting/correction_selectors.py",
+        "accounting/correction_services.py",
+        "accounting/correction_views.py",
+        "accounting/counterparty_journal_forms.py",
+        "accounting/counterparty_journal_selectors.py",
+        "accounting/counterparty_journal_views.py",
+        "accounting/counterparty_note_models.py",
+        "accounting/counterparty_note_services.py",
+        "accounting/counterparty_retirement_models.py",
+        "accounting/counterparty_retirement_selectors.py",
+        "accounting/counterparty_retirement_services.py",
+        "accounting/counterparty_retirement_views.py",
+        "accounting/counterparty_services.py",
+        "accounting/counterparty_validation.py",
+        "accounting/counterparty_views.py",
+        "accounting/cr010_models.py",
+        "accounting/entity_profile_forms.py",
+        "accounting/entity_profile_models.py",
+        "accounting/entity_profile_selectors.py",
+        "accounting/entity_profile_services.py",
+        "accounting/entity_profile_validation.py",
+        "accounting/entity_profile_views.py",
+        "accounting/export_renderers.py",
+        "accounting/export_schema.py",
+        "accounting/export_selectors.py",
+        "accounting/export_views.py",
+        "accounting/fee_forms.py",
+        "accounting/fee_generation_models.py",
+        "accounting/fee_generation_services.py",
+        "accounting/fee_generation_views.py",
+        "accounting/fee_models.py",
+        "accounting/fee_services.py",
+        "accounting/fee_test_support.py",
+        "accounting/fee_views.py",
+        "accounting/finance_models.py",
+        "accounting/finance_money.py",
+        "accounting/finance_services.py",
+        "accounting/fixtures/s11_offices.json",
+        "accounting/forms.py",
+        "accounting/gsis_services.py",
+        "accounting/gsis_views.py",
+        "accounting/invite_views.py",
+        "accounting/job_models.py",
+        "accounting/job_services.py",
+        "accounting/legacy_membership.py",
+        "accounting/legacy_ownership.py",
+        "accounting/management/__init__.py",
+        "accounting/management/commands/__init__.py",
+        "accounting/management/commands/backfill_accountant_profiles.py",
+        "accounting/management/commands/backfill_office_records.py",
+        "accounting/management/commands/background_jobs.py",
+        "accounting/management/commands/bootstrap_office_owner.py",
+        "accounting/management/commands/generate_fees.py",
+        "accounting/management/commands/probe_development_database.py",
+        "accounting/management/commands/prune_auth_attempts.py",
+        "accounting/management/commands/seed_development_data.py",
+        "accounting/manual_agreement_creation.py",
+        "accounting/membership.py",
+        "accounting/middleware.py",
+        "accounting/migrations/0001_initial.py",
+        "accounting/migrations/0002_transaction_agreement_alter_agreement_status_and_more.py",
+        "accounting/migrations/0003_office_profiles.py",
+        "accounting/migrations/0004_office_ownership_nullable.py",
+        "accounting/migrations/0005_enforce_office_ownership.py",
+        "accounting/migrations/0006_staff_authentication.py",
+        "accounting/migrations/0007_office_settings_staff_workflows.py",
+        "accounting/migrations/0008_office_workflow_guards.py",
+        "accounting/migrations/0009_counterparty_workspace.py",
+        "accounting/migrations/0010_counterparty_database_guards.py",
+        "accounting/migrations/0011_financial_posting_foundation.py",
+        "accounting/migrations/0012_financial_database_guards.py",
+        "accounting/migrations/0013_cash_accounts_categories.py",
+        "accounting/migrations/0014_cash_workspace_guards.py",
+        "accounting/migrations/0015_agreement_charge_foundation.py",
+        "accounting/migrations/0016_agreement_charge_guards.py",
+        "accounting/migrations/0017_settlement_foundation.py",
+        "accounting/migrations/0018_settlement_guards.py",
+        "accounting/migrations/0019_financial_corrections.py",
+        "accounting/migrations/0020_financial_correction_guards.py",
+        "accounting/migrations/0021_background_jobs.py",
+        "accounting/migrations/0022_background_job_guards.py",
+        "accounting/migrations/0023_fee_catalogue_schedules.py",
+        "accounting/migrations/0024_fee_configuration_guards.py",
+        "accounting/migrations/0025_fee_generation.py",
+        "accounting/migrations/0026_fee_generation_guards.py",
+        "accounting/migrations/0027_counterparty_notes.py",
+        "accounting/migrations/0028_counterparty_note_guards.py",
+        "accounting/migrations/0029_counterparty_retirement.py",
+        "accounting/migrations/0030_counterparty_retirement_guards.py",
+        "accounting/migrations/0031_client_tasks.py",
+        "accounting/migrations/0032_client_task_guards.py",
+        "accounting/migrations/0033_entity_fiscal_profile.py",
+        "accounting/migrations/0034_entity_profile_guards.py",
+        "accounting/migrations/0035_client_attachments.py",
+        "accounting/migrations/0036_attachment_guards.py",
+        "accounting/migrations/0037_subjects_pending_import.py",
+        "accounting/migrations/0038_subject_import_guards.py",
+        "accounting/migrations/__init__.py",
+        "accounting/models.py",
+        "accounting/movement_forms.py",
+        "accounting/movement_selectors.py",
+        "accounting/movement_views.py",
+        "accounting/office_access.py",
+        "accounting/office_boundary_matrix.json",
+        "accounting/office_forms.py",
+        "accounting/office_mail.py",
+        "accounting/office_models.py",
+        "accounting/office_services.py",
+        "accounting/office_views.py",
+        "accounting/ownership.py",
+        "accounting/regression_cases.json",
+        "accounting/regression_runner.py",
+        "accounting/report_forms.py",
+        "accounting/report_selectors.py",
+        "accounting/report_views.py",
+        "accounting/schema_test_support.py",
+        "accounting/settlement_forms.py",
+        "accounting/settlement_models.py",
+        "accounting/settlement_selectors.py",
+        "accounting/settlement_services.py",
+        "accounting/settlement_views.py",
+        "accounting/static/accounting/reports/DejaVuSans-Bold.ttf",
+        "accounting/static/accounting/reports/DejaVuSans.ttf",
+        "accounting/static/accounting/reports/LICENSE-DejaVu.txt",
+        "accounting/static/accounting/workspace/cash-entry.js",
+        "accounting/static/accounting/workspace/client-attachments.css",
+        "accounting/static/accounting/workspace/client-journal.css",
+        "accounting/static/accounting/workspace/client-tasks.css",
+        "accounting/static/accounting/workspace/client-tasks.js",
+        "accounting/static/accounting/workspace/entity-profile.css",
+        "accounting/static/accounting/workspace/entity-profile.js",
+        "accounting/static/accounting/workspace/gsis.css",
+        "accounting/static/accounting/workspace/gsis.js",
+        "accounting/static/accounting/workspace/mark.svg",
+        "accounting/static/accounting/workspace/workspace.css",
+        "accounting/static/accounting/workspace/workspace.js",
+        "accounting/tasks.py",
+        "accounting/templates/accounting/add_agreement.html",
+        "accounting/templates/accounting/add_entity.html",
+        "accounting/templates/accounting/add_expense.html",
+        "accounting/templates/accounting/add_income.html",
+        "accounting/templates/accounting/add_transfer.html",
+        "accounting/templates/accounting/agreement_detail.html",
+        "accounting/templates/accounting/agreement_list.html",
+        "accounting/templates/accounting/attachments/card.html",
+        "accounting/templates/accounting/attachments/categories.html",
+        "accounting/templates/accounting/attachments/category_form.html",
+        "accounting/templates/accounting/attachments/form.html",
+        "accounting/templates/accounting/attachments/remove.html",
+        "accounting/templates/accounting/attachments/unavailable.html",
+        "accounting/templates/accounting/auth/base.html",
+        "accounting/templates/accounting/auth/message.html",
+        "accounting/templates/accounting/auth/mfa_recover.html",
+        "accounting/templates/accounting/auth/mfa_setup.html",
+        "accounting/templates/accounting/auth/mfa_verify.html",
+        "accounting/templates/accounting/auth/recovery_codes.html",
+        "accounting/templates/accounting/auth/reset_complete.html",
+        "accounting/templates/accounting/auth/reset_confirm.html",
+        "accounting/templates/accounting/auth/reset_done.html",
+        "accounting/templates/accounting/auth/reset_email.txt",
+        "accounting/templates/accounting/auth/reset_request.html",
+        "accounting/templates/accounting/auth/reset_subject.txt",
+        "accounting/templates/accounting/auth/security.html",
+        "accounting/templates/accounting/base.html",
+        "accounting/templates/accounting/cash/accounts.html",
+        "accounting/templates/accounting/cash/categories.html",
+        "accounting/templates/accounting/cash/detail.html",
+        "accounting/templates/accounting/cash/form.html",
+        "accounting/templates/accounting/cash/opening.html",
+        "accounting/templates/accounting/charges/add.html",
+        "accounting/templates/accounting/corrections/agreement.html",
+        "accounting/templates/accounting/corrections/cash.html",
+        "accounting/templates/accounting/corrections/charge.html",
+        "accounting/templates/accounting/corrections/history.html",
+        "accounting/templates/accounting/corrections/history_rows.html",
+        "accounting/templates/accounting/corrections/period.html",
+        "accounting/templates/accounting/corrections/refund.html",
+        "accounting/templates/accounting/counterparty_list.html",
+        "accounting/templates/accounting/customer_list.html",
+        "accounting/templates/accounting/dashboard.html",
+        "accounting/templates/accounting/edit_agreement.html",
+        "accounting/templates/accounting/edit_entity.html",
+        "accounting/templates/accounting/entity_archive.html",
+        "accounting/templates/accounting/entity_archived.html",
+        "accounting/templates/accounting/entity_delete.html",
+        "accounting/templates/accounting/entity_detail.html",
+        "accounting/templates/accounting/entity_profile/balances.html",
+        "accounting/templates/accounting/entity_profile/editor.html",
+        "accounting/templates/accounting/entity_profile/gsis.html",
+        "accounting/templates/accounting/entity_profile/reveal.html",
+        "accounting/templates/accounting/entity_profile/summary.html",
+        "accounting/templates/accounting/fees/agreement.html",
+        "accounting/templates/accounting/fees/automation.html",
+        "accounting/templates/accounting/fees/catalogue.html",
+        "accounting/templates/accounting/fees/detail.html",
+        "accounting/templates/accounting/fees/form.html",
+        "accounting/templates/accounting/fees/pages.html",
+        "accounting/templates/accounting/fees/reconciliation.html",
+        "accounting/templates/accounting/fees/schedules.html",
+        "accounting/templates/accounting/fees/unavailable.html",
+        "accounting/templates/accounting/import/preview.html",
+        "accounting/templates/accounting/import/upload.html",
+        "accounting/templates/accounting/includes/entity_fields.html",
+        "accounting/templates/accounting/includes/nav_link.html",
+        "accounting/templates/accounting/includes/workspace_art.html",
+        "accounting/templates/accounting/journal/event.html",
+        "accounting/templates/accounting/journal/legend.html",
+        "accounting/templates/accounting/journal/note_fields.html",
+        "accounting/templates/accounting/journal/note_form.html",
+        "accounting/templates/accounting/journal/page.html",
+        "accounting/templates/accounting/login.html",
+        "accounting/templates/accounting/movement_filters.html",
+        "accounting/templates/accounting/office/action.html",
+        "accounting/templates/accounting/office/approval_email.txt",
+        "accounting/templates/accounting/office/audit.html",
+        "accounting/templates/accounting/office/base.html",
+        "accounting/templates/accounting/office/handover.html",
+        "accounting/templates/accounting/office/handover_email.txt",
+        "accounting/templates/accounting/office/invitation_email.txt",
+        "accounting/templates/accounting/office/join.html",
+        "accounting/templates/accounting/office/join_done.html",
+        "accounting/templates/accounting/office/members.html",
+        "accounting/templates/accounting/office/ownership.html",
+        "accounting/templates/accounting/office/proof_help.html",
+        "accounting/templates/accounting/office/settings.html",
+        "accounting/templates/accounting/office_access_denied.html",
+        "accounting/templates/accounting/reports/annual.html",
+        "accounting/templates/accounting/reports/balances.html",
+        "accounting/templates/accounting/reports/cash_rows.html",
+        "accounting/templates/accounting/reports/charge_rows.html",
+        "accounting/templates/accounting/reports/credit_rows.html",
+        "accounting/templates/accounting/reports/dashboard.html",
+        "accounting/templates/accounting/reports/export_buttons.html",
+        "accounting/templates/accounting/reports/export_error.html",
+        "accounting/templates/accounting/reports/filters.html",
+        "accounting/templates/accounting/reports/pager.html",
+        "accounting/templates/accounting/reports/statement.html",
+        "accounting/templates/accounting/settlements/allocate.html",
+        "accounting/templates/accounting/settlements/fields.html",
+        "accounting/templates/accounting/settlements/pages.html",
+        "accounting/templates/accounting/settlements/release.html",
+        "accounting/templates/accounting/settlements/totals.html",
+        "accounting/templates/accounting/settlements/workspace.html",
+        "accounting/templates/accounting/summary_report.html",
+        "accounting/templates/accounting/supplier_list.html",
+        "accounting/templates/accounting/tasks/action_error.html",
+        "accounting/templates/accounting/tasks/client.html",
+        "accounting/templates/accounting/tasks/dashboard.html",
+        "accounting/templates/accounting/tasks/detail.html",
+        "accounting/templates/accounting/tasks/form.html",
+        "accounting/templates/accounting/tasks/list.html",
+        "accounting/templates/accounting/tasks/table.html",
+        "accounting/templates/accounting/transaction_list.html",
+        "accounting/templatetags/__init__.py",
+        "accounting/templatetags/export_tags.py",
+        "accounting/templatetags/greek.py",
+        "accounting/templatetags/report_tags.py",
+        "accounting/templatetags/workspace_ui.py",
+        "accounting/tests.py",
+        "accounting/tests_agreement_charges.py",
+        "accounting/tests_agreement_creation.py",
+        "accounting/tests_attachment_support.py",
+        "accounting/tests_attachments.py",
+        "accounting/tests_auth_support.py",
+        "accounting/tests_authentication.py",
+        "accounting/tests_background_jobs.py",
+        "accounting/tests_boundary.py",
+        "accounting/tests_cash_agreement_entry.py",
+        "accounting/tests_cash_movements.py",
+        "accounting/tests_cash_workspace.py",
+        "accounting/tests_client_tasks.py",
+        "accounting/tests_corrections.py",
+        "accounting/tests_counterparties.py",
+        "accounting/tests_counterparty_journal.py",
+        "accounting/tests_counterparty_retirement.py",
+        "accounting/tests_cr004_schema_fixtures.py",
+        "accounting/tests_cr005_support.py",
+        "accounting/tests_cr010_historical_notes.py",
+        "accounting/tests_cr010_import.py",
+        "accounting/tests_cr010_workflow.py",
+        "accounting/tests_entity_profile.py",
+        "accounting/tests_entity_profile_support.py",
+        "accounting/tests_exports.py",
+        "accounting/tests_fee_generation.py",
+        "accounting/tests_fees.py",
+        "accounting/tests_finance_posting.py",
+        "accounting/tests_gsis.py",
+        "accounting/tests_integration.py",
+        "accounting/tests_internal_transfers.py",
+        "accounting/tests_offices.py",
+        "accounting/tests_ownership.py",
+        "accounting/tests_regressions.py",
+        "accounting/tests_reports.py",
+        "accounting/tests_settlements.py",
+        "accounting/tests_staff.py",
+        "accounting/tests_workspace_ui.py",
+        "accounting/transfer_views.py",
+        "accounting/urls.py",
+        "accounting/views.py",
+        "accounting/workspace_selectors.py",
+        "core/__init__.py",
+        "core/asgi.py",
+        "core/attachment_crypto.py",
+        "core/attachment_inspect.py",
+        "core/attachment_upload.py",
+        "core/auth_crypto.py",
+        "core/auth_mail.py",
+        "core/celery.py",
+        "core/client_xlsx.py",
+        "core/config.py",
+        "core/error_views.py",
+        "core/formats/__init__.py",
+        "core/formats/el/__init__.py",
+        "core/formats/el/formats.py",
+        "core/health.py",
+        "core/import_crypto.py",
+        "core/job_scheduler.py",
+        "core/locale.py",
+        "core/redaction.py",
+        "core/referrer.py",
+        "core/settings/__init__.py",
+        "core/settings/base.py",
+        "core/settings/build.py",
+        "core/settings/local.py",
+        "core/settings/production.py",
+        "core/settings/test.py",
+        "core/taxis_crypto.py",
+        "core/tests/__init__.py",
+        "core/tests/test_referrer.py",
+        "core/tests/test_s04.py",
+        "core/tests/test_s06_runner.py",
+        "core/tests/test_s07.py",
+        "core/tests/urls.py",
+        "core/urls.py",
+        "core/wsgi.py",
+        "docker/healthcheck.py",
+        "docker/production-entrypoint.sh",
+        "gunicorn.conf.py",
+        "locale/el/LC_MESSAGES/django.mo",
+        "locale/el/LC_MESSAGES/django.po",
+        "manage.py",
+        "requirements.txt",
+        "templates/400.html",
+        "templates/403.html",
+        "templates/404.html",
+        "templates/500.html",
+        "templates/admin/index.html",
+        "tools/init_local_env.py"
+      ],
+      "digest": "sha256:ea036ea033b7a897b96352d041254d4ef4f6272cf55c02f5f31399a1f9cdcee8"
+    }
+  },
+  "application_context_digest": "sha256:ea036ea033b7a897b96352d041254d4ef4f6272cf55c02f5f31399a1f9cdcee8",
+  "suite": {
+    "tests_run": 1254,
+    "tests_passed": 1254,
+    "known_failures_reproduced": 0,
+    "unexpected_failures": 0,
+    "unexpected_errors": 0,
+    "unexpected_successes": 0,
+    "skips": 0,
+    "cases": [
+      {
+        "case_id": "AMT-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_zero",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Reject zero income without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_negative",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Reject negative income without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-003",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_zero",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Reject zero expense without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-004",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_negative",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Reject negative expense without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-005",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_zero",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "Reject zero transfer without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-006",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_negative",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "Reject negative transfer without financial writes",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-007",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_zero",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S18",
+          "S20"
+        ],
+        "description": "Reject zero ordinary cash amount at the model/database boundary",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "AMT-008",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_model_negative",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S18",
+          "S20"
+        ],
+        "description": "Reject negative ordinary cash amount at the model/database boundary",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "BAL-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_empty_account",
+        "issue_id": "LEG-003",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-03"
+        ],
+        "fix_steps": [
+          "S19"
+        ],
+        "description": "Opening 100 with no movements must display 100",
+        "fixed_in": "S19",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "BAL-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_income_only",
+        "issue_id": "LEG-003",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-03"
+        ],
+        "fix_steps": [
+          "S19"
+        ],
+        "description": "Opening 100 plus income 50 without expenses must display 150",
+        "fixed_in": "S19",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "BAL-003",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_expense_only",
+        "issue_id": "LEG-003",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-03"
+        ],
+        "fix_steps": [
+          "S19"
+        ],
+        "description": "Opening 100 minus expense 20 without income must display 80",
+        "fixed_in": "S19",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CAN-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_transaction_resave_preserves_cancellation",
+        "issue_id": "LEG-008",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-04",
+          "UR-AGR-05"
+        ],
+        "fix_steps": [
+          "S24"
+        ],
+        "description": "Resaving a linked receipt must not change explicit CANCELLED status",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_mixed_account_balance",
+        "issue_id": "LEG-003",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-03"
+        ],
+        "fix_steps": [
+          "S19"
+        ],
+        "description": "Opening 100 plus income 50 minus expense 20 displays 130",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_partial_settlement",
+        "issue_id": "LEG-005",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-03"
+        ],
+        "fix_steps": [
+          "S23"
+        ],
+        "description": "Same-client settlement 25 against 100 leaves 75 outstanding",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-003",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_full_settlement",
+        "issue_id": "LEG-007",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-04"
+        ],
+        "fix_steps": [
+          "S24"
+        ],
+        "description": "Same-client full settlement marks the legacy agreement completed",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-004",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_moves_1000",
+        "issue_id": "LEG-004",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "Linked transfer 1000 produces balances 1000 and 1100 from openings 2000 and 100",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-005",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_failed_second_transfer_leg_rolls_back",
+        "issue_id": "LEG-004",
+        "expected_outcome": "pass",
+        "requirements": [
+          "QR-03",
+          "UR-CSH-04"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "Injected failure on the second transfer leg leaves neither leg",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-006",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_same_account_transfer_is_rejected",
+        "issue_id": "LEG-004",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "A same-account transfer is rejected without writes",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-007",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_income_text_is_rejected",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Non-numeric Greek-form income input is rejected",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-008",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_expense_text_is_rejected",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-02"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Non-numeric Greek-form expense input is rejected",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-009",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_transfer_text_is_rejected",
+        "issue_id": "LEG-006",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04"
+        ],
+        "fix_steps": [
+          "S21"
+        ],
+        "description": "Non-numeric Greek-form transfer input is rejected",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "CTL-010",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_receipt_cannot_select_payable",
+        "issue_id": "LEG-005",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-02"
+        ],
+        "fix_steps": [
+          "S23"
+        ],
+        "description": "The existing income form rejects a supplier-payable agreement",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_start_date",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Malformed start_date on list must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_end_date",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Malformed end_date on list must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-003",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_cash_account",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Malformed cash_account on list must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-004",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_category",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Malformed category on list must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-005",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_list_entity",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20"
+        ],
+        "description": "Malformed entity on list must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-006",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_start_date",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20",
+          "S29"
+        ],
+        "description": "Malformed start_date on report must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-007",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_end_date",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20",
+          "S29"
+        ],
+        "description": "Malformed end_date on report must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-008",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_cash_account",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20",
+          "S29"
+        ],
+        "description": "Malformed cash_account on report must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "FLT-009",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_invalid_report_category",
+        "issue_id": "LEG-009",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-06"
+        ],
+        "fix_steps": [
+          "S20",
+          "S29"
+        ],
+        "description": "Malformed category on report must return field validation instead of HTTP 500",
+        "fixed_in": "S20",
+        "verification": "Not run; user executes tests",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "SET-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_income",
+        "issue_id": "LEG-005",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-02"
+        ],
+        "fix_steps": [
+          "S23"
+        ],
+        "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "SET-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_cross_counterparty_expense",
+        "issue_id": "LEG-005",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-02"
+        ],
+        "fix_steps": [
+          "S23"
+        ],
+        "description": "A settlement for counterparty B must not reduce counterparty A obligation",
+        "fixed_in": "S18",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "STA-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_reduced_receipt_reopens_agreement",
+        "issue_id": "LEG-007",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-04",
+          "UR-CSH-07"
+        ],
+        "fix_steps": [
+          "S23",
+          "S24"
+        ],
+        "description": "Legacy receipt change from 100 to 25 leaves 75 outstanding and must reopen settlement status",
+        "fixed_in": "S18",
+        "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained.",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "STA-002",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_deleted_receipt_reopens_agreement",
+        "issue_id": "LEG-007",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-AGR-04",
+          "UR-CSH-07"
+        ],
+        "fix_steps": [
+          "S23",
+          "S24"
+        ],
+        "description": "Legacy receipt deletion leaves 100 outstanding and must reopen settlement status",
+        "fixed_in": "S18",
+        "adapter_note": "S18 linked reversal/replacement replaces the legacy edit/delete probe; original expected remaining/status assertions retained.",
+        "outcome": "passed"
+      },
+      {
+        "case_id": "TRF-001",
+        "test": "accounting.tests_regressions.FinancialRegressionTests.test_transfer_excluded_from_operating_totals",
+        "issue_id": "LEG-004",
+        "expected_outcome": "pass",
+        "requirements": [
+          "UR-CSH-04",
+          "UR-REP-02",
+          "QR-03"
+        ],
+        "fix_steps": [
+          "S21",
+          "S29"
+        ],
+        "description": "Transfer 1000 must leave operating income 50 and expense 20 unchanged",
+        "fixed_in": "S21",
+        "verification": "Not run for S21; user executes tests",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "new_test_methods": 44,
+  "retained_source_files_checked": 914,
+  "static": {
+    "local_import_symbols": 90,
+    "local_calls_checked": 144,
+    "historical_note_fixture_classes_checked": 3,
+    "retained_gsis_attachment_checks": {
+      "local_import_symbols": 25,
+      "local_call_arguments_checked": 13,
+      "retained_attachment_static_checks": {
+        "project_local_import_symbols": 95,
+        "explicit_fixture_calls_checked": 72,
+        "application_or_tests_executed": false
+      },
+      "application_or_tests_executed": false
+    },
+    "application_or_tests_executed": false
+  },
+  "secret_scan": {
+    "scanner": "detect-secrets",
+    "version": "1.5.0",
+    "network_verification": false,
+    "scanner_self_check": "Passed: detected an ephemeral synthetic password",
+    "history_scope": "All locally reachable Git refs plus the current candidate source",
+    "history_commits": 269,
+    "unique_history_blobs": 2174,
+    "candidate_text_files": 939,
+    "binary_files_or_blobs_skipped": 10,
+    "reviewed_non_secret_matches": 2076,
+    "unreviewed_findings": 0,
+    "findings": [],
+    "limitations": "Heuristic text scan; does not prove absence of every possible secret or inspect binary documents."
+  },
+  "private_files": {
+    "formats_verified": [
+      "pdf",
+      "doc",
+      "docx",
+      "png",
+      "jpg",
+      "gif",
+      "webp",
+      "tif",
+      "bmp"
+    ],
+    "original_file_sha256_after_authenticated_download": true,
+    "antivirus_real_eicar_denied": true,
+    "scanner_unavailable_denied_without_storage": true,
+    "restricted_role_migrations": true,
+    "sealed_bytes_in_database": true,
+    "all_public_tables_restored": 63,
+    "restored_files": 10,
+    "all_public_tables_and_file_hashes_matched": true,
+    "wrong_recovery_key_denied": true,
+    "separate_external_recovery_material_used": true,
+    "encrypted_recovery_archive": "/home/vtsakan/.config/totalaccounting/attachment-rehearsals/874552e5484021b384cc/client-files.dump.age",
+    "scanner_image": "clamav/clamav:stable_base@sha256:7e43db777ae70ed9b60e75fcbdfda6f462c710565c69ccff2ed83a7ec5aba417",
+    "scanner_memory_cap_mib": 4096,
+    "owned_resources_removed": true,
+    "plaintext_archives_written": false,
+    "real_client_data": false,
+    "vm_changed": false,
+    "excel_import": {
+      "clean_real_scan": true,
+      "eicar_denied": true,
+      "scanner_unavailable_denied": true,
+      "explicit_confirmation": true,
+      "encrypted_credentials_and_preview": true,
+      "replay_once": true,
+      "no_financial_writes": true,
+      "unknown_columns_retained": true
+    },
+    "excel_recovery_verified": true
+  },
+  "real_monthly_worker_and_commit_before_ack": true,
+  "revocation_blocks_execution": true,
+  "second_scheduler_rejected": true,
+  "restricted_role_migrations": true,
+  "original_36_migrations_unchanged": true,
+  "new_migrations": 2,
+  "historical_receipts_unchanged": true,
+  "actual_prior_receipt_files_sha256": {
+    "docs/implementation/evidence/CR008-verification.json": "sha256:42f3b332b3b0fda50263d590493e7cc1fd981d37770db36184f8e726e5b31734",
+    "docs/implementation/evidence/CR005-verification.json": "sha256:a80df898d1f26378bc4685841c7753ffd249b95e0495addf0c7c3cd5af082274",
+    "docs/implementation/evidence/CR004-verification.json": "sha256:a0a2731f76ed5a56e8e2a3bfd4bd970cdf7bb5d7da2531a24ea4ab47fe216cc4",
+    "docs/implementation/evidence/CR003-verification.json": "sha256:1f8feac780aa893a9bf8dd7c970ed0a32a553b97b5ce598c217431d590421706",
+    "docs/implementation/evidence/CR002-verification.json": "sha256:b5accc113147abea0502f7f7a5367b68ff292bc859923a7f485634054579c891",
+    "docs/implementation/evidence/CR003-operator-baseline.json": "sha256:d0077c3bcfb36803475e47a0bfc9098753bfd9277648ca7153d0220278c18088",
+    "docs/implementation/evidence/CR004-operator-baseline.json": "sha256:dfec50f4305696f4e950e6d44ba66a25bdc4babadf435834bfb729f8b5cb933a",
+    "docs/implementation/evidence/CR004-VM-verification.json": "sha256:4ef12db035b7f93e42730a38ca39fa18fd2a747db5f34d915e74322f5feafa4e",
+    "docs/implementation/evidence/CR004-VM-operator-baseline.json": "sha256:1593e2378a3c7e6adb5c71405bbfa73b968680fb2810d20eb6c32304efd35eaa",
+    "docs/implementation/evidence/CR005-operator-baseline.json": "sha256:63129cd558fbe5af29723c29d7e5588ee6c414bcd7627495cecbe800d4ccad14",
+    "docs/implementation/evidence/CR005-VM-verification.json": "sha256:b141e22eec872577f965ef7539a4ee275563098b6b527cf7bd47468b492c2a01",
+    "docs/implementation/evidence/CR005-VM-operator-baseline.json": "sha256:f020550f933e561c948d248b841268e7604df01fdfa93947c9ee519ddf84e208",
+    "docs/implementation/evidence/CR006-operator-baseline.json": "sha256:cd8ce51414a35ff94b061cd0f37417813a9ee8bc3f0ce0a10da789babceb5503",
+    "docs/implementation/evidence/CR007-operator-baseline.json": "sha256:eaad5d5787cc1c8b1a826e3d5cfc6b811bf06c32eca53464715ac1d0e6480201",
+    "docs/implementation/evidence/CR007-verification.json": "sha256:b90b0bb2e39c4017150d6332a81bde0d26b8f387cabe8bd76af440544e98bacf",
+    "docs/implementation/evidence/CR008-operator-baseline.json": "sha256:d8a4ca1983058073b1276bf2e1650f4eae20f023545db9724512be15b896f49d",
+    "docs/implementation/evidence/CR008-VM-operator-baseline.json": "sha256:f75266dea6fd5c3dced2471088ae50dc70b11a1d04e9b197ce58997967839722",
+    "docs/implementation/evidence/CR008-VM-verification.json": "sha256:23528beb7bceae0db9b503aac9e303c279cedec3a139736c8572f8821563af8c",
+    "docs/implementation/evidence/CR008-4GB-operator-baseline.json": "sha256:1e641b5619c7638c1714d5bc7caf885962e2b2f513d99655d48e27bfd6326823",
+    "docs/implementation/evidence/CR008-4GB-MEMORY-operator-baseline.json": "sha256:5c11f2d80207b75ad65d1074417cdb8062bf1aded4a0fc65d3f041ee3268e237",
+    "docs/implementation/evidence/CR008-4GB-MEMORY-verification.json": "sha256:7ea23272b7a510d2061ef854d7c2cbebb61e471e076aca0597b930e3f9d6193a",
+    "docs/implementation/evidence/CR009-operator-baseline.json": "sha256:3189fb3080f7691369a86ec40c333988b8e067ca6bf7bc3eab36be5f9259cc73",
+    "docs/implementation/evidence/CR009-verification.json": "sha256:1d4f9187acd7fc7140a22a507758a6cb6ffacc9eb8daa125a02c18dd5d7364e7",
+    "docs/implementation/evidence/CR009-VM-operator-baseline.json": "sha256:78c5ef75e81ff9daea349ae36656ec6ee432e14b751b11356f6927d94be2baba",
+    "docs/implementation/evidence/CR009-VM-verification.json": "sha256:03aefc565f64277816fbc64398e8b884b3af41dc4f74ff23b4a826a673c5a2cd"
+  },
+  "docker_execution_by_operator": true,
+  "agent_native_execution": false,
+  "preserved_operator_files_sha256": {
+    "AGENTS.md": "sha256:19196507700a674b588351a04e8708bb9b643281b1f8a901a95e39d582d051a0"
+  },
+  "prior_completed_vm_record": "git:9dc666bf75aa597747ecd040da1e18fe32273675",
+  "deployment_guard_tests_passed": 140,
+  "local_demo_or_vm_changed": false,
+  "github_updated": false,
+  "human_accounts_or_mfa_changed": false,
+  "real_workbook_imported": false,
+  "owned_resources_removed": true,
+  "full_requirement_acceptances_pending": 85,
+  "accountant_browser_acceptance": "Pending",
+  "g2_release_acceptance": "Pending",
+  "vm_upgrade": "Pending separate rollout"
+}

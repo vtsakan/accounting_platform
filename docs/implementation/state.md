@@ -858,3 +858,8 @@ Verified: 1210 isolated PG17 tests,36 financial cases, real file antivirus/recov
 <!-- CR009-VM -->
 Status: **Verified**. CR009 verified1210/36 GSIS image, same CURRENTschema36 database and4GiB memory/AV profile. Fresh61/61 independent-key restores and liveAV/OOM/HTTPS proof required. No migration, clone, resize, account/MFA reset or history overwrite. All85 full acceptances and actual GSIS/browser/clipboard/D06/S38/R1/G2 remain Pending.
 <!-- /CR009-VM -->
+
+
+<!-- CR010-RESULT -->
+Verified: 1254 isolated PG17 contracts, 36 financial cases, 140 retained deployment guards, real Excel/file antivirus and 63-table encrypted recovery, retained real worker. New source verified by operator; VM upgrade and browser/business acceptance Pending; all85 full acceptances Pending.
+<!-- /CR010-RESULT -->

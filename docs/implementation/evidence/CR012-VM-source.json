@@ -1,0 +1,31 @@
+{
+  "step": "CR012-VM",
+  "status": "Prepared",
+  "profile": "cr012-current40-to42-clone-4GiB-uploads",
+  "source_migrations": 40,
+  "target_migrations": 42,
+  "source_tables": 64,
+  "target_tables": 65,
+  "application_context_digest": "sha256:8f8341cba921c7eac3c100abb8bb20fbd5d8dada82087c3be4573c3293df34ad",
+  "application_inputs": 409,
+  "operator_image_source": "git:f4ce08871eae514d6d80fbf55c3d6b05c59bd227",
+  "operator_image_id": "sha256:996ff3c2ff17afb8e8ac20f83f868cf0520f78eed1b0d972314edfefc94cd42f",
+  "operator_delivery_canonical_sha256": "sha256:0edbc23a740c12be55a640103eab778d2a16cabead81258148a9594ed17979f1",
+  "operator_report_binding": "docs/implementation/evidence/CR012-VM-operator-baseline.json",
+  "native_result_identity": "Resolved exclusively from the genuine full local report and exact two-file native child",
+  "runtime_executed": false,
+  "github_updated": false,
+  "vm_changed": false,
+  "sha256": {
+    "docs/implementation/cr012_preview_upgrade_el.md": "sha256:ade7f7714c3931dc671bd2e144c581fbae215aca3e701007ec4795eef70a33ca",
+    "docs/implementation/evidence/CR012-VM-preflight.json": "sha256:d47b61392595b2d69101894a2533188054256317b100e0d5dfc233c8ca2a40ec",
+    "tools/cr012_vm_static.py": "sha256:f48c2e452e61b4d0f2d2edc4f7c4ff770d6ef5954b7808f5600d88307e29c6b9",
+    "tools/preview_cr012_policy.py": "sha256:f14af24f23b1a760f3e30c303421555bdb1153a3217cb532eef4dd103fd104ea",
+    "tools/preview_cr012_runtime.py": "sha256:a78f3b8c764edc92b0d666ed11263b5c0f2154f6ef4aa9e108adaca27f3a107d",
+    "tools/preview_cr012_migrate.py": "sha256:51cd34b7b3f64e75899f7b25a6a3b41ac84d73a45ec735489a3db8bdb281f430",
+    "tools/preview_cr012_host.py": "sha256:e743388eca57bae832b816c70ab456003a78fac496b5cf09b0f3c7833fe5b596",
+    "tools/preview_cr012_release.py": "sha256:3aa28dfe7fb8e25a1c9119234a3885eb62f211ae52dfdc6de063861c04b7d1bc",
+    "tools/test_preview_cr012_vm.py": "sha256:9a92bfb88bdbca5ab1d6e957e8a751a9b9e60589593e9ae4b379752a0879b6e8",
+    "tools/run_cr012_vm_guards.py": "sha256:1120ff086696ded84cb783122e849ffd414c6abb39655b792d616d15a8502e3b"
+  }
+}

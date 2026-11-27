@@ -1,0 +1,31 @@
+{
+  "step": "CR012-LABEL-VM",
+  "status": "Prepared",
+  "profile": "cr012-label-same-current42-4GiB",
+  "same_current_database": true,
+  "new_migrations": 0,
+  "database_cloned": false,
+  "schema_before": 42,
+  "schema_after": 42,
+  "tables_before": 65,
+  "tables_after": 65,
+  "application_inputs": 409,
+  "application_context_digest": "sha256:6452f9373016e8aed89c4bf810d3aeb43e3cb71f6fd39759a92918ca10891744",
+  "operator_result_binding": "docs/implementation/evidence/CR012-LABEL-VM-operator-baseline.json",
+  "operator_report_binding": "docs/implementation/evidence/CR012-LABEL-VM-operator-baseline.json",
+  "runtime_executed": false,
+  "github_updated": false,
+  "vm_changed": false,
+  "native_guards_expected": 249,
+  "sha256": {
+    "docs/implementation/cr012_label_preview_upgrade_el.md": "sha256:fd7fa85b76e49208ca122cf7219dde55f2c39b78c10fcb86f20e114bfabb82be",
+    "docs/implementation/evidence/CR012-LABEL-VM-preflight.json": "sha256:b6e7f5371086fdcbd834ab8fdad11683bd970ccc44ace0b80a53e5ad43969895",
+    "tools/preview_cr012_label_policy.py": "sha256:06edae690761711e58e4f580bab2d0fcb0cc5747ef9e44c0f35beb7152d9cc5c",
+    "tools/preview_cr012_label_runtime.py": "sha256:47cf789a1cf1219d3790af6ecc2260f5835a7c49180acc6d655c02dd573af949",
+    "tools/preview_cr012_label_host.py": "sha256:05d09923fa1355b1e41228ebb1bbc54e137975215427dbe88e6bf31e4775c17c",
+    "tools/preview_cr012_label_release.py": "sha256:62d362e2770eaf2a554ddd69a508bcc0d8a0ce151138862952e6e58ea54f5cd1",
+    "tools/cr012_label_vm_static.py": "sha256:200030394b4c31e3050e0d66d70d622acb25d60cca3e2f17f325a7f89fce0a70",
+    "tools/test_preview_cr012_label_vm.py": "sha256:d4f83bf2fb7d85ed768d1a3df6cea7dbdc3f5f0fd837c50993e56869f5328570",
+    "tools/run_cr012_label_vm_guards.py": "sha256:34c6e487edafe563a27f665f5500166e68880fae0252211d1295762fcb646a5f"
+  }
+}

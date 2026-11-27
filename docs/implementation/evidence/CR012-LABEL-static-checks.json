@@ -1,0 +1,24 @@
+{
+  "change": "CR012-LABEL",
+  "status": "Prepared",
+  "scope": "Static source/import/call/template/hash review only",
+  "changed_application_files": [
+    "accounting/templates/accounting/agreement_list.html",
+    "accounting/templates/accounting/entity_detail.html"
+  ],
+  "unchanged_application_inputs": 407,
+  "application_inputs": 409,
+  "prior_prepared_files_checked": 996,
+  "old_migrations_unchanged": 42,
+  "old_test_method_asts_unchanged": 1989,
+  "new_test_methods": 0,
+  "native_tests_executed_by_agent": false,
+  "application_or_database_executed_by_agent": false,
+  "old_billing_captions_unchanged": true,
+  "explicit_ON_DEMAND_caption_present": true,
+  "local_import_symbols": 4,
+  "local_calls_checked": 37,
+  "actual_native_history_files_to_preserve": 35,
+  "github_updated": false,
+  "vm_changed": false
+}

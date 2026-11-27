@@ -883,3 +883,8 @@ Verified: 1393 isolated PG17 contracts, 36 financial cases, 176 retained deploym
 <!-- CR012-VM -->
 Verified CR012 preview upgrade: exact1393/36 image, CURRENT40 clone to42, original retained,64/65 independent-key off-VM restores,4GiB private scanner/memory/HTTPS proof. People/MFA/keys/queue retained. All85 full acceptances and browser/business/G2 Pending.
 <!-- /CR012-VM -->
+
+
+<!-- CR012-LABEL-RESULT -->
+Verified operator label correction: fresh1393/36 production-image gate and224 retained deployment guards. Only the ON_DEMAND caption in the agreement list and client card changed. All42 migrations, financial services, native test methods and35 historical receipts retained. Same-schema VM rollout and browser/business acceptance Pending; all85 full acceptances Pending.
+<!-- /CR012-LABEL-RESULT -->

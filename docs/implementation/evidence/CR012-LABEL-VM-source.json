@@ -16,16 +16,25 @@
   "runtime_executed": false,
   "github_updated": false,
   "vm_changed": false,
-  "native_guards_expected": 249,
+  "native_guards_expected": 257,
   "sha256": {
     "docs/implementation/cr012_label_preview_upgrade_el.md": "sha256:fd7fa85b76e49208ca122cf7219dde55f2c39b78c10fcb86f20e114bfabb82be",
-    "docs/implementation/evidence/CR012-LABEL-VM-preflight.json": "sha256:b6e7f5371086fdcbd834ab8fdad11683bd970ccc44ace0b80a53e5ad43969895",
+    "docs/implementation/cr012_label_transfer_fix_el.md": "sha256:b9b270390836c7f58ecf3350fd022814f6bfe257b7c7ec79a2d95ac4aa479256",
+    "docs/implementation/evidence/CR012-LABEL-VM-initial-preflight.json": "sha256:b6e7f5371086fdcbd834ab8fdad11683bd970ccc44ace0b80a53e5ad43969895",
+    "docs/implementation/evidence/CR012-LABEL-VM-initial-source.json": "sha256:9354e964d27eb693028d5a7de0fd8b7efa19b123679e5b2e14e20c8e0fb3bd50",
+    "docs/implementation/evidence/CR012-LABEL-VM-preflight.json": "sha256:d24b1c76f72c7ec8130227923f95dd861766752c042a0cb56aa7e1e929a9845f",
+    "docs/implementation/evidence/CR012-LABEL-VM-transfer-failure.json": "sha256:80dd80d62ed395e9ebc54ce1405d33a5e3c56f278074146a6772d68c120970cf",
+    "tools/cr012_label_transfer.py": "sha256:744e45f66f3ca93e31e496178207f2e88526bb09303fd164d5f1f17770e0eff7",
+    "tools/cr012_label_vm_static.py": "sha256:54ca7797781f479c8166037ba39781f8a511677b5ee437ae3151d4649ab3895e",
+    "tools/preview_cr012_label_host.py": "sha256:857a1e9957f2f0be4db45dbed0c1fa8d76eb4770e6939d67811a62cae016aee7",
     "tools/preview_cr012_label_policy.py": "sha256:06edae690761711e58e4f580bab2d0fcb0cc5747ef9e44c0f35beb7152d9cc5c",
+    "tools/preview_cr012_label_release.py": "sha256:58e7f65c1d94f34cb909d047e4d7928701db88e32e89d997009acd7f214fa409",
     "tools/preview_cr012_label_runtime.py": "sha256:47cf789a1cf1219d3790af6ecc2260f5835a7c49180acc6d655c02dd573af949",
-    "tools/preview_cr012_label_host.py": "sha256:05d09923fa1355b1e41228ebb1bbc54e137975215427dbe88e6bf31e4775c17c",
-    "tools/preview_cr012_label_release.py": "sha256:62d362e2770eaf2a554ddd69a508bcc0d8a0ce151138862952e6e58ea54f5cd1",
-    "tools/cr012_label_vm_static.py": "sha256:200030394b4c31e3050e0d66d70d622acb25d60cca3e2f17f325a7f89fce0a70",
-    "tools/test_preview_cr012_label_vm.py": "sha256:d4f83bf2fb7d85ed768d1a3df6cea7dbdc3f5f0fd837c50993e56869f5328570",
-    "tools/run_cr012_label_vm_guards.py": "sha256:34c6e487edafe563a27f665f5500166e68880fae0252211d1295762fcb646a5f"
-  }
+    "tools/run_cr012_label_vm_guards.py": "sha256:16dd430ca9b0486949eee75141328d3acb0ab34dc45fe5469b618a917012d7d8",
+    "tools/test_preview_cr012_label_vm.py": "sha256:98bf14a95c1a1ea6eae69481a6abb11c5fd7c3cf9ce50a7b8b11cc2b425066e7"
+  },
+  "correction": "Complete bound evidence transfer and guarded unstarted retarget",
+  "previous_manifest_sha256": "sha256:9354e964d27eb693028d5a7de0fd8b7efa19b123679e5b2e14e20c8e0fb3bd50",
+  "previous_pending_commit": "git:f5ccfa463d4afda2ba30109ea13981ea47e0a1ba",
+  "native_evidence_transfer_count": 38
 }

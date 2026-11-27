@@ -20,6 +20,7 @@ import preview_host as host
 import preview_cr012_label_runtime as runtime
 import preview_cr008_scanner as scanner
 import preview_cr012_label_policy as policy
+import cr012_label_transfer as correction
 from r1_gate import digest_bytes, digest_object, require
 from vm_material_common import release_context
 from vm_material_host import merge_hashed_assets, runtime_secrets, web_identity
@@ -68,6 +69,9 @@ def public_failure(error):
         'A previous deployment still has an active hold',
         'A retained previous journal changed; no overwrite or new attempt is allowed',
         'Require the exact previous CR012 and verified CR012-LABEL application contexts',
+        'Require the separate genuine CR012 deployment binding',
+        'Retarget only with no attempt journal, hold or plan and the original configuration still installed',
+        'The installed profile or backup binding differs from the retained source; no retarget',
     }
     record={'error':type(error).__name__,
         'reason':message if type(error) is RuntimeError and message in allowed else 'Profile operation failed; private provider output omitted'}
@@ -142,6 +146,17 @@ def scheduler_memory_limits(service):
     return result
 
 
+def retarget_status(value):
+    status={'status':'Unstarted','state_exists':STATE.exists() or STATE.is_symlink(),
+        'hold_active':HOLD.exists() or HOLD.is_symlink(),'plan_exists':PLAN.exists() or PLAN.is_symlink(),
+        'installed_binding':'source' if host.load()==value['source'] else 'other'}
+    correction.unstarted(status)
+    require(value.get('profile')==policy.PROFILE and ops.load()['preview']==value['source'],
+        'The installed profile or backup binding differs from the retained source; no retarget')
+    policy.transition(value['source'],value['target']);prior_journals_unchanged(value)
+    return status
+
+
 def stage(value,bundle):
     require(not STATE.exists() and not HOLD.exists(),'A profile journal exists; retain it and use status/resume/rollback')
     prior_journals_unchanged(value)
@@ -163,7 +178,7 @@ def stage(value,bundle):
     queue=runtime.queue_storage(source);capacity=runtime.capacity(source)
     release=host.unpack(bundle,value['bundle_sha256'],common.deployment_commit(target))
     staged=Path(__file__).resolve().parents[1]
-    for name in (policy.BASELINE,policy.RECEIPT):
+    for name in correction.evidence_names(policy.identity()):
         require((staged/name).is_file() and not (staged/name).is_symlink()
             and (staged/name).read_bytes()==(release/name).read_bytes(),
             'Transferred native label proof differs from the immutable bundle')
@@ -374,7 +389,7 @@ def refresh_scanner():
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action',choices=('plan','prepare','state','status','activate','complete','rollback','resume','secrets','scanner-refresh'))
+    parser.add_argument('action',choices=('plan','prepare','state','status','retarget-status','activate','complete','rollback','resume','secrets','scanner-refresh'))
     parser.add_argument('--input',type=Path);parser.add_argument('--bundle',type=Path)
     parser.add_argument('--plan-sha256');parser.add_argument('--proof',type=Path);args=parser.parse_args()
     try:
@@ -386,6 +401,7 @@ def main():
             elif args.action=='prepare':result=prepare(args.plan_sha256)
             elif args.action=='state':result=json.loads(STATE.read_text())
             elif args.action=='status':result=summary(json.loads(STATE.read_text())) if STATE.exists() else {'status':'Not applied'}
+            elif args.action=='retarget-status':result=retarget_status(json.loads(args.input.read_text()))
             elif args.action=='activate':result=activate(json.loads(args.proof.read_text()))
             elif args.action=='complete':result=complete(json.loads(args.proof.read_text()))
             elif args.action=='rollback':result=rollback()

@@ -1,0 +1,39 @@
+{
+  "step": "CR012-LABEL-VM-evidence-transfer",
+  "status": "Prepared",
+  "observed_operator_output": {
+    "native_deployment_contracts_passed": 249,
+    "github_commit": "git:f5ccfa463d4afda2ba30109ea13981ea47e0a1ba",
+    "failure": "CR012-LABEL-VM-FAILURE RuntimeError: Profile operation failed; private provider output omitted",
+    "host_stage_observed": false,
+    "backup_start_message_observed": false,
+    "remote_status_supplied": false
+  },
+  "source_analysis": {
+    "finding": "Only the label deployment binding and label report were transferred; previous.transition also reads CR012-VM-operator-baseline.json relative to the staged tools",
+    "call_chain": [
+      "preview_cr012_label_host.stage",
+      "preview_cr012_label_host.prior_journals_unchanged",
+      "preview_cr012_label_policy.completed_journal",
+      "preview_cr012_policy.transition",
+      "preview_cr012_policy.report_sha"
+    ],
+    "missing_dependency": "docs/implementation/evidence/CR012-VM-operator-baseline.json",
+    "expected_failure_before_plan_write_or_service_pause": true,
+    "runtime_cause_independently_observed": false
+  },
+  "correction": {
+    "transfer_all_bound_prior_evidence_files": 37,
+    "transfer_own_deployment_binding": 1,
+    "same_current_schema": 42,
+    "retarget_only_exact_pending_config_after_unstarted_status_and_plan": true,
+    "previous_config_copy_preserves_raw_bytes": true,
+    "old_journals_or_reports_overwritten": false,
+    "application_inputs_changed": 0,
+    "new_migrations": 0,
+    "native_deployment_contracts_expected": 257,
+    "agent_native_execution": false,
+    "vm_changed_by_agent": false,
+    "github_updated_by_agent": false
+  }
+}

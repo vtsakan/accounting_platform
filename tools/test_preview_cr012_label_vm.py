@@ -6,6 +6,7 @@ import unittest
 import preview_cr012_label_policy as p
 import preview_cr012_label_host as host
 import preview_cr012_label_release as release
+import cr012_label_transfer as correction
 import preview_cr012_host as previous_host
 import preview_cr012_release as previous_release
 from test_preview_cr008_profile import pair,proofs
@@ -120,6 +121,62 @@ class RecoveryAndIsolationContracts(unittest.TestCase):
     def test_private_provider_error_text_cannot_be_public(self):
         detail='synthetic private provider text'
         self.assertNotIn(detail,json.dumps(host.public_failure(RuntimeError(detail))))
+
+
+class EvidenceTransferRetryContracts(unittest.TestCase):
+    def pending(self):
+        source,target=transition_pair();target['deployment_commit']=correction.FAILED_COMMIT
+        return {'profile':p.PROFILE,'source':source,'target':target,
+            'deployment_manifest_sha256':correction.OLD_MANIFEST,
+            'prior_journal_sha256':{'synthetic_retained_journal':'sha256:'+'8'*64}}
+
+    def unstarted(self):
+        return {'status':'Unstarted','state_exists':False,'hold_active':False,
+            'plan_exists':False,'installed_binding':'source'}
+
+    def plan(self):
+        return {'status':'Planned','schema_before':42,'schema_after':42,'same_current_database':True,
+            'database_cloned_or_migrated':False,'services_restarted':False,'plan_sha256':'sha256:'+'9'*64}
+
+    def test_entire_native_evidence_closure_includes_previous_binding(self):
+        names=correction.evidence_names(p.identity())
+        self.assertEqual(len(names),len(set(names)));self.assertEqual(len(names),38)
+        self.assertIn(p.previous.BASELINE,names);self.assertIn(p.RECEIPT,names);self.assertIn(p.BASELINE,names)
+
+    def test_incomplete_old_deployment_binding_cannot_be_transferred(self):
+        binding=deepcopy(p.identity());binding['files'].pop(p.previous.BASELINE)
+        binding['files']['docs/implementation/evidence/synthetic-unrelated.json']='sha256:'+'9'*64
+        with self.assertRaises(RuntimeError):correction.evidence_names(binding)
+
+    def test_retarget_changes_only_pending_revision_and_manifest(self):
+        before=self.pending();original=deepcopy(before);expected=deepcopy(before)
+        expected['target']['deployment_commit']='7'*40;expected['deployment_manifest_sha256']='sha256:'+'9'*64
+        self.assertEqual(correction.candidate(before,'7'*40,'sha256:'+'9'*64),expected)
+        self.assertEqual(before,original)
+
+    def test_retarget_rejects_another_prepared_manifest(self):
+        value=self.pending();value['deployment_manifest_sha256']='sha256:'+'6'*64
+        with self.assertRaises(RuntimeError):correction.candidate(value,'7'*40,'sha256:'+'9'*64)
+
+    def test_retarget_rejects_another_pending_deployment(self):
+        value=self.pending();value['target']['deployment_commit']='6'*40
+        with self.assertRaises(RuntimeError):correction.candidate(value,'7'*40,'sha256:'+'9'*64)
+
+    def test_retarget_rejects_a_journal_hold_plan_or_changed_live_source(self):
+        for key,value in (('state_exists',True),('hold_active',True),('plan_exists',True),('installed_binding','other')):
+            with self.subTest(key=key):
+                status=self.unstarted();status[key]=value
+                with self.assertRaises(RuntimeError):correction.unstarted(status)
+
+    def test_unstarted_same_database_plan_is_accepted(self):
+        correction.guarded_plan(self.unstarted(),self.plan())
+
+    def test_plan_cannot_restart_services_or_change_the_database(self):
+        for key,value in (('schema_before',40),('schema_after',43),('same_current_database',False),
+                ('database_cloned_or_migrated',True),('services_restarted',True),('plan_sha256','invalid')):
+            with self.subTest(key=key):
+                plan=self.plan();plan[key]=value
+                with self.assertRaises(RuntimeError):correction.guarded_plan(self.unstarted(),plan)
 
 
 if __name__=='__main__':unittest.main()

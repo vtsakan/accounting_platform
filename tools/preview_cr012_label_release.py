@@ -17,6 +17,7 @@ import preview as publisher
 import preview_common as common
 import preview_cr008_release as previous
 import preview_cr012_label_policy as policy
+import cr012_label_transfer as correction
 import preview_cr012_release as previous_profile
 from r1_gate import digest_bytes,require
 
@@ -33,22 +34,22 @@ def run_tool_guards():
     result=subprocess.run([sys.executable,str(ROOT/'tools/run_cr012_label_vm_guards.py')],cwd=ROOT,
         env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'},capture_output=True,text=True)
     print(result.stderr,end='',file=sys.stderr,flush=True)
-    require(result.returncode==0,'The249 native deployment contracts did not all pass; VM remains unchanged')
+    require(result.returncode==0,'The257 native deployment contracts did not all pass; VM remains unchanged')
     proof=json.loads(result.stdout)
-    require(proof=={'tests_run':249,'tests_passed':249,'skips':0,'status':'Passed'},
-        'Require the exact224 retained plus25 new deployment results')
+    require(proof=={'tests_run':257,'tests_passed':257,'skips':0,'status':'Passed'},
+        'Require the exact249 retained plus8 evidence-transfer deployment results')
     proof.update(source_commit='git:'+previous.git('rev-parse','HEAD'),
         deployment_manifest_sha256=digest_bytes(SOURCE.read_bytes()),application_context_digest=policy.CONTEXT)
     common.private_json(GUARDS,proof)
 
 
 def guard_proof():
-    require(GUARDS.is_file() and not GUARDS.is_symlink(),'Execute the249 native deployment contracts first')
+    require(GUARDS.is_file() and not GUARDS.is_symlink(),'Execute the257 native deployment contracts first')
     proof=json.loads(GUARDS.read_text())
-    require(proof.get('tests_run')==proof.get('tests_passed')==249 and proof.get('skips')==0
+    require(proof.get('tests_run')==proof.get('tests_passed')==257 and proof.get('skips')==0
         and proof.get('status')=='Passed' and proof.get('application_context_digest')==policy.CONTEXT
         and proof.get('deployment_manifest_sha256')==digest_bytes(SOURCE.read_bytes()),
-        'The actual249-test proof differs from the prepared deployment source')
+        'The actual257-test proof differs from the prepared deployment source')
     require(subprocess.run(['git','merge-base','--is-ancestor',proof['source_commit'][4:],'HEAD'],
         cwd=ROOT,capture_output=True).returncode==0,'Retain the genuine native guard source in Git ancestry')
     return proof
@@ -94,13 +95,15 @@ def github():
     return {'status':'GitHub updated','commit':'git:'+revision,'previous_main':'git:'+old,'force_push':False}
 
 
-def load():
+def load(*,status_only=False):
     require(CONFIG.is_file() and not CONFIG.is_symlink(),'Retain the separate regular CR012-LABEL configuration')
     value=json.loads(CONFIG.read_text());require(value.get('profile')==policy.PROFILE,'Unexpected CR012-LABEL deployment profile')
     require(previous_profile.CONFIG.is_file() and not previous_profile.CONFIG.is_symlink()
         and digest_bytes(previous_profile.CONFIG.read_bytes())==value.get('previous_local_config_sha256'),
         'The preceding CR012 local configuration changed; it was not overwritten')
-    require(digest_bytes(SOURCE.read_bytes())==value.get('deployment_manifest_sha256'),
+    known_pending=(status_only and value.get('deployment_manifest_sha256')==correction.OLD_MANIFEST
+        and value['target']['deployment_commit']==correction.FAILED_COMMIT)
+    require(digest_bytes(SOURCE.read_bytes())==value.get('deployment_manifest_sha256') or known_pending,
         'The retained attempt belongs to a different prepared revision; inspect its status')
     policy.transition(value['source'],value['target'])
     common.validate(value['source'],published=True);common.validate(value['target'],published=True)
@@ -119,10 +122,37 @@ def cached_image():
     return built
 
 
+def retarget_unstarted():
+    revision=source_gate();guard_proof();raw=CONFIG.read_bytes();value=json.loads(raw)
+    require(not CONFIG.is_symlink(),'Retain the regular pending configuration')
+    require(previous_profile.CONFIG.is_file() and not previous_profile.CONFIG.is_symlink()
+        and digest_bytes(previous_profile.CONFIG.read_bytes())==value['previous_local_config_sha256'],
+        'The completed CR012 local configuration changed; no retarget')
+    require(subprocess.run(['git','merge-base','--is-ancestor',correction.FAILED_COMMIT,revision],cwd=ROOT,
+        capture_output=True).returncode==0,'Retain the genuine f5cc pending deployment in native history')
+    revised=correction.candidate(value,revision,digest_bytes(SOURCE.read_bytes()))
+    transfer(revised)
+    status=host_action(revised,'retarget-status','--input',STAGE+'/input.json');correction.unstarted(status)
+    plan=host_action(revised,'plan','--input',STAGE+'/input.json','--bundle',STAGE+'/source.tar')
+    correction.guarded_plan(status,plan)
+    require(CONFIG.read_bytes()==raw,'The pending local configuration changed concurrently; it was retained')
+    backup=ROOT/'private/vm-cr012-label-before-transfer-fix.json'
+    with backup.open('xb',opener=lambda name,flags:os.open(name,flags,0o600)) as stream:
+        stream.write(raw);stream.flush();os.fsync(stream.fileno())
+    common.private_json(CONFIG,revised)
+    print(json.dumps({'status':'Unstarted label profile retargeted after guarded plan',
+        'previous_pending_commit':'git:'+correction.FAILED_COMMIT,'deployment_commit':'git:'+revision,
+        'same_current_database':True,'services_restarted':False,'old_completed_journals_changed':False},ensure_ascii=False))
+    return revised
+
+
 def configure(identity):
     revision=source_gate();require_local_docker()
     guard_proof()
-    if CONFIG.exists():return load()
+    if CONFIG.exists():
+        raw=json.loads(CONFIG.read_text())
+        if raw.get('deployment_manifest_sha256')==correction.OLD_MANIFEST:return retarget_unstarted()
+        return load()
     source=common.validate(previous.ssh(policy.BOOTSTRAP,'sudo -n cat /etc/accounting/preview.json'),published=True)
     old=previous_profile.load()
     require(old['target']==source and source['deployment_commit']==policy.VM_DEPLOYMENT,
@@ -195,7 +225,7 @@ def transfer(config):
                 path.write_bytes(common.run(['git','show',revision+':'+name],environment=image.git_environment()))
         name='docs/implementation/cloud_inventory.json'
         (directory/name).write_bytes(common.run(['git','show',revision+':'+name],environment=image.git_environment()))
-        for name in (policy.BASELINE,policy.RECEIPT):
+        for name in correction.evidence_names(policy.verify(ROOT)):
             path=directory/name;path.parent.mkdir(parents=True,exist_ok=True)
             path.write_bytes(common.run(['git','show',revision+':'+name],environment=image.git_environment()))
         common.private_json(directory/'input.json',{**config,'bundle_sha256':common.file_sha(bundle)})
@@ -311,7 +341,7 @@ def main():
         if args.action=='source':result={'status':'Prepared','profile':policy.PROFILE,'deployment_commit':'git:'+source_gate(),'runtime_executed':False}
         elif args.action=='github':result=github()
         elif args.action=='status':
-            result=host_action(load(),'status') if CONFIG.exists() else previous.ssh(policy.BOOTSTRAP,'sudo -n /usr/local/sbin/accounting-preview status')
+            result=host_action(load(status_only=True),'status') if CONFIG.exists() else previous.ssh(policy.BOOTSTRAP,'sudo -n /usr/local/sbin/accounting-preview status')
         elif args.action in ('rollback','scanner-refresh'):result=host_action(load(),args.action)
         elif args.action=='record':record(host_action(load(),'state'));result=push_result()
         else:

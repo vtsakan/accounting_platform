@@ -9,7 +9,8 @@ from cr008_static_inputs import required_call_arguments
 from r1_gate import require
 
 NAMES=('preview_cr012_label_policy.py','preview_cr012_label_runtime.py',
-    'preview_cr012_label_host.py','preview_cr012_label_release.py','test_preview_cr012_label_vm.py','cr012_label_vm_static.py','run_cr012_label_vm_guards.py')
+    'preview_cr012_label_host.py','preview_cr012_label_release.py','cr012_label_transfer.py',
+    'test_preview_cr012_label_vm.py','cr012_label_vm_static.py','run_cr012_label_vm_guards.py')
 
 
 def inspect(root):
@@ -55,14 +56,25 @@ def inspect(root):
         and 'policy.rollback_database' in functions['rollback'],
         'Persist public cutover first and keep exactly the same current database on rollback')
     require('Only the known caption insertion is allowed' in functions['stage']
-        and 'Transferred native label proof differs from the immutable bundle' in functions['stage'],
-        'Permit only the two known caption changes and exact transferred native proof')
+        and 'Transferred native label proof differs from the immutable bundle' in functions['stage']
+        and 'correction.evidence_names(policy.identity())' in functions['stage'],
+        'Permit only the two known caption changes and all38 transferred native proofs')
+    release_functions={n.name:ast.unparse(n) for n in ast.parse((root/'tools/preview_cr012_label_release.py').read_text()).body
+        if isinstance(n,ast.FunctionDef)}
+    retry=release_functions['retarget_unstarted']
+    require('correction.evidence_names(policy.verify(ROOT))' in release_functions['transfer']
+        and retry.index('correction.unstarted(status)')<retry.index("'plan'")
+        and retry.index('correction.guarded_plan(status, plan)')<retry.index('common.private_json(CONFIG, revised)')
+        and 'prior_journals_unchanged(value)' in functions['retarget_status']
+        and 'STATE.exists()' in functions['retarget_status'] and 'HOLD.exists()' in functions['retarget_status']
+        and 'PLAN.exists()' in functions['retarget_status'],
+        'Transfer the complete closure and prove the unstarted source and corrected plan before retargeting')
     tests=root/'tools/test_preview_cr012_label_vm.py'
     new=sum(isinstance(n,ast.FunctionDef) and n.name.startswith('test_') for n in ast.walk(ast.parse(tests.read_text())))
     old=sum(isinstance(n,ast.FunctionDef) and n.name.startswith('test_')
         for path in (*sorted((root/'tools').glob('test_preview_cr008*.py')),root/'tools/test_preview_cr009_vm.py',root/'tools/test_preview_cr011_vm.py',root/'tools/test_preview_cr012_vm.py')
         for n in ast.walk(ast.parse(path.read_text())))
-    require(new==25 and old==224,'Retain all224 original guards and25 new native deployment contracts')
+    require(new==33 and old==224,'Retain all249 original guards and8 new native transfer/retry contracts')
     return {'python_modules':len(files),'local_import_symbols':imports,'local_module_calls':attributes,
         'local_calls_checked':required_call_arguments(root,files),
         'original_deployment_guards':old,'new_operator_guards':new,'runtime_or_tests_executed':False}

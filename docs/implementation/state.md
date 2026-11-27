@@ -888,3 +888,8 @@ Verified CR012 preview upgrade: exact1393/36 image, CURRENT40 clone to42, origin
 <!-- CR012-LABEL-RESULT -->
 Verified operator label correction: fresh1393/36 production-image gate and224 retained deployment guards. Only the ON_DEMAND caption in the agreement list and client card changed. All42 migrations, financial services, native test methods and35 historical receipts retained. Same-schema VM rollout and browser/business acceptance Pending; all85 full acceptances Pending.
 <!-- /CR012-LABEL-RESULT -->
+
+
+<!-- CR012-LABEL-VM -->
+Verified operator label image rollout: same CURRENT42 database/65tables, fresh65/65 independent-key off-VM restores, unchanged4GiB scanner/memory/HTTPS profile, all prior journals/people/MFA/keys/queue retained. No clone/migration or data rewind. All85 full acceptances and browser/business/G2 Pending.
+<!-- /CR012-LABEL-VM -->
